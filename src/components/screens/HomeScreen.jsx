@@ -1,7 +1,19 @@
 import React from 'react';
 import { receivedOfferings } from '../../data/appData';
+import { useAdmin } from '../../contexts/AdminContext';
 
-export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurrentProfile }) {
+export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurrentProfile, setAdminMode }) {
+  const { adminLogin } = useAdmin();
+
+  const handleAdminTest = () => {
+    // Auto-login as admin
+    adminLogin('admin', 'admin123');
+    // Activate admin mode
+    setAdminMode(true);
+    // Navigate to admin profile
+    setCurrentProfile(0);
+    setScreen('profiles');
+  };
   return (
     <div>
       <h1 style={{ fontSize: '36px', marginBottom: '15px', fontWeight: '600' }}>Bienvenue sur JeuTaime</h1>
@@ -65,10 +77,7 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
             <span style={{ fontSize: '22px' }}>💌</span> Mes Lettres ({myLetters.length})
           </button>
           <button
-            onClick={() => {
-              setCurrentProfile(0); // Profile admin est à l'index 0
-              setScreen('profiles');
-            }}
+            onClick={handleAdminTest}
             style={{ padding: '20px', background: 'linear-gradient(135deg, #667eea, #764ba2)', border: '3px solid #FFD700', color: 'white', borderRadius: '15px', cursor: 'pointer', fontWeight: '700', fontSize: '17px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
           >
             <span style={{ fontSize: '22px' }}>🛡️</span> Essai Profil Admin
