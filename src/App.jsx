@@ -37,6 +37,7 @@ function MainApp() {
   const [premiumActive, setPremiumActive] = useState(false);
   const [joinedBars, setJoinedBars] = useState([1]);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
+  const [adminMode, setAdminMode] = useState(false);
 
   const { isAdminAuthenticated } = useAdmin();
 
@@ -121,6 +122,8 @@ function MainApp() {
     moleBestScore, setMoleBestScore,
     myLetters, setMyLetters,
     showAdminPanel, setShowAdminPanel,
+    adminMode, setAdminMode,
+    isAdminAuthenticated,
     rnd
   };
 
@@ -136,7 +139,7 @@ function MainApp() {
 
   return (
     <div style={{ maxWidth: '430px', margin: '0 auto', background: '#000', minHeight: '100vh', color: 'white', fontFamily: '-apple-system, sans-serif', paddingBottom: '100px' }}>
-      <Header userCoins={userCoins} />
+      <Header userCoins={userCoins} adminMode={adminMode} isAdminAuthenticated={isAdminAuthenticated} />
 
       <div style={{ padding: '25px 20px' }}>
         {screen === 'home' && !gameScreen && !selectedBar && <HomeScreen {...appState} />}
@@ -158,6 +161,35 @@ function MainApp() {
       </div>
 
       <Navigation navItems={navItems} screen={screen} setScreen={setScreen} />
+
+      {/* Admin Mode Toggle - Floating Button */}
+      {isAdminAuthenticated && (
+        <button
+          onClick={() => setAdminMode(!adminMode)}
+          style={{
+            position: 'fixed',
+            bottom: '90px',
+            right: '20px',
+            width: '56px',
+            height: '56px',
+            borderRadius: '50%',
+            background: adminMode ? 'linear-gradient(135deg, #667eea, #764ba2)' : '#1a1a1a',
+            border: adminMode ? '3px solid #667eea' : '3px solid #333',
+            color: 'white',
+            fontSize: '24px',
+            cursor: 'pointer',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 999,
+            transition: 'all 0.3s'
+          }}
+          title={adminMode ? 'Désactiver mode admin' : 'Activer mode admin'}
+        >
+          {adminMode ? '🛡️' : '🔒'}
+        </button>
+      )}
     </div>
   );
 }

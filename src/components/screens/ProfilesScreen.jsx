@@ -1,11 +1,27 @@
 import React, { useState } from 'react';
 import { enrichedProfiles, profileBadges } from '../../data/appData';
 
-export default function ProfilesScreen({ currentProfile, setCurrentProfile }) {
+export default function ProfilesScreen({ currentProfile, setCurrentProfile, adminMode, isAdminAuthenticated }) {
   const [viewMode, setViewMode] = useState('discover');
   const [selectedPhoto, setSelectedPhoto] = useState(0);
 
   const currentProfileData = enrichedProfiles[currentProfile];
+
+  const handleAdminEditProfile = () => {
+    alert(`Éditer profil: ${currentProfileData.name}`);
+  };
+
+  const handleAdminBanUser = () => {
+    if (confirm(`Bannir ${currentProfileData.name} ?`)) {
+      alert(`${currentProfileData.name} a été banni`);
+    }
+  };
+
+  const handleAdminDeleteProfile = () => {
+    if (confirm(`Supprimer le profil de ${currentProfileData.name} ?`)) {
+      alert(`Profil supprimé`);
+    }
+  };
 
   return (
     <div>
@@ -122,6 +138,42 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile }) {
               💕
             </button>
           </div>
+
+          {/* Admin Actions */}
+          {adminMode && isAdminAuthenticated && (
+            <div style={{ marginTop: '20px', padding: '15px', background: 'linear-gradient(135deg, #667eea22, #764ba222)', border: '2px solid #667eea', borderRadius: '15px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                <span style={{ fontSize: '20px' }}>🛡️</span>
+                <h3 style={{ fontSize: '14px', fontWeight: '700', margin: 0, color: '#667eea' }}>Actions Admin</h3>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                <button
+                  onClick={handleAdminEditProfile}
+                  style={{ padding: '10px', background: '#2196F3', border: 'none', borderRadius: '8px', color: 'white', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}
+                >
+                  ✏️ Éditer
+                </button>
+                <button
+                  onClick={handleAdminBanUser}
+                  style={{ padding: '10px', background: '#FF9800', border: 'none', borderRadius: '8px', color: 'white', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}
+                >
+                  🚫 Bannir
+                </button>
+                <button
+                  onClick={handleAdminDeleteProfile}
+                  style={{ padding: '10px', background: '#dc3545', border: 'none', borderRadius: '8px', color: 'white', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}
+                >
+                  🗑️ Supprimer
+                </button>
+                <button
+                  onClick={() => alert(`Stats détaillées:\nID: ${currentProfileData.id}\nInscription: 01/09/2024\nDernière connexion: ${currentProfileData.lastActive}\nSignalements: 0`)}
+                  style={{ padding: '10px', background: '#9C27B0', border: 'none', borderRadius: '8px', color: 'white', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}
+                >
+                  📊 Stats
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
