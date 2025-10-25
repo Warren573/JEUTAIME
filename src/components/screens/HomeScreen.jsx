@@ -1,7 +1,7 @@
 import React from 'react';
 import { receivedOfferings } from '../../data/appData';
 
-export default function HomeScreen({ setScreen, myLetters, joinedBars }) {
+export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurrentProfile }) {
   return (
     <div>
       <h1 style={{ fontSize: '36px', marginBottom: '15px', fontWeight: '600' }}>Bienvenue sur JeuTaime</h1>
@@ -63,6 +63,15 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars }) {
           </button>
           <button onClick={() => setScreen('letters')} style={{ padding: '20px', background: 'linear-gradient(135deg, #9C27B0, #7B1FA2)', border: 'none', color: 'white', borderRadius: '15px', cursor: 'pointer', fontWeight: '600', fontSize: '17px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
             <span style={{ fontSize: '22px' }}>💌</span> Mes Lettres ({myLetters.length})
+          </button>
+          <button
+            onClick={() => {
+              setCurrentProfile(0); // Profile admin est à l'index 0
+              setScreen('profiles');
+            }}
+            style={{ padding: '20px', background: 'linear-gradient(135deg, #667eea, #764ba2)', border: '3px solid #FFD700', color: 'white', borderRadius: '15px', cursor: 'pointer', fontWeight: '700', fontSize: '17px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
+          >
+            <span style={{ fontSize: '22px' }}>🛡️</span> Essai Profil Admin
           </button>
         </div>
       </div>
