@@ -18,10 +18,15 @@ import MorpionGame from './components/games/MorpionGame';
 import CardGame from './components/games/CardGame';
 import StoryTimeGame from './components/games/StoryTimeGame';
 
+// Admin
+import { AdminProvider, useAdmin } from './contexts/AdminContext';
+import AdminLogin from './components/admin/AdminLogin';
+import AdminLayout from './components/admin/AdminLayout';
+
 // Helper function for HeroLove Quest
 function rnd(min=1,max=6){ return Math.floor(Math.random()*(max-min+1))+min; }
 
-export default function JeuTaimeApp() {
+function MainApp() {
   const [screen, setScreen] = useState('home');
   const [socialTab, setSocialTab] = useState('bars');
   const [gameScreen, setGameScreen] = useState(null);
@@ -31,6 +36,9 @@ export default function JeuTaimeApp() {
   const [currentProfile, setCurrentProfile] = useState(0);
   const [premiumActive, setPremiumActive] = useState(false);
   const [joinedBars, setJoinedBars] = useState([1]);
+  const [showAdminPanel, setShowAdminPanel] = useState(false);
+
+  const { isAdminAuthenticated } = useAdmin();
 
   // Game states
   const [reactivityScore, setReactivityScore] = useState(0);
@@ -112,8 +120,19 @@ export default function JeuTaimeApp() {
     cardMessage, setCardMessage,
     moleBestScore, setMoleBestScore,
     myLetters, setMyLetters,
+    showAdminPanel, setShowAdminPanel,
     rnd
   };
+
+  // If admin panel is shown and user is not authenticated, show login
+  if (showAdminPanel && !isAdminAuthenticated) {
+    return <AdminLogin />;
+  }
+
+  // If admin panel is shown and user is authenticated, show admin panel
+  if (showAdminPanel && isAdminAuthenticated) {
+    return <AdminLayout onExit={() => setShowAdminPanel(false)} />;
+  }
 
   return (
     <div style={{ maxWidth: '430px', margin: '0 auto', background: '#000', minHeight: '100vh', color: 'white', fontFamily: '-apple-system, sans-serif', paddingBottom: '100px' }}>
@@ -140,5 +159,14 @@ export default function JeuTaimeApp() {
 
       <Navigation navItems={navItems} screen={screen} setScreen={setScreen} />
     </div>
+  );
+}
+
+// Wrapper component with AdminProvider
+export default function JeuTaimeApp() {
+  return (
+    <AdminProvider>
+      <MainApp />
+    </AdminProvider>
   );
 }
