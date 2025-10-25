@@ -1,0 +1,144 @@
+import React, { useState } from 'react';
+import Header from './components/Header';
+import Navigation from './components/Navigation';
+import HomeScreen from './components/screens/HomeScreen';
+import ProfilesScreen from './components/screens/ProfilesScreen';
+import SocialScreen from './components/screens/SocialScreen';
+import LettersScreen from './components/screens/LettersScreen';
+import JournalScreen from './components/screens/JournalScreen';
+import SettingsScreen from './components/screens/SettingsScreen';
+import BarDetailScreen from './components/screens/BarDetailScreen';
+
+// Games
+import HeroLoveQuest from './components/games/HeroLoveQuest';
+import PongGame from './components/games/PongGame';
+import WhackAMoleGame from './components/games/WhackAMoleGame';
+import BrickBreakerGame from './components/games/BrickBreakerGame';
+import MorpionGame from './components/games/MorpionGame';
+import CardGame from './components/games/CardGame';
+import StoryTimeGame from './components/games/StoryTimeGame';
+
+// Helper function for HeroLove Quest
+function rnd(min=1,max=6){ return Math.floor(Math.random()*(max-min+1))+min; }
+
+export default function JeuTaimeApp() {
+  const [screen, setScreen] = useState('home');
+  const [socialTab, setSocialTab] = useState('bars');
+  const [gameScreen, setGameScreen] = useState(null);
+  const [selectedBar, setSelectedBar] = useState(null);
+  const [barTab, setBarTab] = useState('discuss');
+  const [userCoins, setUserCoins] = useState(5245);
+  const [currentProfile, setCurrentProfile] = useState(0);
+  const [premiumActive, setPremiumActive] = useState(false);
+  const [joinedBars, setJoinedBars] = useState([1]);
+
+  // Game states
+  const [reactivityScore, setReactivityScore] = useState(0);
+  const [reactivityReady, setReactivityReady] = useState(false);
+  const [brickScore, setBrickScore] = useState(0);
+  const [morpionBoard, setMorpionBoard] = useState(Array(9).fill(null));
+  const [morpionTurn, setMorpionTurn] = useState('X');
+  const [storyText, setStoryText] = useState('Il était une fois...');
+  const [storyInput, setStoryInput] = useState('');
+
+  // HeroLove Quest states
+  const [heroPlayer, setHeroPlayer] = useState({
+    name: "Aventurier·e",
+    pos: {x:0,y:0},
+    charm: 2,
+    wit: 1,
+    humor: 2,
+    courage: 2,
+    confidence: 10,
+    coinsEarned: 0,
+    monstersDefeated: 0
+  });
+  const [heroMessage, setHeroMessage] = useState("🎮 Commence ton aventure romantique !");
+  const [heroGridSize] = useState(7);
+  const [heroGameOver, setHeroGameOver] = useState(false);
+  const [heroVictory, setHeroVictory] = useState(false);
+
+  // Card Game states
+  const [cardSymbols, setCardSymbols] = useState([]);
+  const [cardRevealed, setCardRevealed] = useState([]);
+  const [cardGains, setCardGains] = useState(0);
+  const [cardGameOver, setCardGameOver] = useState(false);
+  const [cardMessage, setCardMessage] = useState('');
+
+  // Whack A Mole state
+  const [moleBestScore, setMoleBestScore] = useState(0);
+
+  // Letters
+  const [myLetters, setMyLetters] = useState([
+    { id: 1, name: 'Alice', lastMsg: 'C\'était super nos derniers échanges!', lastDate: '2h', unread: true },
+    { id: 2, name: 'Sophie', lastMsg: 'Tu as vu mon dernier message?', lastDate: '1j', unread: false },
+  ]);
+
+  const navItems = [
+    { icon: '🏠', label: 'Accueil', id: 'home' },
+    { icon: '👤', label: 'Profils', id: 'profiles' },
+    { icon: '👥', label: 'Social', id: 'social' },
+    { icon: '💌', label: 'Lettres', id: 'letters' },
+    { icon: '📰', label: 'Journal', id: 'journal' },
+    { icon: '⚙️', label: 'Paramètres', id: 'settings' }
+  ];
+
+  const appState = {
+    screen, setScreen,
+    socialTab, setSocialTab,
+    gameScreen, setGameScreen,
+    selectedBar, setSelectedBar,
+    barTab, setBarTab,
+    userCoins, setUserCoins,
+    currentProfile, setCurrentProfile,
+    premiumActive, setPremiumActive,
+    joinedBars, setJoinedBars,
+    reactivityScore, setReactivityScore,
+    reactivityReady, setReactivityReady,
+    brickScore, setBrickScore,
+    morpionBoard, setMorpionBoard,
+    morpionTurn, setMorpionTurn,
+    storyText, setStoryText,
+    storyInput, setStoryInput,
+    heroPlayer, setHeroPlayer,
+    heroMessage, setHeroMessage,
+    heroGridSize,
+    heroGameOver, setHeroGameOver,
+    heroVictory, setHeroVictory,
+    cardSymbols, setCardSymbols,
+    cardRevealed, setCardRevealed,
+    cardGains, setCardGains,
+    cardGameOver, setCardGameOver,
+    cardMessage, setCardMessage,
+    moleBestScore, setMoleBestScore,
+    myLetters, setMyLetters,
+    rnd
+  };
+
+  return (
+    <div style={{ maxWidth: '430px', margin: '0 auto', background: '#000', minHeight: '100vh', color: 'white', fontFamily: '-apple-system, sans-serif', paddingBottom: '100px' }}>
+      <Header userCoins={userCoins} />
+
+      <div style={{ padding: '25px 20px' }}>
+        {screen === 'home' && !gameScreen && !selectedBar && <HomeScreen {...appState} />}
+        {screen === 'profiles' && !gameScreen && !selectedBar && <ProfilesScreen {...appState} />}
+        {screen === 'social' && !gameScreen && !selectedBar && <SocialScreen {...appState} />}
+        {screen === 'letters' && !gameScreen && !selectedBar && <LettersScreen {...appState} />}
+        {screen === 'journal' && !gameScreen && !selectedBar && <JournalScreen {...appState} />}
+        {screen === 'settings' && !gameScreen && !selectedBar && <SettingsScreen {...appState} />}
+
+        {gameScreen === 'herolove' && <HeroLoveQuest {...appState} />}
+        {gameScreen === 'pong' && <PongGame {...appState} />}
+        {gameScreen === 'reactivity' && <WhackAMoleGame {...appState} />}
+        {gameScreen === 'brickbreaker' && <BrickBreakerGame {...appState} />}
+        {gameScreen === 'morpion' && <MorpionGame {...appState} />}
+        {gameScreen === 'cards' && <CardGame {...appState} />}
+        {gameScreen === 'storytime' && <StoryTimeGame {...appState} />}
+
+        {selectedBar && <BarDetailScreen {...appState} />}
+      </div>
+
+      <Navigation navItems={navItems} screen={screen} setScreen={setScreen} />
+    </div>
+  );
+}
