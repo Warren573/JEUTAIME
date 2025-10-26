@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function SettingsScreen({ setShowAdminPanel }) {
+export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogout }) {
   const [settingsTab, setSettingsTab] = useState('profile');
 
   return (
@@ -122,7 +122,10 @@ export default function SettingsScreen({ setShowAdminPanel }) {
               🗑️ Supprimer mon compte
             </button>
 
-            <button style={{ width: '100%', padding: '15px', background: '#666', border: 'none', color: 'white', borderRadius: '12px', cursor: 'pointer', fontWeight: '600', fontSize: '14px' }}>
+            <button
+              onClick={onLogout}
+              style={{ width: '100%', padding: '15px', background: '#666', border: 'none', color: 'white', borderRadius: '12px', cursor: 'pointer', fontWeight: '600', fontSize: '14px' }}
+            >
               🚪 Se déconnecter
             </button>
           </div>

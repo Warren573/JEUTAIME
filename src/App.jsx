@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Navigation from './components/Navigation';
 import HomeScreen from './components/screens/HomeScreen';
@@ -23,10 +23,19 @@ import { AdminProvider, useAdmin } from './contexts/AdminContext';
 import AdminLogin from './components/admin/AdminLogin';
 import AdminLayout from './components/admin/AdminLayout';
 
+// Auth
+import AuthScreen from './components/auth/AuthScreen';
+import ProfileCreation from './components/auth/ProfileCreation';
+
 // Helper function for HeroLove Quest
 function rnd(min=1,max=6){ return Math.floor(Math.random()*(max-min+1))+min; }
 
 function MainApp() {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [authMode, setAuthMode] = useState(null); // null, 'signup-profile'
+  const [signupEmail, setSignupEmail] = useState('');
+  const [signupPassword, setSignupPassword] = useState('');
+
   const [screen, setScreen] = useState('home');
   const [socialTab, setSocialTab] = useState('bars');
   const [gameScreen, setGameScreen] = useState(null);
@@ -40,6 +49,42 @@ function MainApp() {
   const [adminMode, setAdminMode] = useState(false);
 
   const { isAdminAuthenticated } = useAdmin();
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const savedUser = localStorage.getItem('jeutaime_current_user');
+    if (savedUser) {
+      const user = JSON.parse(savedUser);
+      setCurrentUser(user);
+      setUserCoins(user.coins || 100);
+      setPremiumActive(user.premium || false);
+    }
+  }, []);
+
+  const handleLogin = (user) => {
+    setCurrentUser(user);
+    setUserCoins(user.coins || 100);
+    setPremiumActive(user.premium || false);
+    localStorage.setItem('jeutaime_current_user', JSON.stringify(user));
+  };
+
+  const handleSignup = (email, password) => {
+    setSignupEmail(email);
+    setSignupPassword(password);
+    setAuthMode('signup-profile');
+  };
+
+  const handleProfileComplete = (user) => {
+    setCurrentUser(user);
+    setUserCoins(user.coins || 100);
+    setPremiumActive(user.premium || false);
+    setAuthMode(null);
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    localStorage.removeItem('jeutaime_current_user');
+  };
 
   // Game states
   const [reactivityScore, setReactivityScore] = useState(0);
@@ -124,8 +169,20 @@ function MainApp() {
     showAdminPanel, setShowAdminPanel,
     adminMode, setAdminMode,
     isAdminAuthenticated,
+    currentUser,
+    onLogout: handleLogout,
     rnd
   };
+
+  // Show auth screen if not logged in
+  if (!currentUser && authMode !== 'signup-profile') {
+    return <AuthScreen onLogin={handleLogin} onSignup={handleSignup} />;
+  }
+
+  // Show profile creation if in signup mode
+  if (authMode === 'signup-profile') {
+    return <ProfileCreation email={signupEmail} onComplete={handleProfileComplete} />;
+  }
 
   // If admin panel is shown and user is not authenticated, show login
   if (showAdminPanel && !isAdminAuthenticated) {
