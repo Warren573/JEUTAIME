@@ -15,11 +15,22 @@ export default function ProfileCreation({ email, onComplete }) {
     bio: '',
     job: '',
     interests: '',
-    lookingFor: 'friendship' // friendship, relationship, both
+    lookingFor: 'friendship', // friendship, relationship, both
+    interestedIn: 'all', // men, women, all, other
+    children: 'discuss', // yes, no, later, discuss
+    physicalDescription: '', // funny description
+    question1: '',
+    question2: '',
+    question3: '',
+    // Progression system
+    loveXP: 0,
+    level: 1,
+    title: 'Novice du Cœur',
+    items: []
   });
   const [error, setError] = useState('');
 
-  const totalSteps = 5;
+  const totalSteps = 7;
 
   const handleNext = () => {
     setError('');
@@ -60,6 +71,20 @@ export default function ProfileCreation({ email, onComplete }) {
     if (step === 5) {
       if (!profile.job || !profile.interests) {
         setError('Veuillez remplir tous les champs');
+        return;
+      }
+    }
+
+    if (step === 6) {
+      if (!profile.physicalDescription) {
+        setError('Choisis une description physique');
+        return;
+      }
+    }
+
+    if (step === 7) {
+      if (!profile.question1 || !profile.question2 || !profile.question3) {
+        setError('Réponds aux 3 questions pour continuer');
         return;
       }
     }
@@ -374,7 +399,227 @@ export default function ProfileCreation({ email, onComplete }) {
                   >
                     ✨ Les deux, je suis ouvert(e)
                   </button>
+                  <button
+                    onClick={() => setProfile({ ...profile, lookingFor: 'game-duo' })}
+                    style={{
+                      padding: '14px',
+                      background: profile.lookingFor === 'game-duo' ? 'linear-gradient(135deg, #667eea, #764ba2)' : '#f5f5f5',
+                      border: 'none',
+                      borderRadius: '10px',
+                      color: profile.lookingFor === 'game-duo' ? 'white' : '#333',
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      textAlign: 'left'
+                    }}
+                  >
+                    🎮 Un(e) partenaire de jeu
+                  </button>
+                  <button
+                    onClick={() => setProfile({ ...profile, lookingFor: 'flirt' })}
+                    style={{
+                      padding: '14px',
+                      background: profile.lookingFor === 'flirt' ? 'linear-gradient(135deg, #667eea, #764ba2)' : '#f5f5f5',
+                      border: 'none',
+                      borderRadius: '10px',
+                      color: profile.lookingFor === 'flirt' ? 'white' : '#333',
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      textAlign: 'left'
+                    }}
+                  >
+                    😘 Du flirt
+                  </button>
                 </div>
+              </div>
+
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '12px', color: '#333' }}>
+                  Intéressé(e) par...
+                </label>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                  {['men', 'women', 'all', 'other'].map(option => (
+                    <button
+                      key={option}
+                      onClick={() => setProfile({ ...profile, interestedIn: option })}
+                      style={{
+                        padding: '12px',
+                        background: profile.interestedIn === option ? 'linear-gradient(135deg, #667eea, #764ba2)' : '#f5f5f5',
+                        border: 'none',
+                        borderRadius: '10px',
+                        color: profile.interestedIn === option ? 'white' : '#333',
+                        fontSize: '14px',
+                        fontWeight: '600',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {option === 'men' && '👨 Hommes'}
+                      {option === 'women' && '👩 Femmes'}
+                      {option === 'all' && '🌈 Tous'}
+                      {option === 'other' && '✨ Autre'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ marginBottom: '30px' }}>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '12px', color: '#333' }}>
+                  Enfants ?
+                </label>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                  {['yes', 'no', 'later', 'discuss'].map(option => (
+                    <button
+                      key={option}
+                      onClick={() => setProfile({ ...profile, children: option })}
+                      style={{
+                        padding: '12px',
+                        background: profile.children === option ? 'linear-gradient(135deg, #667eea, #764ba2)' : '#f5f5f5',
+                        border: 'none',
+                        borderRadius: '10px',
+                        color: profile.children === option ? 'white' : '#333',
+                        fontSize: '14px',
+                        fontWeight: '600',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {option === 'yes' && '✅ Oui'}
+                      {option === 'no' && '❌ Non'}
+                      {option === 'later' && '⏳ Plus tard'}
+                      {option === 'discuss' && '💬 À discuter'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* Étape 6: Description physique amusante */}
+          {step === 6 && (
+            <>
+              <h2 style={{ fontSize: '28px', fontWeight: '700', margin: '0 0 10px 0', color: '#333' }}>Comment te décrire ? 😄</h2>
+              <p style={{ color: '#666', marginBottom: '20px' }}>Choisis ta description avec humour !</p>
+
+              {error && (
+                <div style={{ background: '#fee', border: '1px solid #fcc', borderRadius: '10px', padding: '12px', marginBottom: '20px', color: '#c33', fontSize: '14px' }}>
+                  {error}
+                </div>
+              )}
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '20px' }}>
+                {[
+                  { id: 'spaghetti', emoji: '🍝', label: 'Filiforme (comme un spaghetti)' },
+                  { id: 'petite', emoji: '🌱', label: 'Ras motte (petite taille)' },
+                  { id: 'grande', emoji: '🦒', label: 'Grande gigue (très grand·e)' },
+                  { id: 'costaud', emoji: '🌳', label: 'Costaud(e) comme un chêne' },
+                  { id: 'mignon', emoji: '🍪', label: 'Mignon·ne comme un cookie' },
+                  { id: 'mysterieux', emoji: '🕶️', label: 'Mystérieux·se sous la capuche' },
+                  { id: 'athle', emoji: '💪', label: 'Athlétique et dynamique' },
+                  { id: 'doux', emoji: '🧸', label: 'Doux·ce comme une peluche' }
+                ].map(desc => (
+                  <button
+                    key={desc.id}
+                    onClick={() => setProfile({ ...profile, physicalDescription: desc.id })}
+                    style={{
+                      padding: '16px',
+                      background: profile.physicalDescription === desc.id ? 'linear-gradient(135deg, #667eea, #764ba2)' : '#f5f5f5',
+                      border: 'none',
+                      borderRadius: '12px',
+                      color: profile.physicalDescription === desc.id ? 'white' : '#333',
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      textAlign: 'left',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px'
+                    }}
+                  >
+                    <span style={{ fontSize: '28px' }}>{desc.emoji}</span>
+                    {desc.label}
+                  </button>
+                ))}
+              </div>
+
+              <div style={{ background: '#e3f2fd', border: '1px solid #90caf9', borderRadius: '10px', padding: '12px', fontSize: '13px', color: '#1976d2' }}>
+                💡 Ces descriptions sont là pour rire et briser la glace, pas pour juger !
+              </div>
+            </>
+          )}
+
+          {/* Étape 7: 3 Questions obligatoires */}
+          {step === 7 && (
+            <>
+              <h2 style={{ fontSize: '28px', fontWeight: '700', margin: '0 0 10px 0', color: '#333' }}>Dernière étape ! 🎯</h2>
+              <p style={{ color: '#666', marginBottom: '20px' }}>Réponds à ces 3 questions pour débloquer les matchs</p>
+
+              {error && (
+                <div style={{ background: '#fee', border: '1px solid #fcc', borderRadius: '10px', padding: '12px', marginBottom: '20px', color: '#c33', fontSize: '14px' }}>
+                  {error}
+                </div>
+              )}
+
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '12px', color: '#333' }}>
+                  💕 Si tu devais vivre un film d'amour, tu serais lequel ?
+                </label>
+                <select
+                  value={profile.question1}
+                  onChange={(e) => setProfile({ ...profile, question1: e.target.value })}
+                  style={{ width: '100%', padding: '14px', border: '2px solid #ddd', borderRadius: '10px', fontSize: '16px', background: 'white' }}
+                >
+                  <option value="">Choisis ton film...</option>
+                  <option value="titanic">🚢 Titanic (romantique et tragique)</option>
+                  <option value="amelie">🎨 Le Fabuleux Destin d'Amélie Poulain</option>
+                  <option value="500days">📆 500 Jours Ensemble (réaliste)</option>
+                  <option value="lalaland">🎵 La La Land (rêveur)</option>
+                  <option value="notebook">📖 N'oublie jamais (passionné)</option>
+                  <option value="50first">🧠 50 Premières Rencontres (drôle)</option>
+                  <option value="pride">👗 Orgueil et Préjugés (classique)</option>
+                </select>
+              </div>
+
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '12px', color: '#333' }}>
+                  😊 Tu préfères un câlin ou un duel de regards ?
+                </label>
+                <select
+                  value={profile.question2}
+                  onChange={(e) => setProfile({ ...profile, question2: e.target.value })}
+                  style={{ width: '100%', padding: '14px', border: '2px solid #ddd', borderRadius: '10px', fontSize: '16px', background: 'white' }}
+                >
+                  <option value="">Choisis ta préférence...</option>
+                  <option value="calin">🤗 Un gros câlin réconfortant</option>
+                  <option value="regards">👀 Un duel de regards intense</option>
+                  <option value="main">🤝 Se tenir la main</option>
+                  <option value="rire">😂 Rigoler ensemble</option>
+                  <option value="silence">🤫 Un silence complice</option>
+                </select>
+              </div>
+
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '12px', color: '#333' }}>
+                  ❤️ Si on se voyait, tu choisirais... ?
+                </label>
+                <select
+                  value={profile.question3}
+                  onChange={(e) => setProfile({ ...profile, question3: e.target.value })}
+                  style={{ width: '100%', padding: '14px', border: '2px solid #ddd', borderRadius: '10px', fontSize: '16px', background: 'white' }}
+                >
+                  <option value="">Choisis l'activité...</option>
+                  <option value="bar">🍸 Un bar cosy</option>
+                  <option value="piquenique">🧺 Un pique-nique romantique</option>
+                  <option value="aventure">🏔️ Une aventure en plein air</option>
+                  <option value="musee">🎨 Une visite de musée</option>
+                  <option value="cinema">🎬 Une séance de cinéma</option>
+                  <option value="resto">🍽️ Un restaurant gastronomique</option>
+                  <option value="jeux">🎮 Une soirée jeux vidéo</option>
+                  <option value="concert">🎵 Un concert ou spectacle</option>
+                </select>
+              </div>
+
+              <div style={{ background: '#e8f5e9', border: '1px solid #81c784', borderRadius: '10px', padding: '12px', fontSize: '13px', color: '#2e7d32' }}>
+                ✨ Tes réponses serviront à calculer ta compatibilité avec les autres membres !
               </div>
             </>
           )}
