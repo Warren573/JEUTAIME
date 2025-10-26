@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Navigation from './components/Navigation';
 import HomeScreen from './components/screens/HomeScreen';
@@ -18,10 +18,24 @@ import MorpionGame from './components/games/MorpionGame';
 import CardGame from './components/games/CardGame';
 import StoryTimeGame from './components/games/StoryTimeGame';
 
+// Admin
+import { AdminProvider, useAdmin } from './contexts/AdminContext';
+import AdminLogin from './components/admin/AdminLogin';
+import AdminLayout from './components/admin/AdminLayout';
+
+// Auth
+import AuthScreen from './components/auth/AuthScreen';
+import ProfileCreation from './components/auth/ProfileCreation';
+
 // Helper function for HeroLove Quest
 function rnd(min=1,max=6){ return Math.floor(Math.random()*(max-min+1))+min; }
 
-export default function JeuTaimeApp() {
+function MainApp() {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [authMode, setAuthMode] = useState(null); // null, 'signup-profile'
+  const [signupEmail, setSignupEmail] = useState('');
+  const [signupPassword, setSignupPassword] = useState('');
+
   const [screen, setScreen] = useState('home');
   const [socialTab, setSocialTab] = useState('bars');
   const [gameScreen, setGameScreen] = useState(null);
@@ -31,6 +45,46 @@ export default function JeuTaimeApp() {
   const [currentProfile, setCurrentProfile] = useState(0);
   const [premiumActive, setPremiumActive] = useState(false);
   const [joinedBars, setJoinedBars] = useState([1]);
+  const [showAdminPanel, setShowAdminPanel] = useState(false);
+  const [adminMode, setAdminMode] = useState(false);
+
+  const { isAdminAuthenticated } = useAdmin();
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const savedUser = localStorage.getItem('jeutaime_current_user');
+    if (savedUser) {
+      const user = JSON.parse(savedUser);
+      setCurrentUser(user);
+      setUserCoins(user.coins || 100);
+      setPremiumActive(user.premium || false);
+    }
+  }, []);
+
+  const handleLogin = (user) => {
+    setCurrentUser(user);
+    setUserCoins(user.coins || 100);
+    setPremiumActive(user.premium || false);
+    localStorage.setItem('jeutaime_current_user', JSON.stringify(user));
+  };
+
+  const handleSignup = (email, password) => {
+    setSignupEmail(email);
+    setSignupPassword(password);
+    setAuthMode('signup-profile');
+  };
+
+  const handleProfileComplete = (user) => {
+    setCurrentUser(user);
+    setUserCoins(user.coins || 100);
+    setPremiumActive(user.premium || false);
+    setAuthMode(null);
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    localStorage.removeItem('jeutaime_current_user');
+  };
 
   // Game states
   const [reactivityScore, setReactivityScore] = useState(0);
@@ -112,12 +166,37 @@ export default function JeuTaimeApp() {
     cardMessage, setCardMessage,
     moleBestScore, setMoleBestScore,
     myLetters, setMyLetters,
+    showAdminPanel, setShowAdminPanel,
+    adminMode, setAdminMode,
+    isAdminAuthenticated,
+    currentUser,
+    onLogout: handleLogout,
     rnd
   };
 
+  // Show auth screen if not logged in
+  if (!currentUser && authMode !== 'signup-profile') {
+    return <AuthScreen onLogin={handleLogin} onSignup={handleSignup} />;
+  }
+
+  // Show profile creation if in signup mode
+  if (authMode === 'signup-profile') {
+    return <ProfileCreation email={signupEmail} onComplete={handleProfileComplete} />;
+  }
+
+  // If admin panel is shown and user is not authenticated, show login
+  if (showAdminPanel && !isAdminAuthenticated) {
+    return <AdminLogin />;
+  }
+
+  // If admin panel is shown and user is authenticated, show admin panel
+  if (showAdminPanel && isAdminAuthenticated) {
+    return <AdminLayout onExit={() => setShowAdminPanel(false)} />;
+  }
+
   return (
     <div style={{ maxWidth: '430px', margin: '0 auto', background: '#000', minHeight: '100vh', color: 'white', fontFamily: '-apple-system, sans-serif', paddingBottom: '100px' }}>
-      <Header userCoins={userCoins} />
+      <Header userCoins={userCoins} adminMode={adminMode} isAdminAuthenticated={isAdminAuthenticated} />
 
       <div style={{ padding: '25px 20px' }}>
         {screen === 'home' && !gameScreen && !selectedBar && <HomeScreen {...appState} />}
@@ -139,6 +218,44 @@ export default function JeuTaimeApp() {
       </div>
 
       <Navigation navItems={navItems} screen={screen} setScreen={setScreen} />
+
+      {/* Admin Mode Toggle - Floating Button */}
+      {isAdminAuthenticated && (
+        <button
+          onClick={() => setAdminMode(!adminMode)}
+          style={{
+            position: 'fixed',
+            bottom: '90px',
+            right: '20px',
+            width: '56px',
+            height: '56px',
+            borderRadius: '50%',
+            background: adminMode ? 'linear-gradient(135deg, #667eea, #764ba2)' : '#1a1a1a',
+            border: adminMode ? '3px solid #667eea' : '3px solid #333',
+            color: 'white',
+            fontSize: '24px',
+            cursor: 'pointer',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 999,
+            transition: 'all 0.3s'
+          }}
+          title={adminMode ? 'Désactiver mode admin' : 'Activer mode admin'}
+        >
+          {adminMode ? '🛡️' : '🔒'}
+        </button>
+      )}
     </div>
+  );
+}
+
+// Wrapper component with AdminProvider
+export default function JeuTaimeApp() {
+  return (
+    <AdminProvider>
+      <MainApp />
+    </AdminProvider>
   );
 }

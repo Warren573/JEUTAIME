@@ -1,10 +1,36 @@
 import React from 'react';
 import { bars } from '../../data/appData';
 
-export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, setSelectedBar }) {
+export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, setSelectedBar, adminMode, isAdminAuthenticated }) {
+  const handleAdminEditBar = (bar, e) => {
+    e.stopPropagation();
+    alert(`Éditer bar: ${bar.name}`);
+  };
+
+  const handleAdminDeleteBar = (bar, e) => {
+    e.stopPropagation();
+    if (confirm(`Supprimer le bar "${bar.name}" ?`)) {
+      alert(`Bar supprimé`);
+    }
+  };
+
+  const handleAdminCreateBar = () => {
+    alert('Créer un nouveau bar');
+  };
+
   return (
     <div>
-      <h1 style={{ fontSize: '32px', marginBottom: '25px', fontWeight: '600' }}>👥 Social</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px' }}>
+        <h1 style={{ fontSize: '32px', margin: 0, fontWeight: '600' }}>👥 Social</h1>
+        {adminMode && isAdminAuthenticated && socialTab === 'bars' && (
+          <button
+            onClick={handleAdminCreateBar}
+            style={{ padding: '8px 16px', background: 'linear-gradient(135deg, #667eea, #764ba2)', border: 'none', borderRadius: '10px', color: 'white', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}
+          >
+            ➕ Nouveau Bar
+          </button>
+        )}
+      </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '25px' }}>
         {['bars', 'games', 'adoption', 'contest'].map((tab) => (
           <button key={tab} onClick={() => setSocialTab(tab)} style={{ padding: '12px 20px', background: socialTab === tab ? 'linear-gradient(135deg, #E91E63, #C2185B)' : '#1a1a1a', border: 'none', color: 'white', borderRadius: '15px', cursor: 'pointer', fontWeight: '600', fontSize: '15px', whiteSpace: 'nowrap' }}>
@@ -19,8 +45,8 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
       {socialTab === 'bars' && (
         <div style={{ background: '#1a1a1a', borderRadius: '20px', padding: '25px' }}>
           {bars.map((bar) => (
-            <div key={bar.id} onClick={() => setSelectedBar(bar.id)} style={{ background: '#0a0a0a', borderRadius: '15px', padding: '15px', marginBottom: '12px', cursor: 'pointer' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div key={bar.id} style={{ background: '#0a0a0a', borderRadius: '15px', padding: '15px', marginBottom: '12px', position: 'relative' }}>
+              <div onClick={() => setSelectedBar(bar.id)} style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
                 <div style={{ fontSize: '40px' }}>{bar.icon}</div>
                 <div style={{ flex: 1 }}>
                   <h3 style={{ fontSize: '18px', margin: 0, fontWeight: '600' }}>{bar.name}</h3>
@@ -35,6 +61,24 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                 </div>
                 <div style={{ fontSize: '20px' }}>→</div>
               </div>
+
+              {/* Admin Actions */}
+              {adminMode && isAdminAuthenticated && (
+                <div style={{ display: 'flex', gap: '6px', marginTop: '10px', paddingTop: '10px', borderTop: '1px solid #333' }}>
+                  <button
+                    onClick={(e) => handleAdminEditBar(bar, e)}
+                    style={{ flex: 1, padding: '8px', background: '#2196F3', border: 'none', borderRadius: '6px', color: 'white', fontSize: '11px', fontWeight: '600', cursor: 'pointer' }}
+                  >
+                    ✏️ Éditer
+                  </button>
+                  <button
+                    onClick={(e) => handleAdminDeleteBar(bar, e)}
+                    style={{ flex: 1, padding: '8px', background: '#dc3545', border: 'none', borderRadius: '6px', color: 'white', fontSize: '11px', fontWeight: '600', cursor: 'pointer' }}
+                  >
+                    🗑️ Supprimer
+                  </button>
+                </div>
+              )}
             </div>
           ))}
         </div>

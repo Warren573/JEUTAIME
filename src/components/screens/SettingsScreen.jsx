@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function SettingsScreen() {
+export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogout }) {
   const [settingsTab, setSettingsTab] = useState('profile');
 
   return (
@@ -103,12 +103,46 @@ export default function SettingsScreen() {
         </div>
       )}
 
-      {/* NOTIFICATIONS, PRIVACY, ACCOUNT - Version simplifiée */}
-      {(settingsTab === 'notifications' || settingsTab === 'privacy' || settingsTab === 'account') && (
+      {/* NOTIFICATIONS, PRIVACY - Version simplifiée */}
+      {(settingsTab === 'notifications' || settingsTab === 'privacy') && (
         <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '30px', textAlign: 'center' }}>
           <div style={{ fontSize: '64px', marginBottom: '20px' }}>🚧</div>
           <h3 style={{ fontSize: '18px', marginBottom: '10px', fontWeight: '600' }}>Section en construction</h3>
           <p style={{ fontSize: '14px', color: '#888' }}>Cette section sera disponible prochainement</p>
+        </div>
+      )}
+
+      {/* ACCOUNT */}
+      {settingsTab === 'account' && (
+        <div>
+          <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', marginBottom: '15px' }}>
+            <h3 style={{ fontSize: '16px', margin: '0 0 15px 0', fontWeight: '600' }}>Compte</h3>
+
+            <button style={{ width: '100%', padding: '15px', background: '#dc3545', border: 'none', color: 'white', borderRadius: '12px', cursor: 'pointer', fontWeight: '600', fontSize: '14px', marginBottom: '10px' }}>
+              🗑️ Supprimer mon compte
+            </button>
+
+            <button
+              onClick={onLogout}
+              style={{ width: '100%', padding: '15px', background: '#666', border: 'none', color: 'white', borderRadius: '12px', cursor: 'pointer', fontWeight: '600', fontSize: '14px' }}
+            >
+              🚪 Se déconnecter
+            </button>
+          </div>
+
+          {/* Admin Panel Access - Hidden section */}
+          <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', border: '1px solid #333' }}>
+            <h3 style={{ fontSize: '16px', margin: '0 0 15px 0', fontWeight: '600', color: '#667eea' }}>🛠️ Développeur</h3>
+            <p style={{ fontSize: '13px', color: '#888', marginBottom: '15px' }}>
+              Accès réservé aux administrateurs et développeurs
+            </p>
+            <button
+              onClick={() => setShowAdminPanel?.(true)}
+              style={{ width: '100%', padding: '15px', background: 'linear-gradient(135deg, #667eea, #764ba2)', border: 'none', color: 'white', borderRadius: '12px', cursor: 'pointer', fontWeight: '700', fontSize: '14px' }}
+            >
+              🔐 Panneau d'administration
+            </button>
+          </div>
         </div>
       )}
     </div>

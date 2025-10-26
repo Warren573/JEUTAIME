@@ -84,6 +84,31 @@ export const journalNews = [
 
 export const enrichedProfiles = [
   {
+    id: 0,
+    name: 'Admin JeuTaime',
+    age: 99,
+    city: 'Paris',
+    avatar: 'https://i.pravatar.cc/300?img=60',
+    photos: [
+      'https://i.pravatar.cc/400?img=60',
+      'https://i.pravatar.cc/400?img=61',
+      'https://i.pravatar.cc/400?img=62'
+    ],
+    interests: 'Développement, design, communauté',
+    job: 'Développeur / Administrateur',
+    compatibility: 100,
+    bio: '👨‍💻 Créateur et administrateur de JeuTaime. Ici pour gérer l\'app, créer de nouveaux jeux et bars, et assurer la modération. N\'hésitez pas à me contacter pour vos suggestions ! 🛠️✨',
+    badges: ['verified', 'premium', 'admin', 'developer'],
+    distance: '0 km',
+    lastActive: 'En ligne',
+    stats: {
+      letters: 0,
+      games: 999,
+      bars: 50
+    },
+    isAdmin: true
+  },
+  {
     id: 1,
     name: 'Sophie',
     age: 28,
@@ -164,5 +189,7 @@ export const profileBadges = {
   'active': { emoji: '🔥', name: 'Actif', color: '#E91E63' },
   'romantic': { emoji: '💕', name: 'Romantique', color: '#FF69B4' },
   'gamer': { emoji: '🎮', name: 'Joueur', color: '#9C27B0' },
-  'writer': { emoji: '✍️', name: 'Écrivain', color: '#2196F3' }
+  'writer': { emoji: '✍️', name: 'Écrivain', color: '#2196F3' },
+  'admin': { emoji: '🛡️', name: 'Administrateur', color: '#667eea' },
+  'developer': { emoji: '💻', name: 'Développeur', color: '#764ba2' }
 };
