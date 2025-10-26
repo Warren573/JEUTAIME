@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AvatarCreator from './AvatarCreator';
 
 export default function ProfileCreation({ email, onComplete }) {
   const [step, setStep] = useState(1);
@@ -9,7 +10,8 @@ export default function ProfileCreation({ email, onComplete }) {
     gender: '',
     city: '',
     zipCode: '',
-    photos: [],
+    avatar: null,
+    avatarConfig: null,
     bio: '',
     job: '',
     interests: '',
@@ -42,8 +44,8 @@ export default function ProfileCreation({ email, onComplete }) {
     }
 
     if (step === 3) {
-      if (profile.photos.length < 1) {
-        setError('Ajoutez au moins 1 photo (vous pourrez en ajouter plus tard)');
+      if (!profile.avatar) {
+        setError('Créez votre avatar avant de continuer');
         return;
       }
     }
@@ -88,20 +90,6 @@ export default function ProfileCreation({ email, onComplete }) {
 
       onComplete(newUser);
     }
-  };
-
-  const handlePhotoAdd = () => {
-    const url = prompt('Entrez l\'URL de votre photo (ou laissez vide pour une photo aléatoire):');
-    const photoUrl = url || `https://i.pravatar.cc/400?img=${Math.floor(Math.random() * 70) + 1}`;
-
-    if (profile.photos.length < 5) {
-      setProfile({ ...profile, photos: [...profile.photos, photoUrl] });
-    }
-  };
-
-  const handlePhotoRemove = (index) => {
-    const newPhotos = profile.photos.filter((_, i) => i !== index);
-    setProfile({ ...profile, photos: newPhotos });
   };
 
   return (
@@ -239,11 +227,11 @@ export default function ProfileCreation({ email, onComplete }) {
             </>
           )}
 
-          {/* Étape 3: Photos */}
+          {/* Étape 3: Avatar */}
           {step === 3 && (
             <>
-              <h2 style={{ fontSize: '28px', fontWeight: '700', margin: '0 0 10px 0', color: '#333' }}>Vos photos</h2>
-              <p style={{ color: '#666', marginBottom: '30px' }}>Ajoutez entre 1 et 5 photos (révélées après 10 lettres)</p>
+              <h2 style={{ fontSize: '28px', fontWeight: '700', margin: '0 0 10px 0', color: '#333' }}>Ton avatar</h2>
+              <p style={{ color: '#666', marginBottom: '20px' }}>Personnalise ton apparence</p>
 
               {error && (
                 <div style={{ background: '#fee', border: '1px solid #fcc', borderRadius: '10px', padding: '12px', marginBottom: '20px', color: '#c33', fontSize: '14px' }}>
@@ -251,32 +239,18 @@ export default function ProfileCreation({ email, onComplete }) {
                 </div>
               )}
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '20px' }}>
-                {profile.photos.map((photo, idx) => (
-                  <div key={idx} style={{ position: 'relative', aspectRatio: '1', borderRadius: '15px', overflow: 'hidden', background: '#f5f5f5' }}>
-                    <img src={photo} alt={`Photo ${idx + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    <button
-                      onClick={() => handlePhotoRemove(idx)}
-                      style={{ position: 'absolute', top: '5px', right: '5px', width: '24px', height: '24px', borderRadius: '50%', background: '#dc3545', border: 'none', color: 'white', fontSize: '12px', cursor: 'pointer' }}
-                    >
-                      ✕
-                    </button>
-                  </div>
-                ))}
-                {profile.photos.length < 5 && (
-                  <button
-                    onClick={handlePhotoAdd}
-                    style={{ aspectRatio: '1', border: '2px dashed #ddd', borderRadius: '15px', background: '#f5f5f5', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#666' }}
-                  >
-                    <span style={{ fontSize: '32px', marginBottom: '5px' }}>➕</span>
-                    <span style={{ fontSize: '12px' }}>Ajouter</span>
-                  </button>
-                )}
-              </div>
+              <AvatarCreator
+                onSave={(avatarUrl, avatarConfig) => {
+                  setProfile({ ...profile, avatar: avatarUrl, avatarConfig });
+                  setError('');
+                }}
+              />
 
-              <div style={{ background: '#e3f2fd', border: '1px solid #90caf9', borderRadius: '10px', padding: '12px', fontSize: '13px', color: '#1976d2' }}>
-                💡 Vos photos resteront floues jusqu'à ce que vous échangiez 10 lettres avec quelqu'un
-              </div>
+              {profile.avatar && (
+                <div style={{ marginTop: '15px', background: '#e8f5e9', border: '1px solid #81c784', borderRadius: '10px', padding: '12px', fontSize: '13px', color: '#2e7d32', textAlign: 'center' }}>
+                  ✓ Avatar créé ! Tu peux continuer ou le modifier avant de passer à l'étape suivante.
+                </div>
+              )}
             </>
           )}
 
