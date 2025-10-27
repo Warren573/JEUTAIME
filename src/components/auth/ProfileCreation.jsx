@@ -28,7 +28,12 @@ export default function ProfileCreation({ email, onComplete }) {
     loveXP: 0,
     level: 1,
     title: 'Novice du Cœur',
-    items: []
+    items: [],
+    // Points and ranking system
+    points: 0,
+    coins: 100,
+    premium: false,
+    badges: []
   });
   const [error, setError] = useState('');
 

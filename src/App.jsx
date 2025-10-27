@@ -8,6 +8,7 @@ import LettersScreen from './components/screens/LettersScreen';
 import JournalScreen from './components/screens/JournalScreen';
 import SettingsScreen from './components/screens/SettingsScreen';
 import BarDetailScreen from './components/screens/BarDetailScreen';
+import RankingScreen from './components/screens/RankingScreen';
 
 // Games
 import HeroLoveQuest from './components/games/HeroLoveQuest';
@@ -26,6 +27,9 @@ import AdminLayout from './components/admin/AdminLayout';
 // Auth
 import AuthScreen from './components/auth/AuthScreen';
 import ProfileCreation from './components/auth/ProfileCreation';
+
+// Points system
+import { awardDailyLogin } from './utils/pointsSystem';
 
 // Helper function for HeroLove Quest
 function rnd(min=1,max=6){ return Math.floor(Math.random()*(max-min+1))+min; }
@@ -58,6 +62,17 @@ function MainApp() {
       setCurrentUser(user);
       setUserCoins(user.coins || 100);
       setPremiumActive(user.premium || false);
+
+      // Award daily login points
+      const awarded = awardDailyLogin(user.email);
+      if (awarded) {
+        console.log('🎁 Bonus quotidien reçu ! +10 points');
+        // Reload user to get updated points
+        const updatedUser = JSON.parse(localStorage.getItem('jeutaime_current_user'));
+        if (updatedUser) {
+          setCurrentUser(updatedUser);
+        }
+      }
     }
   }, []);
 
@@ -66,6 +81,18 @@ function MainApp() {
     setUserCoins(user.coins || 100);
     setPremiumActive(user.premium || false);
     localStorage.setItem('jeutaime_current_user', JSON.stringify(user));
+
+    // Award daily login points
+    const awarded = awardDailyLogin(user.email);
+    if (awarded) {
+      console.log('🎁 Bonus quotidien reçu ! +10 points');
+      // Reload user to get updated points
+      const updatedUser = JSON.parse(localStorage.getItem('jeutaime_current_user'));
+      if (updatedUser) {
+        setCurrentUser(updatedUser);
+        setUserCoins(updatedUser.coins || 100);
+      }
+    }
   };
 
   const handleSignup = (email, password) => {
@@ -131,6 +158,7 @@ function MainApp() {
   const navItems = [
     { icon: '🏠', label: 'Accueil', id: 'home' },
     { icon: '👤', label: 'Profils', id: 'profiles' },
+    { icon: '🏆', label: 'Classement', id: 'ranking' },
     { icon: '👥', label: 'Social', id: 'social' },
     { icon: '💌', label: 'Lettres', id: 'letters' },
     { icon: '📰', label: 'Journal', id: 'journal' },
@@ -201,6 +229,7 @@ function MainApp() {
       <div style={{ padding: '25px 20px' }}>
         {screen === 'home' && !gameScreen && !selectedBar && <HomeScreen {...appState} />}
         {screen === 'profiles' && !gameScreen && !selectedBar && <ProfilesScreen {...appState} />}
+        {screen === 'ranking' && !gameScreen && !selectedBar && <RankingScreen currentUser={currentUser} />}
         {screen === 'social' && !gameScreen && !selectedBar && <SocialScreen {...appState} />}
         {screen === 'letters' && !gameScreen && !selectedBar && <LettersScreen {...appState} />}
         {screen === 'journal' && !gameScreen && !selectedBar && <JournalScreen {...appState} />}

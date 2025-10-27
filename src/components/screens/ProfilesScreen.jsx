@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { enrichedProfiles, profileBadges } from '../../data/appData';
 import QuestionGame from '../matching/QuestionGame';
+import { awardPoints, checkAndAwardBadge } from '../../utils/pointsSystem';
 
 export default function ProfilesScreen({ currentProfile, setCurrentProfile, adminMode, isAdminAuthenticated, currentUser }) {
   const [viewMode, setViewMode] = useState('discover');
@@ -31,6 +32,21 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
     // Add smile
     if (!smiles[userId].sentTo.includes(targetId)) {
       smiles[userId].sentTo.push(targetId);
+
+      // Award points for sending smile
+      if (currentUser) {
+        awardPoints(currentUser.email, 'SMILE_SENT');
+
+        // Check if this is the first smile (badge)
+        if (smiles[userId].sentTo.length === 1) {
+          checkAndAwardBadge(currentUser.email, 'first_smile');
+        }
+
+        // Check if popular badge (received 10 smiles)
+        if (smiles[userId].receivedFrom?.length >= 10) {
+          checkAndAwardBadge(currentUser.email, 'popular');
+        }
+      }
     }
 
     saveSmiles(smiles);
@@ -118,6 +134,16 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
 
     matches[userId].push(matchData);
     localStorage.setItem('jeutaime_matches', JSON.stringify(matches));
+
+    // Award points for successful match
+    if (currentUser) {
+      awardPoints(currentUser.email, 'MATCH_SUCCESS');
+
+      // Check if this is the first match (badge)
+      if (matches[userId].length === 1) {
+        checkAndAwardBadge(currentUser.email, 'first_match');
+      }
+    }
 
     // Close game and move to next profile
     setShowQuestionGame(false);
