@@ -54,6 +54,69 @@ export default function AuthScreen({ onLogin, onSignup }) {
     onSignup(signupData.email, signupData.password);
   };
 
+  const handleTestProfile = () => {
+    // Create a complete test profile
+    const testProfile = {
+      id: Date.now(),
+      email: 'test@jeutaime.com',
+      password: 'test123',
+      pseudo: 'TestUser',
+      birthdate: '1995-05-15',
+      age: 29,
+      gender: 'F',
+      city: 'Paris',
+      zipCode: '75001',
+      avatar: null,
+      avatarConfig: null,
+      bio: 'Profil de test pour découvrir JeuTaime ! 🎮 J\'adore les jeux, les rencontres authentiques et les conversations intéressantes.',
+      job: 'Développeur·se',
+      interests: 'Jeux vidéo, cinéma, voyages, cuisine',
+      lookingFor: 'both',
+      interestedIn: 'all',
+      children: 'discuss',
+      physicalDescription: 'mignon',
+      question1: {
+        text: 'Aimes-tu le fromage ?',
+        answerA: 'Oui, j\'adore',
+        answerB: 'Non, je déteste',
+        answerC: 'Seulement le camembert',
+        correctAnswer: 'A'
+      },
+      question2: {
+        text: 'Préfères-tu la mer ou la montagne ?',
+        answerA: 'La mer',
+        answerB: 'La montagne',
+        answerC: 'Les deux !',
+        correctAnswer: 'C'
+      },
+      question3: {
+        text: 'Pizza ou sushi ?',
+        answerA: 'Pizza !',
+        answerB: 'Sushi !',
+        answerC: 'J\'aime les deux',
+        correctAnswer: 'A'
+      },
+      loveXP: 0,
+      level: 1,
+      title: 'Novice du Cœur',
+      items: [],
+      coins: 100,
+      premium: false
+    };
+
+    // Save to localStorage
+    const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+
+    // Remove existing test profile if any
+    const filteredUsers = users.filter(u => u.email !== 'test@jeutaime.com');
+    filteredUsers.push(testProfile);
+
+    localStorage.setItem('jeutaime_users', JSON.stringify(filteredUsers));
+
+    // Login with test profile
+    onLogin(testProfile);
+  };
+
   if (mode === 'welcome') {
     return (
       <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
@@ -99,9 +162,15 @@ export default function AuthScreen({ onLogin, onSignup }) {
           </button>
           <button
             onClick={() => setMode('login')}
-            style={{ width: '100%', padding: '18px', background: 'rgba(255,255,255,0.2)', border: '2px solid white', borderRadius: '15px', color: 'white', fontSize: '18px', fontWeight: '700', cursor: 'pointer' }}
+            style={{ width: '100%', padding: '18px', background: 'rgba(255,255,255,0.2)', border: '2px solid white', borderRadius: '15px', color: 'white', fontSize: '18px', fontWeight: '700', cursor: 'pointer', marginBottom: '15px' }}
           >
             Se connecter
+          </button>
+          <button
+            onClick={handleTestProfile}
+            style={{ width: '100%', padding: '18px', background: 'rgba(255,255,255,0.15)', border: '2px solid rgba(255,255,255,0.5)', borderRadius: '15px', color: 'white', fontSize: '16px', fontWeight: '600', cursor: 'pointer' }}
+          >
+            🎮 Profil de Test
           </button>
         </div>
       </div>
