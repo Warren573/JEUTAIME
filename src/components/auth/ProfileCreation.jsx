@@ -5,7 +5,8 @@ export default function ProfileCreation({ email, onComplete }) {
   const [step, setStep] = useState(1);
   const [profile, setProfile] = useState({
     email,
-    name: '',
+    pseudo: '',
+    birthdate: '',
     age: '',
     gender: '',
     city: '',
@@ -32,24 +33,38 @@ export default function ProfileCreation({ email, onComplete }) {
 
   const totalSteps = 7;
 
+  const calculateAge = (birthdate) => {
+    const today = new Date();
+    const birth = new Date(birthdate);
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
   const handleNext = () => {
     setError('');
 
     // Validation par étape
     if (step === 1) {
-      if (!profile.name || !profile.age || !profile.gender) {
+      if (!profile.pseudo || !profile.birthdate || !profile.gender || !profile.zipCode) {
         setError('Veuillez remplir tous les champs');
         return;
       }
-      if (profile.age < 18 || profile.age > 99) {
+      const age = calculateAge(profile.birthdate);
+      if (age < 18 || age > 99) {
         setError('Vous devez avoir entre 18 et 99 ans');
         return;
       }
+      // Calculate and save age
+      setProfile({ ...profile, age });
     }
 
     if (step === 2) {
-      if (!profile.city || !profile.zipCode) {
-        setError('Veuillez remplir tous les champs');
+      if (!profile.city) {
+        setError('Veuillez indiquer votre ville');
         return;
       }
     }
@@ -146,28 +161,40 @@ export default function ProfileCreation({ email, onComplete }) {
 
               <div style={{ marginBottom: '20px' }}>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '8px', color: '#333' }}>
-                  Prénom
+                  Pseudo
                 </label>
                 <input
                   type="text"
-                  value={profile.name}
-                  onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-                  placeholder="Sophie"
+                  value={profile.pseudo}
+                  onChange={(e) => setProfile({ ...profile, pseudo: e.target.value })}
+                  placeholder="Sophie92"
                   style={{ width: '100%', padding: '14px', border: '2px solid #ddd', borderRadius: '10px', fontSize: '16px' }}
                 />
               </div>
 
               <div style={{ marginBottom: '20px' }}>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '8px', color: '#333' }}>
-                  Âge
+                  Date de naissance
                 </label>
                 <input
-                  type="number"
-                  value={profile.age}
-                  onChange={(e) => setProfile({ ...profile, age: e.target.value })}
-                  placeholder="28"
-                  min="18"
-                  max="99"
+                  type="date"
+                  value={profile.birthdate}
+                  onChange={(e) => setProfile({ ...profile, birthdate: e.target.value })}
+                  max={new Date().toISOString().split('T')[0]}
+                  style={{ width: '100%', padding: '14px', border: '2px solid #ddd', borderRadius: '10px', fontSize: '16px' }}
+                />
+              </div>
+
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '8px', color: '#333' }}>
+                  Code postal
+                </label>
+                <input
+                  type="text"
+                  value={profile.zipCode}
+                  onChange={(e) => setProfile({ ...profile, zipCode: e.target.value })}
+                  placeholder="75001"
+                  maxLength="5"
                   style={{ width: '100%', padding: '14px', border: '2px solid #ddd', borderRadius: '10px', fontSize: '16px' }}
                 />
               </div>
@@ -224,7 +251,7 @@ export default function ProfileCreation({ email, onComplete }) {
                 </div>
               )}
 
-              <div style={{ marginBottom: '20px' }}>
+              <div style={{ marginBottom: '30px' }}>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '8px', color: '#333' }}>
                   Ville
                 </label>
@@ -233,19 +260,6 @@ export default function ProfileCreation({ email, onComplete }) {
                   value={profile.city}
                   onChange={(e) => setProfile({ ...profile, city: e.target.value })}
                   placeholder="Paris"
-                  style={{ width: '100%', padding: '14px', border: '2px solid #ddd', borderRadius: '10px', fontSize: '16px' }}
-                />
-              </div>
-
-              <div style={{ marginBottom: '30px' }}>
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '8px', color: '#333' }}>
-                  Code postal
-                </label>
-                <input
-                  type="text"
-                  value={profile.zipCode}
-                  onChange={(e) => setProfile({ ...profile, zipCode: e.target.value })}
-                  placeholder="75001"
                   style={{ width: '100%', padding: '14px', border: '2px solid #ddd', borderRadius: '10px', fontSize: '16px' }}
                 />
               </div>
@@ -265,6 +279,7 @@ export default function ProfileCreation({ email, onComplete }) {
               )}
 
               <AvatarCreator
+                gender={profile.gender}
                 onSave={(avatarUrl, avatarConfig) => {
                   setProfile({ ...profile, avatar: avatarUrl, avatarConfig });
                   setError('');
