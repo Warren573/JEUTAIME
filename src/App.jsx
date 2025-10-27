@@ -18,6 +18,7 @@ import MorpionGame from './components/games/MorpionGame';
 import CardGame from './components/games/CardGame';
 import StoryTimeGame from './components/games/StoryTimeGame';
 import EmpiresEtheriaGame from './components/games/EmpiresEtheriaGame';
+import EmpiresEtheria3D from './components/games/empires3d/EmpiresEtheria3D';
 
 // Admin
 import { AdminProvider, useAdmin } from './contexts/AdminContext';
@@ -241,6 +242,7 @@ function MainApp() {
         {gameScreen === 'cards' && <CardGame {...appState} />}
         {gameScreen === 'storytime' && <StoryTimeGame {...appState} />}
         {gameScreen === 'empires' && <EmpiresEtheriaGame {...appState} />}
+        {gameScreen === 'empires3d' && <EmpiresEtheria3D {...appState} />}
 
         {selectedBar && <BarDetailScreen {...appState} />}
       </div>
