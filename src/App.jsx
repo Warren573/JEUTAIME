@@ -8,7 +8,6 @@ import LettersScreen from './components/screens/LettersScreen';
 import JournalScreen from './components/screens/JournalScreen';
 import SettingsScreen from './components/screens/SettingsScreen';
 import BarDetailScreen from './components/screens/BarDetailScreen';
-import RankingScreen from './components/screens/RankingScreen';
 
 // Games
 import HeroLoveQuest from './components/games/HeroLoveQuest';
@@ -158,7 +157,6 @@ function MainApp() {
   const navItems = [
     { icon: '🏠', label: 'Accueil', id: 'home' },
     { icon: '👤', label: 'Profils', id: 'profiles' },
-    { icon: '🏆', label: 'Classement', id: 'ranking' },
     { icon: '👥', label: 'Social', id: 'social' },
     { icon: '💌', label: 'Lettres', id: 'letters' },
     { icon: '📰', label: 'Journal', id: 'journal' },
@@ -227,10 +225,9 @@ function MainApp() {
       <Header userCoins={userCoins} adminMode={adminMode} isAdminAuthenticated={isAdminAuthenticated} />
 
       <div style={{ padding: '25px 20px' }}>
-        {screen === 'home' && !gameScreen && !selectedBar && <HomeScreen {...appState} />}
+        {screen === 'home' && !gameScreen && !selectedBar && <HomeScreen {...appState} currentUser={currentUser} />}
         {screen === 'profiles' && !gameScreen && !selectedBar && <ProfilesScreen {...appState} />}
-        {screen === 'ranking' && !gameScreen && !selectedBar && <RankingScreen currentUser={currentUser} />}
-        {screen === 'social' && !gameScreen && !selectedBar && <SocialScreen {...appState} />}
+        {screen === 'social' && !gameScreen && !selectedBar && <SocialScreen {...appState} currentUser={currentUser} />}
         {screen === 'letters' && !gameScreen && !selectedBar && <LettersScreen currentUser={currentUser} />}
         {screen === 'journal' && !gameScreen && !selectedBar && <JournalScreen {...appState} />}
         {screen === 'settings' && !gameScreen && !selectedBar && <SettingsScreen {...appState} />}

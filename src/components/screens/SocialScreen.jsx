@@ -1,7 +1,8 @@
 import React from 'react';
 import { bars } from '../../data/appData';
+import RankingScreen from './RankingScreen';
 
-export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, setSelectedBar, adminMode, isAdminAuthenticated }) {
+export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, setSelectedBar, adminMode, isAdminAuthenticated, currentUser }) {
   const handleAdminEditBar = (bar, e) => {
     e.stopPropagation();
     alert(`Éditer bar: ${bar.name}`);
@@ -31,10 +32,26 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
           </button>
         )}
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '25px' }}>
-        {['bars', 'games', 'adoption', 'contest'].map((tab) => (
-          <button key={tab} onClick={() => setSocialTab(tab)} style={{ padding: '12px 20px', background: socialTab === tab ? 'linear-gradient(135deg, #E91E63, #C2185B)' : '#1a1a1a', border: 'none', color: 'white', borderRadius: '15px', cursor: 'pointer', fontWeight: '600', fontSize: '15px', whiteSpace: 'nowrap' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px', marginBottom: '25px' }}>
+        {['bars', 'classement', 'games', 'adoption', 'contest'].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setSocialTab(tab)}
+            style={{
+              padding: '12px 16px',
+              background: socialTab === tab ? 'linear-gradient(135deg, #667eea, #764ba2)' : '#1a1a1a',
+              border: 'none',
+              color: 'white',
+              borderRadius: '15px',
+              cursor: 'pointer',
+              fontWeight: '600',
+              fontSize: '14px',
+              whiteSpace: 'nowrap',
+              gridColumn: tab === 'contest' ? '1 / -1' : 'auto' // Faire que Contest prend toute la largeur
+            }}
+          >
             {tab === 'bars' && '🍸 Bars'}
+            {tab === 'classement' && '🏆 Classement'}
             {tab === 'games' && '🎮 Jeux'}
             {tab === 'adoption' && '💝 Adoption'}
             {tab === 'contest' && '🏆 Concours'}
@@ -82,6 +99,10 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
             </div>
           ))}
         </div>
+      )}
+
+      {socialTab === 'classement' && (
+        <RankingScreen currentUser={currentUser} />
       )}
 
       {socialTab === 'games' && (
