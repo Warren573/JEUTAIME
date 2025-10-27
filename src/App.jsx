@@ -18,7 +18,7 @@ import MorpionGame from './components/games/MorpionGame';
 import CardGame from './components/games/CardGame';
 import StoryTimeGame from './components/games/StoryTimeGame';
 import EmpiresEtheriaGame from './components/games/EmpiresEtheriaGame';
-import EmpiresEtheria3D from './components/games/empires3d/EmpiresEtheria3D';
+import EmpiresEtheria3D from './components/games/empires3d/EmpiresEtheria3DWrapper';
 
 // Admin
 import { AdminProvider, useAdmin } from './contexts/AdminContext';
