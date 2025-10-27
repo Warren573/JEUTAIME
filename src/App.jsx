@@ -231,7 +231,7 @@ function MainApp() {
         {screen === 'profiles' && !gameScreen && !selectedBar && <ProfilesScreen {...appState} />}
         {screen === 'ranking' && !gameScreen && !selectedBar && <RankingScreen currentUser={currentUser} />}
         {screen === 'social' && !gameScreen && !selectedBar && <SocialScreen {...appState} />}
-        {screen === 'letters' && !gameScreen && !selectedBar && <LettersScreen {...appState} />}
+        {screen === 'letters' && !gameScreen && !selectedBar && <LettersScreen currentUser={currentUser} />}
         {screen === 'journal' && !gameScreen && !selectedBar && <JournalScreen {...appState} />}
         {screen === 'settings' && !gameScreen && !selectedBar && <SettingsScreen {...appState} />}
 
