@@ -33,19 +33,50 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
       smiles[userId].sentTo.push(targetId);
     }
 
-    // Check if mutual smile
-    const targetSmiles = smiles[targetId] || { sentTo: [], receivedFrom: [], grimaces: [] };
-    if (targetSmiles.sentTo.includes(userId)) {
-      // MUTUAL SMILE! Show question game
-      setMutualSmileUser(currentProfileData);
+    saveSmiles(smiles);
+
+    // FOR DEMO: Since enrichedProfiles are not real users, automatically trigger mutual smile
+    // In a real app, this would wait for the other person to smile back
+
+    // Check if target has questions defined (from real users in localStorage)
+    const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+    const realTargetUser = users.find(u => u.id === targetId);
+
+    if (realTargetUser && realTargetUser.question1?.text) {
+      // Real user with questions - show question game
+      setMutualSmileUser(realTargetUser);
       setShowQuestionGame(true);
     } else {
-      alert('😊 Sourire envoyé ! Attends que l\'autre personne te sourie aussi.');
-      // Move to next profile
-      setCurrentProfile((currentProfile + 1) % enrichedProfiles.length);
-    }
+      // Demo profile - simulate mutual smile and show game with demo profile
+      // Add dummy questions for demo profiles if they don't have them
+      const demoUser = {
+        ...currentProfileData,
+        question1: {
+          text: "Aimes-tu le fromage ?",
+          answerA: "Oui, j'adore",
+          answerB: "Non, je déteste",
+          answerC: "Seulement le camembert",
+          correctAnswer: "A"
+        },
+        question2: {
+          text: "Préfères-tu la mer ou la montagne ?",
+          answerA: "La mer",
+          answerB: "La montagne",
+          answerC: "Les deux !",
+          correctAnswer: "C"
+        },
+        question3: {
+          text: "Pizza ou sushi ?",
+          answerA: "Pizza !",
+          answerB: "Sushi !",
+          answerC: "J'aime les deux",
+          correctAnswer: "A"
+        }
+      };
 
-    saveSmiles(smiles);
+      setMutualSmileUser(demoUser);
+      setShowQuestionGame(true);
+    }
   };
 
   const handleGrimace = () => {
