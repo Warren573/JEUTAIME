@@ -40,6 +40,12 @@ export const GAME_REWARDS = {
     coinsPerMonster: 10,
     coinsPerLevel: 50,
     victoryBonus: 200
+  },
+  EMPIRES_ETHERIA: {
+    name: 'Empires d\'Étheria',
+    coinsPerMana: 2,
+    victoryBonus: 100,
+    legendaryBonus: 50 // Bonus par ville légendaire contrôlée
   }
 };
 
@@ -90,6 +96,14 @@ export const GAME_BADGES = {
     emoji: '🎮',
     description: 'Jouer à tous les jeux au moins une fois',
     requirement: { allGamesPlayed: true },
+    points: 150
+  },
+  EMPIRE_EMPEROR: {
+    id: 'empire_emperor',
+    name: 'Empereur d\'Étheria',
+    emoji: '🏰',
+    description: 'Gagner 5 parties d\'Empires d\'Étheria',
+    requirement: { game: 'EMPIRES_ETHERIA', victories: 5 },
     points: 150
   }
 };
@@ -196,6 +210,22 @@ export function calculateGameReward(gameType, gameResult) {
         totalCoins += gameConfig.victoryBonus;
         totalPoints += 100;
         bonusMessages.push('🏆 Quête terminée : +200 pièces !');
+      }
+
+      break;
+    }
+
+    case 'EMPIRES_ETHERIA': {
+      const { victory, mana } = gameResult;
+
+      // 2 pièces par mana
+      totalCoins = Math.floor(mana * gameConfig.coinsPerMana);
+      totalPoints = Math.floor(mana / 2);
+
+      if (victory) {
+        totalCoins += gameConfig.victoryBonus;
+        totalPoints += 50;
+        bonusMessages.push('🏆 Victoire Impériale : +100 pièces !');
       }
 
       break;

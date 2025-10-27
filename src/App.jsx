@@ -17,6 +17,7 @@ import BrickBreakerGame from './components/games/BrickBreakerGame';
 import MorpionGame from './components/games/MorpionGame';
 import CardGame from './components/games/CardGame';
 import StoryTimeGame from './components/games/StoryTimeGame';
+import EmpiresEtheriaGame from './components/games/EmpiresEtheriaGame';
 
 // Admin
 import { AdminProvider, useAdmin } from './contexts/AdminContext';
@@ -239,6 +240,7 @@ function MainApp() {
         {gameScreen === 'morpion' && <MorpionGame {...appState} />}
         {gameScreen === 'cards' && <CardGame {...appState} />}
         {gameScreen === 'storytime' && <StoryTimeGame {...appState} />}
+        {gameScreen === 'empires' && <EmpiresEtheriaGame {...appState} />}
 
         {selectedBar && <BarDetailScreen {...appState} />}
       </div>
