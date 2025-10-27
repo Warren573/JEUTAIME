@@ -1,11 +1,105 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { enrichedProfiles, profileBadges } from '../../data/appData';
+import QuestionGame from '../matching/QuestionGame';
 
-export default function ProfilesScreen({ currentProfile, setCurrentProfile, adminMode, isAdminAuthenticated }) {
+export default function ProfilesScreen({ currentProfile, setCurrentProfile, adminMode, isAdminAuthenticated, currentUser }) {
   const [viewMode, setViewMode] = useState('discover');
   const [selectedPhoto, setSelectedPhoto] = useState(0);
+  const [showQuestionGame, setShowQuestionGame] = useState(false);
+  const [mutualSmileUser, setMutualSmileUser] = useState(null);
 
   const currentProfileData = enrichedProfiles[currentProfile];
+
+  // Load smiles data from localStorage
+  const getSmiles = () => {
+    return JSON.parse(localStorage.getItem('jeutaime_smiles') || '{}');
+  };
+
+  const saveSmiles = (smiles) => {
+    localStorage.setItem('jeutaime_smiles', JSON.stringify(smiles));
+  };
+
+  const handleSmile = () => {
+    const smiles = getSmiles();
+    const userId = currentUser?.email || 'guest';
+    const targetId = currentProfileData.id;
+
+    if (!smiles[userId]) {
+      smiles[userId] = { sentTo: [], receivedFrom: [], grimaces: [] };
+    }
+
+    // Add smile
+    if (!smiles[userId].sentTo.includes(targetId)) {
+      smiles[userId].sentTo.push(targetId);
+    }
+
+    // Check if mutual smile
+    const targetSmiles = smiles[targetId] || { sentTo: [], receivedFrom: [], grimaces: [] };
+    if (targetSmiles.sentTo.includes(userId)) {
+      // MUTUAL SMILE! Show question game
+      setMutualSmileUser(currentProfileData);
+      setShowQuestionGame(true);
+    } else {
+      alert('😊 Sourire envoyé ! Attends que l\'autre personne te sourie aussi.');
+      // Move to next profile
+      setCurrentProfile((currentProfile + 1) % enrichedProfiles.length);
+    }
+
+    saveSmiles(smiles);
+  };
+
+  const handleGrimace = () => {
+    const smiles = getSmiles();
+    const userId = currentUser?.email || 'guest';
+    const targetId = currentProfileData.id;
+
+    if (!smiles[userId]) {
+      smiles[userId] = { sentTo: [], receivedFrom: [], grimaces: [] };
+    }
+
+    // Add grimace
+    if (!smiles[userId].grimaces.includes(targetId)) {
+      smiles[userId].grimaces.push(targetId);
+    }
+
+    saveSmiles(smiles);
+
+    // Move to next profile
+    setCurrentProfile((currentProfile + 1) % enrichedProfiles.length);
+  };
+
+  const handleMatchSuccess = (matchedUser, userScore, otherScore) => {
+    // Save match to localStorage
+    const matches = JSON.parse(localStorage.getItem('jeutaime_matches') || '{}');
+    const userId = currentUser?.email || 'guest';
+
+    if (!matches[userId]) {
+      matches[userId] = [];
+    }
+
+    const matchData = {
+      userId: matchedUser.id,
+      userName: matchedUser.name,
+      userScore: userScore,
+      otherScore: otherScore,
+      date: new Date().toISOString()
+    };
+
+    matches[userId].push(matchData);
+    localStorage.setItem('jeutaime_matches', JSON.stringify(matches));
+
+    // Close game and move to next profile
+    setShowQuestionGame(false);
+    setMutualSmileUser(null);
+    setCurrentProfile((currentProfile + 1) % enrichedProfiles.length);
+  };
+
+  const handleMatchFail = () => {
+    // Close game and move to next profile
+    setShowQuestionGame(false);
+    setMutualSmileUser(null);
+    setCurrentProfile((currentProfile + 1) % enrichedProfiles.length);
+  };
 
   const handleAdminEditProfile = () => {
     alert(`Éditer profil: ${currentProfileData.name}`);
@@ -126,17 +220,52 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
             </div>
           </div>
 
-          {/* Actions */}
-          <div style={{ display: 'flex', gap: '12px' }}>
-            <button onClick={() => setCurrentProfile((currentProfile + 1) % enrichedProfiles.length)} style={{ flex: 1, padding: '18px', background: '#333', border: 'none', color: 'white', borderRadius: '50px', cursor: 'pointer', fontSize: '28px' }}>
-              ❌
+          {/* Actions - Sourire / Grimace */}
+          <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
+            <button
+              onClick={handleGrimace}
+              style={{
+                flex: 1,
+                padding: '20px',
+                background: 'linear-gradient(135deg, #FF6B6B, #C92A2A)',
+                border: 'none',
+                color: 'white',
+                borderRadius: '50px',
+                cursor: 'pointer',
+                fontSize: '36px',
+                boxShadow: '0 4px 15px rgba(255, 107, 107, 0.3)',
+                transition: 'transform 0.2s'
+              }}
+              onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
+              onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            >
+              😝
             </button>
-            <button onClick={() => alert('⭐ Super like envoyé!')} style={{ padding: '18px 20px', background: 'linear-gradient(135deg, #2196F3, #1976D2)', border: 'none', color: 'white', borderRadius: '50px', cursor: 'pointer', fontSize: '28px' }}>
-              ⭐
+            <button
+              onClick={handleSmile}
+              style={{
+                flex: 1,
+                padding: '20px',
+                background: 'linear-gradient(135deg, #51CF66, #37B24D)',
+                border: 'none',
+                color: 'white',
+                borderRadius: '50px',
+                cursor: 'pointer',
+                fontSize: '36px',
+                boxShadow: '0 4px 15px rgba(81, 207, 102, 0.3)',
+                transition: 'transform 0.2s'
+              }}
+              onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
+              onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            >
+              😊
             </button>
-            <button onClick={() => alert('💕 Like envoyé!')} style={{ flex: 1, padding: '18px', background: 'linear-gradient(135deg, #E91E63, #C2185B)', border: 'none', color: 'white', borderRadius: '50px', cursor: 'pointer', fontSize: '28px' }}>
-              💕
-            </button>
+          </div>
+
+          {/* Legend */}
+          <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: '12px', fontSize: '13px', color: '#888' }}>
+            <div>😝 = Grimace (non)</div>
+            <div>😊 = Sourire (oui)</div>
           </div>
 
           {/* Admin Actions */}
@@ -176,6 +305,16 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
           )}
         </div>
       </div>
+
+      {/* Question Game Modal */}
+      {showQuestionGame && mutualSmileUser && (
+        <QuestionGame
+          currentUser={currentUser}
+          matchedUser={mutualSmileUser}
+          onMatchSuccess={handleMatchSuccess}
+          onMatchFail={handleMatchFail}
+        />
+      )}
     </div>
   );
 }
