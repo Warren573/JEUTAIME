@@ -5,7 +5,8 @@ export default function ProfileCreation({ email, onComplete }) {
   const [step, setStep] = useState(1);
   const [profile, setProfile] = useState({
     email,
-    name: '',
+    pseudo: '',
+    birthdate: '',
     age: '',
     gender: '',
     city: '',
@@ -19,9 +20,10 @@ export default function ProfileCreation({ email, onComplete }) {
     interestedIn: 'all', // men, women, all, other
     children: 'discuss', // yes, no, later, discuss
     physicalDescription: '', // funny description
-    question1: '',
-    question2: '',
-    question3: '',
+    // User creates 3 questions with answers
+    question1: { text: '', answerA: '', answerB: '', answerC: '', correctAnswer: '' },
+    question2: { text: '', answerA: '', answerB: '', answerC: '', correctAnswer: '' },
+    question3: { text: '', answerA: '', answerB: '', answerC: '', correctAnswer: '' },
     // Progression system
     loveXP: 0,
     level: 1,
@@ -32,24 +34,38 @@ export default function ProfileCreation({ email, onComplete }) {
 
   const totalSteps = 7;
 
+  const calculateAge = (birthdate) => {
+    const today = new Date();
+    const birth = new Date(birthdate);
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
   const handleNext = () => {
     setError('');
 
     // Validation par étape
     if (step === 1) {
-      if (!profile.name || !profile.age || !profile.gender) {
+      if (!profile.pseudo || !profile.birthdate || !profile.gender || !profile.zipCode) {
         setError('Veuillez remplir tous les champs');
         return;
       }
-      if (profile.age < 18 || profile.age > 99) {
+      const age = calculateAge(profile.birthdate);
+      if (age < 18 || age > 99) {
         setError('Vous devez avoir entre 18 et 99 ans');
         return;
       }
+      // Calculate and save age
+      setProfile({ ...profile, age });
     }
 
     if (step === 2) {
-      if (!profile.city || !profile.zipCode) {
-        setError('Veuillez remplir tous les champs');
+      if (!profile.city) {
+        setError('Veuillez indiquer votre ville');
         return;
       }
     }
@@ -83,8 +99,21 @@ export default function ProfileCreation({ email, onComplete }) {
     }
 
     if (step === 7) {
-      if (!profile.question1 || !profile.question2 || !profile.question3) {
-        setError('Réponds aux 3 questions pour continuer');
+      // Validate all 3 questions are complete
+      const q1 = profile.question1;
+      const q2 = profile.question2;
+      const q3 = profile.question3;
+
+      if (!q1.text || !q1.answerA || !q1.answerB || !q1.answerC || !q1.correctAnswer) {
+        setError('Complète la question 1 avec le libellé, les 3 réponses et la bonne réponse');
+        return;
+      }
+      if (!q2.text || !q2.answerA || !q2.answerB || !q2.answerC || !q2.correctAnswer) {
+        setError('Complète la question 2 avec le libellé, les 3 réponses et la bonne réponse');
+        return;
+      }
+      if (!q3.text || !q3.answerA || !q3.answerB || !q3.answerC || !q3.correctAnswer) {
+        setError('Complète la question 3 avec le libellé, les 3 réponses et la bonne réponse');
         return;
       }
     }
@@ -146,28 +175,40 @@ export default function ProfileCreation({ email, onComplete }) {
 
               <div style={{ marginBottom: '20px' }}>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '8px', color: '#333' }}>
-                  Prénom
+                  Pseudo
                 </label>
                 <input
                   type="text"
-                  value={profile.name}
-                  onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-                  placeholder="Sophie"
+                  value={profile.pseudo}
+                  onChange={(e) => setProfile({ ...profile, pseudo: e.target.value })}
+                  placeholder="Sophie92"
                   style={{ width: '100%', padding: '14px', border: '2px solid #ddd', borderRadius: '10px', fontSize: '16px' }}
                 />
               </div>
 
               <div style={{ marginBottom: '20px' }}>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '8px', color: '#333' }}>
-                  Âge
+                  Date de naissance
                 </label>
                 <input
-                  type="number"
-                  value={profile.age}
-                  onChange={(e) => setProfile({ ...profile, age: e.target.value })}
-                  placeholder="28"
-                  min="18"
-                  max="99"
+                  type="date"
+                  value={profile.birthdate}
+                  onChange={(e) => setProfile({ ...profile, birthdate: e.target.value })}
+                  max={new Date().toISOString().split('T')[0]}
+                  style={{ width: '100%', padding: '14px', border: '2px solid #ddd', borderRadius: '10px', fontSize: '16px' }}
+                />
+              </div>
+
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '8px', color: '#333' }}>
+                  Code postal
+                </label>
+                <input
+                  type="text"
+                  value={profile.zipCode}
+                  onChange={(e) => setProfile({ ...profile, zipCode: e.target.value })}
+                  placeholder="75001"
+                  maxLength="5"
                   style={{ width: '100%', padding: '14px', border: '2px solid #ddd', borderRadius: '10px', fontSize: '16px' }}
                 />
               </div>
@@ -224,7 +265,7 @@ export default function ProfileCreation({ email, onComplete }) {
                 </div>
               )}
 
-              <div style={{ marginBottom: '20px' }}>
+              <div style={{ marginBottom: '30px' }}>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '8px', color: '#333' }}>
                   Ville
                 </label>
@@ -233,19 +274,6 @@ export default function ProfileCreation({ email, onComplete }) {
                   value={profile.city}
                   onChange={(e) => setProfile({ ...profile, city: e.target.value })}
                   placeholder="Paris"
-                  style={{ width: '100%', padding: '14px', border: '2px solid #ddd', borderRadius: '10px', fontSize: '16px' }}
-                />
-              </div>
-
-              <div style={{ marginBottom: '30px' }}>
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '8px', color: '#333' }}>
-                  Code postal
-                </label>
-                <input
-                  type="text"
-                  value={profile.zipCode}
-                  onChange={(e) => setProfile({ ...profile, zipCode: e.target.value })}
-                  placeholder="75001"
                   style={{ width: '100%', padding: '14px', border: '2px solid #ddd', borderRadius: '10px', fontSize: '16px' }}
                 />
               </div>
@@ -265,6 +293,7 @@ export default function ProfileCreation({ email, onComplete }) {
               )}
 
               <AvatarCreator
+                gender={profile.gender}
                 onSave={(avatarUrl, avatarConfig) => {
                   setProfile({ ...profile, avatar: avatarUrl, avatarConfig });
                   setError('');
@@ -547,11 +576,11 @@ export default function ProfileCreation({ email, onComplete }) {
             </>
           )}
 
-          {/* Étape 7: 3 Questions obligatoires */}
+          {/* Étape 7: Créer tes 3 Questions */}
           {step === 7 && (
             <>
-              <h2 style={{ fontSize: '28px', fontWeight: '700', margin: '0 0 10px 0', color: '#333' }}>Dernière étape ! 🎯</h2>
-              <p style={{ color: '#666', marginBottom: '20px' }}>Réponds à ces 3 questions pour débloquer les matchs</p>
+              <h2 style={{ fontSize: '28px', fontWeight: '700', margin: '0 0 10px 0', color: '#333' }}>Tes 3 Questions 🎯</h2>
+              <p style={{ color: '#666', marginBottom: '20px' }}>Crée 3 questions que les autres devront répondre pour matcher avec toi</p>
 
               {error && (
                 <div style={{ background: '#fee', border: '1px solid #fcc', borderRadius: '10px', padding: '12px', marginBottom: '20px', color: '#c33', fontSize: '14px' }}>
@@ -559,67 +588,161 @@ export default function ProfileCreation({ email, onComplete }) {
                 </div>
               )}
 
-              <div style={{ marginBottom: '20px' }}>
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '12px', color: '#333' }}>
-                  💕 Si tu devais vivre un film d'amour, tu serais lequel ?
+              {/* Question 1 */}
+              <div style={{ marginBottom: '25px', padding: '20px', background: '#f8f9fa', borderRadius: '12px', border: '2px solid #667eea' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '15px', color: '#667eea' }}>Question 1</h3>
+
+                <input
+                  type="text"
+                  placeholder="Ex: Aimes-tu le fromage ?"
+                  value={profile.question1.text}
+                  onChange={(e) => setProfile({ ...profile, question1: { ...profile.question1, text: e.target.value } })}
+                  style={{ width: '100%', padding: '12px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '15px', marginBottom: '12px' }}
+                />
+
+                <div style={{ display: 'grid', gap: '8px', marginBottom: '12px' }}>
+                  <input
+                    type="text"
+                    placeholder="A. Réponse A"
+                    value={profile.question1.answerA}
+                    onChange={(e) => setProfile({ ...profile, question1: { ...profile.question1, answerA: e.target.value } })}
+                    style={{ width: '100%', padding: '10px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '14px' }}
+                  />
+                  <input
+                    type="text"
+                    placeholder="B. Réponse B"
+                    value={profile.question1.answerB}
+                    onChange={(e) => setProfile({ ...profile, question1: { ...profile.question1, answerB: e.target.value } })}
+                    style={{ width: '100%', padding: '10px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '14px' }}
+                  />
+                  <input
+                    type="text"
+                    placeholder="C. Réponse C"
+                    value={profile.question1.answerC}
+                    onChange={(e) => setProfile({ ...profile, question1: { ...profile.question1, answerC: e.target.value } })}
+                    style={{ width: '100%', padding: '10px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '14px' }}
+                  />
+                </div>
+
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: '#666' }}>
+                  Quelle est LA bonne réponse ?
                 </label>
                 <select
-                  value={profile.question1}
-                  onChange={(e) => setProfile({ ...profile, question1: e.target.value })}
-                  style={{ width: '100%', padding: '14px', border: '2px solid #ddd', borderRadius: '10px', fontSize: '16px', background: 'white' }}
+                  value={profile.question1.correctAnswer}
+                  onChange={(e) => setProfile({ ...profile, question1: { ...profile.question1, correctAnswer: e.target.value } })}
+                  style={{ width: '100%', padding: '10px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '14px', background: 'white' }}
                 >
-                  <option value="">Choisis ton film...</option>
-                  <option value="titanic">🚢 Titanic (romantique et tragique)</option>
-                  <option value="amelie">🎨 Le Fabuleux Destin d'Amélie Poulain</option>
-                  <option value="500days">📆 500 Jours Ensemble (réaliste)</option>
-                  <option value="lalaland">🎵 La La Land (rêveur)</option>
-                  <option value="notebook">📖 N'oublie jamais (passionné)</option>
-                  <option value="50first">🧠 50 Premières Rencontres (drôle)</option>
-                  <option value="pride">👗 Orgueil et Préjugés (classique)</option>
+                  <option value="">Choisis...</option>
+                  <option value="A">A - {profile.question1.answerA || 'Réponse A'}</option>
+                  <option value="B">B - {profile.question1.answerB || 'Réponse B'}</option>
+                  <option value="C">C - {profile.question1.answerC || 'Réponse C'}</option>
                 </select>
               </div>
 
-              <div style={{ marginBottom: '20px' }}>
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '12px', color: '#333' }}>
-                  😊 Tu préfères un câlin ou un duel de regards ?
+              {/* Question 2 */}
+              <div style={{ marginBottom: '25px', padding: '20px', background: '#f8f9fa', borderRadius: '12px', border: '2px solid #764ba2' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '15px', color: '#764ba2' }}>Question 2</h3>
+
+                <input
+                  type="text"
+                  placeholder="Ex: Préfères-tu la mer ou la montagne ?"
+                  value={profile.question2.text}
+                  onChange={(e) => setProfile({ ...profile, question2: { ...profile.question2, text: e.target.value } })}
+                  style={{ width: '100%', padding: '12px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '15px', marginBottom: '12px' }}
+                />
+
+                <div style={{ display: 'grid', gap: '8px', marginBottom: '12px' }}>
+                  <input
+                    type="text"
+                    placeholder="A. Réponse A"
+                    value={profile.question2.answerA}
+                    onChange={(e) => setProfile({ ...profile, question2: { ...profile.question2, answerA: e.target.value } })}
+                    style={{ width: '100%', padding: '10px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '14px' }}
+                  />
+                  <input
+                    type="text"
+                    placeholder="B. Réponse B"
+                    value={profile.question2.answerB}
+                    onChange={(e) => setProfile({ ...profile, question2: { ...profile.question2, answerB: e.target.value } })}
+                    style={{ width: '100%', padding: '10px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '14px' }}
+                  />
+                  <input
+                    type="text"
+                    placeholder="C. Réponse C"
+                    value={profile.question2.answerC}
+                    onChange={(e) => setProfile({ ...profile, question2: { ...profile.question2, answerC: e.target.value } })}
+                    style={{ width: '100%', padding: '10px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '14px' }}
+                  />
+                </div>
+
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: '#666' }}>
+                  Quelle est LA bonne réponse ?
                 </label>
                 <select
-                  value={profile.question2}
-                  onChange={(e) => setProfile({ ...profile, question2: e.target.value })}
-                  style={{ width: '100%', padding: '14px', border: '2px solid #ddd', borderRadius: '10px', fontSize: '16px', background: 'white' }}
+                  value={profile.question2.correctAnswer}
+                  onChange={(e) => setProfile({ ...profile, question2: { ...profile.question2, correctAnswer: e.target.value } })}
+                  style={{ width: '100%', padding: '10px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '14px', background: 'white' }}
                 >
-                  <option value="">Choisis ta préférence...</option>
-                  <option value="calin">🤗 Un gros câlin réconfortant</option>
-                  <option value="regards">👀 Un duel de regards intense</option>
-                  <option value="main">🤝 Se tenir la main</option>
-                  <option value="rire">😂 Rigoler ensemble</option>
-                  <option value="silence">🤫 Un silence complice</option>
+                  <option value="">Choisis...</option>
+                  <option value="A">A - {profile.question2.answerA || 'Réponse A'}</option>
+                  <option value="B">B - {profile.question2.answerB || 'Réponse B'}</option>
+                  <option value="C">C - {profile.question2.answerC || 'Réponse C'}</option>
                 </select>
               </div>
 
-              <div style={{ marginBottom: '20px' }}>
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '12px', color: '#333' }}>
-                  ❤️ Si on se voyait, tu choisirais... ?
+              {/* Question 3 */}
+              <div style={{ marginBottom: '20px', padding: '20px', background: '#f8f9fa', borderRadius: '12px', border: '2px solid #f093fb' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '15px', color: '#f093fb' }}>Question 3</h3>
+
+                <input
+                  type="text"
+                  placeholder="Ex: Quel est ton super-pouvoir idéal ?"
+                  value={profile.question3.text}
+                  onChange={(e) => setProfile({ ...profile, question3: { ...profile.question3, text: e.target.value } })}
+                  style={{ width: '100%', padding: '12px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '15px', marginBottom: '12px' }}
+                />
+
+                <div style={{ display: 'grid', gap: '8px', marginBottom: '12px' }}>
+                  <input
+                    type="text"
+                    placeholder="A. Réponse A"
+                    value={profile.question3.answerA}
+                    onChange={(e) => setProfile({ ...profile, question3: { ...profile.question3, answerA: e.target.value } })}
+                    style={{ width: '100%', padding: '10px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '14px' }}
+                  />
+                  <input
+                    type="text"
+                    placeholder="B. Réponse B"
+                    value={profile.question3.answerB}
+                    onChange={(e) => setProfile({ ...profile, question3: { ...profile.question3, answerB: e.target.value } })}
+                    style={{ width: '100%', padding: '10px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '14px' }}
+                  />
+                  <input
+                    type="text"
+                    placeholder="C. Réponse C"
+                    value={profile.question3.answerC}
+                    onChange={(e) => setProfile({ ...profile, question3: { ...profile.question3, answerC: e.target.value } })}
+                    style={{ width: '100%', padding: '10px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '14px' }}
+                  />
+                </div>
+
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: '#666' }}>
+                  Quelle est LA bonne réponse ?
                 </label>
                 <select
-                  value={profile.question3}
-                  onChange={(e) => setProfile({ ...profile, question3: e.target.value })}
-                  style={{ width: '100%', padding: '14px', border: '2px solid #ddd', borderRadius: '10px', fontSize: '16px', background: 'white' }}
+                  value={profile.question3.correctAnswer}
+                  onChange={(e) => setProfile({ ...profile, question3: { ...profile.question3, correctAnswer: e.target.value } })}
+                  style={{ width: '100%', padding: '10px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '14px', background: 'white' }}
                 >
-                  <option value="">Choisis l'activité...</option>
-                  <option value="bar">🍸 Un bar cosy</option>
-                  <option value="piquenique">🧺 Un pique-nique romantique</option>
-                  <option value="aventure">🏔️ Une aventure en plein air</option>
-                  <option value="musee">🎨 Une visite de musée</option>
-                  <option value="cinema">🎬 Une séance de cinéma</option>
-                  <option value="resto">🍽️ Un restaurant gastronomique</option>
-                  <option value="jeux">🎮 Une soirée jeux vidéo</option>
-                  <option value="concert">🎵 Un concert ou spectacle</option>
+                  <option value="">Choisis...</option>
+                  <option value="A">A - {profile.question3.answerA || 'Réponse A'}</option>
+                  <option value="B">B - {profile.question3.answerB || 'Réponse B'}</option>
+                  <option value="C">C - {profile.question3.answerC || 'Réponse C'}</option>
                 </select>
               </div>
 
-              <div style={{ background: '#e8f5e9', border: '1px solid #81c784', borderRadius: '10px', padding: '12px', fontSize: '13px', color: '#2e7d32' }}>
-                ✨ Tes réponses serviront à calculer ta compatibilité avec les autres membres !
+              <div style={{ background: '#e3f2fd', border: '1px solid #90caf9', borderRadius: '10px', padding: '12px', fontSize: '13px', color: '#1565c0' }}>
+                💡 Après un sourire mutuel, l'autre personne répondra à tes questions. S'il y a au moins 1 bonne réponse de chaque côté, vous pourrez discuter !
               </div>
             </>
           )}
