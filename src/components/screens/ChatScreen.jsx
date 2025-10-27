@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { awardPoints } from '../../utils/pointsSystem';
+import GiftSelector from '../gifts/GiftSelector';
 
 export default function ChatScreen({ currentUser, matchedUser, onBack }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [letterCount, setLetterCount] = useState({ user: 0, matched: 0 });
+  const [showGiftSelector, setShowGiftSelector] = useState(false);
+  const [userCoins, setUserCoins] = useState(currentUser?.coins || 0);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -262,48 +265,82 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
             </p>
           </div>
         ) : (
-          messages.map((msg) => (
-            <div
-              key={msg.id}
-              style={{
-                display: 'flex',
-                justifyContent: msg.sender === 'user' ? 'flex-end' : 'flex-start',
-                marginBottom: '15px'
-              }}
-            >
-              <div style={{
-                maxWidth: '75%',
-                background: msg.sender === 'user'
-                  ? 'linear-gradient(135deg, #667eea, #764ba2)'
-                  : '#1a1a1a',
-                padding: '12px 16px',
-                borderRadius: msg.sender === 'user'
-                  ? '18px 18px 4px 18px'
-                  : '18px 18px 18px 4px',
-                boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
-              }}>
-                <p style={{
-                  fontSize: '15px',
-                  margin: '0 0 5px 0',
-                  color: 'white',
-                  lineHeight: '1.4'
+          messages.map((msg) => {
+            // Message système (cadeau)
+            if (msg.sender === 'system') {
+              return (
+                <div
+                  key={msg.id}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginBottom: '15px'
+                  }}
+                >
+                  <div style={{
+                    background: 'rgba(255, 152, 0, 0.2)',
+                    padding: '10px 16px',
+                    borderRadius: '12px',
+                    border: '2px solid rgba(255, 152, 0, 0.5)',
+                    textAlign: 'center'
+                  }}>
+                    <p style={{
+                      fontSize: '14px',
+                      margin: 0,
+                      color: '#FFD700',
+                      fontWeight: '600'
+                    }}>
+                      {msg.text}
+                    </p>
+                  </div>
+                </div>
+              );
+            }
+
+            // Message normal
+            return (
+              <div
+                key={msg.id}
+                style={{
+                  display: 'flex',
+                  justifyContent: msg.sender === 'user' ? 'flex-end' : 'flex-start',
+                  marginBottom: '15px'
+                }}
+              >
+                <div style={{
+                  maxWidth: '75%',
+                  background: msg.sender === 'user'
+                    ? 'linear-gradient(135deg, #667eea, #764ba2)'
+                    : '#1a1a1a',
+                  padding: '12px 16px',
+                  borderRadius: msg.sender === 'user'
+                    ? '18px 18px 4px 18px'
+                    : '18px 18px 18px 4px',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
                 }}>
-                  {msg.text}
-                </p>
-                <p style={{
-                  fontSize: '11px',
-                  color: msg.sender === 'user' ? 'rgba(255,255,255,0.7)' : '#666',
-                  margin: 0,
-                  textAlign: 'right'
-                }}>
-                  {new Date(msg.timestamp).toLocaleTimeString('fr-FR', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                  })}
-                </p>
+                  <p style={{
+                    fontSize: '15px',
+                    margin: '0 0 5px 0',
+                    color: 'white',
+                    lineHeight: '1.4'
+                  }}>
+                    {msg.text}
+                  </p>
+                  <p style={{
+                    fontSize: '11px',
+                    color: msg.sender === 'user' ? 'rgba(255,255,255,0.7)' : '#666',
+                    margin: 0,
+                    textAlign: 'right'
+                  }}>
+                    {new Date(msg.timestamp).toLocaleTimeString('fr-FR', {
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))
+            );
+          })
         )}
         <div ref={messagesEndRef} />
       </div>
@@ -315,6 +352,24 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
         borderTop: '1px solid #333'
       }}>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end' }}>
+          <button
+            onClick={() => setShowGiftSelector(true)}
+            style={{
+              padding: '12px 15px',
+              background: 'linear-gradient(135deg, #FF9800, #F57C00)',
+              border: 'none',
+              borderRadius: '12px',
+              color: 'white',
+              fontSize: '24px',
+              cursor: 'pointer',
+              transition: 'all 0.3s',
+              height: '50px'
+            }}
+            title="Envoyer un cadeau"
+          >
+            🎁
+          </button>
+
           <textarea
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
@@ -338,6 +393,7 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
               }
             }}
           />
+
           <button
             onClick={handleSendMessage}
             disabled={!newMessage.trim()}
@@ -358,12 +414,41 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
             💌
           </button>
         </div>
-        <p style={{ fontSize: '12px', color: '#666', marginTop: '8px', textAlign: 'center' }}>
-          {messages.length > 0 && messages[messages.length - 1]?.sender === 'user'
-            ? '⏳ En attente de la réponse...'
-            : '✍️ C\'est à ton tour d\'écrire'}
-        </p>
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px' }}>
+          <p style={{ fontSize: '12px', color: '#666', margin: 0 }}>
+            {messages.length > 0 && messages[messages.length - 1]?.sender === 'user'
+              ? '⏳ En attente de la réponse...'
+              : '✍️ C\'est à ton tour d\'écrire'}
+          </p>
+          <p style={{ fontSize: '12px', color: '#FFD700', margin: 0, fontWeight: '600' }}>
+            🪙 {userCoins}
+          </p>
+        </div>
       </div>
+
+      {/* Gift Selector Modal */}
+      {showGiftSelector && (
+        <GiftSelector
+          currentUser={{ ...currentUser, coins: userCoins }}
+          receiverId={matchedUser.id}
+          onClose={() => setShowGiftSelector(false)}
+          onGiftSent={(gift, coinsRemaining) => {
+            setUserCoins(coinsRemaining);
+            // Optionally add a system message in the chat
+            const giftMessage = {
+              id: Date.now(),
+              sender: 'system',
+              text: `🎁 Tu as envoyé ${gift.giftEmoji} ${gift.giftName} !`,
+              timestamp: new Date().toISOString(),
+              type: 'gift'
+            };
+            const updatedMessages = [...messages, giftMessage];
+            setMessages(updatedMessages);
+            saveConversation(updatedMessages, letterCount);
+          }}
+        />
+      )}
     </div>
   );
 }
