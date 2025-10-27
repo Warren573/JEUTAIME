@@ -195,7 +195,7 @@ function MainApp() {
     showAdminPanel, setShowAdminPanel,
     adminMode, setAdminMode,
     isAdminAuthenticated,
-    currentUser,
+    currentUser, // Add currentUser to appState for games
     onLogout: handleLogout,
     rnd
   };
