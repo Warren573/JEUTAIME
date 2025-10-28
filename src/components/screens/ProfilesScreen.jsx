@@ -212,7 +212,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
       {/* Carte profil */}
       <div style={{ background: '#1a1a1a', borderRadius: '20px', overflow: 'hidden', marginBottom: '20px' }}>
         {/* Avatar principal */}
-        <div style={{ position: 'relative', height: '400px', background: 'linear-gradient(135deg, #667eea, #764ba2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ position: 'relative', paddingTop: '20px', paddingBottom: '20px', background: 'linear-gradient(135deg, #667eea, #764ba2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <SpellAvatarFilter
             userEmail={`user${currentProfileData.id}@demo.com`}
             style={{ width: '300px', height: '300px', position: 'relative', zIndex: 1 }}
@@ -247,25 +247,25 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
           }}>
             💖 Avatar
           </div>
+        </div>
 
-          {/* Infos overlay */}
-          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(transparent, rgba(0,0,0,0.8))', padding: '60px 20px 20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-              <h2 style={{ fontSize: '28px', fontWeight: '700', margin: 0 }}>{currentProfileData.name}, {currentProfileData.age}</h2>
-              <div style={{ display: 'flex', gap: '5px' }}>
-                {currentProfileData.badges.map(badgeId => (
-                  <div key={badgeId} title={profileBadges[badgeId].name} style={{ fontSize: '18px' }}>
-                    {profileBadges[badgeId].emoji}
-                  </div>
-                ))}
-              </div>
+        {/* Infos profil */}
+        <div style={{ background: '#0a0a0a', padding: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+            <h2 style={{ fontSize: '28px', fontWeight: '700', margin: 0 }}>{currentProfileData.name}, {currentProfileData.age}</h2>
+            <div style={{ display: 'flex', gap: '5px' }}>
+              {currentProfileData.badges.map(badgeId => (
+                <div key={badgeId} title={profileBadges[badgeId].name} style={{ fontSize: '18px' }}>
+                  {profileBadges[badgeId].emoji}
+                </div>
+              ))}
             </div>
-            <div style={{ fontSize: '14px', color: '#ddd', marginBottom: '5px' }}>
-              📍 {currentProfileData.city} • {currentProfileData.distance}
-            </div>
-            <div style={{ fontSize: '13px', color: '#aaa' }}>
-              🟢 {currentProfileData.lastActive}
-            </div>
+          </div>
+          <div style={{ fontSize: '14px', color: '#ddd', marginBottom: '5px' }}>
+            📍 {currentProfileData.city} • {currentProfileData.distance}
+          </div>
+          <div style={{ fontSize: '13px', color: '#aaa' }}>
+            🟢 {currentProfileData.lastActive}
           </div>
         </div>
 
