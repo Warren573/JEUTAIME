@@ -1,8 +1,9 @@
 import React from 'react';
 import { receivedOfferings } from '../../data/appData';
 import { useAdmin } from '../../contexts/AdminContext';
+import { getTitleFromPoints } from '../../config/gameConfig';
 
-export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurrentProfile, setAdminMode }) {
+export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurrentProfile, setAdminMode, currentUser }) {
   const { adminLogin } = useAdmin();
 
   const handleAdminTest = () => {
@@ -14,6 +15,29 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
     setCurrentProfile(0);
     setScreen('profiles');
   };
+
+  // Calculer le rang de l'utilisateur
+  const getUserRank = () => {
+    const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+    const sortedUsers = users
+      .filter(u => u.pseudo)
+      .sort((a, b) => (b.points || 0) - (a.points || 0));
+
+    const rank = sortedUsers.findIndex(u => u.email === currentUser?.email);
+    return rank >= 0 ? rank + 1 : null;
+  };
+
+  const userPoints = currentUser?.points || 0;
+  const userTitle = getTitleFromPoints(userPoints);
+  const userRank = getUserRank();
+
+  const getMedalEmoji = (rank) => {
+    if (rank === 1) return '🥇';
+    if (rank === 2) return '🥈';
+    if (rank === 3) return '🥉';
+    return `#${rank}`;
+  };
+
   return (
     <div>
       <h1 style={{ fontSize: '36px', marginBottom: '15px', fontWeight: '600' }}>Bienvenue sur JeuTaime</h1>
@@ -21,6 +45,62 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
       <div style={{ background: '#1a1a1a', borderRadius: '20px', padding: '25px', marginBottom: '30px' }}>
         <h3 style={{ fontSize: '20px', marginBottom: '15px', fontWeight: '500' }}>L'application de rencontres anti-superficielle</h3>
         <p style={{ fontSize: '15px', lineHeight: '1.7', color: '#aaa', margin: 0 }}>Découvrez les profils en profondeur. Les photos ne sont révélées qu'après 10 lettres échangées ou avec Premium.</p>
+      </div>
+
+      {/* Widget Classement */}
+      <div
+        onClick={() => {
+          setScreen('social');
+          // L'onglet classement sera sélectionné automatiquement dans SocialScreen
+        }}
+        style={{
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          borderRadius: '20px',
+          padding: '25px',
+          marginBottom: '30px',
+          cursor: 'pointer',
+          transition: 'transform 0.2s',
+          boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)'
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ fontSize: '32px' }}>🏆</div>
+            <h3 style={{ fontSize: '20px', margin: 0, fontWeight: '700', color: 'white' }}>Mon Classement</h3>
+          </div>
+          <div style={{ fontSize: '20px', color: 'white' }}>→</div>
+        </div>
+
+        <div style={{
+          background: 'rgba(255,255,255,0.15)',
+          borderRadius: '15px',
+          padding: '20px',
+          backdropFilter: 'blur(10px)'
+        }}>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: '48px', fontWeight: '700', color: 'white', marginBottom: '10px' }}>
+              {userRank ? getMedalEmoji(userRank) : '—'}
+            </div>
+            <div style={{ fontSize: '18px', fontWeight: '600', color: 'white', marginBottom: '8px' }}>
+              {userTitle.emoji} {userTitle.title}
+            </div>
+            <div style={{ fontSize: '28px', fontWeight: '700', color: 'white', marginBottom: '10px' }}>
+              {userPoints} points
+            </div>
+            <div style={{
+              fontSize: '13px',
+              color: 'rgba(255,255,255,0.8)',
+              padding: '8px 16px',
+              background: 'rgba(255,255,255,0.1)',
+              borderRadius: '10px',
+              display: 'inline-block'
+            }}>
+              Voir le classement complet
+            </div>
+          </div>
+        </div>
       </div>
 
       <div style={{ background: '#1a1a1a', borderRadius: '20px', padding: '25px', marginBottom: '30px' }}>

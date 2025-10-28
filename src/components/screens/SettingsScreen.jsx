@@ -3,6 +3,26 @@ import React, { useState } from 'react';
 export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogout }) {
   const [settingsTab, setSettingsTab] = useState('profile');
 
+  // Questions state for editing
+  const [questions, setQuestions] = useState({
+    question1: currentUser?.question1 || { text: '', answerA: '', answerB: '', answerC: '', correctAnswer: '' },
+    question2: currentUser?.question2 || { text: '', answerA: '', answerB: '', answerC: '', correctAnswer: '' },
+    question3: currentUser?.question3 || { text: '', answerA: '', answerB: '', answerC: '', correctAnswer: '' }
+  });
+
+  const handleSaveQuestions = () => {
+    // Save questions to localStorage
+    const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+    const userIndex = users.findIndex(u => u.email === currentUser.email);
+
+    if (userIndex !== -1) {
+      users[userIndex] = { ...users[userIndex], ...questions };
+      localStorage.setItem('jeutaime_users', JSON.stringify(users));
+      localStorage.setItem('jeutaime_current_user', JSON.stringify({ ...currentUser, ...questions }));
+      alert('✅ Tes questions ont été mises à jour !');
+    }
+  };
+
   return (
     <div>
       <h1 style={{ fontSize: '32px', marginBottom: '20px', fontWeight: '600' }}>⚙️ Paramètres</h1>
@@ -59,6 +79,151 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
                 <option>Femme</option>
               </select>
             </div>
+          </div>
+
+          {/* Tes 3 Questions */}
+          <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid #667eea' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
+              <div style={{ fontSize: '24px' }}>🎯</div>
+              <h3 style={{ fontSize: '16px', margin: 0, fontWeight: '600', color: '#667eea' }}>Tes 3 Questions</h3>
+            </div>
+            <p style={{ fontSize: '13px', color: '#aaa', marginBottom: '20px' }}>Les autres devront y répondre après un sourire mutuel</p>
+
+            {/* Question 1 */}
+            <div style={{ marginBottom: '20px', padding: '15px', background: '#0a0a0a', borderRadius: '10px', border: '1px solid #667eea' }}>
+              <h4 style={{ fontSize: '14px', fontWeight: '600', marginBottom: '10px', color: '#667eea' }}>Question 1</h4>
+              <input
+                type="text"
+                placeholder="Ex: Aimes-tu le fromage ?"
+                value={questions.question1.text}
+                onChange={(e) => setQuestions({ ...questions, question1: { ...questions.question1, text: e.target.value } })}
+                style={{ width: '100%', padding: '10px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '8px', color: 'white', fontSize: '14px', marginBottom: '10px' }}
+              />
+              <input
+                type="text"
+                placeholder="A. Réponse A"
+                value={questions.question1.answerA}
+                onChange={(e) => setQuestions({ ...questions, question1: { ...questions.question1, answerA: e.target.value } })}
+                style={{ width: '100%', padding: '8px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '13px', marginBottom: '8px' }}
+              />
+              <input
+                type="text"
+                placeholder="B. Réponse B"
+                value={questions.question1.answerB}
+                onChange={(e) => setQuestions({ ...questions, question1: { ...questions.question1, answerB: e.target.value } })}
+                style={{ width: '100%', padding: '8px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '13px', marginBottom: '8px' }}
+              />
+              <input
+                type="text"
+                placeholder="C. Réponse C"
+                value={questions.question1.answerC}
+                onChange={(e) => setQuestions({ ...questions, question1: { ...questions.question1, answerC: e.target.value } })}
+                style={{ width: '100%', padding: '8px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '13px', marginBottom: '8px' }}
+              />
+              <select
+                value={questions.question1.correctAnswer}
+                onChange={(e) => setQuestions({ ...questions, question1: { ...questions.question1, correctAnswer: e.target.value } })}
+                style={{ width: '100%', padding: '8px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '13px' }}
+              >
+                <option value="">Bonne réponse ?</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+              </select>
+            </div>
+
+            {/* Question 2 */}
+            <div style={{ marginBottom: '20px', padding: '15px', background: '#0a0a0a', borderRadius: '10px', border: '1px solid #764ba2' }}>
+              <h4 style={{ fontSize: '14px', fontWeight: '600', marginBottom: '10px', color: '#764ba2' }}>Question 2</h4>
+              <input
+                type="text"
+                placeholder="Ex: Préfères-tu la mer ou la montagne ?"
+                value={questions.question2.text}
+                onChange={(e) => setQuestions({ ...questions, question2: { ...questions.question2, text: e.target.value } })}
+                style={{ width: '100%', padding: '10px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '8px', color: 'white', fontSize: '14px', marginBottom: '10px' }}
+              />
+              <input
+                type="text"
+                placeholder="A. Réponse A"
+                value={questions.question2.answerA}
+                onChange={(e) => setQuestions({ ...questions, question2: { ...questions.question2, answerA: e.target.value } })}
+                style={{ width: '100%', padding: '8px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '13px', marginBottom: '8px' }}
+              />
+              <input
+                type="text"
+                placeholder="B. Réponse B"
+                value={questions.question2.answerB}
+                onChange={(e) => setQuestions({ ...questions, question2: { ...questions.question2, answerB: e.target.value } })}
+                style={{ width: '100%', padding: '8px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '13px', marginBottom: '8px' }}
+              />
+              <input
+                type="text"
+                placeholder="C. Réponse C"
+                value={questions.question2.answerC}
+                onChange={(e) => setQuestions({ ...questions, question2: { ...questions.question2, answerC: e.target.value } })}
+                style={{ width: '100%', padding: '8px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '13px', marginBottom: '8px' }}
+              />
+              <select
+                value={questions.question2.correctAnswer}
+                onChange={(e) => setQuestions({ ...questions, question2: { ...questions.question2, correctAnswer: e.target.value } })}
+                style={{ width: '100%', padding: '8px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '13px' }}
+              >
+                <option value="">Bonne réponse ?</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+              </select>
+            </div>
+
+            {/* Question 3 */}
+            <div style={{ marginBottom: '15px', padding: '15px', background: '#0a0a0a', borderRadius: '10px', border: '1px solid #f093fb' }}>
+              <h4 style={{ fontSize: '14px', fontWeight: '600', marginBottom: '10px', color: '#f093fb' }}>Question 3</h4>
+              <input
+                type="text"
+                placeholder="Ex: Quel est ton super-pouvoir idéal ?"
+                value={questions.question3.text}
+                onChange={(e) => setQuestions({ ...questions, question3: { ...questions.question3, text: e.target.value } })}
+                style={{ width: '100%', padding: '10px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '8px', color: 'white', fontSize: '14px', marginBottom: '10px' }}
+              />
+              <input
+                type="text"
+                placeholder="A. Réponse A"
+                value={questions.question3.answerA}
+                onChange={(e) => setQuestions({ ...questions, question3: { ...questions.question3, answerA: e.target.value } })}
+                style={{ width: '100%', padding: '8px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '13px', marginBottom: '8px' }}
+              />
+              <input
+                type="text"
+                placeholder="B. Réponse B"
+                value={questions.question3.answerB}
+                onChange={(e) => setQuestions({ ...questions, question3: { ...questions.question3, answerB: e.target.value } })}
+                style={{ width: '100%', padding: '8px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '13px', marginBottom: '8px' }}
+              />
+              <input
+                type="text"
+                placeholder="C. Réponse C"
+                value={questions.question3.answerC}
+                onChange={(e) => setQuestions({ ...questions, question3: { ...questions.question3, answerC: e.target.value } })}
+                style={{ width: '100%', padding: '8px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '13px', marginBottom: '8px' }}
+              />
+              <select
+                value={questions.question3.correctAnswer}
+                onChange={(e) => setQuestions({ ...questions, question3: { ...questions.question3, correctAnswer: e.target.value } })}
+                style={{ width: '100%', padding: '8px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '13px' }}
+              >
+                <option value="">Bonne réponse ?</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+              </select>
+            </div>
+
+            <button
+              onClick={handleSaveQuestions}
+              style={{ width: '100%', padding: '12px', background: 'linear-gradient(135deg, #667eea, #764ba2)', border: 'none', color: 'white', borderRadius: '10px', cursor: 'pointer', fontWeight: '600', fontSize: '14px' }}
+            >
+              💾 Sauvegarder mes questions
+            </button>
           </div>
 
           {/* Bouton Enregistrer */}

@@ -17,6 +17,8 @@ import BrickBreakerGame from './components/games/BrickBreakerGame';
 import MorpionGame from './components/games/MorpionGame';
 import CardGame from './components/games/CardGame';
 import StoryTimeGame from './components/games/StoryTimeGame';
+import EmpiresEtheriaGame from './components/games/EmpiresEtheriaGame';
+import EmpiresEtheria3D from './components/games/empires3d/EmpiresEtheria3DWrapper';
 
 // Admin
 import { AdminProvider, useAdmin } from './contexts/AdminContext';
@@ -26,6 +28,9 @@ import AdminLayout from './components/admin/AdminLayout';
 // Auth
 import AuthScreen from './components/auth/AuthScreen';
 import ProfileCreation from './components/auth/ProfileCreation';
+
+// Points system
+import { awardDailyLogin } from './utils/pointsSystem';
 
 // Helper function for HeroLove Quest
 function rnd(min=1,max=6){ return Math.floor(Math.random()*(max-min+1))+min; }
@@ -58,6 +63,17 @@ function MainApp() {
       setCurrentUser(user);
       setUserCoins(user.coins || 100);
       setPremiumActive(user.premium || false);
+
+      // Award daily login points
+      const awarded = awardDailyLogin(user.email);
+      if (awarded) {
+        console.log('🎁 Bonus quotidien reçu ! +10 points');
+        // Reload user to get updated points
+        const updatedUser = JSON.parse(localStorage.getItem('jeutaime_current_user'));
+        if (updatedUser) {
+          setCurrentUser(updatedUser);
+        }
+      }
     }
   }, []);
 
@@ -66,6 +82,18 @@ function MainApp() {
     setUserCoins(user.coins || 100);
     setPremiumActive(user.premium || false);
     localStorage.setItem('jeutaime_current_user', JSON.stringify(user));
+
+    // Award daily login points
+    const awarded = awardDailyLogin(user.email);
+    if (awarded) {
+      console.log('🎁 Bonus quotidien reçu ! +10 points');
+      // Reload user to get updated points
+      const updatedUser = JSON.parse(localStorage.getItem('jeutaime_current_user'));
+      if (updatedUser) {
+        setCurrentUser(updatedUser);
+        setUserCoins(updatedUser.coins || 100);
+      }
+    }
   };
 
   const handleSignup = (email, password) => {
@@ -169,7 +197,7 @@ function MainApp() {
     showAdminPanel, setShowAdminPanel,
     adminMode, setAdminMode,
     isAdminAuthenticated,
-    currentUser,
+    currentUser, // Add currentUser to appState for games
     onLogout: handleLogout,
     rnd
   };
@@ -196,13 +224,11 @@ function MainApp() {
 
   return (
     <div style={{ maxWidth: '430px', margin: '0 auto', background: '#000', minHeight: '100vh', color: 'white', fontFamily: '-apple-system, sans-serif', paddingBottom: '100px' }}>
-      <Header userCoins={userCoins} adminMode={adminMode} isAdminAuthenticated={isAdminAuthenticated} />
-
       <div style={{ padding: '25px 20px' }}>
-        {screen === 'home' && !gameScreen && !selectedBar && <HomeScreen {...appState} />}
+        {screen === 'home' && !gameScreen && !selectedBar && <HomeScreen {...appState} currentUser={currentUser} />}
         {screen === 'profiles' && !gameScreen && !selectedBar && <ProfilesScreen {...appState} />}
-        {screen === 'social' && !gameScreen && !selectedBar && <SocialScreen {...appState} />}
-        {screen === 'letters' && !gameScreen && !selectedBar && <LettersScreen {...appState} />}
+        {screen === 'social' && !gameScreen && !selectedBar && <SocialScreen {...appState} currentUser={currentUser} />}
+        {screen === 'letters' && !gameScreen && !selectedBar && <LettersScreen currentUser={currentUser} />}
         {screen === 'journal' && !gameScreen && !selectedBar && <JournalScreen {...appState} />}
         {screen === 'settings' && !gameScreen && !selectedBar && <SettingsScreen {...appState} />}
 
@@ -213,6 +239,8 @@ function MainApp() {
         {gameScreen === 'morpion' && <MorpionGame {...appState} />}
         {gameScreen === 'cards' && <CardGame {...appState} />}
         {gameScreen === 'storytime' && <StoryTimeGame {...appState} />}
+        {gameScreen === 'empires' && <EmpiresEtheriaGame {...appState} />}
+        {gameScreen === 'empires3d' && <EmpiresEtheria3D {...appState} />}
 
         {selectedBar && <BarDetailScreen {...appState} />}
       </div>

@@ -1,33 +1,45 @@
 import React, { useState } from "react";
 import Avatar from "avataaars";
 
-const AvatarCreator = ({ onSave }) => {
-  const [gender, setGender] = useState("femme"); // homme, femme, neutre
-  const [avatarConfig, setAvatarConfig] = useState({
-    avatarStyle: "Circle",
-    topType: "LongHairStraight",
-    accessoriesType: "Blank",
-    hairColor: "BrownDark",
-    facialHairType: "Blank",
-    clotheType: "BlazerShirt",
-    eyeType: "Happy",
-    eyebrowType: "Default",
-    mouthType: "Smile",
-    skinColor: "Light",
-  });
+const AvatarCreator = ({ gender, onSave }) => {
+  // Convert M/F to homme/femme for internal use
+  const genderType = gender === 'M' ? 'homme' : gender === 'F' ? 'femme' : 'neutre';
+
+  // Set default avatar based on gender
+  const getDefaultAvatar = () => {
+    if (genderType === 'homme') {
+      return {
+        avatarStyle: "Circle",
+        topType: "ShortHairShortFlat",
+        accessoriesType: "Blank",
+        hairColor: "Brown",
+        facialHairType: "Blank",
+        clotheType: "Hoodie",
+        eyeType: "Default",
+        eyebrowType: "Default",
+        mouthType: "Smile",
+        skinColor: "Light",
+      };
+    } else {
+      return {
+        avatarStyle: "Circle",
+        topType: "LongHairStraight",
+        accessoriesType: "Blank",
+        hairColor: "BrownDark",
+        facialHairType: "Blank",
+        clotheType: "BlazerShirt",
+        eyeType: "Happy",
+        eyebrowType: "Default",
+        mouthType: "Smile",
+        skinColor: "Light",
+      };
+    }
+  };
+
+  const [avatarConfig, setAvatarConfig] = useState(getDefaultAvatar());
 
   const handleChange = (field, value) => {
     setAvatarConfig({ ...avatarConfig, [field]: value });
-  };
-
-  const handleGenderChange = (newGender) => {
-    setGender(newGender);
-    // Adjust default hair style based on gender
-    if (newGender === "homme") {
-      setAvatarConfig({ ...avatarConfig, topType: "ShortHairShortFlat", facialHairType: "Blank" });
-    } else if (newGender === "femme") {
-      setAvatarConfig({ ...avatarConfig, topType: "LongHairStraight", facialHairType: "Blank" });
-    }
   };
 
   const handleSave = () => {
@@ -48,37 +60,6 @@ const AvatarCreator = ({ onSave }) => {
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Crée ton avatar 💖</h3>
-
-      {/* Gender selector */}
-      <div style={styles.genderSelector}>
-        <button
-          onClick={() => handleGenderChange("femme")}
-          style={{
-            ...styles.genderButton,
-            ...(gender === "femme" ? styles.genderButtonActive : {}),
-          }}
-        >
-          👩 Femme
-        </button>
-        <button
-          onClick={() => handleGenderChange("homme")}
-          style={{
-            ...styles.genderButton,
-            ...(gender === "homme" ? styles.genderButtonActive : {}),
-          }}
-        >
-          👨 Homme
-        </button>
-        <button
-          onClick={() => handleGenderChange("neutre")}
-          style={{
-            ...styles.genderButton,
-            ...(gender === "neutre" ? styles.genderButtonActive : {}),
-          }}
-        >
-          🧑 Autre
-        </button>
-      </div>
 
       <div style={styles.avatarWrapper}>
         <div id="avatar-svg">
@@ -255,7 +236,7 @@ const AvatarCreator = ({ onSave }) => {
           </select>
         </label>
 
-        {gender !== "femme" && (
+        {genderType !== "femme" && (
           <label style={styles.label}>
             <span style={styles.labelText}>Barbe / Moustache</span>
             <select
@@ -294,29 +275,6 @@ const styles = {
     fontSize: "20px",
     fontWeight: "700",
     margin: "0 0 20px 0",
-  },
-  genderSelector: {
-    display: "flex",
-    gap: "10px",
-    marginBottom: "20px",
-    justifyContent: "center",
-  },
-  genderButton: {
-    flex: 1,
-    padding: "12px",
-    backgroundColor: "#1a1a1a",
-    border: "2px solid #333",
-    borderRadius: "10px",
-    color: "white",
-    fontSize: "14px",
-    fontWeight: "600",
-    cursor: "pointer",
-    transition: "all 0.3s",
-  },
-  genderButtonActive: {
-    backgroundColor: "#667eea",
-    borderColor: "#667eea",
-    transform: "scale(1.05)",
   },
   avatarWrapper: {
     backgroundColor: "#1a1a1a",
