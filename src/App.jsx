@@ -19,6 +19,7 @@ import CardGame from './components/games/CardGame';
 import StoryTimeGame from './components/games/StoryTimeGame';
 import EmpiresEtheriaGame from './components/games/EmpiresEtheriaGame';
 import EmpiresEtheria3D from './components/games/empires3d/EmpiresEtheria3DWrapper';
+import EmpiresEtheriaIsometric from './components/games/EmpiresEtheriaIsometric';
 
 // Admin
 import { AdminProvider, useAdmin } from './contexts/AdminContext';
@@ -241,6 +242,7 @@ function MainApp() {
         {gameScreen === 'storytime' && <StoryTimeGame {...appState} />}
         {gameScreen === 'empires' && <EmpiresEtheriaGame {...appState} />}
         {gameScreen === 'empires3d' && <EmpiresEtheria3D {...appState} />}
+        {gameScreen === 'empires-iso' && <EmpiresEtheriaIsometric currentUser={currentUser} onBack={() => setGameScreen(null)} />}
 
         {selectedBar && <BarDetailScreen {...appState} />}
       </div>

@@ -5,6 +5,7 @@ import {
   doc,
   setDoc,
   getDoc,
+  getDocs,
   updateDoc,
   onSnapshot,
   query,
@@ -292,9 +293,9 @@ function initializeBoard() {
     { id: 1, type: "event" },
     { id: 2, type: "city", name: "Forge d'Obsidienne", cost: 12, rent: 5, owner: null },
     { id: 3, type: "artifact" },
-    { id: 4, type: "city", name: "Tour des Arcanes", cost: 20, rent: 8, owner: null },
+    { id: 4, type: "city", name: "Tour des Arcanes", cost: 20, rent: 8, owner: null, legendary: true },
     { id: 5, type: "event" },
-    { id: 6, type: "city", name: "Sanctuaire du Néant", cost: 30, rent: 12, owner: null },
+    { id: 6, type: "city", name: "Sanctuaire du Néant", cost: 30, rent: 12, owner: null, legendary: true },
     { id: 7, type: "portal" },
     { id: 8, type: "city", name: "Bastion d'Azur", cost: 8, rent: 3, owner: null },
     { id: 9, type: "event" },
@@ -304,21 +305,18 @@ function initializeBoard() {
     { id: 13, type: "event" },
     { id: 14, type: "city", name: "Motte de Givre", cost: 11, rent: 5, owner: null },
     { id: 15, type: "portal" },
-    { id: 16, type: "city", name: "Cime des Sages", cost: 14, rent: 6, owner: null },
+    { id: 16, type: "city", name: "Cime des Sages", cost: 14, rent: 6, owner: null, legendary: true },
     { id: 17, type: "event" },
-    { id: 18, type: "city", name: "Ruines d'Yl", cost: 16, rent: 7, owner: null },
+    { id: 18, type: "city", name: "Ruines d'Yl", cost: 16, rent: 7, owner: null, legendary: true },
     { id: 19, type: "artifact" },
     { id: 20, type: "city", name: "Val des Brumes", cost: 18, rent: 8, owner: null },
     { id: 21, type: "event" },
-    { id: 22, type: "city", name: "Nid d'Oblivion", cost: 22, rent: 10, owner: null },
+    { id: 22, type: "city", name: "Nid d'Oblivion", cost: 22, rent: 10, owner: null, legendary: true },
     { id: 23, type: "portal" }
   ];
 }
 
 function processAction(gameState, action, playerId) {
-  // Logique de traitement des actions
-  // À implémenter selon le type d'action (move, buy, etc.)
-
   const newState = { ...gameState };
 
   switch (action.type) {
@@ -338,4 +336,64 @@ function processAction(gameState, action, playerId) {
   }
 
   return newState;
+}
+
+/**
+ * Vérifie les conditions de victoire
+ * @returns {object|null} - { winnerId, reason } ou null
+ */
+export function checkWinCondition(gameState) {
+  const { players, board } = gameState;
+
+  for (let i = 0; i < players.length; i++) {
+    const player = players[i];
+
+    // Condition 1: Atteindre 100 mana
+    if (player.mana >= 100) {
+      return {
+        winnerId: player.id,
+        winnerName: player.name,
+        reason: 'mana',
+        message: `${player.name} a atteint 100 mana et remporte la victoire !`
+      };
+    }
+
+    // Condition 2: Contrôler 3 lieux légendaires
+    const legendariesOwned = board.filter(
+      cell => cell.legendary && cell.owner === i
+    ).length;
+
+    if (legendariesOwned >= 3) {
+      return {
+        winnerId: player.id,
+        winnerName: player.name,
+        reason: 'legendary',
+        message: `${player.name} contrôle 3 lieux légendaires et remporte la victoire !`
+      };
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Récupère les statistiques d'un joueur
+ */
+export function getPlayerStats(gameState, playerId) {
+  const playerIndex = gameState.players.findIndex(p => p.id === playerId);
+  if (playerIndex === -1) return null;
+
+  const player = gameState.players[playerIndex];
+  const ownedCities = gameState.board.filter(c => c.type === 'city' && c.owner === playerIndex);
+  const legendariesOwned = ownedCities.filter(c => c.legendary).length;
+  const totalRent = ownedCities.reduce((sum, c) => sum + (c.rent || 0), 0);
+
+  return {
+    player,
+    citiesOwned: ownedCities.length,
+    legendariesOwned,
+    totalRent,
+    artifacts: player.artifacts?.length || 0,
+    mana: player.mana
+  };
 }

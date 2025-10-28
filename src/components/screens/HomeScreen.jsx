@@ -3,7 +3,7 @@ import { receivedOfferings } from '../../data/appData';
 import { useAdmin } from '../../contexts/AdminContext';
 import { getTitleFromPoints } from '../../config/gameConfig';
 
-export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurrentProfile, setAdminMode, currentUser }) {
+export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurrentProfile, setAdminMode, currentUser, setGameScreen }) {
   const { adminLogin } = useAdmin();
 
   const handleAdminTest = () => {
@@ -162,6 +162,14 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
           >
             <span style={{ fontSize: '22px' }}>🛡️</span> Essai Profil Admin
           </button>
+          {setGameScreen && (
+            <button
+              onClick={() => setGameScreen('empires-iso')}
+              style={{ padding: '20px', background: 'linear-gradient(135deg, #fbbf24, #f59e0b)', border: '2px solid #fef3c7', color: 'white', borderRadius: '15px', cursor: 'pointer', fontWeight: '700', fontSize: '17px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', boxShadow: '0 10px 30px rgba(251, 191, 36, 0.3)' }}
+            >
+              <span style={{ fontSize: '22px' }}>🏰</span> Empires d'Étheria
+            </button>
+          )}
         </div>
       </div>
 
