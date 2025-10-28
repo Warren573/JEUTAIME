@@ -2,14 +2,31 @@ import React, { useState, useEffect } from 'react';
 import { enrichedProfiles, profileBadges } from '../../data/appData';
 import QuestionGame from '../matching/QuestionGame';
 import { awardPoints, checkAndAwardBadge } from '../../utils/pointsSystem';
+import SpellOverlay, { SpellAvatarFilter } from '../spells/SpellOverlay';
+import SpellCaster from '../spells/SpellCaster';
+import SpellManager from '../spells/SpellManager';
+import { getActiveSpells } from '../../config/spellsSystem';
 
 export default function ProfilesScreen({ currentProfile, setCurrentProfile, adminMode, isAdminAuthenticated, currentUser }) {
   const [viewMode, setViewMode] = useState('discover');
   const [selectedPhoto, setSelectedPhoto] = useState(0);
   const [showQuestionGame, setShowQuestionGame] = useState(false);
   const [mutualSmileUser, setMutualSmileUser] = useState(null);
+  const [showSpellCaster, setShowSpellCaster] = useState(false);
+  const [showSpellManager, setShowSpellManager] = useState(false);
+  const [userActiveSpells, setUserActiveSpells] = useState([]);
 
   const currentProfileData = enrichedProfiles[currentProfile];
+
+  // Load active spells for current profile
+  useEffect(() => {
+    if (currentProfileData && currentProfileData.id !== 0) {
+      // Get email from enriched profiles (demo data)
+      const email = `user${currentProfileData.id}@demo.com`;
+      const spells = getActiveSpells(email);
+      setUserActiveSpells(spells);
+    }
+  }, [currentProfile, currentProfileData]);
 
   // Load smiles data from localStorage
   const getSmiles = () => {
@@ -195,11 +212,24 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
       <div style={{ background: '#1a1a1a', borderRadius: '20px', overflow: 'hidden', marginBottom: '20px' }}>
         {/* Photos carousel */}
         <div style={{ position: 'relative', height: '400px', background: '#0a0a0a' }}>
-          <img
-            src={currentProfileData.photos[selectedPhoto]}
-            alt={currentProfileData.name}
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-          />
+          <SpellAvatarFilter
+            userEmail={`user${currentProfileData.id}@demo.com`}
+            style={{ width: '100%', height: '100%' }}
+          >
+            <img
+              src={currentProfileData.photos[selectedPhoto]}
+              alt={currentProfileData.name}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+          </SpellAvatarFilter>
+
+          {/* Spell Overlay */}
+          {userActiveSpells.length > 0 && (
+            <SpellOverlay
+              userEmail={`user${currentProfileData.id}@demo.com`}
+              size="large"
+            />
+          )}
 
           {/* Dots indicateur */}
           {currentProfileData.photos.length > 1 && (
@@ -276,6 +306,63 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
               <div style={{ fontSize: '10px', color: '#888' }}>Bars</div>
             </div>
           </div>
+
+          {/* Sorts magiques - Boutons */}
+          {currentUser && currentProfileData.id !== 0 && (
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '10px',
+              marginBottom: '15px'
+            }}>
+              <button
+                onClick={() => setShowSpellCaster(true)}
+                style={{
+                  padding: '15px',
+                  background: 'linear-gradient(135deg, #9C27B0, #7B1FA2)',
+                  border: 'none',
+                  color: 'white',
+                  borderRadius: '12px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '700',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  transition: 'transform 0.2s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+              >
+                ✨ Lancer un sort
+              </button>
+              {userActiveSpells.length > 0 && (
+                <button
+                  onClick={() => setShowSpellManager(true)}
+                  style={{
+                    padding: '15px',
+                    background: 'linear-gradient(135deg, #FF9800, #F57C00)',
+                    border: 'none',
+                    color: 'white',
+                    borderRadius: '12px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontWeight: '700',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    transition: 'transform 0.2s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                >
+                  {userActiveSpells[0].spellData.icon} Désenvoutement ({userActiveSpells.length})
+                </button>
+              )}
+            </div>
+          )}
 
           {/* Actions - Sourire / Grimace */}
           <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
@@ -370,6 +457,38 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
           matchedUser={mutualSmileUser}
           onMatchSuccess={handleMatchSuccess}
           onMatchFail={handleMatchFail}
+        />
+      )}
+
+      {/* Spell Caster Modal */}
+      {showSpellCaster && currentUser && (
+        <SpellCaster
+          currentUser={currentUser}
+          onClose={() => setShowSpellCaster(false)}
+          onSpellCast={() => {
+            // Recharger les sorts actifs
+            const email = `user${currentProfileData.id}@demo.com`;
+            const spells = getActiveSpells(email);
+            setUserActiveSpells(spells);
+          }}
+        />
+      )}
+
+      {/* Spell Manager Modal */}
+      {showSpellManager && currentUser && (
+        <SpellManager
+          currentUser={currentUser}
+          targetUser={{
+            email: `user${currentProfileData.id}@demo.com`,
+            pseudo: currentProfileData.name
+          }}
+          onClose={() => setShowSpellManager(false)}
+          onSpellRemoved={() => {
+            // Recharger les sorts actifs
+            const email = `user${currentProfileData.id}@demo.com`;
+            const spells = getActiveSpells(email);
+            setUserActiveSpells(spells);
+          }}
         />
       )}
     </div>
