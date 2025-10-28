@@ -8,10 +8,10 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
       <h1 style={{ fontSize: '32px', marginBottom: '20px', fontWeight: '600' }}>⚙️ Paramètres</h1>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', overflowX: 'auto' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '6px', marginBottom: '20px' }}>
         {['profile', 'shop', 'notifications', 'privacy', 'account'].map((tab) => (
-          <button key={tab} onClick={() => setSettingsTab(tab)} style={{ padding: '10px 18px', background: settingsTab === tab ? '#E91E63' : '#1a1a1a', border: 'none', color: 'white', borderRadius: '10px', cursor: 'pointer', fontWeight: '600', fontSize: '13px', whiteSpace: 'nowrap' }}>
-            {tab === 'profile' ? '👤 Profil' : tab === 'shop' ? '🛍️ Boutique' : tab === 'notifications' ? '🔔 Notifs' : tab === 'privacy' ? '🔒 Confidentialité' : '⚙️ Compte'}
+          <button key={tab} onClick={() => setSettingsTab(tab)} style={{ padding: '8px 6px', background: settingsTab === tab ? '#E91E63' : '#1a1a1a', border: 'none', color: 'white', borderRadius: '10px', cursor: 'pointer', fontWeight: '600', fontSize: '10px', whiteSpace: 'nowrap' }}>
+            {tab === 'profile' ? '👤 Profil' : tab === 'shop' ? '🛍️ Boutique' : tab === 'notifications' ? '🔔 Notifs' : tab === 'privacy' ? '🔒 Privé' : '⚙️ Compte'}
           </button>
         ))}
       </div>
