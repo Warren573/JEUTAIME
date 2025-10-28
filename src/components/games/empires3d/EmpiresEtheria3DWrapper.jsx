@@ -1,15 +1,17 @@
 // Wrapper sécurisé pour Empires 3D
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useState, useEffect } from 'react';
 
 // Lazy loading du composant 3D pour éviter les erreurs de build
 const EmpiresEtheria3DLazy = lazy(() =>
   import('./EmpiresEtheria3D').catch(err => {
-    console.error('Erreur chargement 3D:', err);
-    return { default: () => <Fallback3D /> };
+    console.error('❌ Erreur chargement 3D:', err);
+    console.error('Message:', err.message);
+    console.error('Stack:', err.stack);
+    return { default: (props) => <Fallback3D error={err} {...props} /> };
   })
 );
 
-function Fallback3D() {
+function Fallback3D({ error, setGameScreen }) {
   return (
     <div style={{
       width: '100%',
@@ -23,13 +25,55 @@ function Fallback3D() {
       padding: '20px',
       textAlign: 'center'
     }}>
-      <div style={{ fontSize: '64px', marginBottom: '20px' }}>🏰</div>
-      <h2 style={{ marginBottom: '10px' }}>Empires d'Étheria 3D</h2>
+      <button
+        onClick={() => setGameScreen && setGameScreen(null)}
+        style={{
+          position: 'absolute',
+          top: '20px',
+          left: '20px',
+          padding: '10px 20px',
+          background: '#1a1a1a',
+          border: '1px solid #333',
+          color: 'white',
+          borderRadius: '10px',
+          cursor: 'pointer',
+          fontWeight: '600'
+        }}
+      >
+        ← Retour
+      </button>
+
+      <div style={{ fontSize: '64px', marginBottom: '20px' }}>⚠️</div>
+      <h2 style={{ marginBottom: '10px' }}>Erreur de chargement 3D</h2>
       <p style={{ color: '#888', marginBottom: '20px' }}>
-        Le mode 3D n'est pas disponible sur cet appareil.
+        Le mode 3D n'a pas pu se charger.
       </p>
-      <p style={{ fontSize: '14px', color: '#666' }}>
+
+      {error && (
+        <div style={{
+          maxWidth: '600px',
+          padding: '15px',
+          background: '#1a1a1a',
+          borderRadius: '10px',
+          border: '1px solid #333',
+          fontSize: '12px',
+          color: '#ff6b6b',
+          textAlign: 'left',
+          marginTop: '20px',
+          fontFamily: 'monospace',
+          overflow: 'auto',
+          maxHeight: '200px'
+        }}>
+          <div style={{ marginBottom: '10px', fontWeight: 'bold' }}>Détails de l'erreur:</div>
+          <div>{error.message || error.toString()}</div>
+        </div>
+      )}
+
+      <p style={{ fontSize: '14px', color: '#666', marginTop: '20px' }}>
         Essayez la version 2D depuis le menu Jeux.
+      </p>
+      <p style={{ fontSize: '12px', color: '#444', marginTop: '10px' }}>
+        Ouvrez la console (F12) pour plus de détails.
       </p>
     </div>
   );
