@@ -114,7 +114,7 @@ export default function GiftSelector({ currentUser, receiverId, onClose, onGiftS
             return (
               <div
                 key={gift.id}
-                onClick={() => canAfford && setSelected Gift(gift)}
+                onClick={() => canAfford && setSelectedGift(gift)}
                 style={{
                   background: isSelected
                     ? 'linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3))'

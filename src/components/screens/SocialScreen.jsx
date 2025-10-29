@@ -1,7 +1,8 @@
 import React from 'react';
 import { bars } from '../../data/appData';
+import RankingScreen from './RankingScreen';
 
-export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, setSelectedBar, adminMode, isAdminAuthenticated }) {
+export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, setSelectedBar, adminMode, isAdminAuthenticated, currentUser }) {
   const handleAdminEditBar = (bar, e) => {
     e.stopPropagation();
     alert(`Éditer bar: ${bar.name}`);
@@ -31,10 +32,26 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
           </button>
         )}
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '25px' }}>
-        {['bars', 'games', 'adoption', 'contest'].map((tab) => (
-          <button key={tab} onClick={() => setSocialTab(tab)} style={{ padding: '12px 20px', background: socialTab === tab ? 'linear-gradient(135deg, #E91E63, #C2185B)' : '#1a1a1a', border: 'none', color: 'white', borderRadius: '15px', cursor: 'pointer', fontWeight: '600', fontSize: '15px', whiteSpace: 'nowrap' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px', marginBottom: '25px' }}>
+        {['bars', 'classement', 'games', 'adoption', 'contest'].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setSocialTab(tab)}
+            style={{
+              padding: '12px 16px',
+              background: socialTab === tab ? 'linear-gradient(135deg, #667eea, #764ba2)' : '#1a1a1a',
+              border: 'none',
+              color: 'white',
+              borderRadius: '15px',
+              cursor: 'pointer',
+              fontWeight: '600',
+              fontSize: '14px',
+              whiteSpace: 'nowrap',
+              gridColumn: tab === 'contest' ? '1 / -1' : 'auto' // Faire que Contest prend toute la largeur
+            }}
+          >
             {tab === 'bars' && '🍸 Bars'}
+            {tab === 'classement' && '🏆 Classement'}
             {tab === 'games' && '🎮 Jeux'}
             {tab === 'adoption' && '💝 Adoption'}
             {tab === 'contest' && '🏆 Concours'}
@@ -84,6 +101,10 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
         </div>
       )}
 
+      {socialTab === 'classement' && (
+        <RankingScreen currentUser={currentUser} />
+      )}
+
       {socialTab === 'games' && (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
           <div onClick={() => setGameScreen('reactivity')} style={{ background: '#1a1a1a', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
@@ -121,6 +142,12 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
             <div style={{ fontSize: '36px', marginBottom: '8px' }}>🎮</div>
             <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600' }}>HeroLove Quest</h4>
             <p style={{ fontSize: '11px', color: '#fff', margin: 0 }}>Aventure RPG romantique - Gagne des pièces!</p>
+          </div>
+          <div onClick={() => setGameScreen('empires-iso')} style={{ background: 'linear-gradient(135deg, #fbbf24, #f59e0b)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer', gridColumn: '1 / -1', border: '3px solid #fef3c7', position: 'relative', boxShadow: '0 10px 30px rgba(251, 191, 36, 0.3)' }}>
+            <div style={{ position: 'absolute', top: '5px', right: '5px', background: '#fef3c7', color: '#92400e', padding: '3px 8px', borderRadius: '5px', fontSize: '10px', fontWeight: 'bold' }}>FANTASY</div>
+            <div style={{ fontSize: '36px', marginBottom: '8px' }}>🏰✨</div>
+            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '700', color: '#fff' }}>Empires d'Étheria</h4>
+            <p style={{ fontSize: '11px', color: '#fef3c7', margin: 0, fontWeight: '500' }}>Plateau isométrique fantasy - Multi-joueurs asynchrone!</p>
           </div>
         </div>
       )}

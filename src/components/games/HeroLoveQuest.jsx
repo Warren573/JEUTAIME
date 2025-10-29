@@ -1,19 +1,48 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { awardGameRewards, showRewardModal } from '../../utils/gameRewards';
+import { getGameScores } from '../../config/gamesConfig';
 
 export default function HeroLoveQuest({
   setGameScreen,
-  heroPlayer,
-  setHeroPlayer,
-  heroMessage,
-  setHeroMessage,
-  heroGridSize,
-  heroGameOver,
-  setHeroGameOver,
-  heroVictory,
-  setHeroVictory,
+  currentUser,
   setUserCoins,
-  rnd
+  heroGridSize = 5,
+  rnd = () => Math.floor(Math.random() * 6) + 1
 }) {
+  // Local game state
+  const [heroPlayer, setHeroPlayer] = useState({
+    name: "Aventurier·e",
+    pos: { x: 0, y: 0 },
+    charm: 2,
+    wit: 1,
+    humor: 2,
+    courage: 2,
+    confidence: 10,
+    coinsEarned: 0,
+    monstersDefeated: 0
+  });
+  const [heroMessage, setHeroMessage] = useState("🎮 Nouvelle aventure commence !");
+  const [heroGameOver, setHeroGameOver] = useState(false);
+  const [heroVictory, setHeroVictory] = useState(false);
+
+  // Stats persistantes
+  const [totalGames, setTotalGames] = useState(0);
+  const [totalVictories, setTotalVictories] = useState(0);
+  const [totalCoinsEarned, setTotalCoinsEarned] = useState(0);
+  const [bestMonstersDefeated, setBestMonstersDefeated] = useState(0);
+
+  // Charger les stats au démarrage
+  useEffect(() => {
+    if (currentUser) {
+      const gameData = getGameScores(currentUser.email, 'HERO_LOVE');
+      if (gameData) {
+        setTotalGames(gameData.totalPlays || 0);
+        setTotalVictories(gameData.victories || 0);
+        setTotalCoinsEarned(gameData.totalCoinsEarned || 0);
+        setBestMonstersDefeated(gameData.bestScore || 0);
+      }
+    }
+  }, [currentUser]);
   const heroObstacles = [
     { name: "💬 Silence Glaçant", diff: 6, type:"charm", desc:"Un silence embarrassant s'installe...", reward: 10 },
     { name: "🤡 Blague Ratée", diff: 7, type:"humor", desc:"Ta blague tombe à plat...", reward: 15 },
@@ -35,6 +64,43 @@ export default function HeroLoveQuest({
     else { setHeroMessage('🚶 Tu explores (' + nx + ',' + ny + '). Rien pour l\'instant...'); }
   };
 
+  const handleGameEnd = (victory, coinsEarned, monstersDefeated) => {
+    if (!currentUser) return;
+
+    // Attribuer les récompenses via le système centralisé
+    const reward = awardGameRewards(currentUser.email, 'HERO_LOVE', {
+      victory: victory,
+      coinsEarned: coinsEarned,
+      monstersDefeated: monstersDefeated,
+      score: monstersDefeated
+    });
+
+    // Mettre à jour les stats
+    setTotalGames(prev => prev + 1);
+    if (victory) {
+      setTotalVictories(prev => prev + 1);
+    }
+    setTotalCoinsEarned(prev => prev + coinsEarned);
+    if (monstersDefeated > bestMonstersDefeated) {
+      setBestMonstersDefeated(monstersDefeated);
+    }
+
+    // Mettre à jour les pièces
+    if (setUserCoins) {
+      setUserCoins(reward.newCoins);
+    }
+
+    // Sauvegarder victories pour le badge
+    const scores = JSON.parse(localStorage.getItem('jeutaime_game_scores') || '{}');
+    if (scores[currentUser.email] && scores[currentUser.email].HERO_LOVE) {
+      scores[currentUser.email].HERO_LOVE.victories = (scores[currentUser.email].HERO_LOVE.victories || 0) + (victory ? 1 : 0);
+      localStorage.setItem('jeutaime_game_scores', JSON.stringify(scores));
+    }
+
+    // Afficher le modal après un court délai
+    setTimeout(() => showRewardModal(reward), 1000);
+  };
+
   const heroEncounter = (x, y, isBoss) => {
     const obstacle = isBoss ? heroObstacles[8] : heroObstacles[Math.floor(Math.random() * 8)];
     const stat = obstacle.type === 'charm' ? heroPlayer.charm : obstacle.type === 'wit' ? heroPlayer.wit : obstacle.type === 'humor' ? heroPlayer.humor : heroPlayer.courage;
@@ -44,11 +110,17 @@ export default function HeroLoveQuest({
 
     if(total >= obstacle.diff){
       const coinReward = obstacle.reward;
-      setHeroPlayer(p => ({...p, coinsEarned: p.coinsEarned + coinReward, monstersDefeated: p.monstersDefeated + 1}));
-      setUserCoins(c => c + coinReward);
+      const newCoinsEarned = heroPlayer.coinsEarned + coinReward;
+      const newMonstersDefeated = heroPlayer.monstersDefeated + 1;
+
+      setHeroPlayer(p => ({...p, coinsEarned: newCoinsEarned, monstersDefeated: newMonstersDefeated}));
+
       if(isBoss){
         setHeroVictory(true);
         setHeroMessage('🎉 VICTOIRE ÉPIQUE! ' + obstacle.name + '\n\n✅ Réussi! (🎲' + roll + ' + ' + statName + ' ' + stat + ' = ' + total + '/' + obstacle.diff + ')\n\n🏆 +' + coinReward + ' 🪙\n💕 Tu as conquis son cœur!');
+
+        // Attribution des récompenses finales
+        setTimeout(() => handleGameEnd(true, newCoinsEarned, newMonstersDefeated), 500);
       } else {
         setHeroMessage('✨ ' + obstacle.name + '\n' + obstacle.desc + '\n\n✅ Réussi! (🎲' + roll + ' + ' + statName + ' ' + stat + ' = ' + total + '/' + obstacle.diff + ')\n\n💰 +' + coinReward + ' 🪙');
       }
@@ -58,6 +130,9 @@ export default function HeroLoveQuest({
       if(newConfidence <= 0){
         setHeroGameOver(true);
         setHeroMessage('💔 GAME OVER!\n\n' + obstacle.name + '\n❌ Échec (🎲' + roll + ' + ' + statName + ' ' + stat + ' = ' + total + '/' + obstacle.diff + ')\n\n😢 Tu as perdu toute confiance...');
+
+        // Attribution des récompenses finales (même en cas de défaite)
+        setTimeout(() => handleGameEnd(false, heroPlayer.coinsEarned, heroPlayer.monstersDefeated), 500);
       } else {
         setHeroPlayer(p => ({...p, confidence: newConfidence}));
         setHeroMessage('⚠️ ' + obstacle.name + '\n' + obstacle.desc + '\n\n❌ Échec (🎲' + roll + ' + ' + statName + ' ' + stat + ' = ' + total + '/' + obstacle.diff + ')\n\n💔 -' + loss + ' Confiance (' + newConfidence + ' restant)');
@@ -89,11 +164,77 @@ export default function HeroLoveQuest({
     return cells;
   };
 
+  const victoryRate = totalGames > 0 ? Math.round((totalVictories / totalGames) * 100) : 0;
+
   return (
     <div style={{padding: '15px'}}>
       <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px'}}>
-        <h2 style={{margin: 0, fontSize: '20px'}}>🎮 HeroLove Quest</h2>
-        <button onClick={() => setGameScreen(null)} style={{background: '#E91E63', color: 'white', border: 'none', padding: '8px 15px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '13px'}}>← Retour</button>
+        <h2 style={{margin: 0, fontSize: '24px', fontWeight: '600'}}>🎮 HeroLove Quest</h2>
+        <button onClick={() => setGameScreen(null)} style={{background: '#E91E63', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '10px', cursor: 'pointer', fontWeight: '600', fontSize: '14px'}}>← Retour</button>
+      </div>
+
+      {/* Stats */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(4, 1fr)',
+        gap: '8px',
+        marginBottom: '15px'
+      }}>
+        <div style={{
+          background: 'linear-gradient(135deg, #667eea, #764ba2)',
+          borderRadius: '12px',
+          padding: '12px 8px',
+          textAlign: 'center'
+        }}>
+          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.8)', marginBottom: '3px' }}>
+            Quêtes
+          </div>
+          <div style={{ fontSize: '20px', fontWeight: '700', color: 'white' }}>
+            {totalGames}
+          </div>
+        </div>
+
+        <div style={{
+          background: 'linear-gradient(135deg, #4CAF50, #388E3C)',
+          borderRadius: '12px',
+          padding: '12px 8px',
+          textAlign: 'center'
+        }}>
+          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.8)', marginBottom: '3px' }}>
+            Victoires
+          </div>
+          <div style={{ fontSize: '20px', fontWeight: '700', color: 'white' }}>
+            {totalVictories}
+          </div>
+        </div>
+
+        <div style={{
+          background: 'linear-gradient(135deg, #FF9800, #F57C00)',
+          borderRadius: '12px',
+          padding: '12px 8px',
+          textAlign: 'center'
+        }}>
+          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.8)', marginBottom: '3px' }}>
+            Taux
+          </div>
+          <div style={{ fontSize: '20px', fontWeight: '700', color: 'white' }}>
+            {victoryRate}%
+          </div>
+        </div>
+
+        <div style={{
+          background: 'linear-gradient(135deg, #E91E63, #C2185B)',
+          borderRadius: '12px',
+          padding: '12px 8px',
+          textAlign: 'center'
+        }}>
+          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.8)', marginBottom: '3px' }}>
+            Record
+          </div>
+          <div style={{ fontSize: '20px', fontWeight: '700', color: 'white' }}>
+            {bestMonstersDefeated}
+          </div>
+        </div>
       </div>
 
       <div style={{background: 'linear-gradient(135deg, #FF6B9D, #C2185B)', padding: '12px', borderRadius: '12px', marginBottom: '15px', color: 'white', fontSize: '12px', lineHeight: '1.5'}}>

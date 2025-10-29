@@ -2,14 +2,32 @@ import React, { useState, useEffect } from 'react';
 import { enrichedProfiles, profileBadges } from '../../data/appData';
 import QuestionGame from '../matching/QuestionGame';
 import { awardPoints, checkAndAwardBadge } from '../../utils/pointsSystem';
+import SpellOverlay, { SpellAvatarFilter } from '../spells/SpellOverlay';
+import SpellCaster from '../spells/SpellCaster';
+import SpellManager from '../spells/SpellManager';
+import { getActiveSpells } from '../../config/spellsSystem';
+import UserAvatar, { profileAvatars } from '../avatar/UserAvatar';
 
 export default function ProfilesScreen({ currentProfile, setCurrentProfile, adminMode, isAdminAuthenticated, currentUser }) {
   const [viewMode, setViewMode] = useState('discover');
   const [selectedPhoto, setSelectedPhoto] = useState(0);
   const [showQuestionGame, setShowQuestionGame] = useState(false);
   const [mutualSmileUser, setMutualSmileUser] = useState(null);
+  const [showSpellCaster, setShowSpellCaster] = useState(false);
+  const [showSpellManager, setShowSpellManager] = useState(false);
+  const [userActiveSpells, setUserActiveSpells] = useState([]);
 
   const currentProfileData = enrichedProfiles[currentProfile];
+
+  // Load active spells for current profile
+  useEffect(() => {
+    if (currentProfileData && currentProfileData.id !== 0) {
+      // Get email from enriched profiles (demo data)
+      const email = `user${currentProfileData.id}@demo.com`;
+      const spells = getActiveSpells(email);
+      setUserActiveSpells(spells);
+    }
+  }, [currentProfile, currentProfileData]);
 
   // Load smiles data from localStorage
   const getSmiles = () => {
@@ -179,55 +197,75 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
       <h1 style={{ fontSize: '32px', marginBottom: '20px', fontWeight: '600' }}>👥 Découverte</h1>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', overflowX: 'auto' }}>
-        <button onClick={() => setViewMode('discover')} style={{ padding: '10px 20px', background: viewMode === 'discover' ? 'linear-gradient(135deg, #E91E63, #C2185B)' : '#1a1a1a', border: 'none', color: 'white', borderRadius: '20px', cursor: 'pointer', fontWeight: '600', fontSize: '13px', whiteSpace: 'nowrap' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '20px' }}>
+        <button onClick={() => setViewMode('discover')} style={{ padding: '10px 12px', background: viewMode === 'discover' ? 'linear-gradient(135deg, #E91E63, #C2185B)' : '#1a1a1a', border: 'none', color: 'white', borderRadius: '12px', cursor: 'pointer', fontWeight: '600', fontSize: '12px' }}>
           🔍 Découvrir
         </button>
-        <button onClick={() => setViewMode('matches')} style={{ padding: '10px 20px', background: viewMode === 'matches' ? 'linear-gradient(135deg, #E91E63, #C2185B)' : '#1a1a1a', border: 'none', color: 'white', borderRadius: '20px', cursor: 'pointer', fontWeight: '600', fontSize: '13px', whiteSpace: 'nowrap' }}>
-          💕 Matches (3)
+        <button onClick={() => setViewMode('matches')} style={{ padding: '10px 12px', background: viewMode === 'matches' ? 'linear-gradient(135deg, #E91E63, #C2185B)' : '#1a1a1a', border: 'none', color: 'white', borderRadius: '12px', cursor: 'pointer', fontWeight: '600', fontSize: '12px' }}>
+          💕 Matches
         </button>
-        <button onClick={() => setViewMode('likes')} style={{ padding: '10px 20px', background: viewMode === 'likes' ? 'linear-gradient(135deg, #E91E63, #C2185B)' : '#1a1a1a', border: 'none', color: 'white', borderRadius: '20px', cursor: 'pointer', fontWeight: '600', fontSize: '13px', whiteSpace: 'nowrap' }}>
-          ❤️ Likes reçus (12)
+        <button onClick={() => setViewMode('likes')} style={{ padding: '10px 12px', background: viewMode === 'likes' ? 'linear-gradient(135deg, #E91E63, #C2185B)' : '#1a1a1a', border: 'none', color: 'white', borderRadius: '12px', cursor: 'pointer', fontWeight: '600', fontSize: '12px' }}>
+          ❤️ Likes
         </button>
       </div>
 
       {/* Carte profil */}
       <div style={{ background: '#1a1a1a', borderRadius: '20px', overflow: 'hidden', marginBottom: '20px' }}>
-        {/* Photos carousel */}
-        <div style={{ position: 'relative', height: '400px', background: '#0a0a0a' }}>
-          <img
-            src={currentProfileData.photos[selectedPhoto]}
-            alt={currentProfileData.name}
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-          />
+        {/* Avatar principal */}
+        <div style={{ position: 'relative', paddingTop: '20px', paddingBottom: '20px', background: 'linear-gradient(135deg, #667eea, #764ba2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <SpellAvatarFilter
+            userEmail={`user${currentProfileData.id}@demo.com`}
+            style={{ width: '300px', height: '300px', position: 'relative', zIndex: 1 }}
+          >
+            <UserAvatar
+              avatarConfig={profileAvatars[currentProfileData.id]}
+              size={300}
+            />
+          </SpellAvatarFilter>
 
-          {/* Dots indicateur */}
-          {currentProfileData.photos.length > 1 && (
-            <div style={{ position: 'absolute', top: '15px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px' }}>
-              {currentProfileData.photos.map((_, idx) => (
-                <div key={idx} onClick={() => setSelectedPhoto(idx)} style={{ width: '40px', height: '4px', background: selectedPhoto === idx ? '#fff' : 'rgba(255,255,255,0.3)', borderRadius: '2px', cursor: 'pointer' }} />
-              ))}
-            </div>
+          {/* Spell Overlay */}
+          {userActiveSpells.length > 0 && (
+            <SpellOverlay
+              userEmail={`user${currentProfileData.id}@demo.com`}
+              size="large"
+            />
           )}
 
-          {/* Infos overlay */}
-          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(transparent, rgba(0,0,0,0.8))', padding: '60px 20px 20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-              <h2 style={{ fontSize: '28px', fontWeight: '700', margin: 0 }}>{currentProfileData.name}, {currentProfileData.age}</h2>
-              <div style={{ display: 'flex', gap: '5px' }}>
-                {currentProfileData.badges.map(badgeId => (
-                  <div key={badgeId} title={profileBadges[badgeId].name} style={{ fontSize: '18px' }}>
-                    {profileBadges[badgeId].emoji}
-                  </div>
-                ))}
-              </div>
+          {/* Badge "Avatar" */}
+          <div style={{
+            position: 'absolute',
+            top: '15px',
+            left: '15px',
+            background: 'rgba(0,0,0,0.7)',
+            padding: '8px 12px',
+            borderRadius: '20px',
+            fontSize: '12px',
+            fontWeight: '600',
+            color: 'white',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255,255,255,0.2)'
+          }}>
+            💖 Avatar
+          </div>
+        </div>
+
+        {/* Infos profil */}
+        <div style={{ background: '#0a0a0a', padding: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+            <h2 style={{ fontSize: '28px', fontWeight: '700', margin: 0 }}>{currentProfileData.name}, {currentProfileData.age}</h2>
+            <div style={{ display: 'flex', gap: '5px' }}>
+              {currentProfileData.badges.map(badgeId => (
+                <div key={badgeId} title={profileBadges[badgeId].name} style={{ fontSize: '18px' }}>
+                  {profileBadges[badgeId].emoji}
+                </div>
+              ))}
             </div>
-            <div style={{ fontSize: '14px', color: '#ddd', marginBottom: '5px' }}>
-              📍 {currentProfileData.city} • {currentProfileData.distance}
-            </div>
-            <div style={{ fontSize: '13px', color: '#aaa' }}>
-              🟢 {currentProfileData.lastActive}
-            </div>
+          </div>
+          <div style={{ fontSize: '14px', color: '#ddd', marginBottom: '5px' }}>
+            📍 {currentProfileData.city} • {currentProfileData.distance}
+          </div>
+          <div style={{ fontSize: '13px', color: '#aaa' }}>
+            🟢 {currentProfileData.lastActive}
           </div>
         </div>
 
@@ -237,6 +275,64 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
           <div style={{ marginBottom: '15px' }}>
             <div style={{ fontSize: '14px', lineHeight: '1.6', color: '#ccc' }}>
               {currentProfileData.bio}
+            </div>
+          </div>
+
+          {/* Photos verrouillées */}
+          <div style={{ marginBottom: '20px', background: '#0a0a0a', borderRadius: '12px', padding: '20px', border: '2px dashed #333' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '15px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{ fontSize: '24px' }}>🔒</div>
+                <div>
+                  <h4 style={{ fontSize: '16px', fontWeight: '700', margin: 0, marginBottom: '4px' }}>Photos verrouillées</h4>
+                  <p style={{ fontSize: '12px', color: '#888', margin: 0 }}>
+                    Échangez 10 lettres ou passez Premium
+                  </p>
+                </div>
+              </div>
+              <div style={{
+                background: 'linear-gradient(135deg, #FFD700, #FFA500)',
+                padding: '8px 16px',
+                borderRadius: '8px',
+                fontSize: '11px',
+                fontWeight: '700',
+                color: '#000',
+                cursor: 'pointer'
+              }}>
+                👑 Premium
+              </div>
+            </div>
+
+            {/* Galerie floutée */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
+              {currentProfileData.photos.slice(0, 3).map((photo, idx) => (
+                <div key={idx} style={{ position: 'relative', paddingBottom: '100%', overflow: 'hidden', borderRadius: '8px' }}>
+                  <img
+                    src={photo}
+                    alt="Verrouillé"
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      filter: 'blur(30px)',
+                      opacity: 0.3
+                    }}
+                  />
+                  <div style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    fontSize: '32px',
+                    zIndex: 1
+                  }}>
+                    🔒
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -276,6 +372,63 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
               <div style={{ fontSize: '10px', color: '#888' }}>Bars</div>
             </div>
           </div>
+
+          {/* Sorts magiques - Boutons */}
+          {currentUser && currentProfileData.id !== 0 && (
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '10px',
+              marginBottom: '15px'
+            }}>
+              <button
+                onClick={() => setShowSpellCaster(true)}
+                style={{
+                  padding: '15px',
+                  background: 'linear-gradient(135deg, #9C27B0, #7B1FA2)',
+                  border: 'none',
+                  color: 'white',
+                  borderRadius: '12px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '700',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  transition: 'transform 0.2s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+              >
+                ✨ Lancer un sort
+              </button>
+              {userActiveSpells.length > 0 && (
+                <button
+                  onClick={() => setShowSpellManager(true)}
+                  style={{
+                    padding: '15px',
+                    background: 'linear-gradient(135deg, #FF9800, #F57C00)',
+                    border: 'none',
+                    color: 'white',
+                    borderRadius: '12px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontWeight: '700',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    transition: 'transform 0.2s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                >
+                  {userActiveSpells[0].spellData.icon} Désenvoutement ({userActiveSpells.length})
+                </button>
+              )}
+            </div>
+          )}
 
           {/* Actions - Sourire / Grimace */}
           <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
@@ -370,6 +523,38 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
           matchedUser={mutualSmileUser}
           onMatchSuccess={handleMatchSuccess}
           onMatchFail={handleMatchFail}
+        />
+      )}
+
+      {/* Spell Caster Modal */}
+      {showSpellCaster && currentUser && (
+        <SpellCaster
+          currentUser={currentUser}
+          onClose={() => setShowSpellCaster(false)}
+          onSpellCast={() => {
+            // Recharger les sorts actifs
+            const email = `user${currentProfileData.id}@demo.com`;
+            const spells = getActiveSpells(email);
+            setUserActiveSpells(spells);
+          }}
+        />
+      )}
+
+      {/* Spell Manager Modal */}
+      {showSpellManager && currentUser && (
+        <SpellManager
+          currentUser={currentUser}
+          targetUser={{
+            email: `user${currentProfileData.id}@demo.com`,
+            pseudo: currentProfileData.name
+          }}
+          onClose={() => setShowSpellManager(false)}
+          onSpellRemoved={() => {
+            // Recharger les sorts actifs
+            const email = `user${currentProfileData.id}@demo.com`;
+            const spells = getActiveSpells(email);
+            setUserActiveSpells(spells);
+          }}
         />
       )}
     </div>

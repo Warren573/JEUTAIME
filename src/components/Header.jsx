@@ -21,9 +21,6 @@ export default function Header({ userCoins, adminMode, isAdminAuthenticated }) {
             )}
           </p>
         </div>
-        <div style={{ background: 'linear-gradient(135deg, #FFD700, #FFA500)', padding: '10px 18px', borderRadius: '25px', fontWeight: 'bold', color: '#000', fontSize: '16px' }}>
-          💰 {userCoins}
-        </div>
       </div>
     </div>
   );

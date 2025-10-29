@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { awardGameRewards, showRewardModal } from '../../utils/gameRewards';
+import { getGameScores } from '../../config/gamesConfig';
 
-export default function PongGame({ setGameScreen }) {
+export default function PongGame({ setGameScreen, currentUser, setUserCoins }) {
   const [localBallX, setLocalBallX] = useState(290);
   const [localBallY, setLocalBallY] = useState(190);
   const [localBallDirX, setLocalBallDirX] = useState(1);
@@ -12,6 +14,27 @@ export default function PongGame({ setGameScreen }) {
   const [localBotScore, setLocalBotScore] = useState(0);
   const [localGameActive, setLocalGameActive] = useState(false);
   const [keysPressed, setKeysPressed] = useState({});
+
+  // Stats
+  const [totalGames, setTotalGames] = useState(0);
+  const [totalWins, setTotalWins] = useState(0);
+  const [totalCoinsEarned, setTotalCoinsEarned] = useState(0);
+  const [bestScore, setBestScore] = useState(0);
+
+  const MAX_SCORE = 5; // Première à 5 points gagne
+
+  // Charger les stats au démarrage
+  useEffect(() => {
+    if (currentUser) {
+      const gameData = getGameScores(currentUser.email, 'PONG');
+      if (gameData) {
+        setTotalGames(gameData.totalPlays || 0);
+        setTotalWins(gameData.wins || 0);
+        setTotalCoinsEarned(gameData.totalCoinsEarned || 0);
+        setBestScore(gameData.bestScore || 0);
+      }
+    }
+  }, [currentUser]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -85,6 +108,48 @@ export default function PongGame({ setGameScreen }) {
     return () => clearInterval(aiLoop);
   }, [localGameActive, localBallY]);
 
+  const handleGameEnd = (playerScore, botScore) => {
+    if (!currentUser) {
+      const won = playerScore > botScore;
+      alert(won ? `🎉 Victoire ${playerScore}-${botScore} !` : `😔 Défaite ${playerScore}-${botScore}...`);
+      return;
+    }
+
+    const won = playerScore > botScore;
+
+    // Attribuer les récompenses
+    const reward = awardGameRewards(currentUser.email, 'PONG', {
+      playerScore: playerScore,
+      opponentScore: botScore,
+      score: playerScore
+    });
+
+    // Mettre à jour les stats
+    setTotalGames(prev => prev + 1);
+    if (won) {
+      setTotalWins(prev => prev + 1);
+    }
+    setTotalCoinsEarned(prev => prev + reward.coins);
+    if (playerScore > bestScore) {
+      setBestScore(playerScore);
+    }
+
+    // Mettre à jour les pièces
+    if (setUserCoins) {
+      setUserCoins(reward.newCoins);
+    }
+
+    // Mettre à jour wins dans game_scores pour le badge
+    const scores = JSON.parse(localStorage.getItem('jeutaime_game_scores') || '{}');
+    if (scores[currentUser.email] && scores[currentUser.email].PONG) {
+      scores[currentUser.email].PONG.wins = (scores[currentUser.email].PONG.wins || 0) + (won ? 1 : 0);
+      localStorage.setItem('jeutaime_game_scores', JSON.stringify(scores));
+    }
+
+    // Afficher le modal
+    showRewardModal(reward);
+  };
+
   useEffect(() => {
     if (!localGameActive) return;
 
@@ -111,16 +176,24 @@ export default function PongGame({ setGameScreen }) {
         }
 
         if (prev <= 0) {
-          setLocalBotScore(s => s + 1);
+          const newBotScore = localBotScore + 1;
+          setLocalBotScore(newBotScore);
           setLocalGameActive(false);
-          alert('Le bot a marqué un point!');
+
+          if (newBotScore >= MAX_SCORE) {
+            setTimeout(() => handleGameEnd(localPlayerScore, newBotScore), 500);
+          }
           return 190;
         }
 
         if (prev >= 385) {
-          setLocalPlayerScore(s => s + 1);
+          const newPlayerScore = localPlayerScore + 1;
+          setLocalPlayerScore(newPlayerScore);
           setLocalGameActive(false);
-          alert('Vous avez marqué un point!');
+
+          if (newPlayerScore >= MAX_SCORE) {
+            setTimeout(() => handleGameEnd(newPlayerScore, localBotScore), 500);
+          }
           return 190;
         }
 
@@ -132,6 +205,12 @@ export default function PongGame({ setGameScreen }) {
   }, [localGameActive, localBallY, localPaddleLeftY, localPaddleRightY]);
 
   const startGame = () => {
+    // Reset si un joueur a atteint MAX_SCORE
+    if (localPlayerScore >= MAX_SCORE || localBotScore >= MAX_SCORE) {
+      setLocalPlayerScore(0);
+      setLocalBotScore(0);
+    }
+
     setLocalBallX(190);
     setLocalBallY(140);
     setLocalBallDirX(1);
@@ -142,10 +221,91 @@ export default function PongGame({ setGameScreen }) {
     setLocalGameActive(true);
   };
 
+  const winRate = totalGames > 0 ? Math.round((totalWins / totalGames) * 100) : 0;
+
   return (
     <div>
-      <button onClick={() => setGameScreen(null)} style={{ padding: '10px 20px', background: '#1a1a1a', border: '1px solid #333', color: 'white', borderRadius: '10px', marginBottom: '20px', cursor: 'pointer', fontWeight: '600' }}>← Retour</button>
-      <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600' }}>🎮 Pong</h2>
+      <button
+        onClick={() => setGameScreen(null)}
+        style={{
+          padding: '10px 20px',
+          background: '#1a1a1a',
+          border: '1px solid #333',
+          color: 'white',
+          borderRadius: '10px',
+          marginBottom: '20px',
+          cursor: 'pointer',
+          fontWeight: '600'
+        }}
+      >
+        ← Retour
+      </button>
+
+      <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600' }}>🏓 Pong</h2>
+
+      {/* Stats */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(4, 1fr)',
+        gap: '8px',
+        marginBottom: '20px'
+      }}>
+        <div style={{
+          background: 'linear-gradient(135deg, #667eea, #764ba2)',
+          borderRadius: '12px',
+          padding: '12px 8px',
+          textAlign: 'center'
+        }}>
+          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.8)', marginBottom: '3px' }}>
+            Parties
+          </div>
+          <div style={{ fontSize: '20px', fontWeight: '700', color: 'white' }}>
+            {totalGames}
+          </div>
+        </div>
+
+        <div style={{
+          background: 'linear-gradient(135deg, #4CAF50, #388E3C)',
+          borderRadius: '12px',
+          padding: '12px 8px',
+          textAlign: 'center'
+        }}>
+          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.8)', marginBottom: '3px' }}>
+            Victoires
+          </div>
+          <div style={{ fontSize: '20px', fontWeight: '700', color: 'white' }}>
+            {totalWins}
+          </div>
+        </div>
+
+        <div style={{
+          background: 'linear-gradient(135deg, #FF9800, #F57C00)',
+          borderRadius: '12px',
+          padding: '12px 8px',
+          textAlign: 'center'
+        }}>
+          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.8)', marginBottom: '3px' }}>
+            Taux
+          </div>
+          <div style={{ fontSize: '20px', fontWeight: '700', color: 'white' }}>
+            {winRate}%
+          </div>
+        </div>
+
+        <div style={{
+          background: 'linear-gradient(135deg, #E91E63, #C2185B)',
+          borderRadius: '12px',
+          padding: '12px 8px',
+          textAlign: 'center'
+        }}>
+          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.8)', marginBottom: '3px' }}>
+            Record
+          </div>
+          <div style={{ fontSize: '20px', fontWeight: '700', color: 'white' }}>
+            {bestScore}
+          </div>
+        </div>
+      </div>
 
       <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', textAlign: 'center' }}>
         <div style={{ position: 'relative', width: '400px', height: '300px', background: '#0a0a0a', border: '2px solid #888', marginBottom: '20px', margin: '0 auto 20px' }}>
@@ -177,6 +337,25 @@ export default function PongGame({ setGameScreen }) {
         >
           {localGameActive ? 'Partie en cours...' : 'Jouer'}
         </button>
+
+        {/* Info récompenses */}
+        <div style={{
+          marginTop: '25px',
+          padding: '20px',
+          background: 'rgba(103, 58, 183, 0.1)',
+          borderRadius: '12px',
+          border: '1px solid rgba(103, 58, 183, 0.3)'
+        }}>
+          <div style={{ fontSize: '14px', fontWeight: '600', marginBottom: '12px', color: '#BB86FC' }}>
+            💰 Récompenses
+          </div>
+          <div style={{ fontSize: '13px', color: '#ccc', lineHeight: '1.6', textAlign: 'left' }}>
+            • <strong>Victoire :</strong> 50 pièces + 5 points<br />
+            • <strong>Défaite :</strong> 10 pièces + 2 points<br />
+            • <strong>Bonus points :</strong> 5 pièces par point marqué<br />
+            • <strong>Badge "Champion de Pong" :</strong> Débloqué à 10 victoires (100 points bonus)
+          </div>
+        </div>
       </div>
     </div>
   );
