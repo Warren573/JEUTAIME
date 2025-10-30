@@ -316,6 +316,7 @@ export default function RankingScreen({ currentUser }) {
           • Connexion quotidienne : <strong>+10 pts</strong>
         </div>
       </div>
+      </div>
     </div>
   );
 }
