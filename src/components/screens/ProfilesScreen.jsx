@@ -302,7 +302,18 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
         <div style={{ position: 'relative', height: '400px', background: 'var(--color-beige-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           {selectedPhoto === -1 ? (
             // Afficher l'avatar si photo non débloquée
-            <div style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
+            <div style={{
+              textAlign: 'center',
+              position: 'relative',
+              zIndex: 1,
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingBottom: '140px' // Espace pour les infos en bas
+            }}>
               {/* AVATAR STYLISÉ AVATAAARS */}
               <div style={{
                 width: '200px',
@@ -313,7 +324,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
                 alignItems: 'center',
                 justifyContent: 'center',
                 border: '4px solid var(--color-gold)',
-                margin: '0 auto 20px auto',
+                margin: '0 auto',
                 overflow: 'hidden'
               }}>
                 <Avatar
@@ -330,38 +341,32 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
                   skinColor="Light"
                 />
               </div>
+
+              {/* Message photo verrouillée - AU CENTRE */}
               <div style={{
-                marginTop: 'var(--spacing-lg)',
-                padding: 'var(--spacing-md)',
-                background: 'var(--color-cream)',
+                marginTop: 'var(--spacing-md)',
+                padding: 'var(--spacing-sm) var(--spacing-md)',
+                background: 'rgba(255, 255, 255, 0.9)',
                 borderRadius: 'var(--border-radius-md)',
                 border: '2px solid var(--color-gold)',
-                maxWidth: '300px',
-                margin: '0 auto'
+                maxWidth: '280px'
               }}>
                 <p style={{
-                  fontSize: '0.9rem',
+                  fontSize: '0.85rem',
                   color: 'var(--color-text-primary)',
-                  margin: '0 0 var(--spacing-xs) 0',
+                  margin: 0,
                   fontWeight: '600'
                 }}>
-                  🔒 Photo verrouillée
-                </p>
-                <p style={{
-                  fontSize: '0.8rem',
-                  color: 'var(--color-text-secondary)',
-                  margin: 0
-                }}>
-                  {currentUser?.premium
-                    ? '✨ Débloquée avec Premium'
-                    : `Échangez ${(selectedPhoto + 1) * 10} lettres pour débloquer`}
+                  🔒 Photos verrouillées
                 </p>
                 <p style={{
                   fontSize: '0.75rem',
-                  color: 'var(--color-text-light)',
-                  margin: 'var(--spacing-xs) 0 0 0'
+                  color: 'var(--color-text-secondary)',
+                  margin: '4px 0 0 0'
                 }}>
-                  Actuellement : {getLettersCount(currentProfileData.id)} lettres
+                  {currentUser?.premium
+                    ? '✨ Débloquée avec Premium'
+                    : 'Échangez des lettres pour débloquer'}
                 </p>
               </div>
 
@@ -482,7 +487,18 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
             </>
           ) : (
             // Photo verrouillée - afficher avatar
-            <div style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
+            <div style={{
+              textAlign: 'center',
+              position: 'relative',
+              zIndex: 1,
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingBottom: '140px' // Espace pour les infos en bas
+            }}>
               {/* AVATAR STYLISÉ AVATAAARS */}
               <div style={{
                 width: '200px',
@@ -493,7 +509,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
                 alignItems: 'center',
                 justifyContent: 'center',
                 border: '4px solid var(--color-gold)',
-                margin: '0 auto 20px auto',
+                margin: '0 auto',
                 overflow: 'hidden'
               }}>
                 <Avatar
@@ -510,38 +526,39 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
                   skinColor="Light"
                 />
               </div>
+
+              {/* Message photo spécifique verrouillée */}
               <div style={{
-                marginTop: 'var(--spacing-lg)',
-                padding: 'var(--spacing-md)',
-                background: 'var(--color-cream)',
+                marginTop: 'var(--spacing-md)',
+                padding: 'var(--spacing-sm) var(--spacing-md)',
+                background: 'rgba(255, 255, 255, 0.9)',
                 borderRadius: 'var(--border-radius-md)',
                 border: '2px solid var(--color-gold)',
-                maxWidth: '300px',
-                margin: '0 auto'
+                maxWidth: '280px'
               }}>
                 <p style={{
-                  fontSize: '0.9rem',
+                  fontSize: '0.85rem',
                   color: 'var(--color-text-primary)',
-                  margin: '0 0 var(--spacing-xs) 0',
+                  margin: 0,
                   fontWeight: '600'
                 }}>
-                  🔒 Photo verrouillée
-                </p>
-                <p style={{
-                  fontSize: '0.8rem',
-                  color: 'var(--color-text-secondary)',
-                  margin: 0
-                }}>
-                  {currentUser?.premium
-                    ? '✨ Débloquée avec Premium'
-                    : `Échangez ${(selectedPhoto + 1) * 10} lettres pour débloquer`}
+                  🔒 Photo {selectedPhoto + 1} verrouillée
                 </p>
                 <p style={{
                   fontSize: '0.75rem',
-                  color: 'var(--color-text-light)',
-                  margin: 'var(--spacing-xs) 0 0 0'
+                  color: 'var(--color-text-secondary)',
+                  margin: '4px 0 0 0'
                 }}>
-                  Actuellement : {getLettersCount(currentProfileData.id)} lettres
+                  {currentUser?.premium
+                    ? '✨ Débloquée avec Premium'
+                    : `${(selectedPhoto + 1) * 10} lettres requises`}
+                </p>
+                <p style={{
+                  fontSize: '0.7rem',
+                  color: 'var(--color-text-light)',
+                  margin: '4px 0 0 0'
+                }}>
+                  {getLettersCount(currentProfileData.id)} lettres échangées
                 </p>
               </div>
             </div>
