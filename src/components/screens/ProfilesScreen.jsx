@@ -311,11 +311,21 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
           {selectedPhoto === -1 ? (
             // Afficher l'avatar si photo non débloquée
             <div style={{ textAlign: 'center' }}>
-              <UserAvatar
-                user={currentProfileData}
-                size={200}
-                emoji="😊"
-              />
+              {/* AVATAR GÉNÉRIQUE - PAS DE PHOTO */}
+              <div style={{
+                width: '200px',
+                height: '200px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '100px',
+                border: '4px solid var(--color-gold)',
+                margin: '0 auto 20px auto'
+              }}>
+                😊
+              </div>
               <div style={{
                 marginTop: 'var(--spacing-lg)',
                 padding: 'var(--spacing-md)',
@@ -469,11 +479,21 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
           ) : (
             // Photo verrouillée - afficher avatar
             <div style={{ textAlign: 'center' }}>
-              <UserAvatar
-                user={currentProfileData}
-                size={200}
-                emoji="😊"
-              />
+              {/* AVATAR GÉNÉRIQUE - PAS DE PHOTO */}
+              <div style={{
+                width: '200px',
+                height: '200px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '100px',
+                border: '4px solid var(--color-gold)',
+                margin: '0 auto 20px auto'
+              }}>
+                😊
+              </div>
               <div style={{
                 marginTop: 'var(--spacing-lg)',
                 padding: 'var(--spacing-md)',
