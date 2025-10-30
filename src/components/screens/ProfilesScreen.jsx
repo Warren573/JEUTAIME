@@ -231,10 +231,6 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
         }}>
           👥 Découverte
         </h1>
-        {/* Indicateur de version - TEMPORAIRE */}
-        <div style={{ background: '#4CAF50', color: 'white', padding: '5px', textAlign: 'center', fontSize: '12px', fontWeight: 'bold' }}>
-          ✅ VERSION AVATAR-FIRST ACTIVE (selectedPhoto = {selectedPhoto})
-        </div>
       </div>
 
       {/* Tabs */}
@@ -304,14 +300,9 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
       }}>
         {/* Avatar ou Photos carousel */}
         <div style={{ position: 'relative', height: '400px', background: 'var(--color-beige-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          {/* DEBUG VISUEL */}
-          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, background: 'red', color: 'white', padding: '10px', zIndex: 999, fontSize: '14px', fontWeight: 'bold' }}>
-            DEBUG: selectedPhoto={selectedPhoto} | condition1={selectedPhoto === -1 ? 'TRUE' : 'FALSE'} | isPremium={currentUser?.premium ? 'OUI' : 'NON'}
-          </div>
-
           {selectedPhoto === -1 ? (
             // Afficher l'avatar si photo non débloquée
-            <div style={{ textAlign: 'center' }}>
+            <div style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
               {/* AVATAR STYLISÉ AVATAAARS */}
               <div style={{
                 width: '200px',
@@ -491,7 +482,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
             </>
           ) : (
             // Photo verrouillée - afficher avatar
-            <div style={{ textAlign: 'center' }}>
+            <div style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
               {/* AVATAR STYLISÉ AVATAAARS */}
               <div style={{
                 width: '200px',
