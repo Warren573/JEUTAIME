@@ -88,145 +88,265 @@ export default function LettersScreen({ currentUser }) {
   }
 
   return (
-    <div>
-      <h1 style={{ fontSize: '32px', marginBottom: '25px', fontWeight: '600' }}>💌 Mes Lettres</h1>
+    <div style={{
+      minHeight: '100vh',
+      paddingBottom: '100px',
+      background: 'var(--color-brown-dark)'
+    }}>
+      {/* En-tête avec avatar utilisateur */}
+      <div style={{
+        background: 'var(--color-brown-darker)',
+        padding: 'var(--spacing-lg)',
+        marginBottom: 'var(--spacing-lg)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 'var(--spacing-md)',
+        boxShadow: 'var(--shadow-lg)'
+      }}>
+        <div style={{
+          width: '60px',
+          height: '60px',
+          borderRadius: '50%',
+          background: 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '2rem',
+          border: '3px solid var(--color-gold-light)',
+          boxShadow: 'var(--shadow-md)'
+        }}>
+          👤
+        </div>
+        <div style={{ flex: 1 }}>
+          <h1 style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: '1.75rem',
+            margin: 0,
+            color: 'var(--color-cream)',
+            textShadow: '1px 1px 2px rgba(0,0,0,0.3)'
+          }}>
+            {currentUser?.name || 'Utilisateur'}
+          </h1>
+          <p style={{
+            fontSize: '0.9rem',
+            color: 'var(--color-tan)',
+            margin: 0
+          }}>
+            {conversations.length} conversation{conversations.length !== 1 ? 's' : ''}
+          </p>
+        </div>
+      </div>
 
       {conversations.length === 0 ? (
         <div style={{
           textAlign: 'center',
           padding: '60px 20px',
-          background: '#1a1a1a',
-          borderRadius: '20px'
+          margin: '0 var(--spacing-lg)',
+          background: 'var(--color-cream)',
+          borderRadius: 'var(--border-radius-lg)',
+          border: '3px solid var(--color-tan)',
+          boxShadow: 'var(--shadow-lg)'
         }}>
           <div style={{ fontSize: '80px', marginBottom: '20px' }}>💌</div>
-          <h3 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '10px' }}>
+          <h3 style={{
+            fontSize: '1.25rem',
+            fontWeight: '600',
+            marginBottom: '10px',
+            color: 'var(--color-text-primary)',
+            fontFamily: 'var(--font-heading)'
+          }}>
             Aucune conversation
           </h3>
-          <p style={{ fontSize: '14px', color: '#999', lineHeight: '1.6' }}>
+          <p style={{
+            fontSize: '0.95rem',
+            color: 'var(--color-text-secondary)',
+            lineHeight: '1.6'
+          }}>
             Envoie des sourires et réussis des matchs<br />
             pour commencer des conversations !
           </p>
         </div>
       ) : (
-        <div style={{ marginBottom: '25px' }}>
+        <div style={{ padding: '0 var(--spacing-lg)' }}>
           {conversations.map((convo, index) => {
             const isPhotoRevealed = (convo.letterCount.user >= 10 && convo.letterCount.matched >= 10) || currentUser.premium;
             const totalLetters = convo.letterCount.user + convo.letterCount.matched;
-            const progress = Math.min((totalLetters / 20) * 100, 100);
 
             return (
               <div
                 key={index}
-                onClick={() => handleOpenConversation(convo)}
                 style={{
-                  background: convo.unread
-                    ? 'linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.15))'
-                    : '#1a1a1a',
-                  borderRadius: '15px',
-                  padding: '15px',
-                  marginBottom: '12px',
-                  cursor: 'pointer',
-                  border: convo.unread ? '2px solid #667eea' : 'none',
-                  transition: 'transform 0.2s',
-                  position: 'relative',
-                  overflow: 'hidden'
+                  background: 'var(--color-cream)',
+                  borderRadius: 'var(--border-radius-lg)',
+                  padding: 'var(--spacing-md)',
+                  marginBottom: 'var(--spacing-md)',
+                  border: '3px solid var(--color-tan)',
+                  boxShadow: 'var(--shadow-lg)',
+                  transition: 'all var(--transition-normal)',
+                  position: 'relative'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
               >
-                {/* Barre de progression */}
-                {!isPhotoRevealed && (
+                {/* En-tête de l'enveloppe */}
+                <div
+                  onClick={() => handleOpenConversation(convo)}
+                  style={{
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: 'var(--spacing-md)',
+                    paddingBottom: 'var(--spacing-md)',
+                    borderBottom: '2px dashed var(--color-tan)',
+                    marginBottom: 'var(--spacing-md)'
+                  }}
+                >
+                  {/* Icône enveloppe */}
                   <div style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    height: '3px',
-                    width: `${progress}%`,
-                    background: 'linear-gradient(90deg, #667eea, #764ba2)',
-                    transition: 'width 0.3s'
-                  }} />
-                )}
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                  {/* Avatar */}
-                  <div style={{
-                    position: 'relative',
-                    width: '50px',
-                    height: '50px',
-                    borderRadius: '50%',
-                    overflow: 'hidden',
-                    flexShrink: 0
+                    fontSize: '2.5rem',
+                    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))'
                   }}>
-                    <div style={{
-                      width: '100%',
-                      height: '100%',
-                      background: 'linear-gradient(135deg, #667eea, #764ba2)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '24px',
-                      filter: isPhotoRevealed ? 'none' : `blur(${Math.max(0, 10 - (progress / 10))}px)`
-                    }}>
-                      👤
-                    </div>
-                    {!isPhotoRevealed && (
-                      <div style={{
-                        position: 'absolute',
-                        bottom: '-2px',
-                        right: '-2px',
-                        background: '#FFD700',
-                        borderRadius: '50%',
-                        padding: '4px',
-                        fontSize: '12px'
-                      }}>
-                        🔒
-                      </div>
-                    )}
+                    ✉️
                   </div>
 
-                  {/* Contenu */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '5px' }}>
+                  <div style={{ flex: 1 }}>
+                    {/* Expéditeur */}
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 'var(--spacing-sm)',
+                      marginBottom: 'var(--spacing-xs)'
+                    }}>
+                      <div style={{
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '50%',
+                        background: 'linear-gradient(135deg, var(--color-brown), var(--color-brown-light))',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '1.25rem',
+                        border: '2px solid var(--color-tan)',
+                        filter: isPhotoRevealed ? 'none' : 'blur(4px)'
+                      }}>
+                        👤
+                      </div>
                       <h3 style={{
-                        fontSize: '16px',
+                        fontFamily: 'var(--font-heading)',
+                        fontSize: '1.1rem',
                         margin: 0,
-                        fontWeight: '600',
-                        color: convo.unread ? '#667eea' : 'white'
+                        color: 'var(--color-text-primary)',
+                        fontWeight: '700'
                       }}>
                         {convo.matchedUser.name || convo.matchedUser.pseudo}
                       </h3>
-                      <span style={{ fontSize: '11px', color: '#666', flexShrink: 0 }}>
-                        {getTimeDiff(convo.lastTimestamp)}
-                      </span>
                     </div>
 
+                    {/* Aperçu du message */}
                     <p style={{
-                      fontSize: '13px',
-                      color: '#aaa',
-                      margin: '0 0 5px 0',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis'
+                      fontSize: '0.9rem',
+                      color: 'var(--color-text-secondary)',
+                      margin: '0 0 var(--spacing-xs) 0',
+                      fontStyle: 'italic',
+                      lineHeight: '1.3'
                     }}>
-                      {convo.lastMessage}
+                      "{convo.lastMessage.length > 60 ? convo.lastMessage.substring(0, 60) + '...' : convo.lastMessage}"
                     </p>
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontSize: '11px', color: '#666' }}>
-                        💌 {convo.letterCount.user + convo.letterCount.matched} lettres
-                      </span>
+                    {/* Statut */}
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 'var(--spacing-md)',
+                      fontSize: '0.8rem',
+                      color: 'var(--color-text-light)'
+                    }}>
+                      <span>💌 {totalLetters} lettres</span>
+                      <span>•</span>
+                      <span>{convo.unread ? '✨ Non lu' : 'Tu es ghosté'}</span>
                       {!isPhotoRevealed && (
-                        <span style={{ fontSize: '11px', color: '#FFD700', fontWeight: '600' }}>
-                          {20 - totalLetters} pour dévoiler
-                        </span>
-                      )}
-                      {isPhotoRevealed && (
-                        <span style={{ fontSize: '11px', color: '#4CAF50', fontWeight: '600' }}>
-                          ✨ Photo révélée
-                        </span>
+                        <>
+                          <span>•</span>
+                          <span style={{ color: 'var(--color-gold)', fontWeight: '600' }}>
+                            🔒 {20 - totalLetters} pour révéler
+                          </span>
+                        </>
                       )}
                     </div>
                   </div>
+                </div>
+
+                {/* Actions - Boutons style LETTRES.png */}
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(3, 1fr)',
+                  gap: 'var(--spacing-xs)'
+                }}>
+                  <button
+                    onClick={() => handleOpenConversation(convo)}
+                    style={{
+                      padding: 'var(--spacing-sm)',
+                      background: 'linear-gradient(135deg, var(--color-romantic-light), var(--color-romantic))',
+                      border: '2px solid var(--color-romantic)',
+                      borderRadius: 'var(--border-radius-sm)',
+                      color: 'var(--color-cream)',
+                      fontSize: '0.8rem',
+                      fontWeight: '700',
+                      cursor: 'pointer',
+                      transition: 'all var(--transition-normal)',
+                      boxShadow: 'var(--shadow-sm)'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+                    onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                  >
+                    Relancer
+                  </button>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      alert('Conversation archivée');
+                    }}
+                    style={{
+                      padding: 'var(--spacing-sm)',
+                      background: 'var(--color-brown-light)',
+                      border: '2px solid var(--color-brown)',
+                      borderRadius: 'var(--border-radius-sm)',
+                      color: 'var(--color-cream)',
+                      fontSize: '0.8rem',
+                      fontWeight: '700',
+                      cursor: 'pointer',
+                      transition: 'all var(--transition-normal)',
+                      boxShadow: 'var(--shadow-sm)'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+                    onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                  >
+                    Archiver
+                  </button>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (confirm('Supprimer cette conversation ?')) {
+                        alert('Conversation supprimée');
+                      }
+                    }}
+                    style={{
+                      padding: 'var(--spacing-sm)',
+                      background: 'var(--color-error)',
+                      border: '2px solid var(--color-brown-dark)',
+                      borderRadius: 'var(--border-radius-sm)',
+                      color: 'var(--color-cream)',
+                      fontSize: '0.8rem',
+                      fontWeight: '700',
+                      cursor: 'pointer',
+                      transition: 'all var(--transition-normal)',
+                      boxShadow: 'var(--shadow-sm)'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+                    onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                  >
+                    Supprimer
+                  </button>
                 </div>
               </div>
             );
@@ -234,64 +354,136 @@ export default function LettersScreen({ currentUser }) {
         </div>
       )}
 
-      {/* Section Offrandes */}
-      <button
-        onClick={() => setShowGifts(!showGifts)}
-        style={{
-          width: '100%',
-          background: 'linear-gradient(135deg, #9C27B0, #7B1FA2)',
-          padding: '15px',
-          borderRadius: '15px',
-          marginTop: '25px',
-          marginBottom: '20px',
-          color: 'white',
-          border: 'none',
-          cursor: 'pointer',
-          textAlign: 'left'
-        }}
-      >
-        <h3 style={{ fontSize: '16px', margin: '0 0 8px 0', fontWeight: '600' }}>
-          ✨ Envoyer de la Magie {showGifts ? '▼' : '▶'}
-        </h3>
-        <p style={{ fontSize: '13px', margin: 0, lineHeight: '1.5' }}>
-          Envoie des cadeaux magiques à tes correspondants !
-        </p>
-      </button>
+      {/* Section Offrandes - Thème vintage */}
+      <div style={{ padding: '0 var(--spacing-lg)', marginTop: 'var(--spacing-xl)' }}>
+        <button
+          onClick={() => setShowGifts(!showGifts)}
+          className="btn-primary"
+          style={{
+            width: '100%',
+            padding: 'var(--spacing-md)',
+            marginBottom: 'var(--spacing-md)',
+            textAlign: 'left',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}
+        >
+          <div>
+            <h3 style={{
+              fontSize: '1.1rem',
+              margin: '0 0 var(--spacing-xs) 0',
+              fontWeight: '700',
+              fontFamily: 'var(--font-heading)'
+            }}>
+              ✨ Envoyer de la Magie
+            </h3>
+            <p style={{
+              fontSize: '0.9rem',
+              margin: 0,
+              lineHeight: '1.3',
+              opacity: 0.9
+            }}>
+              Envoie des cadeaux magiques !
+            </p>
+          </div>
+          <div style={{ fontSize: '1.5rem' }}>
+            {showGifts ? '▼' : '▶'}
+          </div>
+        </button>
 
-      {showGifts && (
-        <>
-          <h3 style={{ fontSize: '14px', marginBottom: '15px', fontWeight: '600', color: '#aaa' }}>
-            🎁 Offrandes disponibles
-          </h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-            <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', textAlign: 'center', cursor: 'pointer', border: '2px solid transparent', transition: 'all 0.3s' }}>
-              <div style={{ fontSize: '40px', marginBottom: '10px' }}>🌹</div>
-              <h3 style={{ fontSize: '14px', margin: '0 0 5px 0', fontWeight: '600' }}>Rose</h3>
-              <p style={{ fontSize: '12px', color: '#E91E63', margin: '0 0 8px 0', fontWeight: 'bold' }}>30 🪙</p>
-            </div>
-            <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', textAlign: 'center', cursor: 'pointer', border: '2px solid transparent', transition: 'all 0.3s' }}>
-              <div style={{ fontSize: '40px', marginBottom: '10px' }}>🧪</div>
-              <h3 style={{ fontSize: '14px', margin: '0 0 5px 0', fontWeight: '600' }}>Philtre</h3>
-              <p style={{ fontSize: '12px', color: '#9C27B0', margin: '0 0 8px 0', fontWeight: 'bold' }}>50 🪙</p>
-            </div>
-            <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', textAlign: 'center', cursor: 'pointer', border: '2px solid transparent', transition: 'all 0.3s' }}>
-              <div style={{ fontSize: '40px', marginBottom: '10px' }}>💐</div>
-              <h3 style={{ fontSize: '14px', margin: '0 0 5px 0', fontWeight: '600' }}>Bouquet</h3>
-              <p style={{ fontSize: '12px', color: '#FF9800', margin: '0 0 8px 0', fontWeight: 'bold' }}>75 🪙</p>
-            </div>
-            <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', textAlign: 'center', cursor: 'pointer', border: '2px solid transparent', transition: 'all 0.3s' }}>
-              <div style={{ fontSize: '40px', marginBottom: '10px' }}>🍷</div>
-              <h3 style={{ fontSize: '14px', margin: '0 0 5px 0', fontWeight: '600' }}>Verre de vin</h3>
-              <p style={{ fontSize: '12px', color: '#2196F3', margin: '0 0 8px 0', fontWeight: 'bold' }}>100 🪙</p>
-            </div>
-            <div style={{ background: 'linear-gradient(135deg, #FFD700, #FFA500)', borderRadius: '15px', padding: '20px', textAlign: 'center', cursor: 'pointer', gridColumn: '1 / -1', border: '3px solid #FFD700' }}>
-              <div style={{ fontSize: '40px', marginBottom: '10px' }}>💎</div>
-              <h3 style={{ fontSize: '14px', margin: '0 0 5px 0', fontWeight: '700', color: '#000' }}>Diamant Éternel</h3>
-              <p style={{ fontSize: '14px', color: '#000', margin: '0 0 8px 0', fontWeight: 'bold' }}>500 🪙</p>
+        {showGifts && (
+          <div style={{
+            background: 'var(--color-cream)',
+            borderRadius: 'var(--border-radius-lg)',
+            padding: 'var(--spacing-md)',
+            border: '3px solid var(--color-tan)',
+            boxShadow: 'var(--shadow-lg)'
+          }}>
+            <h3 style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: '1rem',
+              marginBottom: 'var(--spacing-md)',
+              color: 'var(--color-text-primary)',
+              textAlign: 'center'
+            }}>
+              🎁 Offrandes disponibles
+            </h3>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: 'var(--spacing-sm)'
+            }}>
+              <div className="card" style={{
+                padding: 'var(--spacing-md)',
+                textAlign: 'center',
+                cursor: 'pointer',
+                background: 'var(--color-beige)',
+                border: '2px solid var(--color-tan)'
+              }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: 'var(--spacing-xs)' }}>🌹</div>
+                <h3 style={{ fontSize: '0.95rem', margin: '0 0 var(--spacing-xs) 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Rose</h3>
+                <div className="currency" style={{ fontSize: '0.85rem' }}>
+                  <span className="currency-icon">J</span> 30
+                </div>
+              </div>
+              <div className="card" style={{
+                padding: 'var(--spacing-md)',
+                textAlign: 'center',
+                cursor: 'pointer',
+                background: 'var(--color-beige)',
+                border: '2px solid var(--color-tan)'
+              }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: 'var(--spacing-xs)' }}>🧪</div>
+                <h3 style={{ fontSize: '0.95rem', margin: '0 0 var(--spacing-xs) 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Philtre</h3>
+                <div className="currency" style={{ fontSize: '0.85rem' }}>
+                  <span className="currency-icon">J</span> 50
+                </div>
+              </div>
+              <div className="card" style={{
+                padding: 'var(--spacing-md)',
+                textAlign: 'center',
+                cursor: 'pointer',
+                background: 'var(--color-beige)',
+                border: '2px solid var(--color-tan)'
+              }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: 'var(--spacing-xs)' }}>💐</div>
+                <h3 style={{ fontSize: '0.95rem', margin: '0 0 var(--spacing-xs) 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Bouquet</h3>
+                <div className="currency" style={{ fontSize: '0.85rem' }}>
+                  <span className="currency-icon">J</span> 75
+                </div>
+              </div>
+              <div className="card" style={{
+                padding: 'var(--spacing-md)',
+                textAlign: 'center',
+                cursor: 'pointer',
+                background: 'var(--color-beige)',
+                border: '2px solid var(--color-tan)'
+              }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: 'var(--spacing-xs)' }}>🍷</div>
+                <h3 style={{ fontSize: '0.95rem', margin: '0 0 var(--spacing-xs) 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Verre de vin</h3>
+                <div className="currency" style={{ fontSize: '0.85rem' }}>
+                  <span className="currency-icon">J</span> 100
+                </div>
+              </div>
+              <div className="card" style={{
+                padding: 'var(--spacing-md)',
+                textAlign: 'center',
+                cursor: 'pointer',
+                gridColumn: '1 / -1',
+                background: 'linear-gradient(135deg, var(--color-gold-light), var(--color-gold))',
+                border: '3px solid var(--color-gold-dark)'
+              }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: 'var(--spacing-xs)' }}>💎</div>
+                <h3 style={{ fontSize: '1rem', margin: '0 0 var(--spacing-xs) 0', fontWeight: '700', color: 'var(--color-brown-dark)', fontFamily: 'var(--font-heading)' }}>Diamant Éternel</h3>
+                <div className="currency" style={{ fontSize: '1rem', background: 'var(--color-gold-dark)' }}>
+                  <span className="currency-icon">J</span> 500
+                </div>
+              </div>
             </div>
           </div>
-        </>
-      )}
+        )}
+      </div>
     </div>
   );
 }
