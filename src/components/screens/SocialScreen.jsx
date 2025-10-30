@@ -365,6 +365,12 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
             <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '700', color: '#fff' }}>Empires d'Étheria</h4>
             <p style={{ fontSize: '11px', color: '#fef3c7', margin: 0, fontWeight: '500' }}>Plateau isométrique fantasy - Multi-joueurs asynchrone!</p>
           </div>
+          <div onClick={() => setGameScreen('piratemonopoly')} style={{ background: 'linear-gradient(135deg, #8B4513, #2c1810)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer', gridColumn: '1 / -1', border: '3px solid #FFD700', position: 'relative', boxShadow: '0 10px 30px rgba(139, 69, 19, 0.4)' }}>
+            <div style={{ position: 'absolute', top: '5px', right: '5px', background: '#FFD700', color: '#000', padding: '3px 8px', borderRadius: '5px', fontSize: '10px', fontWeight: 'bold' }}>NEW!</div>
+            <div style={{ fontSize: '36px', marginBottom: '8px' }}>🏴‍☠️💰</div>
+            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '700', color: '#FFD700' }}>Monopoly Pirate</h4>
+            <p style={{ fontSize: '11px', color: '#f4e8d0', margin: 0, fontWeight: '500' }}>Jeu de plateau pirate - 2 à 4 joueurs!</p>
+          </div>
         </div>
       )}
 

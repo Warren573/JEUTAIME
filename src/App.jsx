@@ -19,6 +19,7 @@ import BrickBreakerGame from './components/games/BrickBreakerGame';
 import MorpionGame from './components/games/MorpionGame';
 import CardGame from './components/games/CardGame';
 import StoryTimeGame from './components/games/StoryTimeGame';
+import PirateMonopolyGame from './components/games/PirateMonopolyGame';
 
 // Admin
 import { AdminProvider, useAdmin } from './contexts/AdminContext';
@@ -239,6 +240,7 @@ function MainApp() {
         {gameScreen === 'morpion' && <MorpionGame {...appState} />}
         {gameScreen === 'cards' && <CardGame {...appState} />}
         {gameScreen === 'storytime' && <StoryTimeGame {...appState} />}
+        {gameScreen === 'piratemonopoly' && <PirateMonopolyGame {...appState} />}
 
         {selectedBar && <BarDetailScreen {...appState} />}
       </div>
