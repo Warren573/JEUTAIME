@@ -303,6 +303,11 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
       }}>
         {/* Avatar ou Photos carousel */}
         <div style={{ position: 'relative', height: '400px', background: 'var(--color-beige-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {/* DEBUG VISUEL */}
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, background: 'red', color: 'white', padding: '10px', zIndex: 999, fontSize: '14px', fontWeight: 'bold' }}>
+            DEBUG: selectedPhoto={selectedPhoto} | condition1={selectedPhoto === -1 ? 'TRUE' : 'FALSE'} | isPremium={currentUser?.premium ? 'OUI' : 'NON'}
+          </div>
+
           {selectedPhoto === -1 ? (
             // Afficher l'avatar si photo non débloquée
             <div style={{ textAlign: 'center' }}>
