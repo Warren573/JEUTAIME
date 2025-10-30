@@ -30,6 +30,8 @@ export default function PirateMonopolyGame({ setGameScreen, userCoins, setUserCo
   const [currentCard, setCurrentCard] = useState(null);
   const [showPropertiesModal, setShowPropertiesModal] = useState(false);
   const [selectedPropertyForBuild, setSelectedPropertyForBuild] = useState(null);
+  const [showSpaceDetailModal, setShowSpaceDetailModal] = useState(false);
+  const [selectedSpaceForDetail, setSelectedSpaceForDetail] = useState(null);
 
   // Prison
   const [playersInJail, setPlayersInJail] = useState({});
@@ -902,6 +904,10 @@ export default function PirateMonopolyGame({ setGameScreen, userCoins, setUserCo
               <div
                 key={space.id}
                 title={`${space.name}${space.price ? ` - ${space.price}₽` : ''}`}
+                onClick={() => {
+                  setSelectedSpaceForDetail(space);
+                  setShowSpaceDetailModal(true);
+                }}
                 style={{
                   gridArea,
                   background: property?.owner !== undefined
@@ -1473,6 +1479,281 @@ export default function PirateMonopolyGame({ setGameScreen, userCoins, setUserCo
               }}
             >
               ❌ Fermer
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de détail d'une case */}
+      {showSpaceDetailModal && selectedSpaceForDetail && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.85)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000,
+          padding: '20px'
+        }}>
+          <div style={{
+            background: 'linear-gradient(135deg, #3d2817, #2a1810)',
+            padding: '30px',
+            borderRadius: '20px',
+            border: '4px solid #8B6F47',
+            maxWidth: '500px',
+            maxHeight: '90vh',
+            overflow: 'auto'
+          }}>
+            {/* En-tête avec emoji et nom */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '20px',
+              marginBottom: '25px',
+              paddingBottom: '20px',
+              borderBottom: '2px solid #8B6F47'
+            }}>
+              <div style={{
+                fontSize: '5rem',
+                background: selectedSpaceForDetail.group
+                  ? islandGroups[selectedSpaceForDetail.group].color
+                  : '#2a1810',
+                padding: '20px',
+                borderRadius: '15px',
+                border: '3px solid #8B6F47'
+              }}>
+                {selectedSpaceForDetail.emoji}
+              </div>
+              <div style={{ flex: 1 }}>
+                <h2 style={{
+                  color: '#FFD700',
+                  margin: '0 0 10px 0',
+                  fontSize: '1.5rem',
+                  lineHeight: '1.2'
+                }}>
+                  {selectedSpaceForDetail.name}
+                </h2>
+                {selectedSpaceForDetail.group && (
+                  <div style={{
+                    fontSize: '0.9rem',
+                    color: '#b89968',
+                    marginBottom: '5px'
+                  }}>
+                    Groupe: {islandGroups[selectedSpaceForDetail.group].name}
+                  </div>
+                )}
+                {selectedSpaceForDetail.description && (
+                  <div style={{
+                    fontSize: '0.9rem',
+                    color: '#f4e8d0',
+                    fontStyle: 'italic'
+                  }}>
+                    {selectedSpaceForDetail.description}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Informations de propriété */}
+            {selectedSpaceForDetail.price && (
+              <div style={{ marginBottom: '20px' }}>
+                <div style={{
+                  background: '#2a1810',
+                  padding: '15px',
+                  borderRadius: '12px',
+                  border: '2px solid #8B6F47'
+                }}>
+                  <div style={{
+                    fontSize: '1.2rem',
+                    color: '#FFD700',
+                    marginBottom: '10px',
+                    fontWeight: 'bold'
+                  }}>
+                    💰 Prix d'achat: {selectedSpaceForDetail.price} pièces
+                  </div>
+                  {properties[selectedSpaceForDetail.id] && (
+                    <div style={{
+                      marginBottom: '10px',
+                      padding: '10px',
+                      background: '#1a0f0a',
+                      borderRadius: '8px'
+                    }}>
+                      <div style={{ color: '#48BB78', fontSize: '0.95rem', fontWeight: 'bold' }}>
+                        🏴‍☠️ Propriétaire: {players[properties[selectedSpaceForDetail.id].owner]?.name}
+                      </div>
+                      {properties[selectedSpaceForDetail.id].buildings > 0 && (
+                        <div style={{ color: '#f4e8d0', fontSize: '0.9rem', marginTop: '5px' }}>
+                          Constructions: {properties[selectedSpaceForDetail.id].buildings < 5
+                            ? `${properties[selectedSpaceForDetail.id].buildings} Taverne(s) 🏠`
+                            : 'Fort Pirate 🏰'}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {!properties[selectedSpaceForDetail.id] && (
+                    <div style={{
+                      color: '#48BB78',
+                      fontSize: '0.9rem',
+                      padding: '8px',
+                      background: '#1a0f0a',
+                      borderRadius: '8px'
+                    }}>
+                      ✅ Disponible à l'achat
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Table des loyers */}
+            {selectedSpaceForDetail.rent && (
+              <div style={{ marginBottom: '20px' }}>
+                <h3 style={{
+                  color: '#FFD700',
+                  fontSize: '1.1rem',
+                  marginBottom: '10px'
+                }}>
+                  📊 Loyers
+                </h3>
+                <div style={{
+                  background: '#2a1810',
+                  padding: '15px',
+                  borderRadius: '12px',
+                  border: '2px solid #8B6F47'
+                }}>
+                  {selectedSpaceForDetail.type === 'island' ? (
+                    <>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', padding: '8px', background: '#1a0f0a', borderRadius: '6px' }}>
+                        <span style={{ color: '#f4e8d0' }}>Terrain nu</span>
+                        <span style={{ color: '#FFD700', fontWeight: 'bold' }}>{selectedSpaceForDetail.rent[0]}₽</span>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', padding: '8px', background: '#1a0f0a', borderRadius: '6px' }}>
+                        <span style={{ color: '#f4e8d0' }}>🏠 1 Taverne</span>
+                        <span style={{ color: '#FFD700', fontWeight: 'bold' }}>{selectedSpaceForDetail.rent[1]}₽</span>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', padding: '8px', background: '#1a0f0a', borderRadius: '6px' }}>
+                        <span style={{ color: '#f4e8d0' }}>🏠 2 Tavernes</span>
+                        <span style={{ color: '#FFD700', fontWeight: 'bold' }}>{selectedSpaceForDetail.rent[2]}₽</span>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', padding: '8px', background: '#1a0f0a', borderRadius: '6px' }}>
+                        <span style={{ color: '#f4e8d0' }}>🏠 3 Tavernes</span>
+                        <span style={{ color: '#FFD700', fontWeight: 'bold' }}>{selectedSpaceForDetail.rent[3]}₽</span>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', padding: '8px', background: '#1a0f0a', borderRadius: '6px' }}>
+                        <span style={{ color: '#f4e8d0' }}>🏠 4 Tavernes</span>
+                        <span style={{ color: '#FFD700', fontWeight: 'bold' }}>{selectedSpaceForDetail.rent[4]}₽</span>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px', background: '#DC143C', borderRadius: '6px' }}>
+                        <span style={{ color: '#fff', fontWeight: 'bold' }}>🏰 Fort Pirate</span>
+                        <span style={{ color: '#FFD700', fontWeight: 'bold' }}>{selectedSpaceForDetail.rent[5]}₽</span>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div style={{ color: '#f4e8d0', fontSize: '0.9rem', marginBottom: '8px' }}>
+                        Loyer selon le nombre de ports possédés:
+                      </div>
+                      {selectedSpaceForDetail.rent.map((rent, idx) => (
+                        <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px', padding: '6px', background: '#1a0f0a', borderRadius: '6px' }}>
+                          <span style={{ color: '#f4e8d0' }}>⚓ {idx + 1} port(s)</span>
+                          <span style={{ color: '#FFD700', fontWeight: 'bold' }}>{rent}₽</span>
+                        </div>
+                      ))}
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Coût de construction */}
+            {selectedSpaceForDetail.buildCost && (
+              <div style={{ marginBottom: '20px' }}>
+                <div style={{
+                  background: '#2a1810',
+                  padding: '12px',
+                  borderRadius: '12px',
+                  border: '2px solid #8B6F47'
+                }}>
+                  <div style={{ color: '#FFD700', fontSize: '1rem', marginBottom: '5px' }}>
+                    🏗️ Coût de construction
+                  </div>
+                  <div style={{ color: '#f4e8d0', fontSize: '1.1rem', fontWeight: 'bold' }}>
+                    {selectedSpaceForDetail.buildCost} pièces par bâtiment
+                  </div>
+                  <div style={{ color: '#b89968', fontSize: '0.85rem', marginTop: '5px' }}>
+                    Vous devez posséder toutes les îles du groupe pour construire
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Effet spécial */}
+            {selectedSpaceForDetail.amount && (
+              <div style={{ marginBottom: '20px' }}>
+                <div style={{
+                  background: '#2a1810',
+                  padding: '15px',
+                  borderRadius: '12px',
+                  border: '2px solid #8B6F47'
+                }}>
+                  <div style={{ color: '#FFD700', fontSize: '1rem', marginBottom: '8px', fontWeight: 'bold' }}>
+                    ⚡ Effet
+                  </div>
+                  <div style={{ color: '#f4e8d0', fontSize: '1.1rem' }}>
+                    {selectedSpaceForDetail.type === 'treasure' && `+${selectedSpaceForDetail.amount} pièces`}
+                    {selectedSpaceForDetail.type === 'tax' && `-${selectedSpaceForDetail.amount} pièces`}
+                    {selectedSpaceForDetail.type === 'storm' && `-${selectedSpaceForDetail.amount} pièces`}
+                    {selectedSpaceForDetail.type === 'combat' && `-${selectedSpaceForDetail.amount} pièces`}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Mécaniques spéciales */}
+            {(selectedSpaceForDetail.type === 'adventure' || selectedSpaceForDetail.type === 'curse') && (
+              <div style={{ marginBottom: '20px' }}>
+                <div style={{
+                  background: '#2a1810',
+                  padding: '15px',
+                  borderRadius: '12px',
+                  border: '2px solid #8B6F47'
+                }}>
+                  <div style={{ color: '#FFD700', fontSize: '1rem', marginBottom: '8px', fontWeight: 'bold' }}>
+                    🎴 Mécanique
+                  </div>
+                  <div style={{ color: '#f4e8d0', fontSize: '0.95rem' }}>
+                    {selectedSpaceForDetail.type === 'adventure'
+                      ? 'Piochez une carte Aventure (effets positifs)'
+                      : 'Piochez une carte Malédiction (effets négatifs)'}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Bouton fermer */}
+            <button
+              onClick={() => {
+                setShowSpaceDetailModal(false);
+                setSelectedSpaceForDetail(null);
+              }}
+              style={{
+                width: '100%',
+                background: 'linear-gradient(135deg, #FFD700, #FFA500)',
+                border: 'none',
+                color: '#1a0f0a',
+                padding: '15px',
+                borderRadius: '12px',
+                fontSize: '1.2rem',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                boxShadow: '0 5px 20px rgba(255, 215, 0, 0.4)'
+              }}
+            >
+              ⚓ Fermer
             </button>
           </div>
         </div>
