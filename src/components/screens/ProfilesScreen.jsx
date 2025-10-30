@@ -175,18 +175,86 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
   };
 
   return (
-    <div>
-      <h1 style={{ fontSize: '32px', marginBottom: '20px', fontWeight: '600' }}>👥 Découverte</h1>
+    <div style={{
+      minHeight: '100vh',
+      paddingBottom: '100px',
+      background: 'var(--color-beige-light)'
+    }}>
+      {/* En-tête style Journal */}
+      <div style={{
+        background: 'var(--color-cream)',
+        borderBottom: '4px double var(--color-brown-dark)',
+        padding: 'var(--spacing-lg)',
+        marginBottom: 'var(--spacing-lg)',
+        boxShadow: 'var(--shadow-md)'
+      }}>
+        <h1 style={{
+          fontFamily: 'var(--font-heading)',
+          fontSize: '2.5rem',
+          textAlign: 'center',
+          margin: '0 0 var(--spacing-xs) 0',
+          color: 'var(--color-brown-dark)',
+          textTransform: 'uppercase',
+          letterSpacing: '2px',
+          borderBottom: '2px solid var(--color-gold)',
+          paddingBottom: 'var(--spacing-xs)'
+        }}>
+          👥 Découverte
+        </h1>
+      </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', overflowX: 'auto' }}>
-        <button onClick={() => setViewMode('discover')} style={{ padding: '10px 20px', background: viewMode === 'discover' ? 'linear-gradient(135deg, #E91E63, #C2185B)' : '#1a1a1a', border: 'none', color: 'white', borderRadius: '20px', cursor: 'pointer', fontWeight: '600', fontSize: '13px', whiteSpace: 'nowrap' }}>
+      <div style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: 'var(--spacing-xs)',
+        marginBottom: 'var(--spacing-lg)',
+        padding: '0 var(--spacing-md)',
+        justifyContent: 'center'
+      }}>
+        <button onClick={() => setViewMode('discover')} style={{
+          padding: 'var(--spacing-sm) var(--spacing-md)',
+          background: viewMode === 'discover' ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))' : 'var(--color-brown)',
+          border: viewMode === 'discover' ? '2px solid var(--color-gold-light)' : '2px solid var(--color-brown-dark)',
+          color: viewMode === 'discover' ? 'var(--color-brown-dark)' : 'var(--color-cream)',
+          borderRadius: 'var(--border-radius-md)',
+          cursor: 'pointer',
+          fontWeight: '600',
+          fontSize: '0.875rem',
+          minWidth: 'fit-content',
+          transition: 'all var(--transition-normal)',
+          boxShadow: viewMode === 'discover' ? 'var(--shadow-md)' : 'var(--shadow-sm)'
+        }}>
           🔍 Découvrir
         </button>
-        <button onClick={() => setViewMode('matches')} style={{ padding: '10px 20px', background: viewMode === 'matches' ? 'linear-gradient(135deg, #E91E63, #C2185B)' : '#1a1a1a', border: 'none', color: 'white', borderRadius: '20px', cursor: 'pointer', fontWeight: '600', fontSize: '13px', whiteSpace: 'nowrap' }}>
+        <button onClick={() => setViewMode('matches')} style={{
+          padding: 'var(--spacing-sm) var(--spacing-md)',
+          background: viewMode === 'matches' ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))' : 'var(--color-brown)',
+          border: viewMode === 'matches' ? '2px solid var(--color-gold-light)' : '2px solid var(--color-brown-dark)',
+          color: viewMode === 'matches' ? 'var(--color-brown-dark)' : 'var(--color-cream)',
+          borderRadius: 'var(--border-radius-md)',
+          cursor: 'pointer',
+          fontWeight: '600',
+          fontSize: '0.875rem',
+          minWidth: 'fit-content',
+          transition: 'all var(--transition-normal)',
+          boxShadow: viewMode === 'matches' ? 'var(--shadow-md)' : 'var(--shadow-sm)'
+        }}>
           💕 Matches (3)
         </button>
-        <button onClick={() => setViewMode('likes')} style={{ padding: '10px 20px', background: viewMode === 'likes' ? 'linear-gradient(135deg, #E91E63, #C2185B)' : '#1a1a1a', border: 'none', color: 'white', borderRadius: '20px', cursor: 'pointer', fontWeight: '600', fontSize: '13px', whiteSpace: 'nowrap' }}>
+        <button onClick={() => setViewMode('likes')} style={{
+          padding: 'var(--spacing-sm) var(--spacing-md)',
+          background: viewMode === 'likes' ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))' : 'var(--color-brown)',
+          border: viewMode === 'likes' ? '2px solid var(--color-gold-light)' : '2px solid var(--color-brown-dark)',
+          color: viewMode === 'likes' ? 'var(--color-brown-dark)' : 'var(--color-cream)',
+          borderRadius: 'var(--border-radius-md)',
+          cursor: 'pointer',
+          fontWeight: '600',
+          fontSize: '0.875rem',
+          minWidth: 'fit-content',
+          transition: 'all var(--transition-normal)',
+          boxShadow: viewMode === 'likes' ? 'var(--shadow-md)' : 'var(--shadow-sm)'
+        }}>
           ❤️ Likes reçus (12)
         </button>
       </div>

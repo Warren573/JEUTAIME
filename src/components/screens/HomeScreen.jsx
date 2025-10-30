@@ -98,26 +98,33 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
       paddingBottom: '100px',
       background: 'var(--color-beige-light)'
     }}>
-      {/* En-tête JeuTaime */}
+      {/* En-tête style Journal */}
       <div style={{
-        textAlign: 'center',
-        padding: 'var(--spacing-xl) var(--spacing-lg)',
-        background: 'linear-gradient(180deg, var(--color-cream) 0%, var(--color-beige-light) 100%)',
-        marginBottom: 'var(--spacing-lg)'
+        background: 'var(--color-cream)',
+        borderBottom: '4px double var(--color-brown-dark)',
+        padding: 'var(--spacing-lg)',
+        marginBottom: 'var(--spacing-lg)',
+        boxShadow: 'var(--shadow-md)'
       }}>
         <h1 style={{
           fontFamily: 'var(--font-heading)',
           fontSize: '2.5rem',
-          color: 'var(--color-romantic)',
-          marginBottom: 'var(--spacing-sm)',
-          textShadow: '2px 2px 4px rgba(0,0,0,0.1)'
+          textAlign: 'center',
+          margin: '0 0 var(--spacing-xs) 0',
+          color: 'var(--color-brown-dark)',
+          textTransform: 'uppercase',
+          letterSpacing: '2px',
+          borderBottom: '2px solid var(--color-gold)',
+          paddingBottom: 'var(--spacing-xs)'
         }}>
-          JeuT'aime
+          💝 JeuT'aime
         </h1>
         <p style={{
-          fontSize: '1.1rem',
-          color: 'var(--color-text-secondary)',
-          fontWeight: '500'
+          textAlign: 'center',
+          fontSize: '0.9rem',
+          color: 'var(--color-brown)',
+          margin: 0,
+          fontStyle: 'italic'
         }}>
           Fais plaisir avec une offrande
         </p>

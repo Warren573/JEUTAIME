@@ -25,42 +25,50 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
       paddingBottom: '100px',
       background: 'var(--color-beige-light)'
     }}>
-      {/* En-tête */}
+      {/* En-tête style Journal */}
       <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        background: 'var(--color-cream)',
+        borderBottom: '4px double var(--color-brown-dark)',
         padding: 'var(--spacing-lg)',
-        marginBottom: 'var(--spacing-md)'
+        marginBottom: 'var(--spacing-lg)',
+        boxShadow: 'var(--shadow-md)'
       }}>
         <h1 style={{
           fontFamily: 'var(--font-heading)',
-          fontSize: '2rem',
-          margin: 0,
-          color: 'var(--color-text-primary)'
+          fontSize: '2.5rem',
+          textAlign: 'center',
+          margin: '0 0 var(--spacing-xs) 0',
+          color: 'var(--color-brown-dark)',
+          textTransform: 'uppercase',
+          letterSpacing: '2px',
+          borderBottom: '2px solid var(--color-gold)',
+          paddingBottom: 'var(--spacing-xs)'
         }}>
           👥 Social
         </h1>
         {adminMode && isAdminAuthenticated && socialTab === 'bars' && (
-          <button
-            onClick={handleAdminCreateBar}
-            className="btn-primary"
-            style={{ padding: 'var(--spacing-sm) var(--spacing-md)', fontSize: '0.875rem' }}
-          >
-            ➕ Nouveau Bar
-          </button>
+          <div style={{ textAlign: 'center', marginTop: 'var(--spacing-sm)' }}>
+            <button
+              onClick={handleAdminCreateBar}
+              className="btn-primary"
+              style={{ padding: 'var(--spacing-sm) var(--spacing-md)', fontSize: '0.875rem' }}
+            >
+              ➕ Nouveau Bar
+            </button>
+          </div>
         )}
       </div>
 
-      {/* Onglets */}
+      {/* Onglets - Corrigé pour éviter le débordement */}
       <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(2, 1fr)',
-        gap: 'var(--spacing-sm)',
-        padding: '0 var(--spacing-lg)',
-        marginBottom: 'var(--spacing-lg)'
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: 'var(--spacing-xs)',
+        padding: '0 var(--spacing-md)',
+        marginBottom: 'var(--spacing-lg)',
+        justifyContent: 'center'
       }}>
-        {['bars', 'classement', 'games', 'adoption', 'contest'].map((tab) => {
+        {['bars', 'classement', 'games'].map((tab) => {
           const isActive = socialTab === tab;
           return (
             <button
@@ -77,17 +85,14 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                 cursor: 'pointer',
                 fontWeight: '600',
                 fontSize: '0.875rem',
-                whiteSpace: 'nowrap',
-                gridColumn: tab === 'contest' ? '1 / -1' : 'auto',
                 transition: 'all var(--transition-normal)',
-                boxShadow: isActive ? 'var(--shadow-md)' : 'var(--shadow-sm)'
+                boxShadow: isActive ? 'var(--shadow-md)' : 'var(--shadow-sm)',
+                minWidth: 'fit-content'
               }}
             >
               {tab === 'bars' && '🍸 Bars'}
               {tab === 'classement' && '🏆 Classement'}
               {tab === 'games' && '🎮 Jeux'}
-              {tab === 'adoption' && '💝 Adoption'}
-              {tab === 'contest' && '🏆 Concours'}
             </button>
           );
         })}

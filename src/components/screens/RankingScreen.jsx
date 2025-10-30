@@ -39,22 +39,55 @@ export default function RankingScreen({ currentUser }) {
   const currentUserTitle = getTitleFromPoints(currentUser?.points || 0);
 
   return (
-    <div style={{ padding: '20px', paddingBottom: '100px', maxWidth: '800px', margin: '0 auto' }}>
-      {/* Header avec stats personnelles */}
+    <div style={{
+      minHeight: '100vh',
+      paddingBottom: '100px',
+      background: 'var(--color-beige-light)'
+    }}>
+      {/* En-tête style Journal */}
       <div style={{
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        borderRadius: '20px',
-        padding: '30px',
-        color: 'white',
-        marginBottom: '25px',
-        textAlign: 'center',
-        boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)'
+        background: 'var(--color-cream)',
+        borderBottom: '4px double var(--color-brown-dark)',
+        padding: 'var(--spacing-lg)',
+        marginBottom: 'var(--spacing-lg)',
+        boxShadow: 'var(--shadow-md)'
       }}>
-        <div style={{ fontSize: '48px', marginBottom: '10px' }}>🏆</div>
-        <h1 style={{ fontSize: '28px', fontWeight: '700', margin: '0 0 10px 0' }}>Classement</h1>
-        <p style={{ fontSize: '14px', opacity: '0.9', margin: '0' }}>
+        <h1 style={{
+          fontFamily: 'var(--font-heading)',
+          fontSize: '2.5rem',
+          textAlign: 'center',
+          margin: '0 0 var(--spacing-xs) 0',
+          color: 'var(--color-brown-dark)',
+          textTransform: 'uppercase',
+          letterSpacing: '2px',
+          borderBottom: '2px solid var(--color-gold)',
+          paddingBottom: 'var(--spacing-xs)'
+        }}>
+          🏆 Classement
+        </h1>
+        <p style={{
+          textAlign: 'center',
+          fontSize: '0.9rem',
+          color: 'var(--color-brown)',
+          margin: 0,
+          fontStyle: 'italic'
+        }}>
           Les joueurs les plus courtisés
         </p>
+      </div>
+
+      <div style={{ padding: '0 var(--spacing-lg)' }}>
+        {/* Header avec stats personnelles */}
+        <div style={{
+          background: 'var(--color-cream)',
+          border: '3px solid var(--color-gold)',
+          borderRadius: 'var(--border-radius-lg)',
+          padding: 'var(--spacing-lg)',
+          color: 'var(--color-text-primary)',
+          marginBottom: 'var(--spacing-lg)',
+          textAlign: 'center',
+          boxShadow: 'var(--shadow-lg)'
+        }}>
 
         {/* Mes stats */}
         <div style={{

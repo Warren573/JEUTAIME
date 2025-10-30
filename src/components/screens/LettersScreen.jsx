@@ -91,50 +91,38 @@ export default function LettersScreen({ currentUser }) {
     <div style={{
       minHeight: '100vh',
       paddingBottom: '100px',
-      background: 'var(--color-brown-dark)'
+      background: 'var(--color-beige-light)'
     }}>
-      {/* En-tête avec avatar utilisateur */}
+      {/* En-tête style Journal */}
       <div style={{
-        background: 'var(--color-brown-darker)',
+        background: 'var(--color-cream)',
+        borderBottom: '4px double var(--color-brown-dark)',
         padding: 'var(--spacing-lg)',
         marginBottom: 'var(--spacing-lg)',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 'var(--spacing-md)',
-        boxShadow: 'var(--shadow-lg)'
+        boxShadow: 'var(--shadow-md)'
       }}>
-        <div style={{
-          width: '60px',
-          height: '60px',
-          borderRadius: '50%',
-          background: 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '2rem',
-          border: '3px solid var(--color-gold-light)',
-          boxShadow: 'var(--shadow-md)'
+        <h1 style={{
+          fontFamily: 'var(--font-heading)',
+          fontSize: '2.5rem',
+          textAlign: 'center',
+          margin: '0 0 var(--spacing-xs) 0',
+          color: 'var(--color-brown-dark)',
+          textTransform: 'uppercase',
+          letterSpacing: '2px',
+          borderBottom: '2px solid var(--color-gold)',
+          paddingBottom: 'var(--spacing-xs)'
         }}>
-          👤
-        </div>
-        <div style={{ flex: 1 }}>
-          <h1 style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: '1.75rem',
-            margin: 0,
-            color: 'var(--color-cream)',
-            textShadow: '1px 1px 2px rgba(0,0,0,0.3)'
-          }}>
-            {currentUser?.name || 'Utilisateur'}
-          </h1>
-          <p style={{
-            fontSize: '0.9rem',
-            color: 'var(--color-tan)',
-            margin: 0
-          }}>
-            {conversations.length} conversation{conversations.length !== 1 ? 's' : ''}
-          </p>
-        </div>
+          💌 Lettres
+        </h1>
+        <p style={{
+          textAlign: 'center',
+          fontSize: '0.9rem',
+          color: 'var(--color-brown)',
+          margin: 0,
+          fontStyle: 'italic'
+        }}>
+          {conversations.length} conversation{conversations.length !== 1 ? 's' : ''}
+        </p>
       </div>
 
       {conversations.length === 0 ? (
