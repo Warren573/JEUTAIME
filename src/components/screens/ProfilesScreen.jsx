@@ -236,6 +236,23 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
         }}>
           👥 Découverte
         </h1>
+        {/* DEBUG: Test avatar */}
+        <div style={{ textAlign: 'center', marginTop: '10px', padding: '10px', background: '#ffeb3b', fontSize: '12px' }}>
+          <p style={{ margin: 0, fontWeight: 'bold' }}>🔧 DEBUG - Profil: {currentProfileData.name}</p>
+          <p style={{ margin: '5px 0', fontSize: '11px' }}>Avatar URL: {currentProfileData.avatar || 'AUCUNE'}</p>
+          <p style={{ margin: '5px 0', fontSize: '11px' }}>Test image directe:</p>
+          <img
+            src={currentProfileData.avatar}
+            alt="test direct"
+            style={{ width: '80px', height: '80px', borderRadius: '50%', border: '2px solid red' }}
+            onError={(e) => { e.target.style.border = '2px solid green'; e.target.alt = 'ERREUR CHARGEMENT'; }}
+            onLoad={(e) => { e.target.style.border = '2px solid blue'; }}
+          />
+          <p style={{ margin: '5px 0', fontSize: '11px' }}>Test UserAvatar component:</p>
+          <div style={{ display: 'inline-block' }}>
+            <UserAvatar user={currentProfileData} size={80} emoji="❌" />
+          </div>
+        </div>
       </div>
 
       {/* Tabs */}
