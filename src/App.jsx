@@ -164,8 +164,6 @@ function MainApp() {
     { icon: '👥', label: 'Social', id: 'social' },
     { icon: '💌', label: 'Lettres', id: 'letters' },
     { icon: '📰', label: 'Journal', id: 'journal' },
-    { icon: '📦', label: 'Souvenirs', id: 'memories' },
-    { icon: '🎖️', label: 'Badges', id: 'badges' },
     { icon: '⚙️', label: 'Paramètres', id: 'settings' }
   ];
 
@@ -237,8 +235,6 @@ function MainApp() {
         {screen === 'social' && !gameScreen && !selectedBar && <SocialScreen {...appState} />}
         {screen === 'letters' && !gameScreen && !selectedBar && <LettersScreen currentUser={currentUser} />}
         {screen === 'journal' && !gameScreen && !selectedBar && <JournalScreen {...appState} />}
-        {screen === 'memories' && !gameScreen && !selectedBar && <MemoriesScreen currentUser={currentUser} />}
-        {screen === 'badges' && !gameScreen && !selectedBar && <BadgesScreen currentUser={currentUser} />}
         {screen === 'settings' && !gameScreen && !selectedBar && <SettingsScreen {...appState} />}
 
         {gameScreen === 'herolove' && <HeroLoveQuest {...appState} />}
