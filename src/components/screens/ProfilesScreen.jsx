@@ -3,6 +3,7 @@ import { enrichedProfiles, profileBadges } from '../../data/appData';
 import QuestionGame from '../matching/QuestionGame';
 import { awardPoints, checkAndAwardBadge } from '../../utils/pointsSystem';
 import UserAvatar from '../avatar/UserAvatar';
+import Avatar from 'avataaars';
 
 export default function ProfilesScreen({ currentProfile, setCurrentProfile, adminMode, isAdminAuthenticated, currentUser }) {
   const [viewMode, setViewMode] = useState('discover');
@@ -311,20 +312,32 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
           {selectedPhoto === -1 ? (
             // Afficher l'avatar si photo non débloquée
             <div style={{ textAlign: 'center' }}>
-              {/* AVATAR GÉNÉRIQUE - PAS DE PHOTO */}
+              {/* AVATAR STYLISÉ AVATAAARS */}
               <div style={{
                 width: '200px',
                 height: '200px',
                 borderRadius: '50%',
-                background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                background: 'var(--color-cream)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '100px',
                 border: '4px solid var(--color-gold)',
-                margin: '0 auto 20px auto'
+                margin: '0 auto 20px auto',
+                overflow: 'hidden'
               }}>
-                😊
+                <Avatar
+                  style={{ width: '200px', height: '200px' }}
+                  avatarStyle="Circle"
+                  topType={currentProfile === 0 ? "ShortHairShortFlat" : currentProfile === 1 ? "LongHairStraight" : currentProfile === 2 ? "LongHairBun" : "LongHairCurly"}
+                  accessoriesType="Blank"
+                  hairColor={currentProfile === 0 ? "Brown" : currentProfile === 1 ? "BrownDark" : currentProfile === 2 ? "Blonde" : "Auburn"}
+                  facialHairType="Blank"
+                  clotheType={currentProfile === 0 ? "Hoodie" : "BlazerShirt"}
+                  eyeType="Happy"
+                  eyebrowType="Default"
+                  mouthType="Smile"
+                  skinColor="Light"
+                />
               </div>
               <div style={{
                 marginTop: 'var(--spacing-lg)',
@@ -479,20 +492,32 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
           ) : (
             // Photo verrouillée - afficher avatar
             <div style={{ textAlign: 'center' }}>
-              {/* AVATAR GÉNÉRIQUE - PAS DE PHOTO */}
+              {/* AVATAR STYLISÉ AVATAAARS */}
               <div style={{
                 width: '200px',
                 height: '200px',
                 borderRadius: '50%',
-                background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                background: 'var(--color-cream)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '100px',
                 border: '4px solid var(--color-gold)',
-                margin: '0 auto 20px auto'
+                margin: '0 auto 20px auto',
+                overflow: 'hidden'
               }}>
-                😊
+                <Avatar
+                  style={{ width: '200px', height: '200px' }}
+                  avatarStyle="Circle"
+                  topType={currentProfile === 0 ? "ShortHairShortFlat" : currentProfile === 1 ? "LongHairStraight" : currentProfile === 2 ? "LongHairBun" : "LongHairCurly"}
+                  accessoriesType="Blank"
+                  hairColor={currentProfile === 0 ? "Brown" : currentProfile === 1 ? "BrownDark" : currentProfile === 2 ? "Blonde" : "Auburn"}
+                  facialHairType="Blank"
+                  clotheType={currentProfile === 0 ? "Hoodie" : "BlazerShirt"}
+                  eyeType="Happy"
+                  eyebrowType="Default"
+                  mouthType="Smile"
+                  skinColor="Light"
+                />
               </div>
               <div style={{
                 marginTop: 'var(--spacing-lg)',
