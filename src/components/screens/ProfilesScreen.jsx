@@ -24,26 +24,14 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
   // Vérifier si une photo est défloutée
   const isPhotoUnblurred = (photoIndex) => {
     // Si premium, toutes les photos sont défloutées
-    if (currentUser?.premium) {
-      console.log('📸 Photo débloquée car utilisateur premium');
-      return true;
-    }
+    if (currentUser?.premium) return true;
 
     // Calculer le nombre de lettres échangées
     const lettersCount = getLettersCount(currentProfileData.id);
+
+    // Chaque photo nécessite 10 lettres
     const requiredLetters = (photoIndex + 1) * 10;
-    const isUnblurred = lettersCount >= requiredLetters;
-
-    console.log('📸 Vérification photo:', {
-      photoIndex,
-      lettersCount,
-      requiredLetters,
-      isUnblurred,
-      profileId: currentProfileData.id,
-      currentUserEmail: currentUser?.email
-    });
-
-    return isUnblurred;
+    return lettersCount >= requiredLetters;
   };
 
   // Load smiles data from localStorage
@@ -236,23 +224,6 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
         }}>
           👥 Découverte
         </h1>
-        {/* DEBUG: Test avatar */}
-        <div style={{ textAlign: 'center', marginTop: '10px', padding: '10px', background: '#ffeb3b', fontSize: '12px' }}>
-          <p style={{ margin: 0, fontWeight: 'bold' }}>🔧 DEBUG - Profil: {currentProfileData.name}</p>
-          <p style={{ margin: '5px 0', fontSize: '11px' }}>Avatar URL: {currentProfileData.avatar || 'AUCUNE'}</p>
-          <p style={{ margin: '5px 0', fontSize: '11px' }}>Test image directe:</p>
-          <img
-            src={currentProfileData.avatar}
-            alt="test direct"
-            style={{ width: '80px', height: '80px', borderRadius: '50%', border: '2px solid red' }}
-            onError={(e) => { e.target.style.border = '2px solid green'; e.target.alt = 'ERREUR CHARGEMENT'; }}
-            onLoad={(e) => { e.target.style.border = '2px solid blue'; }}
-          />
-          <p style={{ margin: '5px 0', fontSize: '11px' }}>Test UserAvatar component:</p>
-          <div style={{ display: 'inline-block' }}>
-            <UserAvatar user={currentProfileData} size={80} emoji="❌" />
-          </div>
-        </div>
       </div>
 
       {/* Tabs */}
