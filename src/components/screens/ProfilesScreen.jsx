@@ -23,6 +23,9 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
 
   // Vérifier si une photo est défloutée - PAR DÉFAUT TOUT EST VERROUILLÉ
   const isPhotoUnblurred = (photoIndex) => {
+    // Si c'est l'avatar (index -1), retourner false
+    if (photoIndex < 0) return false;
+
     // TOUJOURS verrouillé par défaut - l'avatar doit s'afficher
     // Les photos ne se débloquent qu'après échange de lettres
 
@@ -300,7 +303,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
       }}>
         {/* Avatar ou Photos carousel */}
         <div style={{ position: 'relative', height: '400px', background: 'var(--color-beige-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          {selectedPhoto === -1 || !isPhotoUnblurred(selectedPhoto) ? (
+          {selectedPhoto === -1 ? (
             // Afficher l'avatar si photo non débloquée
             <div style={{ textAlign: 'center' }}>
               <UserAvatar
@@ -396,7 +399,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
                 ))}
               </div>
             </div>
-          ) : (
+          ) : selectedPhoto >= 0 && isPhotoUnblurred(selectedPhoto) ? (
             // Afficher la photo si débloquée
             <>
               <img
@@ -458,6 +461,49 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
                 ))}
               </div>
             </>
+          ) : (
+            // Photo verrouillée - afficher avatar
+            <div style={{ textAlign: 'center' }}>
+              <UserAvatar
+                user={currentProfileData}
+                size={200}
+                emoji="😊"
+              />
+              <div style={{
+                marginTop: 'var(--spacing-lg)',
+                padding: 'var(--spacing-md)',
+                background: 'var(--color-cream)',
+                borderRadius: 'var(--border-radius-md)',
+                border: '2px solid var(--color-gold)',
+                maxWidth: '300px',
+                margin: '0 auto'
+              }}>
+                <p style={{
+                  fontSize: '0.9rem',
+                  color: 'var(--color-text-primary)',
+                  margin: '0 0 var(--spacing-xs) 0',
+                  fontWeight: '600'
+                }}>
+                  🔒 Photo verrouillée
+                </p>
+                <p style={{
+                  fontSize: '0.8rem',
+                  color: 'var(--color-text-secondary)',
+                  margin: 0
+                }}>
+                  {currentUser?.premium
+                    ? '✨ Débloquée avec Premium'
+                    : `Échangez ${(selectedPhoto + 1) * 10} lettres pour débloquer`}
+                </p>
+                <p style={{
+                  fontSize: '0.75rem',
+                  color: 'var(--color-text-light)',
+                  margin: 'var(--spacing-xs) 0 0 0'
+                }}>
+                  Actuellement : {getLettersCount(currentProfileData.id)} lettres
+                </p>
+              </div>
+            </div>
           )}
 
           {/* Infos overlay */}
