@@ -10,7 +10,6 @@ import BadgesScreen from './components/screens/BadgesScreen';
 import SettingsScreen from './components/screens/SettingsScreen';
 import BarDetailScreen from './components/screens/BarDetailScreen';
 import RankingScreen from './components/screens/RankingScreen';
-import AdoptionScreen from './components/screens/AdoptionScreen';
 
 // Games
 import HeroLoveQuest from './components/games/HeroLoveQuest';
@@ -160,7 +159,6 @@ function MainApp() {
   const navItems = [
     { icon: '🏠', label: 'Accueil', id: 'home' },
     { icon: '👤', label: 'Profils', id: 'profiles' },
-    { icon: '🐾', label: 'Adoption', id: 'adoption' },
     { icon: '👥', label: 'Social', id: 'social' },
     { icon: '💌', label: 'Lettres', id: 'letters' },
     { icon: '📰', label: 'Journal', id: 'journal' },
@@ -229,7 +227,6 @@ function MainApp() {
       <div style={{ padding: '25px 20px' }}>
         {screen === 'home' && !gameScreen && !selectedBar && <HomeScreen {...appState} />}
         {screen === 'profiles' && !gameScreen && !selectedBar && <ProfilesScreen {...appState} />}
-        {screen === 'adoption' && !gameScreen && !selectedBar && <AdoptionScreen currentUser={currentUser} userCoins={userCoins} setUserCoins={setUserCoins} />}
         {screen === 'social' && !gameScreen && !selectedBar && <SocialScreen {...appState} currentUser={currentUser} />}
         {screen === 'letters' && !gameScreen && !selectedBar && <LettersScreen currentUser={currentUser} />}
         {screen === 'journal' && !gameScreen && !selectedBar && <JournalScreen {...appState} />}
