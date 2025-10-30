@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Header from './components/Header';
 import Navigation from './components/Navigation';
 import HomeScreen from './components/screens/HomeScreen';
 import ProfilesScreen from './components/screens/ProfilesScreen';
@@ -225,8 +224,6 @@ function MainApp() {
 
   return (
     <div style={{ maxWidth: '430px', margin: '0 auto', background: '#000', minHeight: '100vh', color: 'white', fontFamily: '-apple-system, sans-serif', paddingBottom: '100px' }}>
-      <Header userCoins={userCoins} adminMode={adminMode} isAdminAuthenticated={isAdminAuthenticated} />
-
       <div style={{ padding: '25px 20px' }}>
         {screen === 'home' && !gameScreen && !selectedBar && <HomeScreen {...appState} />}
         {screen === 'profiles' && !gameScreen && !selectedBar && <ProfilesScreen {...appState} />}

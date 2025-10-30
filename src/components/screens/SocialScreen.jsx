@@ -168,21 +168,24 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                     e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
                   }}
                 >
+                  {/* Ligne 1: Icône + Infos */}
                   <div style={{
                     display: 'flex',
-                    alignItems: 'center',
-                    gap: 'var(--spacing-md)'
+                    alignItems: 'flex-start',
+                    gap: 'var(--spacing-md)',
+                    marginBottom: 'var(--spacing-md)'
                   }}>
                     {/* Icône du bar */}
                     <div style={{
-                      fontSize: '3.5rem',
-                      filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))'
+                      fontSize: '2.5rem',
+                      filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))',
+                      flexShrink: 0
                     }}>
                       {bar.icon}
                     </div>
 
                     {/* Infos du bar */}
-                    <div style={{ flex: 1 }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
                       <h3 style={{
                         fontFamily: 'var(--font-heading)',
                         fontSize: '1.25rem',
@@ -204,7 +207,8 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                       <div style={{
                         display: 'flex',
                         gap: 'var(--spacing-xs)',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        flexWrap: 'wrap'
                       }}>
                         {bar.participants.slice(0, 5).map((p, idx) => (
                           <div
@@ -238,24 +242,24 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                         )}
                       </div>
                     </div>
-
-                    {/* Bouton Discuter */}
-                    <button
-                      className="btn-primary"
-                      style={{
-                        padding: 'var(--spacing-sm) var(--spacing-md)',
-                        fontSize: '0.875rem',
-                        fontWeight: '700',
-                        whiteSpace: 'nowrap'
-                      }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedBar(bar.id);
-                      }}
-                    >
-                      Discuter
-                    </button>
                   </div>
+
+                  {/* Ligne 2: Bouton Discuter */}
+                  <button
+                    className="btn-primary"
+                    style={{
+                      width: '100%',
+                      padding: 'var(--spacing-sm) var(--spacing-md)',
+                      fontSize: '0.875rem',
+                      fontWeight: '700'
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedBar(bar.id);
+                    }}
+                  >
+                    💬 Discuter
+                  </button>
 
                   {/* Admin Actions */}
                   {adminMode && isAdminAuthenticated && (
