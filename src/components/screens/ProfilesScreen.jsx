@@ -6,7 +6,7 @@ import UserAvatar from '../avatar/UserAvatar';
 
 export default function ProfilesScreen({ currentProfile, setCurrentProfile, adminMode, isAdminAuthenticated, currentUser }) {
   const [viewMode, setViewMode] = useState('discover');
-  const [selectedPhoto, setSelectedPhoto] = useState(0);
+  const [selectedPhoto, setSelectedPhoto] = useState(-1); // -1 = afficher avatar, 0+ = afficher photo
   const [showQuestionGame, setShowQuestionGame] = useState(false);
   const [mutualSmileUser, setMutualSmileUser] = useState(null);
 
@@ -21,15 +21,18 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
     return convo?.messages?.length || 0;
   };
 
-  // Vérifier si une photo est défloutée
+  // Vérifier si une photo est défloutée - PAR DÉFAUT TOUT EST VERROUILLÉ
   const isPhotoUnblurred = (photoIndex) => {
-    // Si premium, toutes les photos sont défloutées
+    // TOUJOURS verrouillé par défaut - l'avatar doit s'afficher
+    // Les photos ne se débloquent qu'après échange de lettres
+
+    // Si premium, toutes les photos sont débloquées
     if (currentUser?.premium) return true;
 
     // Calculer le nombre de lettres échangées
     const lettersCount = getLettersCount(currentProfileData.id);
 
-    // Chaque photo nécessite 10 lettres
+    // Chaque photo nécessite 10 lettres (10, 20, 30)
     const requiredLetters = (photoIndex + 1) * 10;
     return lettersCount >= requiredLetters;
   };
@@ -293,7 +296,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
       }}>
         {/* Avatar ou Photos carousel */}
         <div style={{ position: 'relative', height: '400px', background: 'var(--color-beige-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          {!isPhotoUnblurred(selectedPhoto) ? (
+          {selectedPhoto === -1 || !isPhotoUnblurred(selectedPhoto) ? (
             // Afficher l'avatar si photo non débloquée
             <div style={{ textAlign: 'center' }}>
               <UserAvatar
@@ -335,6 +338,59 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
                   Actuellement : {getLettersCount(currentProfileData.id)} lettres
                 </p>
               </div>
+
+              {/* Indicateurs photos sous l'avatar */}
+              <div style={{ position: 'absolute', bottom: '120px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px', alignItems: 'center', zIndex: 10 }}>
+                {/* Bouton avatar */}
+                <div
+                  onClick={() => setSelectedPhoto(-1)}
+                  style={{
+                    width: selectedPhoto === -1 ? '50px' : '40px',
+                    height: '40px',
+                    background: selectedPhoto === -1 ? 'var(--color-gold)' : 'var(--color-cream)',
+                    border: '2px solid var(--color-brown)',
+                    borderRadius: '50%',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '20px',
+                    transition: 'all 0.2s'
+                  }}
+                >
+                  👤
+                </div>
+                {/* Boutons photos */}
+                {currentProfileData.photos.map((_, idx) => (
+                  <div
+                    key={idx}
+                    onClick={() => {
+                      if (isPhotoUnblurred(idx)) {
+                        setSelectedPhoto(idx);
+                      }
+                    }}
+                    style={{
+                      width: selectedPhoto === idx ? '50px' : '40px',
+                      height: '40px',
+                      background: isPhotoUnblurred(idx)
+                        ? (selectedPhoto === idx ? 'var(--color-gold)' : 'var(--color-cream)')
+                        : 'var(--color-beige-light)',
+                      border: `2px solid ${isPhotoUnblurred(idx) ? 'var(--color-brown)' : '#ccc'}`,
+                      borderRadius: '50%',
+                      cursor: isPhotoUnblurred(idx) ? 'pointer' : 'not-allowed',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '16px',
+                      opacity: isPhotoUnblurred(idx) ? 1 : 0.5,
+                      transition: 'all 0.2s'
+                    }}
+                    title={isPhotoUnblurred(idx) ? `Photo ${idx + 1}` : `🔒 ${(idx + 1) * 10} lettres requises`}
+                  >
+                    {isPhotoUnblurred(idx) ? `📷${idx + 1}` : '🔒'}
+                  </div>
+                ))}
+              </div>
             </div>
           ) : (
             // Afficher la photo si débloquée
@@ -345,25 +401,58 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />
 
-              {/* Dots indicateur */}
-              {currentProfileData.photos.length > 1 && (
-                <div style={{ position: 'absolute', top: '15px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px' }}>
-                  {currentProfileData.photos.map((_, idx) => (
-                    <div
-                      key={idx}
-                      onClick={() => setSelectedPhoto(idx)}
-                      style={{
-                        width: '40px',
-                        height: '4px',
-                        background: selectedPhoto === idx ? 'var(--color-gold)' : 'rgba(255,255,255,0.3)',
-                        borderRadius: '2px',
-                        cursor: 'pointer',
-                        border: !isPhotoUnblurred(idx) ? '1px solid var(--color-gold)' : 'none'
-                      }}
-                    />
-                  ))}
+              {/* Indicateurs photos sous la photo */}
+              <div style={{ position: 'absolute', bottom: '120px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px', alignItems: 'center', zIndex: 10 }}>
+                {/* Bouton avatar */}
+                <div
+                  onClick={() => setSelectedPhoto(-1)}
+                  style={{
+                    width: '40px',
+                    height: '40px',
+                    background: 'var(--color-cream)',
+                    border: '2px solid var(--color-brown)',
+                    borderRadius: '50%',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '20px',
+                    transition: 'all 0.2s'
+                  }}
+                >
+                  👤
                 </div>
-              )}
+                {/* Boutons photos */}
+                {currentProfileData.photos.map((_, idx) => (
+                  <div
+                    key={idx}
+                    onClick={() => {
+                      if (isPhotoUnblurred(idx)) {
+                        setSelectedPhoto(idx);
+                      }
+                    }}
+                    style={{
+                      width: selectedPhoto === idx ? '50px' : '40px',
+                      height: '40px',
+                      background: isPhotoUnblurred(idx)
+                        ? (selectedPhoto === idx ? 'var(--color-gold)' : 'var(--color-cream)')
+                        : 'var(--color-beige-light)',
+                      border: `2px solid ${isPhotoUnblurred(idx) ? 'var(--color-brown)' : '#ccc'}`,
+                      borderRadius: '50%',
+                      cursor: isPhotoUnblurred(idx) ? 'pointer' : 'not-allowed',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '16px',
+                      opacity: isPhotoUnblurred(idx) ? 1 : 0.5,
+                      transition: 'all 0.2s'
+                    }}
+                    title={isPhotoUnblurred(idx) ? `Photo ${idx + 1}` : `🔒 ${(idx + 1) * 10} lettres requises`}
+                  >
+                    {isPhotoUnblurred(idx) ? `📷${idx + 1}` : '🔒'}
+                  </div>
+                ))}
+              </div>
             </>
           )}
 
