@@ -744,6 +744,78 @@ export default function PirateMonopolyGame({ setGameScreen, userCoins, setUserCo
         {message}
       </div>
 
+      {/* Case actuelle du joueur */}
+      {currentSpace && (
+        <div style={{
+          background: 'linear-gradient(135deg, #3d2817, #2a1810)',
+          padding: '20px',
+          borderRadius: '15px',
+          border: '3px solid #FFD700',
+          marginBottom: '20px',
+          boxShadow: '0 5px 20px rgba(255, 215, 0, 0.3)'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '15px',
+            marginBottom: '10px'
+          }}>
+            <div style={{
+              fontSize: '3rem',
+              background: currentSpace.group ? islandGroups[currentSpace.group].color : '#2a1810',
+              padding: '10px',
+              borderRadius: '12px',
+              border: '2px solid #8B6F47'
+            }}>
+              {currentSpace.emoji}
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{
+                fontSize: '1.3rem',
+                fontWeight: 'bold',
+                color: '#FFD700',
+                marginBottom: '5px'
+              }}>
+                {currentSpace.name}
+              </div>
+              {currentSpace.description && (
+                <div style={{
+                  fontSize: '0.9rem',
+                  color: '#b89968'
+                }}>
+                  {currentSpace.description}
+                </div>
+              )}
+              {currentSpace.price && (
+                <div style={{
+                  fontSize: '1.1rem',
+                  color: '#f4e8d0',
+                  marginTop: '5px'
+                }}>
+                  💰 Prix: {currentSpace.price} pièces
+                </div>
+              )}
+              {properties[currentSpace.id] && (
+                <div style={{
+                  fontSize: '0.9rem',
+                  color: '#48BB78',
+                  marginTop: '5px'
+                }}>
+                  Propriétaire: {players[properties[currentSpace.id].owner]?.name}
+                  {properties[currentSpace.id].buildings > 0 && (
+                    <span style={{ marginLeft: '10px' }}>
+                      {properties[currentSpace.id].buildings < 5
+                        ? `🏠 x${properties[currentSpace.id].buildings}`
+                        : '🏰 Fort'}
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Joueurs */}
       <div style={{
         display: 'grid',
@@ -792,26 +864,27 @@ export default function PirateMonopolyGame({ setGameScreen, userCoins, setUserCo
         ))}
       </div>
 
-      {/* Plateau simplifié (sera détaillé dans la prochaine tâche) */}
+      {/* Plateau amélioré */}
       <div style={{
         background: '#3d2817',
-        padding: '20px',
+        padding: '15px',
         borderRadius: '15px',
         border: '3px solid #8B6F47',
-        marginBottom: '20px',
-        minHeight: '300px'
+        marginBottom: '20px'
       }}>
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(11, 1fr)',
           gridTemplateRows: 'repeat(11, 1fr)',
-          gap: '2px',
+          gap: '3px',
           aspectRatio: '1/1',
-          maxWidth: '100%'
+          maxWidth: '100%',
+          minHeight: '400px'
         }}>
           {boardSpaces.map((space, idx) => {
             const playersHere = players.filter(p => p.position === idx);
             const property = properties[space.id];
+            const isCurrentPlayerHere = playersHere.some(p => p.id === currentPlayer?.id);
             let gridArea;
 
             // Calculer la position sur le plateau carré
@@ -828,6 +901,7 @@ export default function PirateMonopolyGame({ setGameScreen, userCoins, setUserCo
             return (
               <div
                 key={space.id}
+                title={`${space.name}${space.price ? ` - ${space.price}₽` : ''}`}
                 style={{
                   gridArea,
                   background: property?.owner !== undefined
@@ -836,21 +910,49 @@ export default function PirateMonopolyGame({ setGameScreen, userCoins, setUserCo
                     : players[property.owner]?.token?.emoji === '💀' ? '#9F7AEA'
                     : '#F56565'
                     : space.group ? islandGroups[space.group].color : '#2a1810',
-                  border: '1px solid #8B6F47',
-                  borderRadius: '4px',
-                  padding: '2px',
-                  fontSize: '0.6rem',
+                  border: isCurrentPlayerHere ? '3px solid #FFD700' : '2px solid #8B6F47',
+                  borderRadius: '6px',
+                  padding: '4px',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
                   position: 'relative',
-                  overflow: 'hidden'
+                  overflow: 'hidden',
+                  boxShadow: isCurrentPlayerHere ? '0 0 15px rgba(255, 215, 0, 0.6)' : 'none',
+                  cursor: 'pointer',
+                  transition: 'transform 0.2s'
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
               >
-                <div style={{ fontSize: '1rem' }}>{space.emoji}</div>
+                <div style={{
+                  fontSize: '1.3rem',
+                  filter: property?.owner !== undefined ? 'brightness(1.2)' : 'none'
+                }}>
+                  {space.emoji}
+                </div>
+                {space.price && (
+                  <div style={{
+                    fontSize: '0.5rem',
+                    color: '#fff',
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    lineHeight: '1',
+                    marginTop: '2px',
+                    textShadow: '1px 1px 2px rgba(0,0,0,0.8)'
+                  }}>
+                    {space.price}₽
+                  </div>
+                )}
                 {property?.buildings > 0 && (
-                  <div style={{ fontSize: '0.7rem' }}>
+                  <div style={{
+                    fontSize: '0.6rem',
+                    position: 'absolute',
+                    top: '2px',
+                    left: '2px',
+                    lineHeight: '1'
+                  }}>
                     {property.buildings < 5 ? '🏠'.repeat(property.buildings) : '🏰'}
                   </div>
                 )}
@@ -859,10 +961,13 @@ export default function PirateMonopolyGame({ setGameScreen, userCoins, setUserCo
                     position: 'absolute',
                     bottom: '2px',
                     display: 'flex',
-                    gap: '1px'
+                    gap: '2px',
+                    flexWrap: 'wrap',
+                    justifyContent: 'center',
+                    maxWidth: '100%'
                   }}>
                     {playersHere.map(p => (
-                      <span key={p.id} style={{ fontSize: '0.8rem' }}>
+                      <span key={p.id} style={{ fontSize: '1rem' }}>
                         {p.token.emoji}
                       </span>
                     ))}
@@ -876,19 +981,28 @@ export default function PirateMonopolyGame({ setGameScreen, userCoins, setUserCo
           <div style={{
             gridArea: '2 / 2 / 11 / 11',
             background: 'linear-gradient(135deg, #3d2817, #2a1810)',
-            borderRadius: '8px',
+            borderRadius: '12px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '10px'
+            padding: '20px',
+            border: '2px solid #8B6F47'
           }}>
-            <div style={{ fontSize: '3rem', marginBottom: '10px' }}>🏴‍☠️</div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#FFD700' }}>
+            <div style={{ fontSize: '4rem', marginBottom: '15px' }}>🏴‍☠️</div>
+            <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#FFD700', textAlign: 'center' }}>
               Monopoly
             </div>
-            <div style={{ fontSize: '0.8rem', color: '#b89968' }}>
+            <div style={{ fontSize: '1rem', color: '#b89968', textAlign: 'center' }}>
               Pirate
+            </div>
+            <div style={{
+              marginTop: '15px',
+              fontSize: '0.8rem',
+              color: '#8B6F47',
+              textAlign: 'center'
+            }}>
+              Tour {currentPlayerIndex + 1}
             </div>
           </div>
         </div>

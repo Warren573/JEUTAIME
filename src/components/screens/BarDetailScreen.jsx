@@ -1,9 +1,77 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { bars } from '../../data/appData';
 
-export default function BarDetailScreen({ selectedBar, setSelectedBar, barTab, setBarTab }) {
+export default function BarDetailScreen({ selectedBar, setSelectedBar, barTab, setBarTab, currentUser }) {
   const bar = bars.find(b => b.id === selectedBar);
+  const [messages, setMessages] = useState([]);
+  const [messageInput, setMessageInput] = useState('');
+  const messagesEndRef = useRef(null);
+
   if (!bar) return null;
+
+  // Charger les messages du bar depuis localStorage
+  useEffect(() => {
+    const savedMessages = localStorage.getItem(`jeutaime_bar_chat_${bar.id}`);
+    if (savedMessages) {
+      setMessages(JSON.parse(savedMessages));
+    } else {
+      // Messages par défaut
+      const defaultMessages = [
+        {
+          id: 1,
+          username: 'Sophie',
+          text: 'Coucou les gens! 😊',
+          timestamp: new Date().toISOString(),
+          isSystem: false
+        },
+        {
+          id: 2,
+          username: 'Alexandre',
+          text: 'Salut! Ça va?',
+          timestamp: new Date().toISOString(),
+          isSystem: false
+        },
+        {
+          id: 3,
+          username: 'Emma',
+          text: 'Super ambiance ce soir!',
+          timestamp: new Date().toISOString(),
+          isSystem: false
+        }
+      ];
+      setMessages(defaultMessages);
+      localStorage.setItem(`jeutaime_bar_chat_${bar.id}`, JSON.stringify(defaultMessages));
+    }
+  }, [bar.id]);
+
+  // Scroll automatique vers le bas
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  // Envoyer un message
+  const sendMessage = () => {
+    if (!messageInput.trim()) return;
+
+    const newMessage = {
+      id: Date.now(),
+      username: currentUser?.name || 'Invité',
+      text: messageInput,
+      timestamp: new Date().toISOString(),
+      isSystem: false
+    };
+
+    const updatedMessages = [...messages, newMessage];
+    setMessages(updatedMessages);
+    localStorage.setItem(`jeutaime_bar_chat_${bar.id}`, JSON.stringify(updatedMessages));
+    setMessageInput('');
+  };
+
+  // Formater l'heure
+  const formatTime = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  };
 
   return (
     <div>
@@ -37,14 +105,100 @@ export default function BarDetailScreen({ selectedBar, setSelectedBar, barTab, s
 
         {barTab === 'discuss' && (
           <div>
-            <div style={{ background: '#0a0a0a', borderRadius: '10px', padding: '15px', marginBottom: '15px', minHeight: '200px', maxHeight: '300px', overflowY: 'auto' }}>
-              <div style={{ fontSize: '12px', color: '#888', marginBottom: '10px' }}>Sophie: Coucou les gens! 😊</div>
-              <div style={{ fontSize: '12px', color: '#888', marginBottom: '10px' }}>Alexandre: Salut! Ça va?</div>
-              <div style={{ fontSize: '12px', color: '#888', marginBottom: '10px' }}>Emma: Super ambiance ce soir!</div>
+            <div style={{
+              background: '#0a0a0a',
+              borderRadius: '10px',
+              padding: '15px',
+              marginBottom: '15px',
+              minHeight: '300px',
+              maxHeight: '400px',
+              overflowY: 'auto',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '10px'
+            }}>
+              {messages.map((msg) => {
+                const isOwnMessage = msg.username === (currentUser?.name || 'Invité');
+                return (
+                  <div
+                    key={msg.id}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: isOwnMessage ? 'flex-end' : 'flex-start',
+                      marginBottom: '5px'
+                    }}
+                  >
+                    <div style={{
+                      fontSize: '10px',
+                      color: '#666',
+                      marginBottom: '3px',
+                      paddingLeft: '5px',
+                      paddingRight: '5px'
+                    }}>
+                      {msg.username} • {formatTime(msg.timestamp)}
+                    </div>
+                    <div style={{
+                      background: isOwnMessage
+                        ? 'linear-gradient(135deg, #E91E63, #C2185B)'
+                        : '#2a2a2a',
+                      padding: '10px 15px',
+                      borderRadius: isOwnMessage ? '15px 15px 5px 15px' : '15px 15px 15px 5px',
+                      maxWidth: '70%',
+                      wordWrap: 'break-word'
+                    }}>
+                      <div style={{
+                        fontSize: '13px',
+                        color: 'white',
+                        lineHeight: '1.4'
+                      }}>
+                        {msg.text}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+              <div ref={messagesEndRef} />
             </div>
             <div style={{ display: 'flex', gap: '8px' }}>
-              <input type="text" placeholder="Écris un message..." style={{ flex: 1, padding: '10px', background: '#0a0a0a', border: '1px solid #333', borderRadius: '8px', color: 'white', fontSize: '12px' }} />
-              <button style={{ padding: '10px 20px', background: '#E91E63', border: 'none', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}>Envoyer</button>
+              <input
+                type="text"
+                placeholder="Écris un message..."
+                value={messageInput}
+                onChange={(e) => setMessageInput(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    sendMessage();
+                  }
+                }}
+                style={{
+                  flex: 1,
+                  padding: '12px',
+                  background: '#0a0a0a',
+                  border: '1px solid #333',
+                  borderRadius: '8px',
+                  color: 'white',
+                  fontSize: '13px'
+                }}
+              />
+              <button
+                onClick={sendMessage}
+                style={{
+                  padding: '12px 24px',
+                  background: 'linear-gradient(135deg, #E91E63, #C2185B)',
+                  border: 'none',
+                  color: 'white',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                  fontSize: '13px',
+                  transition: 'transform 0.2s'
+                }}
+                onMouseDown={(e) => e.target.style.transform = 'scale(0.95)'}
+                onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
+              >
+                📤 Envoyer
+              </button>
             </div>
           </div>
         )}
