@@ -227,6 +227,10 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
         }}>
           👥 Découverte
         </h1>
+        {/* Indicateur de version - TEMPORAIRE */}
+        <div style={{ background: '#4CAF50', color: 'white', padding: '5px', textAlign: 'center', fontSize: '12px', fontWeight: 'bold' }}>
+          ✅ VERSION AVATAR-FIRST ACTIVE (selectedPhoto = {selectedPhoto})
+        </div>
       </div>
 
       {/* Tabs */}
