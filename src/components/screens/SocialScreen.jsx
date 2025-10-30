@@ -1,8 +1,9 @@
 import React from 'react';
 import { bars } from '../../data/appData';
 import RankingScreen from './RankingScreen';
+import AdoptionScreen from './AdoptionScreen';
 
-export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, setSelectedBar, adminMode, isAdminAuthenticated, currentUser }) {
+export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, setSelectedBar, adminMode, isAdminAuthenticated, currentUser, userCoins, setUserCoins }) {
   const handleAdminEditBar = (bar, e) => {
     e.stopPropagation();
     alert(`Éditer bar: ${bar.name}`);
@@ -68,7 +69,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
         marginBottom: 'var(--spacing-lg)',
         justifyContent: 'center'
       }}>
-        {['bars', 'ranking', 'games'].map((tab) => {
+        {['bars', 'ranking', 'games', 'adoption'].map((tab) => {
           const isActive = socialTab === tab;
           return (
             <button
@@ -93,6 +94,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
               {tab === 'bars' && '🍸 Bars'}
               {tab === 'ranking' && '🏆 Classement'}
               {tab === 'games' && '🎮 Jeux'}
+              {tab === 'adoption' && '🐾 Adoption'}
             </button>
           );
         })}
@@ -313,6 +315,10 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
 
       {socialTab === 'ranking' && (
         <RankingScreen currentUser={currentUser} />
+      )}
+
+      {socialTab === 'adoption' && (
+        <AdoptionScreen currentUser={currentUser} userCoins={userCoins} setUserCoins={setUserCoins} />
       )}
 
       {socialTab === 'games' && (
