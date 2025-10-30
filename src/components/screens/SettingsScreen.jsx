@@ -24,17 +24,67 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
   };
 
   return (
-    <div>
-      <h1 style={{ fontSize: '32px', marginBottom: '20px', fontWeight: '600' }}>⚙️ Paramètres</h1>
-
-      {/* Tabs */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', overflowX: 'auto' }}>
-        {['profile', 'shop', 'notifications', 'privacy', 'account'].map((tab) => (
-          <button key={tab} onClick={() => setSettingsTab(tab)} style={{ padding: '10px 18px', background: settingsTab === tab ? '#E91E63' : '#1a1a1a', border: 'none', color: 'white', borderRadius: '10px', cursor: 'pointer', fontWeight: '600', fontSize: '13px', whiteSpace: 'nowrap' }}>
-            {tab === 'profile' ? '👤 Profil' : tab === 'shop' ? '🛍️ Boutique' : tab === 'notifications' ? '🔔 Notifs' : tab === 'privacy' ? '🔒 Confidentialité' : '⚙️ Compte'}
-          </button>
-        ))}
+    <div style={{
+      minHeight: '100vh',
+      paddingBottom: '100px',
+      background: 'var(--color-beige-light)'
+    }}>
+      {/* En-tête style Journal */}
+      <div style={{
+        background: 'var(--color-cream)',
+        borderBottom: '4px double var(--color-brown-dark)',
+        padding: 'var(--spacing-lg)',
+        marginBottom: 'var(--spacing-lg)',
+        boxShadow: 'var(--shadow-md)'
+      }}>
+        <h1 style={{
+          fontFamily: 'var(--font-heading)',
+          fontSize: '2.5rem',
+          textAlign: 'center',
+          margin: '0 0 var(--spacing-xs) 0',
+          color: 'var(--color-brown-dark)',
+          textTransform: 'uppercase',
+          letterSpacing: '2px',
+          borderBottom: '2px solid var(--color-gold)',
+          paddingBottom: 'var(--spacing-xs)'
+        }}>
+          ⚙️ Paramètres
+        </h1>
       </div>
+
+      <div style={{ padding: '0 var(--spacing-lg)' }}>
+        {/* Tabs */}
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 'var(--spacing-xs)',
+          marginBottom: 'var(--spacing-lg)',
+          justifyContent: 'center'
+        }}>
+          {['profile', 'shop', 'notifications', 'privacy', 'account'].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setSettingsTab(tab)}
+              style={{
+                padding: 'var(--spacing-sm) var(--spacing-md)',
+                background: settingsTab === tab
+                  ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))'
+                  : 'var(--color-brown)',
+                border: settingsTab === tab ? '2px solid var(--color-gold-light)' : '2px solid var(--color-brown-dark)',
+                color: settingsTab === tab ? 'var(--color-brown-dark)' : 'var(--color-cream)',
+                borderRadius: 'var(--border-radius-md)',
+                cursor: 'pointer',
+                fontWeight: '600',
+                fontSize: '0.875rem',
+                transition: 'all var(--transition-normal)',
+                boxShadow: settingsTab === tab ? 'var(--shadow-md)' : 'var(--shadow-sm)',
+                minWidth: 'fit-content'
+              }}
+            >
+              {tab === 'profile' ? '👤 Profil' : tab === 'shop' ? '🛍️ Boutique' : tab === 'notifications' ? '🔔 Notifs' : tab === 'privacy' ? '🔒 Confidentialité' : '⚙️ Compte'}
+            </button>
+          ))}
+        </div>
 
       {/* PROFIL */}
       {settingsTab === 'profile' && (
@@ -310,6 +360,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { enrichedProfiles, profileBadges } from '../../data/appData';
 import QuestionGame from '../matching/QuestionGame';
 import { awardPoints, checkAndAwardBadge } from '../../utils/pointsSystem';
+import UserAvatar from '../avatar/UserAvatar';
 
 export default function ProfilesScreen({ currentProfile, setCurrentProfile, adminMode, isAdminAuthenticated, currentUser }) {
   const [viewMode, setViewMode] = useState('discover');
@@ -10,6 +11,28 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
   const [mutualSmileUser, setMutualSmileUser] = useState(null);
 
   const currentProfileData = enrichedProfiles[currentProfile];
+
+  // Calculer le nombre de lettres échangées avec ce profil
+  const getLettersCount = (targetId) => {
+    const convos = JSON.parse(localStorage.getItem('jeutaime_conversations') || '{}');
+    const userId = currentUser?.email || 'guest';
+    const convKey = [userId, targetId].sort().join('_');
+    const convo = convos[convKey];
+    return convo?.messages?.length || 0;
+  };
+
+  // Vérifier si une photo est défloutée
+  const isPhotoUnblurred = (photoIndex) => {
+    // Si premium, toutes les photos sont défloutées
+    if (currentUser?.premium) return true;
+
+    // Calculer le nombre de lettres échangées
+    const lettersCount = getLettersCount(currentProfileData.id);
+
+    // Chaque photo nécessite 10 lettres
+    const requiredLetters = (photoIndex + 1) * 10;
+    return lettersCount >= requiredLetters;
+  };
 
   // Load smiles data from localStorage
   const getSmiles = () => {
@@ -260,28 +283,94 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
       </div>
 
       {/* Carte profil */}
-      <div style={{ background: '#1a1a1a', borderRadius: '20px', overflow: 'hidden', marginBottom: '20px' }}>
-        {/* Photos carousel */}
-        <div style={{ position: 'relative', height: '400px', background: '#0a0a0a' }}>
-          <img
-            src={currentProfileData.photos[selectedPhoto]}
-            alt={currentProfileData.name}
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-          />
-
-          {/* Dots indicateur */}
-          {currentProfileData.photos.length > 1 && (
-            <div style={{ position: 'absolute', top: '15px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px' }}>
-              {currentProfileData.photos.map((_, idx) => (
-                <div key={idx} onClick={() => setSelectedPhoto(idx)} style={{ width: '40px', height: '4px', background: selectedPhoto === idx ? '#fff' : 'rgba(255,255,255,0.3)', borderRadius: '2px', cursor: 'pointer' }} />
-              ))}
+      <div style={{
+        background: 'var(--color-cream)',
+        borderRadius: 'var(--border-radius-xl)',
+        overflow: 'hidden',
+        marginBottom: 'var(--spacing-lg)',
+        border: '3px solid var(--color-brown)',
+        boxShadow: 'var(--shadow-lg)'
+      }}>
+        {/* Avatar ou Photos carousel */}
+        <div style={{ position: 'relative', height: '400px', background: 'var(--color-beige-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {!isPhotoUnblurred(selectedPhoto) ? (
+            // Afficher l'avatar si photo non débloquée
+            <div style={{ textAlign: 'center' }}>
+              <UserAvatar
+                avatarConfig={currentProfileData.avatarConfig}
+                size={200}
+                emoji="😊"
+              />
+              <div style={{
+                marginTop: 'var(--spacing-lg)',
+                padding: 'var(--spacing-md)',
+                background: 'var(--color-cream)',
+                borderRadius: 'var(--border-radius-md)',
+                border: '2px solid var(--color-gold)',
+                maxWidth: '300px',
+                margin: '0 auto'
+              }}>
+                <p style={{
+                  fontSize: '0.9rem',
+                  color: 'var(--color-text-primary)',
+                  margin: '0 0 var(--spacing-xs) 0',
+                  fontWeight: '600'
+                }}>
+                  🔒 Photo verrouillée
+                </p>
+                <p style={{
+                  fontSize: '0.8rem',
+                  color: 'var(--color-text-secondary)',
+                  margin: 0
+                }}>
+                  {currentUser?.premium
+                    ? '✨ Débloquée avec Premium'
+                    : `Échangez ${(selectedPhoto + 1) * 10} lettres pour débloquer`}
+                </p>
+                <p style={{
+                  fontSize: '0.75rem',
+                  color: 'var(--color-text-light)',
+                  margin: 'var(--spacing-xs) 0 0 0'
+                }}>
+                  Actuellement : {getLettersCount(currentProfileData.id)} lettres
+                </p>
+              </div>
             </div>
+          ) : (
+            // Afficher la photo si débloquée
+            <>
+              <img
+                src={currentProfileData.photos[selectedPhoto]}
+                alt={currentProfileData.name}
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+
+              {/* Dots indicateur */}
+              {currentProfileData.photos.length > 1 && (
+                <div style={{ position: 'absolute', top: '15px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px' }}>
+                  {currentProfileData.photos.map((_, idx) => (
+                    <div
+                      key={idx}
+                      onClick={() => setSelectedPhoto(idx)}
+                      style={{
+                        width: '40px',
+                        height: '4px',
+                        background: selectedPhoto === idx ? 'var(--color-gold)' : 'rgba(255,255,255,0.3)',
+                        borderRadius: '2px',
+                        cursor: 'pointer',
+                        border: !isPhotoUnblurred(idx) ? '1px solid var(--color-gold)' : 'none'
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
+            </>
           )}
 
           {/* Infos overlay */}
-          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(transparent, rgba(0,0,0,0.8))', padding: '60px 20px 20px' }}>
+          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(transparent, var(--color-brown-darker))', padding: '60px 20px 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-              <h2 style={{ fontSize: '28px', fontWeight: '700', margin: 0 }}>{currentProfileData.name}, {currentProfileData.age}</h2>
+              <h2 style={{ fontSize: '28px', fontWeight: '700', margin: 0, color: 'var(--color-cream)' }}>{currentProfileData.name}, {currentProfileData.age}</h2>
               <div style={{ display: 'flex', gap: '5px' }}>
                 {currentProfileData.badges.map(badgeId => (
                   <div key={badgeId} title={profileBadges[badgeId].name} style={{ fontSize: '18px' }}>
@@ -290,75 +379,127 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
                 ))}
               </div>
             </div>
-            <div style={{ fontSize: '14px', color: '#ddd', marginBottom: '5px' }}>
+            <div style={{ fontSize: '14px', color: 'var(--color-cream)', marginBottom: '5px' }}>
               📍 {currentProfileData.city} • {currentProfileData.distance}
             </div>
-            <div style={{ fontSize: '13px', color: '#aaa' }}>
+            <div style={{ fontSize: '13px', color: 'var(--color-tan)' }}>
               🟢 {currentProfileData.lastActive}
             </div>
           </div>
         </div>
 
         {/* Infos détaillées */}
-        <div style={{ padding: '20px' }}>
+        <div style={{ padding: 'var(--spacing-lg)', background: 'var(--color-beige-light)' }}>
           {/* Bio */}
-          <div style={{ marginBottom: '15px' }}>
-            <div style={{ fontSize: '14px', lineHeight: '1.6', color: '#ccc' }}>
+          <div style={{ marginBottom: 'var(--spacing-md)' }}>
+            <div style={{
+              fontSize: '0.9rem',
+              lineHeight: '1.6',
+              color: 'var(--color-text-primary)',
+              fontStyle: 'italic'
+            }}>
               {currentProfileData.bio}
             </div>
           </div>
 
           {/* Compatibilité */}
-          <div style={{ background: '#0a0a0a', borderRadius: '12px', padding: '15px', marginBottom: '15px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', fontWeight: '600' }}>💚 Compatibilité</span>
-              <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#4CAF50' }}>{currentProfileData.compatibility}%</span>
+          <div style={{
+            background: 'var(--color-cream)',
+            borderRadius: 'var(--border-radius-md)',
+            padding: 'var(--spacing-md)',
+            marginBottom: 'var(--spacing-md)',
+            border: '2px solid var(--color-gold-light)'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-xs)' }}>
+              <span style={{
+                fontSize: '0.9rem',
+                fontWeight: '600',
+                color: 'var(--color-text-primary)'
+              }}>💚 Compatibilité</span>
+              <span style={{
+                fontSize: '1.25rem',
+                fontWeight: 'bold',
+                color: 'var(--color-friendly)'
+              }}>{currentProfileData.compatibility}%</span>
             </div>
-            <div style={{ background: '#333', borderRadius: '8px', height: '8px', overflow: 'hidden' }}>
-              <div style={{ width: `${currentProfileData.compatibility}%`, height: '100%', background: 'linear-gradient(90deg, #4CAF50, #45a049)' }} />
+            <div style={{
+              background: 'var(--color-tan)',
+              borderRadius: 'var(--border-radius-sm)',
+              height: '8px',
+              overflow: 'hidden'
+            }}>
+              <div style={{
+                width: `${currentProfileData.compatibility}%`,
+                height: '100%',
+                background: 'linear-gradient(90deg, var(--color-friendly), var(--color-friendly-light))'
+              }} />
             </div>
           </div>
 
           {/* Intérêts */}
-          <div style={{ marginBottom: '15px' }}>
-            <div style={{ fontSize: '12px', color: '#888', marginBottom: '8px', fontWeight: '600' }}>INTÉRÊTS</div>
-            <div style={{ fontSize: '14px' }}>💼 {currentProfileData.job}</div>
-            <div style={{ fontSize: '14px', marginTop: '5px' }}>❤️ {currentProfileData.interests}</div>
+          <div style={{ marginBottom: 'var(--spacing-md)' }}>
+            <div style={{
+              fontSize: '0.75rem',
+              color: 'var(--color-text-secondary)',
+              marginBottom: 'var(--spacing-xs)',
+              fontWeight: '600',
+              textTransform: 'uppercase'
+            }}>Intérêts</div>
+            <div style={{ fontSize: '0.9rem', color: 'var(--color-text-primary)' }}>💼 {currentProfileData.job}</div>
+            <div style={{ fontSize: '0.9rem', color: 'var(--color-text-primary)', marginTop: 'var(--spacing-xs)' }}>❤️ {currentProfileData.interests}</div>
           </div>
 
           {/* Stats */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '20px' }}>
-            <div style={{ background: '#0a0a0a', borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
-              <div style={{ fontSize: '20px', marginBottom: '5px' }}>✉️</div>
-              <div style={{ fontSize: '16px', fontWeight: 'bold' }}>{currentProfileData.stats.letters}</div>
-              <div style={{ fontSize: '10px', color: '#888' }}>Lettres</div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--spacing-sm)', marginBottom: 'var(--spacing-lg)' }}>
+            <div style={{
+              background: 'var(--color-cream)',
+              borderRadius: 'var(--border-radius-md)',
+              padding: 'var(--spacing-sm)',
+              textAlign: 'center',
+              border: '2px solid var(--color-brown-light)'
+            }}>
+              <div style={{ fontSize: '1.5rem', marginBottom: 'var(--spacing-xs)' }}>✉️</div>
+              <div style={{ fontSize: '1rem', fontWeight: 'bold', color: 'var(--color-text-primary)' }}>{currentProfileData.stats.letters}</div>
+              <div style={{ fontSize: '0.7rem', color: 'var(--color-text-light)' }}>Lettres</div>
             </div>
-            <div style={{ background: '#0a0a0a', borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
-              <div style={{ fontSize: '20px', marginBottom: '5px' }}>🎮</div>
-              <div style={{ fontSize: '16px', fontWeight: 'bold' }}>{currentProfileData.stats.games}</div>
-              <div style={{ fontSize: '10px', color: '#888' }}>Parties</div>
+            <div style={{
+              background: 'var(--color-cream)',
+              borderRadius: 'var(--border-radius-md)',
+              padding: 'var(--spacing-sm)',
+              textAlign: 'center',
+              border: '2px solid var(--color-brown-light)'
+            }}>
+              <div style={{ fontSize: '1.5rem', marginBottom: 'var(--spacing-xs)' }}>🎮</div>
+              <div style={{ fontSize: '1rem', fontWeight: 'bold', color: 'var(--color-text-primary)' }}>{currentProfileData.stats.games}</div>
+              <div style={{ fontSize: '0.7rem', color: 'var(--color-text-light)' }}>Parties</div>
             </div>
-            <div style={{ background: '#0a0a0a', borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
-              <div style={{ fontSize: '20px', marginBottom: '5px' }}>🍸</div>
-              <div style={{ fontSize: '16px', fontWeight: 'bold' }}>{currentProfileData.stats.bars}</div>
-              <div style={{ fontSize: '10px', color: '#888' }}>Bars</div>
+            <div style={{
+              background: 'var(--color-cream)',
+              borderRadius: 'var(--border-radius-md)',
+              padding: 'var(--spacing-sm)',
+              textAlign: 'center',
+              border: '2px solid var(--color-brown-light)'
+            }}>
+              <div style={{ fontSize: '1.5rem', marginBottom: 'var(--spacing-xs)' }}>🍸</div>
+              <div style={{ fontSize: '1rem', fontWeight: 'bold', color: 'var(--color-text-primary)' }}>{currentProfileData.stats.bars}</div>
+              <div style={{ fontSize: '0.7rem', color: 'var(--color-text-light)' }}>Bars</div>
             </div>
           </div>
 
           {/* Actions - Sourire / Grimace */}
-          <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
+          <div style={{ display: 'flex', gap: 'var(--spacing-md)', justifyContent: 'center' }}>
             <button
               onClick={handleGrimace}
               style={{
                 flex: 1,
-                padding: '20px',
-                background: 'linear-gradient(135deg, #FF6B6B, #C92A2A)',
-                border: 'none',
+                padding: 'var(--spacing-lg)',
+                background: 'linear-gradient(135deg, var(--color-romantic), var(--color-romantic-light))',
+                border: '3px solid var(--color-brown)',
                 color: 'white',
-                borderRadius: '50px',
+                borderRadius: 'var(--border-radius-xl)',
                 cursor: 'pointer',
-                fontSize: '36px',
-                boxShadow: '0 4px 15px rgba(255, 107, 107, 0.3)',
+                fontSize: '2.5rem',
+                boxShadow: 'var(--shadow-lg)',
                 transition: 'transform 0.2s'
               }}
               onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
@@ -370,14 +511,14 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
               onClick={handleSmile}
               style={{
                 flex: 1,
-                padding: '20px',
-                background: 'linear-gradient(135deg, #51CF66, #37B24D)',
-                border: 'none',
+                padding: 'var(--spacing-lg)',
+                background: 'linear-gradient(135deg, var(--color-friendly), var(--color-friendly-light))',
+                border: '3px solid var(--color-brown)',
                 color: 'white',
-                borderRadius: '50px',
+                borderRadius: 'var(--border-radius-xl)',
                 cursor: 'pointer',
-                fontSize: '36px',
-                boxShadow: '0 4px 15px rgba(81, 207, 102, 0.3)',
+                fontSize: '2.5rem',
+                boxShadow: 'var(--shadow-lg)',
                 transition: 'transform 0.2s'
               }}
               onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
