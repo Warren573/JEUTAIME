@@ -369,59 +369,6 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
                     : 'Échangez des lettres pour débloquer'}
                 </p>
               </div>
-
-              {/* Indicateurs photos sous l'avatar */}
-              <div style={{ position: 'absolute', bottom: '120px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px', alignItems: 'center', zIndex: 10 }}>
-                {/* Bouton avatar */}
-                <div
-                  onClick={() => setSelectedPhoto(-1)}
-                  style={{
-                    width: selectedPhoto === -1 ? '50px' : '40px',
-                    height: '40px',
-                    background: selectedPhoto === -1 ? 'var(--color-gold)' : 'var(--color-cream)',
-                    border: '2px solid var(--color-brown)',
-                    borderRadius: '50%',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '20px',
-                    transition: 'all 0.2s'
-                  }}
-                >
-                  👤
-                </div>
-                {/* Boutons photos */}
-                {currentProfileData.photos.map((_, idx) => (
-                  <div
-                    key={idx}
-                    onClick={() => {
-                      if (isPhotoUnblurred(idx)) {
-                        setSelectedPhoto(idx);
-                      }
-                    }}
-                    style={{
-                      width: selectedPhoto === idx ? '50px' : '40px',
-                      height: '40px',
-                      background: isPhotoUnblurred(idx)
-                        ? (selectedPhoto === idx ? 'var(--color-gold)' : 'var(--color-cream)')
-                        : 'var(--color-beige-light)',
-                      border: `2px solid ${isPhotoUnblurred(idx) ? 'var(--color-brown)' : '#ccc'}`,
-                      borderRadius: '50%',
-                      cursor: isPhotoUnblurred(idx) ? 'pointer' : 'not-allowed',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '16px',
-                      opacity: isPhotoUnblurred(idx) ? 1 : 0.5,
-                      transition: 'all 0.2s'
-                    }}
-                    title={isPhotoUnblurred(idx) ? `Photo ${idx + 1}` : `🔒 ${(idx + 1) * 10} lettres requises`}
-                  >
-                    {isPhotoUnblurred(idx) ? `📷${idx + 1}` : '🔒'}
-                  </div>
-                ))}
-              </div>
             </div>
           ) : selectedPhoto >= 0 && isPhotoUnblurred(selectedPhoto) ? (
             // Afficher la photo si débloquée
@@ -431,59 +378,6 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
                 alt={currentProfileData.name}
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />
-
-              {/* Indicateurs photos sous la photo */}
-              <div style={{ position: 'absolute', bottom: '120px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px', alignItems: 'center', zIndex: 10 }}>
-                {/* Bouton avatar */}
-                <div
-                  onClick={() => setSelectedPhoto(-1)}
-                  style={{
-                    width: '40px',
-                    height: '40px',
-                    background: 'var(--color-cream)',
-                    border: '2px solid var(--color-brown)',
-                    borderRadius: '50%',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '20px',
-                    transition: 'all 0.2s'
-                  }}
-                >
-                  👤
-                </div>
-                {/* Boutons photos */}
-                {currentProfileData.photos.map((_, idx) => (
-                  <div
-                    key={idx}
-                    onClick={() => {
-                      if (isPhotoUnblurred(idx)) {
-                        setSelectedPhoto(idx);
-                      }
-                    }}
-                    style={{
-                      width: selectedPhoto === idx ? '50px' : '40px',
-                      height: '40px',
-                      background: isPhotoUnblurred(idx)
-                        ? (selectedPhoto === idx ? 'var(--color-gold)' : 'var(--color-cream)')
-                        : 'var(--color-beige-light)',
-                      border: `2px solid ${isPhotoUnblurred(idx) ? 'var(--color-brown)' : '#ccc'}`,
-                      borderRadius: '50%',
-                      cursor: isPhotoUnblurred(idx) ? 'pointer' : 'not-allowed',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '16px',
-                      opacity: isPhotoUnblurred(idx) ? 1 : 0.5,
-                      transition: 'all 0.2s'
-                    }}
-                    title={isPhotoUnblurred(idx) ? `Photo ${idx + 1}` : `🔒 ${(idx + 1) * 10} lettres requises`}
-                  >
-                    {isPhotoUnblurred(idx) ? `📷${idx + 1}` : '🔒'}
-                  </div>
-                ))}
-              </div>
             </>
           ) : (
             // Photo verrouillée - afficher avatar
