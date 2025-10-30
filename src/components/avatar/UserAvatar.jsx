@@ -1,13 +1,14 @@
 import React from 'react';
-import Avatar from 'avataaars';
 
 /**
  * Composant pour afficher l'avatar d'un utilisateur
- * Si avatarConfig existe, affiche l'avatar personnalisé
- * Sinon affiche un emoji par défaut
+ * Affiche l'image avatar si disponible, sinon un emoji par défaut
  */
-export default function UserAvatar({ avatarConfig, size = 50, emoji = '👤' }) {
-  if (avatarConfig && typeof avatarConfig === 'object') {
+export default function UserAvatar({ avatar, user, size = 50, emoji = '👤' }) {
+  // Priority 1: Use avatar URL if provided directly
+  const avatarUrl = avatar || user?.avatar;
+
+  if (avatarUrl) {
     return (
       <div style={{
         width: `${size}px`,
@@ -16,12 +17,23 @@ export default function UserAvatar({ avatarConfig, size = 50, emoji = '👤' }) 
         overflow: 'hidden',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        border: '2px solid var(--color-gold)',
+        background: 'var(--color-beige-light)'
       }}>
-        <Avatar
-          style={{ width: `${size}px`, height: `${size}px` }}
-          avatarStyle="Circle"
-          {...avatarConfig}
+        <img
+          src={avatarUrl}
+          alt="Avatar"
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover'
+          }}
+          onError={(e) => {
+            // Fallback to emoji if image fails to load
+            e.target.style.display = 'none';
+            e.target.parentElement.innerHTML = `<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: ${size * 0.5}px; background: linear-gradient(135deg, #667eea, #764ba2);">${emoji}</div>`;
+          }}
         />
       </div>
     );
@@ -37,7 +49,8 @@ export default function UserAvatar({ avatarConfig, size = 50, emoji = '👤' }) 
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      fontSize: `${size * 0.5}px`
+      fontSize: `${size * 0.5}px`,
+      border: '2px solid var(--color-gold)'
     }}>
       {emoji}
     </div>

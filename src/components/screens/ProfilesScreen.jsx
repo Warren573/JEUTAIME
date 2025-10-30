@@ -297,7 +297,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
             // Afficher l'avatar si photo non débloquée
             <div style={{ textAlign: 'center' }}>
               <UserAvatar
-                avatarConfig={currentProfileData.avatarConfig}
+                user={currentProfileData}
                 size={200}
                 emoji="😊"
               />

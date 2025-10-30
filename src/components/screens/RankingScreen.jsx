@@ -245,7 +245,7 @@ export default function RankingScreen({ currentUser }) {
                   </div>
 
                   {/* Avatar */}
-                  <UserAvatar avatarConfig={user.avatarConfig} size={50} emoji="😊" />
+                  <UserAvatar user={user} size={50} emoji="😊" />
 
                   {/* Infos */}
                   <div style={{ flex: 1 }}>

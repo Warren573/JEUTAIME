@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { receivedOfferings } from '../../data/appData';
 import { useAdmin } from '../../contexts/AdminContext';
 import { getTitleFromPoints } from '../../config/gameConfig';
+import UserAvatar from '../avatar/UserAvatar';
 
 export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurrentProfile, setAdminMode, currentUser }) {
   const { adminLogin } = useAdmin();
@@ -117,26 +118,190 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
           borderBottom: '2px solid var(--color-gold)',
           paddingBottom: 'var(--spacing-xs)'
         }}>
-          💝 JeuT'aime
+          💝 Accueil
         </h1>
-        <p style={{
-          textAlign: 'center',
-          fontSize: '0.9rem',
-          color: 'var(--color-brown)',
-          margin: 0,
-          fontStyle: 'italic'
-        }}>
-          Fais plaisir avec une offrande
-        </p>
       </div>
 
-      {/* Grille des offrandes - Style DESIGN.png */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(2, 1fr)',
-        gap: 'var(--spacing-md)',
-        padding: '0 var(--spacing-lg) var(--spacing-lg)'
-      }}>
+      <div style={{ padding: '0 var(--spacing-lg)' }}>
+        {/* PROFIL UTILISATEUR */}
+        <div style={{
+          background: 'var(--color-cream)',
+          borderRadius: 'var(--border-radius-lg)',
+          padding: 'var(--spacing-lg)',
+          marginBottom: 'var(--spacing-lg)',
+          border: '3px solid var(--color-gold)',
+          boxShadow: 'var(--shadow-lg)'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)', marginBottom: 'var(--spacing-md)' }}>
+            <UserAvatar
+              user={currentUser}
+              size={80}
+              emoji="😊"
+            />
+            <div style={{ flex: 1 }}>
+              <h2 style={{
+                fontSize: '1.5rem',
+                margin: '0 0 var(--spacing-xs) 0',
+                color: 'var(--color-text-primary)',
+                fontWeight: '700'
+              }}>
+                {currentUser?.pseudo || currentUser?.name || 'Utilisateur'}
+              </h2>
+              <div style={{
+                fontSize: '1rem',
+                color: 'var(--color-gold-dark)',
+                fontWeight: '600',
+                marginBottom: 'var(--spacing-xs)'
+              }}>
+                {userTitle.emoji} {userTitle.title}
+              </div>
+              {userRank && (
+                <div style={{
+                  fontSize: '0.9rem',
+                  color: 'var(--color-text-secondary)'
+                }}>
+                  {getMedalEmoji(userRank)} Classé #{userRank}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Stats utilisateur */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: 'var(--spacing-sm)',
+            marginTop: 'var(--spacing-md)'
+          }}>
+            <div style={{
+              background: 'var(--color-beige-light)',
+              borderRadius: 'var(--border-radius-md)',
+              padding: 'var(--spacing-sm)',
+              textAlign: 'center',
+              border: '2px solid var(--color-brown-light)'
+            }}>
+              <div style={{ fontSize: '1.5rem', marginBottom: 'var(--spacing-xs)' }}>⭐</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--color-text-primary)' }}>{userPoints}</div>
+              <div style={{ fontSize: '0.7rem', color: 'var(--color-text-light)' }}>Points</div>
+            </div>
+            <div style={{
+              background: 'var(--color-beige-light)',
+              borderRadius: 'var(--border-radius-md)',
+              padding: 'var(--spacing-sm)',
+              textAlign: 'center',
+              border: '2px solid var(--color-brown-light)'
+            }}>
+              <div style={{ fontSize: '1.5rem', marginBottom: 'var(--spacing-xs)' }}>💌</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--color-text-primary)' }}>{myLetters?.length || 0}</div>
+              <div style={{ fontSize: '0.7rem', color: 'var(--color-text-light)' }}>Conversations</div>
+            </div>
+            <div style={{
+              background: 'var(--color-beige-light)',
+              borderRadius: 'var(--border-radius-md)',
+              padding: 'var(--spacing-sm)',
+              textAlign: 'center',
+              border: '2px solid var(--color-brown-light)'
+            }}>
+              <div style={{ fontSize: '1.5rem', marginBottom: 'var(--spacing-xs)' }}>🍸</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--color-text-primary)' }}>{joinedBars?.length || 0}</div>
+              <div style={{ fontSize: '0.7rem', color: 'var(--color-text-light)' }}>Bars rejoints</div>
+            </div>
+          </div>
+        </div>
+
+        {/* COMMENT ÇA MARCHE */}
+        <div style={{
+          background: 'var(--color-cream)',
+          borderRadius: 'var(--border-radius-lg)',
+          padding: 'var(--spacing-lg)',
+          marginBottom: 'var(--spacing-lg)',
+          border: '2px solid var(--color-brown)',
+          boxShadow: 'var(--shadow-md)'
+        }}>
+          <h3 style={{
+            fontSize: '1.25rem',
+            margin: '0 0 var(--spacing-md) 0',
+            color: 'var(--color-text-primary)',
+            fontWeight: '700',
+            borderBottom: '2px solid var(--color-gold)',
+            paddingBottom: 'var(--spacing-xs)'
+          }}>
+            💡 Comment ça marche ?
+          </h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
+            <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
+              <div style={{ fontSize: '1.5rem', flexShrink: 0 }}>👤</div>
+              <div>
+                <strong style={{ color: 'var(--color-text-primary)' }}>Profils :</strong>{' '}
+                <span style={{ color: 'var(--color-text-secondary)' }}>
+                  Découvre des profils, envoie des sourires. Les photos se débloquent après 10 lettres échangées chacune.
+                </span>
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
+              <div style={{ fontSize: '1.5rem', flexShrink: 0 }}>💌</div>
+              <div>
+                <strong style={{ color: 'var(--color-text-primary)' }}>Lettres :</strong>{' '}
+                <span style={{ color: 'var(--color-text-secondary)' }}>
+                  Échange des messages avec tes matchs. Plus tu écris, plus tu débloqueras leurs photos !
+                </span>
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
+              <div style={{ fontSize: '1.5rem', flexShrink: 0 }}>🍸</div>
+              <div>
+                <strong style={{ color: 'var(--color-text-primary)' }}>Bars :</strong>{' '}
+                <span style={{ color: 'var(--color-text-secondary)' }}>
+                  Rejoins des bars thématiques pour discuter et jouer avec d'autres membres.
+                </span>
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
+              <div style={{ fontSize: '1.5rem', flexShrink: 0 }}>⭐</div>
+              <div>
+                <strong style={{ color: 'var(--color-text-primary)' }}>Points :</strong>{' '}
+                <span style={{ color: 'var(--color-text-secondary)' }}>
+                  Gagne des points en étant actif : sourires, matches, jeux, lettres. Monte dans le classement !
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* BUREAU D'OFFRANDES */}
+        <div style={{
+          background: 'var(--color-cream)',
+          borderRadius: 'var(--border-radius-lg)',
+          padding: 'var(--spacing-lg)',
+          marginBottom: 'var(--spacing-lg)',
+          border: '2px solid var(--color-brown)',
+          boxShadow: 'var(--shadow-md)'
+        }}>
+          <h3 style={{
+            fontSize: '1.25rem',
+            margin: '0 0 var(--spacing-md) 0',
+            color: 'var(--color-text-primary)',
+            fontWeight: '700',
+            borderBottom: '2px solid var(--color-gold)',
+            paddingBottom: 'var(--spacing-xs)'
+          }}>
+            🎁 Bureau d'Offrandes
+          </h3>
+          <p style={{
+            fontSize: '0.9rem',
+            color: 'var(--color-text-secondary)',
+            marginBottom: 'var(--spacing-md)',
+            fontStyle: 'italic'
+          }}>
+            Envoie des cadeaux virtuels pour faire plaisir à tes matchs !
+          </p>
+
+          {/* Grille des offrandes */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: 'var(--spacing-md)'
+          }}>
         {offerings.map((offering) => (
           <div
             key={offering.id}
@@ -230,9 +395,10 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
             </div>
           </div>
         ))}
-      </div>
+          </div>
+        </div>
 
-      {/* Accès rapide */}
+      {/* Accès rapide - Action rapides vers fonctionnalités */}
       <div style={{
         marginTop: 'var(--spacing-xl)',
         padding: '0 var(--spacing-lg)'
@@ -374,6 +540,7 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
