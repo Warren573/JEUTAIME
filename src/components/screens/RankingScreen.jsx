@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getTitleFromPoints } from '../../config/gameConfig';
+import UserAvatar from '../avatar/UserAvatar';
 
 export default function RankingScreen({ currentUser }) {
   const [rankings, setRankings] = useState([]);
@@ -244,18 +245,7 @@ export default function RankingScreen({ currentUser }) {
                   </div>
 
                   {/* Avatar */}
-                  <div style={{
-                    width: '50px',
-                    height: '50px',
-                    borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #667eea, #764ba2)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '24px'
-                  }}>
-                    {user.avatarConfig ? '👤' : '😊'}
-                  </div>
+                  <UserAvatar avatarConfig={user.avatarConfig} size={50} emoji="😊" />
 
                   {/* Infos */}
                   <div style={{ flex: 1 }}>

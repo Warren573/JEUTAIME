@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { awardPoints } from '../../utils/pointsSystem';
 import GiftSelector from '../gifts/GiftSelector';
+import UserAvatar from '../avatar/UserAvatar';
 
 export default function ChatScreen({ currentUser, matchedUser, onBack }) {
   const [messages, setMessages] = useState([]);
@@ -197,11 +198,10 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '30px',
               filter: `blur(${Math.max(0, 10 - (photoOpacity * 10))}px)`,
               opacity: photoOpacity
             }}>
-              {matchedUser.avatarConfig ? '👤' : '😊'}
+              <UserAvatar avatarConfig={matchedUser.avatarConfig} size={60} emoji="😊" />
             </div>
             {!isPhotoRevealed() && (
               <div style={{

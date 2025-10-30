@@ -68,7 +68,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
         marginBottom: 'var(--spacing-lg)',
         justifyContent: 'center'
       }}>
-        {['bars', 'classement', 'games'].map((tab) => {
+        {['bars', 'ranking', 'games'].map((tab) => {
           const isActive = socialTab === tab;
           return (
             <button
@@ -91,7 +91,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
               }}
             >
               {tab === 'bars' && '🍸 Bars'}
-              {tab === 'classement' && '🏆 Classement'}
+              {tab === 'ranking' && '🏆 Classement'}
               {tab === 'games' && '🎮 Jeux'}
             </button>
           );
@@ -307,7 +307,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
         </div>
       )}
 
-      {socialTab === 'classement' && (
+      {socialTab === 'ranking' && (
         <RankingScreen currentUser={currentUser} />
       )}
 
