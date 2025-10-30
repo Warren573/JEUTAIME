@@ -24,14 +24,26 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
   // Vérifier si une photo est défloutée
   const isPhotoUnblurred = (photoIndex) => {
     // Si premium, toutes les photos sont défloutées
-    if (currentUser?.premium) return true;
+    if (currentUser?.premium) {
+      console.log('📸 Photo débloquée car utilisateur premium');
+      return true;
+    }
 
     // Calculer le nombre de lettres échangées
     const lettersCount = getLettersCount(currentProfileData.id);
-
-    // Chaque photo nécessite 10 lettres
     const requiredLetters = (photoIndex + 1) * 10;
-    return lettersCount >= requiredLetters;
+    const isUnblurred = lettersCount >= requiredLetters;
+
+    console.log('📸 Vérification photo:', {
+      photoIndex,
+      lettersCount,
+      requiredLetters,
+      isUnblurred,
+      profileId: currentProfileData.id,
+      currentUserEmail: currentUser?.email
+    });
+
+    return isUnblurred;
   };
 
   // Load smiles data from localStorage

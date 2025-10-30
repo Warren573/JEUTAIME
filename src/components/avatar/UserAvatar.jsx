@@ -8,6 +8,14 @@ export default function UserAvatar({ avatar, user, size = 50, emoji = '👤' }) 
   // Priority 1: Use avatar URL if provided directly
   const avatarUrl = avatar || user?.avatar;
 
+  console.log('🔍 UserAvatar DEBUG:', {
+    avatar,
+    userName: user?.name,
+    userAvatar: user?.avatar,
+    finalUrl: avatarUrl,
+    size
+  });
+
   if (avatarUrl) {
     return (
       <div style={{
