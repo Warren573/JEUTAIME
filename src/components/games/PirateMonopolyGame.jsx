@@ -866,22 +866,29 @@ export default function PirateMonopolyGame({ setGameScreen, userCoins, setUserCo
         ))}
       </div>
 
-      {/* Plateau amélioré */}
+      {/* Plateau style carte au trésor */}
       <div style={{
-        background: '#3d2817',
-        padding: '15px',
-        borderRadius: '15px',
-        border: '3px solid #8B6F47',
-        marginBottom: '20px'
+        background: 'linear-gradient(135deg, #f4e8d0, #e8dcc0)',
+        padding: '20px',
+        borderRadius: '20px',
+        border: '8px solid',
+        borderImage: 'linear-gradient(135deg, #8B4513, #A0522D) 1',
+        marginBottom: '20px',
+        boxShadow: '0 10px 30px rgba(0,0,0,0.4), inset 0 2px 10px rgba(139, 69, 19, 0.1)',
+        position: 'relative',
+        backgroundImage: `
+          repeating-linear-gradient(0deg, transparent, transparent 10px, rgba(139, 69, 19, 0.03) 10px, rgba(139, 69, 19, 0.03) 11px),
+          repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(139, 69, 19, 0.03) 10px, rgba(139, 69, 19, 0.03) 11px)
+        `
       }}>
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(11, 1fr)',
           gridTemplateRows: 'repeat(11, 1fr)',
-          gap: '3px',
+          gap: '4px',
           aspectRatio: '1/1',
           maxWidth: '100%',
-          minHeight: '400px'
+          minHeight: '500px'
         }}>
           {boardSpaces.map((space, idx) => {
             const playersHere = players.filter(p => p.position === idx);
@@ -911,26 +918,35 @@ export default function PirateMonopolyGame({ setGameScreen, userCoins, setUserCo
                 style={{
                   gridArea,
                   background: property?.owner !== undefined
-                    ? players[property.owner]?.token?.emoji === '⚓' ? '#4A5568'
-                    : players[property.owner]?.token?.emoji === '🦜' ? '#48BB78'
-                    : players[property.owner]?.token?.emoji === '💀' ? '#9F7AEA'
-                    : '#F56565'
-                    : space.group ? islandGroups[space.group].color : '#2a1810',
-                  border: isCurrentPlayerHere ? '3px solid #FFD700' : '2px solid #8B6F47',
-                  borderRadius: '6px',
-                  padding: '4px',
+                    ? players[property.owner]?.token?.emoji === '⚓' ? 'linear-gradient(135deg, #4A5568, #5A6578)'
+                    : players[property.owner]?.token?.emoji === '🦜' ? 'linear-gradient(135deg, #48BB78, #58CB88)'
+                    : players[property.owner]?.token?.emoji === '💀' ? 'linear-gradient(135deg, #9F7AEA, #AF8AFA)'
+                    : 'linear-gradient(135deg, #F56565, #FF7575)'
+                    : space.group ? `linear-gradient(135deg, ${islandGroups[space.group].color}, ${islandGroups[space.group].color}dd)` : 'linear-gradient(135deg, #e8dcc0, #d4c0a0)',
+                  border: isCurrentPlayerHere ? '3px solid #FFD700' : '3px solid #8B4513',
+                  borderRadius: '8px',
+                  padding: '6px',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
                   position: 'relative',
                   overflow: 'hidden',
-                  boxShadow: isCurrentPlayerHere ? '0 0 15px rgba(255, 215, 0, 0.6)' : 'none',
+                  boxShadow: isCurrentPlayerHere
+                    ? '0 0 20px rgba(255, 215, 0, 0.8), 0 4px 8px rgba(0,0,0,0.3)'
+                    : '0 4px 8px rgba(0,0,0,0.2), inset 0 1px 2px rgba(255,255,255,0.3)',
                   cursor: 'pointer',
-                  transition: 'transform 0.2s'
+                  transition: 'all 0.2s',
+                  backdropFilter: 'brightness(1.05)'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'scale(1.08)';
+                  e.currentTarget.style.zIndex = '10';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'scale(1)';
+                  e.currentTarget.style.zIndex = '1';
+                }}
               >
                 <div style={{
                   fontSize: '1.3rem',
@@ -983,30 +999,130 @@ export default function PirateMonopolyGame({ setGameScreen, userCoins, setUserCo
             );
           })}
 
-          {/* Centre du plateau */}
+          {/* Centre du plateau - Île tropicale */}
           <div style={{
             gridArea: '2 / 2 / 11 / 11',
-            background: 'linear-gradient(135deg, #3d2817, #2a1810)',
-            borderRadius: '12px',
+            background: 'radial-gradient(circle at 50% 70%, #4A90E2 0%, #2C5AA0 40%, #1e3a5f 100%)',
+            borderRadius: '50%',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
             padding: '20px',
-            border: '2px solid #8B6F47'
+            border: '4px solid #8B4513',
+            boxShadow: 'inset 0 -20px 40px rgba(0,0,0,0.3), 0 8px 20px rgba(0,0,0,0.4)',
+            position: 'relative',
+            overflow: 'hidden'
           }}>
-            <div style={{ fontSize: '4rem', marginBottom: '15px' }}>🏴‍☠️</div>
-            <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#FFD700', textAlign: 'center' }}>
-              Monopoly
-            </div>
-            <div style={{ fontSize: '1rem', color: '#b89968', textAlign: 'center' }}>
-              Pirate
-            </div>
+            {/* Vagues de mer */}
             <div style={{
-              marginTop: '15px',
-              fontSize: '0.8rem',
-              color: '#8B6F47',
-              textAlign: 'center'
+              position: 'absolute',
+              bottom: 0,
+              width: '100%',
+              height: '30%',
+              background: 'linear-gradient(180deg, transparent, rgba(255,255,255,0.1))',
+              borderRadius: '0 0 50% 50%'
+            }} />
+
+            {/* Île centrale avec plage */}
+            <div style={{
+              position: 'absolute',
+              bottom: '15%',
+              width: '80%',
+              height: '50%',
+              background: 'linear-gradient(180deg, #D4A574 0%, #f4d494 50%, #FFE5B4 100%)',
+              borderRadius: '50% 50% 40% 40%',
+              boxShadow: '0 -5px 15px rgba(0,0,0,0.2)'
+            }} />
+
+            {/* Palmiers */}
+            <div style={{
+              position: 'absolute',
+              bottom: '35%',
+              left: '25%',
+              fontSize: '2.5rem',
+              filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.3))',
+              zIndex: 2
+            }}>🌴</div>
+            <div style={{
+              position: 'absolute',
+              bottom: '40%',
+              right: '30%',
+              fontSize: '3rem',
+              filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.3))',
+              zIndex: 2
+            }}>🌴</div>
+            <div style={{
+              position: 'absolute',
+              bottom: '32%',
+              left: '45%',
+              fontSize: '2rem',
+              filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.3))',
+              zIndex: 2
+            }}>🌺</div>
+
+            {/* Coffre au trésor */}
+            <div style={{
+              position: 'absolute',
+              bottom: '25%',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              fontSize: '2rem',
+              filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.4))',
+              zIndex: 3
+            }}>💰</div>
+
+            {/* Bateau pirate */}
+            <div style={{
+              position: 'absolute',
+              top: '15%',
+              right: '15%',
+              fontSize: '2rem',
+              filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.3))',
+              zIndex: 2
+            }}>⛵</div>
+
+            {/* Titre */}
+            <div style={{
+              position: 'absolute',
+              top: '10px',
+              width: '100%',
+              textAlign: 'center',
+              zIndex: 4
+            }}>
+              <div style={{
+                fontSize: '1.2rem',
+                fontWeight: 'bold',
+                color: '#FFD700',
+                textShadow: '2px 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(255, 215, 0, 0.5)',
+                fontFamily: 'serif',
+                letterSpacing: '2px'
+              }}>
+                MONOPOLY
+              </div>
+              <div style={{
+                fontSize: '1rem',
+                color: '#f4e8d0',
+                textShadow: '1px 1px 3px rgba(0,0,0,0.8)',
+                fontFamily: 'serif',
+                marginTop: '2px'
+              }}>
+                PIRATE
+              </div>
+            </div>
+
+            {/* Tour actuel */}
+            <div style={{
+              position: 'absolute',
+              bottom: '8px',
+              background: 'rgba(139, 69, 19, 0.8)',
+              padding: '4px 12px',
+              borderRadius: '12px',
+              fontSize: '0.75rem',
+              color: '#FFD700',
+              fontWeight: 'bold',
+              border: '2px solid #8B4513',
+              zIndex: 4
             }}>
               Tour {currentPlayerIndex + 1}
             </div>

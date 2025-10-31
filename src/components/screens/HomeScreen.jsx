@@ -95,7 +95,8 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
 
   return (
     <div style={{
-      minHeight: '100vh',
+      maxHeight: 'calc(100vh - 80px)',
+      overflowY: 'auto',
       paddingBottom: '100px',
       background: 'var(--color-beige-light)'
     }}>
@@ -299,8 +300,9 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
           {/* Grille des offrandes */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
-            gap: 'var(--spacing-md)'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: 'var(--spacing-md)',
+            maxWidth: '100%'
           }}>
         {offerings.map((offering) => (
           <div
@@ -316,7 +318,9 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
               borderRadius: 'var(--border-radius-lg)',
               boxShadow: 'var(--shadow-md)',
               transition: 'all var(--transition-normal)',
-              position: 'relative'
+              position: 'relative',
+              maxWidth: '100%',
+              boxSizing: 'border-box'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(-8px)';
