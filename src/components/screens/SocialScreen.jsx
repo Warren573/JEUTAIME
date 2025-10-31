@@ -3,7 +3,7 @@ import { bars } from '../../data/appData';
 import RankingScreen from './RankingScreen';
 import AdoptionScreen from './AdoptionScreen';
 
-export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, setSelectedBar, adminMode, isAdminAuthenticated, currentUser, userCoins, setUserCoins }) {
+export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, setSelectedBar, adminMode, isAdminAuthenticated, currentUser, userCoins, setUserCoins, setScreen }) {
   const handleAdminEditBar = (bar, e) => {
     e.stopPropagation();
     alert(`Éditer bar: ${bar.name}`);
@@ -106,6 +106,42 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
           padding: '0 var(--spacing-lg)',
           position: 'relative'
         }}>
+          {/* Bouton vers liste complète des bars thématiques */}
+          <button
+            onClick={() => setScreen('bars')}
+            style={{
+              width: '100%',
+              padding: 'var(--spacing-md)',
+              marginBottom: 'var(--spacing-lg)',
+              background: 'linear-gradient(135deg, #7B1FA2, #4A148C)',
+              border: '3px solid #FFD700',
+              borderRadius: 'var(--border-radius-lg)',
+              color: '#FFD700',
+              fontSize: '1.1rem',
+              fontWeight: '700',
+              cursor: 'pointer',
+              boxShadow: '0 6px 16px rgba(123, 31, 162, 0.4)',
+              transition: 'transform 0.2s',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '10px'
+            }}
+            onMouseDown={(e) => e.target.style.transform = 'scale(0.98)'}
+            onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
+          >
+            <span style={{ fontSize: '1.5rem' }}>🍸</span>
+            Voir tous les Bars Thématiques
+            <span style={{
+              background: '#FFD700',
+              color: '#000',
+              padding: '3px 8px',
+              borderRadius: '12px',
+              fontSize: '0.7rem',
+              fontWeight: 'bold'
+            }}>NOUVEAU</span>
+          </button>
+
           {/* Titre section */}
           <div style={{
             textAlign: 'center',

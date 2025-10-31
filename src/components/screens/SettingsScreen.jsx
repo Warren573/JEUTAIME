@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogout }) {
+export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogout, setScreen }) {
   const [settingsTab, setSettingsTab] = useState('profile');
 
   // Questions state for editing
@@ -25,7 +25,8 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
 
   return (
     <div style={{
-      minHeight: '100vh',
+      maxHeight: 'calc(100vh - 80px)',
+      overflowY: 'auto',
       paddingBottom: '100px',
       background: 'var(--color-beige-light)'
     }}>
@@ -330,6 +331,38 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
       {/* ACCOUNT */}
       {settingsTab === 'account' && (
         <div>
+          {/* Parrainage */}
+          <div
+            onClick={() => setScreen('referral')}
+            style={{
+              background: 'linear-gradient(135deg, #4CAF50, #388E3C)',
+              borderRadius: '15px',
+              padding: '20px',
+              marginBottom: '15px',
+              cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(76, 175, 80, 0.3)',
+              transition: 'transform 0.2s',
+              border: '2px solid #66BB6A'
+            }}
+            onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.98)'}
+            onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <span style={{ fontSize: '28px' }}>🤝</span>
+                <div>
+                  <h3 style={{ fontSize: '16px', margin: '0 0 4px 0', fontWeight: '700', color: 'white' }}>
+                    Parrainage
+                  </h3>
+                  <p style={{ fontSize: '13px', margin: 0, color: 'rgba(255,255,255,0.9)' }}>
+                    Invitez vos amis et gagnez des pièces
+                  </p>
+                </div>
+              </div>
+              <div style={{ fontSize: '20px', color: 'white' }}>→</div>
+            </div>
+          </div>
+
           <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', marginBottom: '15px' }}>
             <h3 style={{ fontSize: '16px', margin: '0 0 15px 0', fontWeight: '600' }}>Compte</h3>
 
