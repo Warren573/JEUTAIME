@@ -300,9 +300,12 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
           {/* Grille des offrandes */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
             gap: 'var(--spacing-md)',
-            maxWidth: '100%'
+            maxWidth: '900px',
+            margin: '0 auto',
+            width: '100%',
+            justifyContent: 'center'
           }}>
         {offerings.map((offering) => (
           <div

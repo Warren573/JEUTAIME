@@ -80,6 +80,13 @@ function MainApp() {
     }
   }, []);
 
+  // Reset selectedBar when screen changes (to allow navigation)
+  useEffect(() => {
+    if (selectedBar && screen !== 'bars') {
+      setSelectedBar(null);
+    }
+  }, [screen]);
+
   const handleLogin = (user) => {
     setCurrentUser(user);
     setUserCoins(user.coins || 100);
@@ -231,7 +238,7 @@ function MainApp() {
         {screen === 'home' && !gameScreen && !selectedBar && <HomeScreen {...appState} />}
         {screen === 'profiles' && !gameScreen && !selectedBar && <ProfilesScreen {...appState} />}
         {screen === 'social' && !gameScreen && !selectedBar && <SocialScreen {...appState} currentUser={currentUser} />}
-        {screen === 'bars' && !gameScreen && !selectedBar && <BarsScreen setScreen={setScreen} setGameScreen={setGameScreen} />}
+        {screen === 'bars' && !gameScreen && !selectedBar && <BarsScreen setScreen={setScreen} setGameScreen={setGameScreen} setSelectedBar={setSelectedBar} currentUser={currentUser} />}
         {screen === 'referral' && !gameScreen && !selectedBar && <ReferralScreen currentUser={currentUser} />}
         {screen === 'letters' && !gameScreen && !selectedBar && <LettersScreen currentUser={currentUser} />}
         {screen === 'journal' && !gameScreen && !selectedBar && <JournalScreen {...appState} />}
