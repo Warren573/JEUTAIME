@@ -1,220 +1,467 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { bars } from '../../data/appData';
+import React, { useState, useEffect } from 'react';
 
-export default function BarDetailScreen({ selectedBar, setSelectedBar, barTab, setBarTab, currentUser }) {
-  const bar = bars.find(b => b.id === selectedBar);
-  const [messages, setMessages] = useState([]);
-  const [messageInput, setMessageInput] = useState('');
-  const messagesEndRef = useRef(null);
+export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
+  // Mock data pour le développement
+  const [story, setStory] = useState([
+    { id: 1, user: 'Marie', text: 'Il était une fois, dans un royaume lointain...', timestamp: Date.now() - 3600000 },
+    { id: 2, user: 'Thomas', text: 'Un chevalier courageux découvrit une carte mystérieuse.', timestamp: Date.now() - 1800000 },
+    { id: 3, user: 'Sophie', text: 'La carte menait vers une forêt enchantée où...', timestamp: Date.now() - 900000 }
+  ]);
 
-  if (!bar) return null;
+  const [members, setMembers] = useState([
+    { id: 1, name: 'Marie', emoji: '🌸', isPatron: false, skippedTurns: 0 },
+    { id: 2, name: 'Thomas', emoji: '⚔️', isPatron: false, skippedTurns: 0 },
+    { id: 3, name: 'Sophie', emoji: '📖', isPatron: false, skippedTurns: 1 },
+    { id: 4, name: currentUser?.name || 'Vous', emoji: '✨', isPatron: true, skippedTurns: 0 }
+  ]);
 
-  // Charger les messages du bar depuis localStorage
+  const [currentTurnIndex, setCurrentTurnIndex] = useState(0);
+  const [newSentence, setNewSentence] = useState('');
+  const [timeRemaining, setTimeRemaining] = useState(24 * 60 * 60); // 24h en secondes
+  const [voteRestart, setVoteRestart] = useState({ voted: false, count: 0 });
+
+  const currentPlayer = members[currentTurnIndex];
+  const isMyTurn = currentPlayer?.name === (currentUser?.name || 'Vous');
+  const isPatron = members.find(m => m.name === (currentUser?.name || 'Vous'))?.isPatron;
+
+  // Timer countdown
   useEffect(() => {
-    const savedMessages = localStorage.getItem(`jeutaime_bar_chat_${bar.id}`);
-    if (savedMessages) {
-      setMessages(JSON.parse(savedMessages));
-    } else {
-      // Messages par défaut
-      const defaultMessages = [
-        {
-          id: 1,
-          username: 'Sophie',
-          text: 'Coucou les gens! 😊',
-          timestamp: new Date().toISOString(),
-          isSystem: false
-        },
-        {
-          id: 2,
-          username: 'Alexandre',
-          text: 'Salut! Ça va?',
-          timestamp: new Date().toISOString(),
-          isSystem: false
-        },
-        {
-          id: 3,
-          username: 'Emma',
-          text: 'Super ambiance ce soir!',
-          timestamp: new Date().toISOString(),
-          isSystem: false
+    const interval = setInterval(() => {
+      setTimeRemaining(prev => {
+        if (prev <= 0) {
+          // Tour sauté - passer au suivant
+          handleSkipTurn();
+          return 24 * 60 * 60;
         }
-      ];
-      setMessages(defaultMessages);
-      localStorage.setItem(`jeutaime_bar_chat_${bar.id}`, JSON.stringify(defaultMessages));
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [currentTurnIndex]);
+
+  const handleSkipTurn = () => {
+    const updatedMembers = [...members];
+    updatedMembers[currentTurnIndex].skippedTurns += 1;
+
+    // Expulsion automatique après 2 tours sautés
+    if (updatedMembers[currentTurnIndex].skippedTurns >= 2) {
+      alert(`❌ ${updatedMembers[currentTurnIndex].name} a été expulsé(e) du bar (2 tours sautés)`);
+      updatedMembers.splice(currentTurnIndex, 1);
+      setMembers(updatedMembers);
     }
-  }, [bar.id]);
 
-  // Scroll automatique vers le bas
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
-  // Envoyer un message
-  const sendMessage = () => {
-    if (!messageInput.trim()) return;
-
-    const newMessage = {
-      id: Date.now(),
-      username: currentUser?.name || 'Invité',
-      text: messageInput,
-      timestamp: new Date().toISOString(),
-      isSystem: false
-    };
-
-    const updatedMessages = [...messages, newMessage];
-    setMessages(updatedMessages);
-    localStorage.setItem(`jeutaime_bar_chat_${bar.id}`, JSON.stringify(updatedMessages));
-    setMessageInput('');
+    // Passer au joueur suivant
+    setCurrentTurnIndex((currentTurnIndex + 1) % updatedMembers.length);
   };
 
-  // Formater l'heure
-  const formatTime = (timestamp) => {
-    const date = new Date(timestamp);
-    return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  const handleSubmitSentence = () => {
+    if (newSentence.trim().length < 10) {
+      alert('⚠️ Votre phrase doit faire au moins 10 caractères !');
+      return;
+    }
+
+    const newStoryEntry = {
+      id: story.length + 1,
+      user: currentUser?.name || 'Vous',
+      text: newSentence.trim(),
+      timestamp: Date.now()
+    };
+
+    setStory([...story, newStoryEntry]);
+    setNewSentence('');
+    setTimeRemaining(24 * 60 * 60); // Reset timer
+
+    // Passer au joueur suivant
+    setCurrentTurnIndex((currentTurnIndex + 1) % members.length);
+  };
+
+  const handleSaveToJournal = () => {
+    const storyText = story.map(s => `${s.user}: ${s.text}`).join('\n\n');
+    alert(`📔 Histoire sauvegardée dans votre journal !\n\n${storyText}`);
+  };
+
+  const handleExpelMember = (memberId) => {
+    const member = members.find(m => m.id === memberId);
+    const reason = prompt(`Raison de l'expulsion de ${member.name} :`);
+
+    if (reason && reason.trim().length > 10) {
+      const updatedMembers = members.filter(m => m.id !== memberId);
+      setMembers(updatedMembers);
+      alert(`✅ ${member.name} a été expulsé(e) du bar.\nRaison: ${reason}`);
+    } else if (reason) {
+      alert('⚠️ La raison doit faire au moins 10 caractères.');
+    }
+  };
+
+  const handleVoteRestart = () => {
+    setVoteRestart({ voted: true, count: voteRestart.count + 1 });
+
+    // Si unanimité (tous les membres restants votent)
+    if (voteRestart.count + 1 >= members.length) {
+      setStory([]);
+      setVoteRestart({ voted: false, count: 0 });
+      setCurrentTurnIndex(Math.floor(Math.random() * members.length));
+      alert('🔄 L\'histoire a été redémarrée ! Nouveau tirage au sort...');
+    }
+  };
+
+  const formatTime = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    return `${hours}h ${minutes}m`;
   };
 
   return (
-    <div>
-      <button onClick={() => setSelectedBar(null)} style={{ padding: '10px 20px', background: '#1a1a1a', border: '1px solid #333', color: 'white', borderRadius: '10px', marginBottom: '20px', cursor: 'pointer', fontWeight: '600' }}>← Retour</button>
+    <div style={{
+      maxHeight: 'calc(100vh - 80px)',
+      overflowY: 'auto',
+      paddingBottom: '100px',
+      background: 'var(--color-beige-light)'
+    }}>
+      {/* En-tête du bar */}
+      <div style={{
+        background: bar?.gradient || 'linear-gradient(135deg, #667eea, #764ba2)',
+        padding: 'var(--spacing-lg)',
+        boxShadow: 'var(--shadow-md)',
+        borderBottom: '4px solid rgba(0,0,0,0.2)'
+      }}>
+        <button
+          onClick={() => setSelectedBar(null)}
+          style={{
+            background: 'rgba(255,255,255,0.2)',
+            border: 'none',
+            color: 'white',
+            padding: '8px 15px',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            marginBottom: '10px',
+            fontWeight: '600'
+          }}
+        >
+          ← Retour aux bars
+        </button>
 
-      <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', marginBottom: '20px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '15px' }}>
-          <div style={{ fontSize: '40px' }}>{bar.icon}</div>
-          <div>
-            <h2 style={{ fontSize: '24px', margin: '0 0 4px 0', fontWeight: '600' }}>{bar.name}</h2>
-            <p style={{ fontSize: '13px', color: '#888', margin: 0 }}>{bar.desc}</p>
-          </div>
-        </div>
+        <h1 style={{
+          fontSize: '2rem',
+          color: 'white',
+          margin: '10px 0',
+          fontWeight: '700'
+        }}>
+          {bar?.emoji} {bar?.name}
+        </h1>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', marginBottom: '20px' }}>
-          {bar.participants.map((p, idx) => (
-            <div key={idx} style={{ background: '#0a0a0a', borderRadius: '10px', padding: '10px', textAlign: 'center' }}>
-              <div style={{ fontSize: '24px', marginBottom: '4px' }}>{p.gender === 'F' ? '👩' : '👨'}</div>
-              <p style={{ fontSize: '11px', fontWeight: '600', margin: '0 0 2px 0' }}>{p.name}</p>
-              <p style={{ fontSize: '10px', color: '#888', margin: 0 }}>{p.age}ans</p>
-              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: p.online ? '#4CAF50' : '#666', margin: '4px auto 0' }}></div>
+        {/* Membres du bar */}
+        <div style={{
+          display: 'flex',
+          gap: '10px',
+          marginTop: '15px',
+          flexWrap: 'wrap'
+        }}>
+          {members.map((member) => (
+            <div
+              key={member.id}
+              style={{
+                background: member.id === members[currentTurnIndex]?.id
+                  ? 'rgba(255, 215, 0, 0.3)'
+                  : 'rgba(255,255,255,0.2)',
+                padding: '8px 12px',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                border: member.id === members[currentTurnIndex]?.id ? '2px solid #FFD700' : 'none'
+              }}
+            >
+              <span style={{ fontSize: '1.2rem' }}>{member.emoji}</span>
+              <span style={{ color: 'white', fontWeight: '600', fontSize: '0.9rem' }}>
+                {member.name}
+                {member.isPatron && ' 👑'}
+                {member.skippedTurns > 0 && ` ⚠️${member.skippedTurns}`}
+              </span>
+              {isPatron && member.id !== members.find(m => m.isPatron)?.id && (
+                <button
+                  onClick={() => handleExpelMember(member.id)}
+                  style={{
+                    background: '#E91E63',
+                    border: 'none',
+                    color: 'white',
+                    padding: '4px 8px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '0.7rem',
+                    fontWeight: '600',
+                    marginLeft: '5px'
+                  }}
+                >
+                  Expulser
+                </button>
+              )}
             </div>
           ))}
         </div>
+      </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px', marginBottom: '20px' }}>
-          <button onClick={() => setBarTab('discuss')} style={{ padding: '10px', background: barTab === 'discuss' ? 'linear-gradient(135deg, #E91E63, #C2185B)' : '#0a0a0a', border: 'none', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '13px' }}>💬 Discuter</button>
-          <button onClick={() => setBarTab('challenges')} style={{ padding: '10px', background: barTab === 'challenges' ? 'linear-gradient(135deg, #E91E63, #C2185B)' : '#0a0a0a', border: 'none', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '13px' }}>⚡ Défis</button>
-          <button onClick={() => setBarTab('games')} style={{ padding: '10px', background: barTab === 'games' ? 'linear-gradient(135deg, #E91E63, #C2185B)' : '#0a0a0a', border: 'none', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '13px' }}>🎮 Jeux</button>
+      <div style={{ padding: 'var(--spacing-lg)' }}>
+        {/* Timer et tour actuel */}
+        <div style={{
+          background: 'linear-gradient(135deg, #4CAF50, #2E7D32)',
+          borderRadius: '12px',
+          padding: 'var(--spacing-md)',
+          marginBottom: 'var(--spacing-lg)',
+          color: 'white',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '10px'
+        }}>
+          <div>
+            <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Tour de</div>
+            <div style={{ fontSize: '1.3rem', fontWeight: '700' }}>
+              {currentPlayer?.emoji} {currentPlayer?.name}
+            </div>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Temps restant</div>
+            <div style={{ fontSize: '1.3rem', fontWeight: '700' }}>
+              ⏱️ {formatTime(timeRemaining)}
+            </div>
+          </div>
         </div>
 
-        {barTab === 'discuss' && (
-          <div>
-            <div style={{
-              background: '#0a0a0a',
-              borderRadius: '10px',
-              padding: '15px',
-              marginBottom: '15px',
-              minHeight: '300px',
-              maxHeight: '400px',
-              overflowY: 'auto',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '10px'
-            }}>
-              {messages.map((msg) => {
-                const isOwnMessage = msg.username === (currentUser?.name || 'Invité');
-                return (
-                  <div
-                    key={msg.id}
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: isOwnMessage ? 'flex-end' : 'flex-start',
-                      marginBottom: '5px'
-                    }}
-                  >
-                    <div style={{
-                      fontSize: '10px',
-                      color: '#666',
-                      marginBottom: '3px',
-                      paddingLeft: '5px',
-                      paddingRight: '5px'
-                    }}>
-                      {msg.username} • {formatTime(msg.timestamp)}
-                    </div>
-                    <div style={{
-                      background: isOwnMessage
-                        ? 'linear-gradient(135deg, #E91E63, #C2185B)'
-                        : '#2a2a2a',
-                      padding: '10px 15px',
-                      borderRadius: isOwnMessage ? '15px 15px 5px 15px' : '15px 15px 15px 5px',
-                      maxWidth: '70%',
-                      wordWrap: 'break-word'
-                    }}>
-                      <div style={{
-                        fontSize: '13px',
-                        color: 'white',
-                        lineHeight: '1.4'
-                      }}>
-                        {msg.text}
-                      </div>
-                    </div>
+        {/* L'histoire en cours */}
+        <div style={{
+          background: '#fff',
+          borderRadius: '12px',
+          padding: 'var(--spacing-lg)',
+          marginBottom: 'var(--spacing-lg)',
+          boxShadow: 'var(--shadow-sm)',
+          border: '2px solid var(--color-brown-light)'
+        }}>
+          <h2 style={{
+            fontSize: '1.3rem',
+            color: 'var(--color-brown-dark)',
+            marginBottom: 'var(--spacing-md)',
+            fontWeight: '700'
+          }}>
+            📖 L'histoire
+          </h2>
+
+          {story.length === 0 ? (
+            <p style={{ color: '#888', fontStyle: 'italic', textAlign: 'center', padding: '20px' }}>
+              L'histoire n'a pas encore commencé...
+            </p>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+              {story.map((sentence) => (
+                <div
+                  key={sentence.id}
+                  style={{
+                    background: 'var(--color-beige-light)',
+                    padding: '12px',
+                    borderRadius: '8px',
+                    borderLeft: '4px solid var(--color-gold)'
+                  }}
+                >
+                  <div style={{
+                    fontSize: '0.8rem',
+                    color: 'var(--color-text-secondary)',
+                    marginBottom: '5px',
+                    fontWeight: '600'
+                  }}>
+                    {sentence.user}
                   </div>
-                );
-              })}
-              <div ref={messagesEndRef} />
+                  <div style={{
+                    fontSize: '1rem',
+                    color: 'var(--color-text-primary)',
+                    lineHeight: '1.5'
+                  }}>
+                    {sentence.text}
+                  </div>
+                </div>
+              ))}
             </div>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <input
-                type="text"
-                placeholder="Écris un message..."
-                value={messageInput}
-                onChange={(e) => setMessageInput(e.target.value)}
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    sendMessage();
-                  }
-                }}
-                style={{
-                  flex: 1,
-                  padding: '12px',
-                  background: '#0a0a0a',
-                  border: '1px solid #333',
-                  borderRadius: '8px',
-                  color: 'white',
-                  fontSize: '13px'
-                }}
-              />
+          )}
+
+          {/* Bouton sauvegarder */}
+          {story.length > 0 && (
+            <button
+              onClick={handleSaveToJournal}
+              style={{
+                width: '100%',
+                marginTop: 'var(--spacing-md)',
+                padding: '12px',
+                background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                border: 'none',
+                color: 'white',
+                borderRadius: '10px',
+                cursor: 'pointer',
+                fontWeight: '700',
+                fontSize: '0.95rem'
+              }}
+            >
+              📔 Sauvegarder dans mon journal
+            </button>
+          )}
+        </div>
+
+        {/* Zone d'écriture (si c'est votre tour) */}
+        {isMyTurn && (
+          <div style={{
+            background: '#fff',
+            borderRadius: '12px',
+            padding: 'var(--spacing-lg)',
+            marginBottom: 'var(--spacing-lg)',
+            boxShadow: 'var(--shadow-sm)',
+            border: '3px solid #FFD700'
+          }}>
+            <h3 style={{
+              fontSize: '1.1rem',
+              color: 'var(--color-brown-dark)',
+              marginBottom: 'var(--spacing-sm)',
+              fontWeight: '700'
+            }}>
+              ✍️ C'est votre tour !
+            </h3>
+            <textarea
+              value={newSentence}
+              onChange={(e) => setNewSentence(e.target.value)}
+              placeholder="Ajoutez votre phrase à l'histoire... (minimum 10 caractères)"
+              style={{
+                width: '100%',
+                minHeight: '100px',
+                padding: '12px',
+                borderRadius: '8px',
+                border: '2px solid var(--color-brown-light)',
+                fontSize: '1rem',
+                fontFamily: 'inherit',
+                resize: 'vertical',
+                boxSizing: 'border-box'
+              }}
+            />
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginTop: '10px'
+            }}>
+              <span style={{ fontSize: '0.85rem', color: '#666' }}>
+                {newSentence.length} caractères
+              </span>
               <button
-                onClick={sendMessage}
+                onClick={handleSubmitSentence}
+                disabled={newSentence.trim().length < 10}
                 style={{
                   padding: '12px 24px',
-                  background: 'linear-gradient(135deg, #E91E63, #C2185B)',
+                  background: newSentence.trim().length < 10
+                    ? '#ccc'
+                    : 'linear-gradient(135deg, #4CAF50, #2E7D32)',
                   border: 'none',
                   color: 'white',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  fontWeight: '600',
-                  fontSize: '13px',
-                  transition: 'transform 0.2s'
+                  borderRadius: '10px',
+                  cursor: newSentence.trim().length < 10 ? 'not-allowed' : 'pointer',
+                  fontWeight: '700',
+                  fontSize: '0.95rem'
                 }}
-                onMouseDown={(e) => e.target.style.transform = 'scale(0.95)'}
-                onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
               >
-                📤 Envoyer
+                Envoyer ✨
               </button>
             </div>
           </div>
         )}
 
-        {barTab === 'challenges' && (
-          <div style={{ background: '#0a0a0a', borderRadius: '10px', padding: '20px', textAlign: 'center' }}>
-            <div style={{ fontSize: '48px', marginBottom: '15px' }}>🎯</div>
-            <h3 style={{ fontSize: '16px', marginBottom: '10px', fontWeight: '600' }}>Défis disponibles</h3>
-            <p style={{ fontSize: '13px', color: '#888' }}>Fonctionnalité à venir...</p>
+        {/* Vote pour redémarrer (si 1-2 personnes) */}
+        {members.length <= 2 && story.length > 0 && (
+          <div style={{
+            background: '#fff3cd',
+            borderRadius: '12px',
+            padding: 'var(--spacing-md)',
+            marginBottom: 'var(--spacing-lg)',
+            border: '2px solid #ffc107'
+          }}>
+            <h3 style={{
+              fontSize: '1rem',
+              color: '#856404',
+              marginBottom: 'var(--spacing-sm)',
+              fontWeight: '700'
+            }}>
+              🔄 Redémarrer l'histoire ?
+            </h3>
+            <p style={{ fontSize: '0.9rem', color: '#856404', marginBottom: 'var(--spacing-sm)' }}>
+              Vous n'êtes plus que {members.length}. Vous pouvez voter pour redémarrer une nouvelle histoire.
+            </p>
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+              <button
+                onClick={handleVoteRestart}
+                disabled={voteRestart.voted}
+                style={{
+                  padding: '10px 20px',
+                  background: voteRestart.voted ? '#ccc' : '#ffc107',
+                  border: 'none',
+                  color: voteRestart.voted ? '#666' : '#000',
+                  borderRadius: '8px',
+                  cursor: voteRestart.voted ? 'not-allowed' : 'pointer',
+                  fontWeight: '700',
+                  fontSize: '0.9rem'
+                }}
+              >
+                {voteRestart.voted ? '✓ Voté' : 'Voter pour redémarrer'}
+              </button>
+              <span style={{ fontSize: '0.9rem', color: '#856404', fontWeight: '600' }}>
+                {voteRestart.count}/{members.length} votes
+              </span>
+            </div>
           </div>
         )}
 
-        {barTab === 'games' && (
-          <div style={{ background: '#0a0a0a', borderRadius: '10px', padding: '15px', textAlign: 'center' }}>
-            <button style={{ width: '100%', padding: '12px', background: 'linear-gradient(135deg, #E91E63, #C2185B)', border: 'none', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '13px' }}>📖 Continue l'histoire</button>
-            <p style={{ fontSize: '12px', color: '#888', margin: '12px 0 0 0' }}>Autres jeux à venir...</p>
+        {/* Pouvoirs du Patron */}
+        {isPatron && (
+          <div style={{
+            background: 'linear-gradient(135deg, #FFD700, #FFA500)',
+            borderRadius: '12px',
+            padding: 'var(--spacing-md)',
+            border: '2px solid #FFD700'
+          }}>
+            <h3 style={{
+              fontSize: '1rem',
+              color: '#000',
+              marginBottom: 'var(--spacing-sm)',
+              fontWeight: '700'
+            }}>
+              👑 Pouvoirs du Patron
+            </h3>
+            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+              <button
+                onClick={() => alert('🔒 Fermeture/Réouverture du bar en développement')}
+                style={{
+                  padding: '10px 15px',
+                  background: '#000',
+                  border: 'none',
+                  color: '#FFD700',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontWeight: '700',
+                  fontSize: '0.85rem'
+                }}
+              >
+                🔒 Fermer le bar
+              </button>
+              <button
+                onClick={() => alert('🎨 Modification du thème en développement')}
+                style={{
+                  padding: '10px 15px',
+                  background: '#000',
+                  border: 'none',
+                  color: '#FFD700',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontWeight: '700',
+                  fontSize: '0.85rem'
+                }}
+              >
+                🎨 Modifier le thème
+              </button>
+            </div>
           </div>
         )}
       </div>
