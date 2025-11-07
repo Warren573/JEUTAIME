@@ -1,7 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
-  // Mock data pour le développement
+  const [barTab, setBarTab] = useState('discuss');
+  const messagesEndRef = useRef(null);
+
+  // Chat discussion
+  const [messages, setMessages] = useState([
+    { id: 1, username: 'Sophie', text: 'Coucou les gens! 😊', timestamp: Date.now() - 3600000 },
+    { id: 2, username: 'Alexandre', text: 'Salut! Ça va?', timestamp: Date.now() - 1800000 },
+    { id: 3, username: 'Emma', text: 'Super ambiance ce soir!', timestamp: Date.now() - 900000 }
+  ]);
+  const [messageInput, setMessageInput] = useState('');
+
+  // Système "Continuer l'histoire"
   const [story, setStory] = useState([
     { id: 1, user: 'Marie', text: 'Il était une fois, dans un royaume lointain...', timestamp: Date.now() - 3600000 },
     { id: 2, user: 'Thomas', text: 'Un chevalier courageux découvrit une carte mystérieuse.', timestamp: Date.now() - 1800000 },
@@ -23,6 +34,26 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
   const currentPlayer = members[currentTurnIndex];
   const isMyTurn = currentPlayer?.name === (currentUser?.name || 'Vous');
   const isPatron = members.find(m => m.name === (currentUser?.name || 'Vous'))?.isPatron;
+
+  // Scroll automatique pour le chat
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  // Envoyer un message dans le chat
+  const sendMessage = () => {
+    if (!messageInput.trim()) return;
+
+    const newMessage = {
+      id: Date.now(),
+      username: currentUser?.name || 'Vous',
+      text: messageInput,
+      timestamp: Date.now()
+    };
+
+    setMessages([...messages, newMessage]);
+    setMessageInput('');
+  };
 
   // Timer countdown
   useEffect(() => {
@@ -111,6 +142,11 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
     return `${hours}h ${minutes}m`;
   };
 
+  const formatChatTime = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  };
+
   return (
     <div style={{
       maxHeight: 'calc(100vh - 80px)',
@@ -125,26 +161,42 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
         boxShadow: 'var(--shadow-md)',
         borderBottom: '4px solid rgba(0,0,0,0.2)'
       }}>
-        <button
-          onClick={() => setSelectedBar(null)}
-          style={{
-            background: 'rgba(255,255,255,0.2)',
-            border: 'none',
-            color: 'white',
-            padding: '8px 15px',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            marginBottom: '10px',
-            fontWeight: '600'
-          }}
-        >
-          ← Retour aux bars
-        </button>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px' }}>
+          <button
+            onClick={() => setSelectedBar(null)}
+            style={{
+              background: 'rgba(255,255,255,0.2)',
+              border: 'none',
+              color: 'white',
+              padding: '8px 15px',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontWeight: '600',
+              fontSize: '0.9rem'
+            }}
+          >
+            ← Retour
+          </button>
+
+          {/* Timer discret en haut à droite */}
+          {barTab === 'story' && (
+            <div style={{
+              background: 'rgba(255,255,255,0.15)',
+              padding: '6px 12px',
+              borderRadius: '20px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}>
+              <span style={{ fontSize: '0.85rem', color: 'white', opacity: 0.9 }}>⏱️ {formatTime(timeRemaining)}</span>
+            </div>
+          )}
+        </div>
 
         <h1 style={{
-          fontSize: '2rem',
+          fontSize: '1.8rem',
           color: 'white',
-          margin: '10px 0',
+          margin: '0 0 12px 0',
           fontWeight: '700'
         }}>
           {bar?.emoji} {bar?.name}
@@ -152,316 +204,440 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
 
         {/* Membres du bar */}
         <div style={{
-          display: 'flex',
-          gap: '10px',
-          marginTop: '15px',
-          flexWrap: 'wrap'
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))',
+          gap: '8px',
+          marginTop: '12px'
         }}>
           {members.map((member) => (
             <div
               key={member.id}
               style={{
-                background: member.id === members[currentTurnIndex]?.id
-                  ? 'rgba(255, 215, 0, 0.3)'
-                  : 'rgba(255,255,255,0.2)',
-                padding: '8px 12px',
-                borderRadius: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                border: member.id === members[currentTurnIndex]?.id ? '2px solid #FFD700' : 'none'
+                background: barTab === 'story' && member.id === members[currentTurnIndex]?.id
+                  ? 'rgba(255, 215, 0, 0.25)'
+                  : 'rgba(255,255,255,0.15)',
+                padding: '10px',
+                borderRadius: '10px',
+                textAlign: 'center',
+                border: barTab === 'story' && member.id === members[currentTurnIndex]?.id ? '2px solid #FFD700' : 'none',
+                transition: 'all 0.3s'
               }}
             >
-              <span style={{ fontSize: '1.2rem' }}>{member.emoji}</span>
-              <span style={{ color: 'white', fontWeight: '600', fontSize: '0.9rem' }}>
-                {member.name}
-                {member.isPatron && ' 👑'}
-                {member.skippedTurns > 0 && ` ⚠️${member.skippedTurns}`}
-              </span>
-              {isPatron && member.id !== members.find(m => m.isPatron)?.id && (
-                <button
-                  onClick={() => handleExpelMember(member.id)}
-                  style={{
-                    background: '#E91E63',
-                    border: 'none',
-                    color: 'white',
-                    padding: '4px 8px',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontSize: '0.7rem',
-                    fontWeight: '600',
-                    marginLeft: '5px'
-                  }}
-                >
-                  Expulser
-                </button>
+              <div style={{ fontSize: '1.5rem', marginBottom: '4px' }}>{member.emoji}</div>
+              <div style={{ color: 'white', fontWeight: '600', fontSize: '0.75rem' }}>
+                {member.name.length > 8 ? member.name.substring(0, 8) + '...' : member.name}
+              </div>
+              {member.isPatron && <div style={{ fontSize: '0.9rem' }}>👑</div>}
+              {barTab === 'story' && member.skippedTurns > 0 && (
+                <div style={{ fontSize: '0.8rem', color: '#FFD700' }}>⚠️{member.skippedTurns}</div>
               )}
             </div>
           ))}
         </div>
+
+        {/* Tabs */}
+        <div style={{
+          display: 'flex',
+          gap: '8px',
+          marginTop: '15px'
+        }}>
+          <button
+            onClick={() => setBarTab('discuss')}
+            style={{
+              flex: 1,
+              padding: '10px',
+              background: barTab === 'discuss'
+                ? 'rgba(255,255,255,0.3)'
+                : 'rgba(255,255,255,0.1)',
+              border: barTab === 'discuss' ? '2px solid rgba(255,255,255,0.5)' : 'none',
+              color: 'white',
+              borderRadius: '10px',
+              cursor: 'pointer',
+              fontWeight: '700',
+              fontSize: '0.9rem',
+              transition: 'all 0.2s'
+            }}
+          >
+            💬 Discussion
+          </button>
+          <button
+            onClick={() => setBarTab('story')}
+            style={{
+              flex: 1,
+              padding: '10px',
+              background: barTab === 'story'
+                ? 'rgba(255,255,255,0.3)'
+                : 'rgba(255,255,255,0.1)',
+              border: barTab === 'story' ? '2px solid rgba(255,255,255,0.5)' : 'none',
+              color: 'white',
+              borderRadius: '10px',
+              cursor: 'pointer',
+              fontWeight: '700',
+              fontSize: '0.9rem',
+              transition: 'all 0.2s'
+            }}
+          >
+            📖 Continuer l'histoire
+          </button>
+        </div>
       </div>
 
       <div style={{ padding: 'var(--spacing-lg)' }}>
-        {/* Timer et tour actuel */}
-        <div style={{
-          background: 'linear-gradient(135deg, #4CAF50, #2E7D32)',
-          borderRadius: '12px',
-          padding: 'var(--spacing-md)',
-          marginBottom: 'var(--spacing-lg)',
-          color: 'white',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '10px'
-        }}>
+
+        {/* ONGLET DISCUSSION */}
+        {barTab === 'discuss' && (
           <div>
-            <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Tour de</div>
-            <div style={{ fontSize: '1.3rem', fontWeight: '700' }}>
-              {currentPlayer?.emoji} {currentPlayer?.name}
-            </div>
-          </div>
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Temps restant</div>
-            <div style={{ fontSize: '1.3rem', fontWeight: '700' }}>
-              ⏱️ {formatTime(timeRemaining)}
-            </div>
-          </div>
-        </div>
-
-        {/* L'histoire en cours */}
-        <div style={{
-          background: '#fff',
-          borderRadius: '12px',
-          padding: 'var(--spacing-lg)',
-          marginBottom: 'var(--spacing-lg)',
-          boxShadow: 'var(--shadow-sm)',
-          border: '2px solid var(--color-brown-light)'
-        }}>
-          <h2 style={{
-            fontSize: '1.3rem',
-            color: 'var(--color-brown-dark)',
-            marginBottom: 'var(--spacing-md)',
-            fontWeight: '700'
-          }}>
-            📖 L'histoire
-          </h2>
-
-          {story.length === 0 ? (
-            <p style={{ color: '#888', fontStyle: 'italic', textAlign: 'center', padding: '20px' }}>
-              L'histoire n'a pas encore commencé...
-            </p>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-              {story.map((sentence) => (
-                <div
-                  key={sentence.id}
-                  style={{
-                    background: 'var(--color-beige-light)',
-                    padding: '12px',
-                    borderRadius: '8px',
-                    borderLeft: '4px solid var(--color-gold)'
-                  }}
-                >
-                  <div style={{
-                    fontSize: '0.8rem',
-                    color: 'var(--color-text-secondary)',
-                    marginBottom: '5px',
-                    fontWeight: '600'
-                  }}>
-                    {sentence.user}
-                  </div>
-                  <div style={{
-                    fontSize: '1rem',
-                    color: 'var(--color-text-primary)',
-                    lineHeight: '1.5'
-                  }}>
-                    {sentence.text}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Bouton sauvegarder */}
-          {story.length > 0 && (
-            <button
-              onClick={handleSaveToJournal}
-              style={{
-                width: '100%',
-                marginTop: 'var(--spacing-md)',
-                padding: '12px',
-                background: 'linear-gradient(135deg, #667eea, #764ba2)',
-                border: 'none',
-                color: 'white',
-                borderRadius: '10px',
-                cursor: 'pointer',
-                fontWeight: '700',
-                fontSize: '0.95rem'
-              }}
-            >
-              📔 Sauvegarder dans mon journal
-            </button>
-          )}
-        </div>
-
-        {/* Zone d'écriture (si c'est votre tour) */}
-        {isMyTurn && (
-          <div style={{
-            background: '#fff',
-            borderRadius: '12px',
-            padding: 'var(--spacing-lg)',
-            marginBottom: 'var(--spacing-lg)',
-            boxShadow: 'var(--shadow-sm)',
-            border: '3px solid #FFD700'
-          }}>
-            <h3 style={{
-              fontSize: '1.1rem',
-              color: 'var(--color-brown-dark)',
-              marginBottom: 'var(--spacing-sm)',
-              fontWeight: '700'
-            }}>
-              ✍️ C'est votre tour !
-            </h3>
-            <textarea
-              value={newSentence}
-              onChange={(e) => setNewSentence(e.target.value)}
-              placeholder="Ajoutez votre phrase à l'histoire... (minimum 10 caractères)"
-              style={{
-                width: '100%',
-                minHeight: '100px',
-                padding: '12px',
-                borderRadius: '8px',
-                border: '2px solid var(--color-brown-light)',
-                fontSize: '1rem',
-                fontFamily: 'inherit',
-                resize: 'vertical',
-                boxSizing: 'border-box'
-              }}
-            />
+            {/* Zone de chat */}
             <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginTop: '10px'
+              background: '#fff',
+              borderRadius: '12px',
+              padding: '15px',
+              marginBottom: '15px',
+              minHeight: '400px',
+              maxHeight: '500px',
+              overflowY: 'auto',
+              boxShadow: 'var(--shadow-sm)',
+              border: '2px solid var(--color-brown-light)'
             }}>
-              <span style={{ fontSize: '0.85rem', color: '#666' }}>
-                {newSentence.length} caractères
-              </span>
+              {messages.map((msg) => {
+                const isOwnMessage = msg.username === (currentUser?.name || 'Vous');
+                return (
+                  <div
+                    key={msg.id}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: isOwnMessage ? 'flex-end' : 'flex-start',
+                      marginBottom: '12px'
+                    }}
+                  >
+                    <div style={{
+                      fontSize: '0.75rem',
+                      color: '#888',
+                      marginBottom: '4px',
+                      paddingLeft: '8px',
+                      paddingRight: '8px'
+                    }}>
+                      {msg.username} • {formatChatTime(msg.timestamp)}
+                    </div>
+                    <div style={{
+                      background: isOwnMessage
+                        ? 'linear-gradient(135deg, #667eea, #764ba2)'
+                        : '#f0f0f0',
+                      color: isOwnMessage ? 'white' : '#333',
+                      padding: '10px 15px',
+                      borderRadius: isOwnMessage ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
+                      maxWidth: '75%',
+                      wordWrap: 'break-word',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                    }}>
+                      {msg.text}
+                    </div>
+                  </div>
+                );
+              })}
+              <div ref={messagesEndRef} />
+            </div>
+
+            {/* Input de chat */}
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <input
+                type="text"
+                placeholder="Écris un message..."
+                value={messageInput}
+                onChange={(e) => setMessageInput(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                style={{
+                  flex: 1,
+                  padding: '12px 16px',
+                  background: '#fff',
+                  border: '2px solid var(--color-brown-light)',
+                  borderRadius: '25px',
+                  fontSize: '0.95rem',
+                  outline: 'none',
+                  transition: 'border 0.2s'
+                }}
+              />
               <button
-                onClick={handleSubmitSentence}
-                disabled={newSentence.trim().length < 10}
+                onClick={sendMessage}
                 style={{
                   padding: '12px 24px',
-                  background: newSentence.trim().length < 10
-                    ? '#ccc'
-                    : 'linear-gradient(135deg, #4CAF50, #2E7D32)',
+                  background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                  border: 'none',
+                  color: 'white',
+                  borderRadius: '25px',
+                  cursor: 'pointer',
+                  fontWeight: '700',
+                  fontSize: '0.95rem',
+                  boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+                  transition: 'transform 0.2s'
+                }}
+                onMouseDown={(e) => e.target.style.transform = 'scale(0.95)'}
+                onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
+              >
+                Envoyer
+              </button>
+            </div>
+
+            {/* Pouvoirs du Patron (seulement en discussion) */}
+            {isPatron && (
+              <div style={{
+                background: 'linear-gradient(135deg, #FFD700, #FFA500)',
+                borderRadius: '12px',
+                padding: 'var(--spacing-md)',
+                marginTop: 'var(--spacing-lg)',
+                border: '2px solid #FFD700'
+              }}>
+                <h3 style={{
+                  fontSize: '0.95rem',
+                  color: '#000',
+                  marginBottom: 'var(--spacing-sm)',
+                  fontWeight: '700',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}>
+                  👑 Pouvoirs du Patron
+                </h3>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  <button
+                    onClick={() => {
+                      const memberId = prompt('ID du membre à expulser (1-4):');
+                      if (memberId) handleExpelMember(parseInt(memberId));
+                    }}
+                    style={{
+                      padding: '8px 14px',
+                      background: '#E91E63',
+                      border: 'none',
+                      color: 'white',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      fontWeight: '600',
+                      fontSize: '0.85rem'
+                    }}
+                  >
+                    👤 Expulser un membre
+                  </button>
+                  <button
+                    onClick={() => alert('🔒 Fermeture/Réouverture du bar en développement')}
+                    style={{
+                      padding: '8px 14px',
+                      background: '#000',
+                      border: 'none',
+                      color: '#FFD700',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      fontWeight: '600',
+                      fontSize: '0.85rem'
+                    }}
+                  >
+                    🔒 Fermer le bar
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ONGLET CONTINUER L'HISTOIRE */}
+        {barTab === 'story' && (
+          <div>
+            {/* Indicateur de tour discret */}
+            <div style={{
+              background: 'linear-gradient(135deg, #4CAF50, #2E7D32)',
+              borderRadius: '12px',
+              padding: '12px 16px',
+              marginBottom: 'var(--spacing-md)',
+              color: 'white',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              fontSize: '0.95rem',
+              fontWeight: '600'
+            }}>
+              <span>Tour de {currentPlayer?.emoji} {currentPlayer?.name}</span>
+            </div>
+
+            {/* L'histoire en cours */}
+            <div style={{
+              background: '#fff',
+              borderRadius: '12px',
+              padding: 'var(--spacing-md)',
+              marginBottom: 'var(--spacing-md)',
+              boxShadow: 'var(--shadow-sm)',
+              border: '2px solid var(--color-brown-light)',
+              maxHeight: '400px',
+              overflowY: 'auto'
+            }}>
+              {story.length === 0 ? (
+                <p style={{ color: '#888', fontStyle: 'italic', textAlign: 'center', padding: '30px' }}>
+                  L'histoire n'a pas encore commencé...
+                </p>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {story.map((sentence) => (
+                    <div
+                      key={sentence.id}
+                      style={{
+                        background: 'var(--color-beige-light)',
+                        padding: '10px 12px',
+                        borderRadius: '10px',
+                        borderLeft: '3px solid var(--color-gold)'
+                      }}
+                    >
+                      <div style={{
+                        fontSize: '0.75rem',
+                        color: 'var(--color-text-secondary)',
+                        marginBottom: '4px',
+                        fontWeight: '600'
+                      }}>
+                        {sentence.user}
+                      </div>
+                      <div style={{
+                        fontSize: '0.95rem',
+                        color: 'var(--color-text-primary)',
+                        lineHeight: '1.5'
+                      }}>
+                        {sentence.text}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Bouton sauvegarder */}
+            {story.length > 0 && (
+              <button
+                onClick={handleSaveToJournal}
+                style={{
+                  width: '100%',
+                  marginBottom: 'var(--spacing-md)',
+                  padding: '10px',
+                  background: 'linear-gradient(135deg, #667eea, #764ba2)',
                   border: 'none',
                   color: 'white',
                   borderRadius: '10px',
-                  cursor: newSentence.trim().length < 10 ? 'not-allowed' : 'pointer',
-                  fontWeight: '700',
-                  fontSize: '0.95rem'
-                }}
-              >
-                Envoyer ✨
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Vote pour redémarrer (si 1-2 personnes) */}
-        {members.length <= 2 && story.length > 0 && (
-          <div style={{
-            background: '#fff3cd',
-            borderRadius: '12px',
-            padding: 'var(--spacing-md)',
-            marginBottom: 'var(--spacing-lg)',
-            border: '2px solid #ffc107'
-          }}>
-            <h3 style={{
-              fontSize: '1rem',
-              color: '#856404',
-              marginBottom: 'var(--spacing-sm)',
-              fontWeight: '700'
-            }}>
-              🔄 Redémarrer l'histoire ?
-            </h3>
-            <p style={{ fontSize: '0.9rem', color: '#856404', marginBottom: 'var(--spacing-sm)' }}>
-              Vous n'êtes plus que {members.length}. Vous pouvez voter pour redémarrer une nouvelle histoire.
-            </p>
-            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-              <button
-                onClick={handleVoteRestart}
-                disabled={voteRestart.voted}
-                style={{
-                  padding: '10px 20px',
-                  background: voteRestart.voted ? '#ccc' : '#ffc107',
-                  border: 'none',
-                  color: voteRestart.voted ? '#666' : '#000',
-                  borderRadius: '8px',
-                  cursor: voteRestart.voted ? 'not-allowed' : 'pointer',
-                  fontWeight: '700',
+                  cursor: 'pointer',
+                  fontWeight: '600',
                   fontSize: '0.9rem'
                 }}
               >
-                {voteRestart.voted ? '✓ Voté' : 'Voter pour redémarrer'}
+                📔 Sauvegarder dans mon journal
               </button>
-              <span style={{ fontSize: '0.9rem', color: '#856404', fontWeight: '600' }}>
-                {voteRestart.count}/{members.length} votes
-              </span>
-            </div>
-          </div>
-        )}
+            )}
 
-        {/* Pouvoirs du Patron */}
-        {isPatron && (
-          <div style={{
-            background: 'linear-gradient(135deg, #FFD700, #FFA500)',
-            borderRadius: '12px',
-            padding: 'var(--spacing-md)',
-            border: '2px solid #FFD700'
-          }}>
-            <h3 style={{
-              fontSize: '1rem',
-              color: '#000',
-              marginBottom: 'var(--spacing-sm)',
-              fontWeight: '700'
-            }}>
-              👑 Pouvoirs du Patron
-            </h3>
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              <button
-                onClick={() => alert('🔒 Fermeture/Réouverture du bar en développement')}
-                style={{
-                  padding: '10px 15px',
-                  background: '#000',
-                  border: 'none',
-                  color: '#FFD700',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  fontWeight: '700',
-                  fontSize: '0.85rem'
-                }}
-              >
-                🔒 Fermer le bar
-              </button>
-              <button
-                onClick={() => alert('🎨 Modification du thème en développement')}
-                style={{
-                  padding: '10px 15px',
-                  background: '#000',
-                  border: 'none',
-                  color: '#FFD700',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  fontWeight: '700',
-                  fontSize: '0.85rem'
-                }}
-              >
-                🎨 Modifier le thème
-              </button>
-            </div>
+            {/* Zone d'écriture (si c'est votre tour) */}
+            {isMyTurn && (
+              <div style={{
+                background: '#fff',
+                borderRadius: '12px',
+                padding: 'var(--spacing-md)',
+                marginBottom: 'var(--spacing-md)',
+                boxShadow: 'var(--shadow-sm)',
+                border: '2px solid #FFD700'
+              }}>
+                <div style={{
+                  fontSize: '0.9rem',
+                  color: 'var(--color-brown-dark)',
+                  marginBottom: '8px',
+                  fontWeight: '600',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}>
+                  ✍️ À toi de jouer !
+                </div>
+                <textarea
+                  value={newSentence}
+                  onChange={(e) => setNewSentence(e.target.value)}
+                  placeholder="Ajoute ta phrase à l'histoire... (min. 10 caractères)"
+                  style={{
+                    width: '100%',
+                    minHeight: '80px',
+                    padding: '10px',
+                    borderRadius: '8px',
+                    border: '2px solid var(--color-brown-light)',
+                    fontSize: '0.95rem',
+                    fontFamily: 'inherit',
+                    resize: 'vertical',
+                    boxSizing: 'border-box'
+                  }}
+                />
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginTop: '8px'
+                }}>
+                  <span style={{ fontSize: '0.8rem', color: '#888' }}>
+                    {newSentence.length} / 500
+                  </span>
+                  <button
+                    onClick={handleSubmitSentence}
+                    disabled={newSentence.trim().length < 10}
+                    style={{
+                      padding: '10px 20px',
+                      background: newSentence.trim().length < 10
+                        ? '#ccc'
+                        : 'linear-gradient(135deg, #4CAF50, #2E7D32)',
+                      border: 'none',
+                      color: 'white',
+                      borderRadius: '10px',
+                      cursor: newSentence.trim().length < 10 ? 'not-allowed' : 'pointer',
+                      fontWeight: '600',
+                      fontSize: '0.9rem'
+                    }}
+                  >
+                    Envoyer ✨
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Vote pour redémarrer (si 1-2 personnes) */}
+            {members.length <= 2 && story.length > 0 && (
+              <div style={{
+                background: '#fff3cd',
+                borderRadius: '12px',
+                padding: 'var(--spacing-md)',
+                border: '2px solid #ffc107'
+              }}>
+                <div style={{
+                  fontSize: '0.9rem',
+                  color: '#856404',
+                  marginBottom: '8px',
+                  fontWeight: '600'
+                }}>
+                  🔄 Redémarrer l'histoire ?
+                </div>
+                <p style={{ fontSize: '0.85rem', color: '#856404', marginBottom: '10px' }}>
+                  Vous n'êtes plus que {members.length}. Votez pour recommencer.
+                </p>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <button
+                    onClick={handleVoteRestart}
+                    disabled={voteRestart.voted}
+                    style={{
+                      padding: '8px 16px',
+                      background: voteRestart.voted ? '#ccc' : '#ffc107',
+                      border: 'none',
+                      color: voteRestart.voted ? '#666' : '#000',
+                      borderRadius: '8px',
+                      cursor: voteRestart.voted ? 'not-allowed' : 'pointer',
+                      fontWeight: '600',
+                      fontSize: '0.85rem'
+                    }}
+                  >
+                    {voteRestart.voted ? '✓ Voté' : 'Voter'}
+                  </button>
+                  <span style={{ fontSize: '0.85rem', color: '#856404', fontWeight: '600' }}>
+                    {voteRestart.count}/{members.length}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
