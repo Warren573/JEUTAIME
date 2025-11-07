@@ -135,84 +135,127 @@ export default function BadgesScreen({ currentUser }) {
       <div style={{ padding: '0 var(--spacing-lg)' }}>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))',
           gap: 'var(--spacing-md)',
-          marginBottom: 'var(--spacing-xl)'
+          marginBottom: 'var(--spacing-xl)',
+          maxWidth: '900px',
+          margin: '0 auto var(--spacing-xl) auto'
         }}>
-          {badges.map((badge) => (
-            <div
-              key={badge.id}
-              className="card"
-              style={{
-                padding: 'var(--spacing-md)',
-                textAlign: 'center',
-                background: badge.unlocked ? badge.color : 'var(--color-brown-light)',
-                border: badge.unlocked
-                  ? '3px solid var(--color-gold)'
-                  : '3px dashed var(--color-brown)',
-                opacity: badge.unlocked ? 1 : 0.5,
-                position: 'relative',
-                cursor: 'pointer',
-                transition: 'all var(--transition-normal)'
-              }}
-              onMouseEnter={(e) => {
-                if (badge.unlocked) {
-                  e.currentTarget.style.transform = 'scale(1.1) rotate(5deg)';
-                  e.currentTarget.style.boxShadow = 'var(--shadow-xl)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (badge.unlocked) {
-                  e.currentTarget.style.transform = 'scale(1) rotate(0deg)';
-                  e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-                }
-              }}
-            >
-              {/* Icône du badge */}
-              <div style={{
-                fontSize: '3rem',
-                marginBottom: 'var(--spacing-xs)',
-                filter: badge.unlocked ? 'none' : 'grayscale(1)',
-                position: 'relative'
-              }}>
-                {badge.icon}
-                {!badge.unlocked && (
+          {badges.map((badge, index) => {
+            // Première badge débloqué aura une notification
+            const isFirstUnlocked = badge.unlocked && badges.filter((b, i) => b.unlocked && i < index).length === 0;
+
+            return (
+              <div
+                key={badge.id}
+                style={{
+                  position: 'relative'
+                }}
+              >
+                {/* Badge notification */}
+                {isFirstUnlocked && (
                   <div style={{
                     position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    fontSize: '1.5rem',
-                    background: 'var(--color-brown-darker)',
+                    top: '-8px',
+                    right: '-8px',
+                    width: '30px',
+                    height: '30px',
+                    background: 'linear-gradient(135deg, #FFD700, #FFA500)',
                     borderRadius: '50%',
-                    width: '35px',
-                    height: '35px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    border: '2px solid var(--color-gold)'
+                    fontWeight: 'bold',
+                    color: '#000',
+                    fontSize: '14px',
+                    boxShadow: '0 4px 12px rgba(255, 215, 0, 0.4)',
+                    zIndex: 10,
+                    border: '3px solid var(--color-beige-light)'
                   }}>
-                    🔒
+                    1
                   </div>
                 )}
-              </div>
 
-              {/* Nom du badge */}
-              <h3 style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: '0.75rem',
-                margin: 0,
-                color: badge.unlocked ? 'var(--color-brown-dark)' : 'var(--color-tan)',
-                fontWeight: '700',
-                minHeight: '32px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                {badge.name}
-              </h3>
-            </div>
-          ))}
+                <div
+                  className="card"
+                  style={{
+                    padding: 'var(--spacing-md)',
+                    textAlign: 'center',
+                    background: badge.unlocked ? badge.color : 'var(--color-brown-light)',
+                    border: badge.unlocked
+                      ? '3px solid var(--color-gold)'
+                      : '3px dashed var(--color-brown)',
+                    opacity: badge.unlocked ? 1 : 0.5,
+                    cursor: 'pointer',
+                    transition: 'all var(--transition-normal)',
+                    minHeight: '120px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (badge.unlocked) {
+                      e.currentTarget.style.transform = 'scale(1.1) rotate(5deg)';
+                      e.currentTarget.style.boxShadow = 'var(--shadow-xl)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (badge.unlocked) {
+                      e.currentTarget.style.transform = 'scale(1) rotate(0deg)';
+                      e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                    }
+                  }}
+                >
+                  {/* Icône du badge */}
+                  <div style={{
+                    fontSize: '3rem',
+                    marginBottom: 'var(--spacing-xs)',
+                    filter: badge.unlocked ? 'none' : 'grayscale(1)',
+                    position: 'relative'
+                  }}>
+                    {badge.icon}
+                    {!badge.unlocked && (
+                      <div style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        fontSize: '1.5rem',
+                        background: 'var(--color-brown-darker)',
+                        borderRadius: '50%',
+                        width: '35px',
+                        height: '35px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        border: '2px solid var(--color-gold)'
+                      }}>
+                        🔒
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Nom du badge */}
+                  <h3 style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: '0.75rem',
+                    margin: 0,
+                    color: badge.unlocked ? 'var(--color-brown-dark)' : 'var(--color-tan)',
+                    fontWeight: '700',
+                    minHeight: '32px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    lineHeight: '1.2',
+                    textAlign: 'center'
+                  }}>
+                    {badge.name}
+                  </h3>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         {/* Description du badge sélectionné (exemple pour le premier badge débloqué) */}
@@ -221,7 +264,9 @@ export default function BadgesScreen({ currentUser }) {
             background: 'var(--color-cream)',
             padding: 'var(--spacing-lg)',
             border: '2px solid var(--color-brown-light)',
-            marginBottom: 'var(--spacing-xl)'
+            marginBottom: 'var(--spacing-xl)',
+            maxWidth: '900px',
+            margin: '0 auto var(--spacing-xl) auto'
           }}>
             <div style={{
               display: 'flex',
@@ -269,7 +314,9 @@ export default function BadgesScreen({ currentUser }) {
           borderRadius: 'var(--border-radius-lg)',
           padding: 'var(--spacing-xl)',
           border: '3px solid var(--color-friendly-light)',
-          boxShadow: 'var(--shadow-xl)'
+          boxShadow: 'var(--shadow-xl)',
+          maxWidth: '900px',
+          margin: '0 auto'
         }}>
           <h2 style={{
             fontFamily: 'var(--font-heading)',
