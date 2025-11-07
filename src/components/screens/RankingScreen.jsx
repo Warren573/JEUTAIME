@@ -87,7 +87,9 @@ export default function RankingScreen({ currentUser }) {
           color: 'var(--color-text-primary)',
           marginBottom: 'var(--spacing-lg)',
           textAlign: 'center',
-          boxShadow: 'var(--shadow-lg)'
+          boxShadow: 'var(--shadow-lg)',
+          maxWidth: '900px',
+          margin: '0 auto var(--spacing-lg) auto'
         }}>
 
         {/* Mes stats */}
@@ -118,7 +120,9 @@ export default function RankingScreen({ currentUser }) {
           justifyContent: 'center',
           alignItems: 'flex-end',
           gap: '10px',
-          marginBottom: '30px'
+          marginBottom: '30px',
+          maxWidth: '900px',
+          margin: '0 auto 30px auto'
         }}>
           {/* 2ème place */}
           <div style={{
@@ -202,7 +206,9 @@ export default function RankingScreen({ currentUser }) {
         background: 'white',
         borderRadius: '20px',
         padding: '20px',
-        boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
+        boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
+        maxWidth: '900px',
+        margin: '0 auto'
       }}>
         <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '20px', color: '#333' }}>
           Classement Général
@@ -291,7 +297,9 @@ export default function RankingScreen({ currentUser }) {
         marginTop: '25px',
         background: '#f8f9fa',
         borderRadius: '15px',
-        padding: '20px'
+        padding: '20px',
+        maxWidth: '900px',
+        margin: '25px auto 0 auto'
       }}>
         <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '15px', color: '#333' }}>
           💡 Comment gagner des points ?
