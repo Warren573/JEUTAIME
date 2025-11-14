@@ -4,12 +4,17 @@ import QuestionGame from '../matching/QuestionGame';
 import { awardPoints, checkAndAwardBadge } from '../../utils/pointsSystem';
 import UserAvatar from '../avatar/UserAvatar';
 import Avatar from 'avataaars';
+import GiftSelector from '../gifts/GiftSelector';
+import MagicEffect from '../effects/MagicEffect';
+import { getReceivedGifts } from '../../utils/giftsSystem';
 
 export default function ProfilesScreen({ currentProfile, setCurrentProfile, adminMode, isAdminAuthenticated, currentUser }) {
   const [viewMode, setViewMode] = useState('discover');
   const [selectedPhoto, setSelectedPhoto] = useState(-1); // -1 = afficher avatar, 0+ = afficher photo
   const [showQuestionGame, setShowQuestionGame] = useState(false);
   const [mutualSmileUser, setMutualSmileUser] = useState(null);
+  const [showGiftSelector, setShowGiftSelector] = useState(false);
+  const [magicEffect, setMagicEffect] = useState(null);
 
   const currentProfileData = enrichedProfiles[currentProfile];
 
@@ -143,6 +148,16 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
 
     // Move to next profile
     setCurrentProfile((currentProfile + 1) % enrichedProfiles.length);
+  };
+
+  const handleSendGift = () => {
+    setShowGiftSelector(true);
+  };
+
+  const handleGiftSent = (gift, coinsRemaining) => {
+    // Afficher l'effet magique
+    setMagicEffect(gift);
+    setShowGiftSelector(false);
   };
 
   const handleMatchSuccess = (matchedUser, userScore, otherScore) => {
@@ -577,8 +592,8 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
             </div>
           </div>
 
-          {/* Actions - Sourire / Grimace */}
-          <div style={{ display: 'flex', gap: 'var(--spacing-md)', justifyContent: 'center' }}>
+          {/* Actions - Sourire / Grimace / Cadeau */}
+          <div style={{ display: 'flex', gap: 'var(--spacing-md)', justifyContent: 'center', marginBottom: 'var(--spacing-sm)' }}>
             <button
               onClick={handleGrimace}
               style={{
@@ -618,6 +633,40 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
               😊
             </button>
           </div>
+
+          {/* Bouton Envoyer un Cadeau Magique */}
+          <button
+            onClick={handleSendGift}
+            style={{
+              width: '100%',
+              padding: 'var(--spacing-md)',
+              background: 'linear-gradient(135deg, #FFD700, #FFA500)',
+              border: '3px solid var(--color-brown)',
+              color: '#000',
+              borderRadius: 'var(--border-radius-lg)',
+              cursor: 'pointer',
+              fontSize: '1.1rem',
+              fontWeight: '700',
+              boxShadow: '0 6px 16px rgba(255,215,0,0.4)',
+              transition: 'all 0.2s',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 8px 20px rgba(255,215,0,0.6)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 6px 16px rgba(255,215,0,0.4)';
+            }}
+          >
+            <span style={{ fontSize: '1.5rem' }}>🎁</span>
+            Envoyer un Cadeau Magique
+            <span style={{ fontSize: '1.5rem' }}>✨</span>
+          </button>
 
           {/* Legend */}
           <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: '12px', fontSize: '13px', color: '#888' }}>
@@ -670,6 +719,24 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
           matchedUser={mutualSmileUser}
           onMatchSuccess={handleMatchSuccess}
           onMatchFail={handleMatchFail}
+        />
+      )}
+
+      {/* Gift Selector Modal */}
+      {showGiftSelector && (
+        <GiftSelector
+          currentUser={currentUser}
+          receiverId={currentProfileData.id}
+          onClose={() => setShowGiftSelector(false)}
+          onGiftSent={handleGiftSent}
+        />
+      )}
+
+      {/* Magic Effect Animation */}
+      {magicEffect && (
+        <MagicEffect
+          gift={magicEffect}
+          onComplete={() => setMagicEffect(null)}
         />
       )}
     </div>

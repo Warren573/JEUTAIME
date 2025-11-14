@@ -1,8 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
+import GiftSelector from '../gifts/GiftSelector';
+import MagicEffect from '../effects/MagicEffect';
 
 export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
   const [barTab, setBarTab] = useState('discuss');
   const messagesEndRef = useRef(null);
+
+  // Système de cadeaux
+  const [showGiftSelector, setShowGiftSelector] = useState(false);
+  const [selectedMember, setSelectedMember] = useState(null);
+  const [magicEffect, setMagicEffect] = useState(null);
 
   // Chat discussion
   const [messages, setMessages] = useState([
@@ -147,6 +154,31 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
     return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
   };
 
+  const handleSendGiftToMember = (member) => {
+    setSelectedMember(member);
+    setShowGiftSelector(true);
+  };
+
+  const handleGiftSent = (gift, coinsRemaining) => {
+    // Afficher l'effet magique
+    setMagicEffect(gift);
+
+    // Ajouter un message système dans le chat
+    const giftMessage = {
+      id: Date.now(),
+      username: 'Système',
+      text: `${currentUser?.name || 'Quelqu\'un'} a envoyé ${gift.giftEmoji} ${gift.giftName} à ${selectedMember?.name} !`,
+      timestamp: Date.now(),
+      isSystem: true,
+      giftData: gift
+    };
+    setMessages([...messages, giftMessage]);
+
+    // Fermer le sélecteur
+    setShowGiftSelector(false);
+    setSelectedMember(null);
+  };
+
   return (
     <div style={{
       maxHeight: 'calc(100vh - 80px)',
@@ -231,6 +263,38 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
               {barTab === 'story' && member.skippedTurns > 0 && (
                 <div style={{ fontSize: '0.8rem', color: '#FFD700' }}>⚠️{member.skippedTurns}</div>
               )}
+              {/* Bouton envoyer cadeau */}
+              {barTab === 'discuss' && member.name !== (currentUser?.name || 'Vous') && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSendGiftToMember(member);
+                  }}
+                  style={{
+                    marginTop: '6px',
+                    padding: '4px 8px',
+                    background: 'linear-gradient(135deg, #FFD700, #FFA500)',
+                    border: 'none',
+                    borderRadius: '8px',
+                    color: '#000',
+                    fontSize: '0.7rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    boxShadow: '0 2px 8px rgba(255,215,0,0.4)',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.transform = 'scale(1.05)';
+                    e.target.style.boxShadow = '0 4px 12px rgba(255,215,0,0.6)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.transform = 'scale(1)';
+                    e.target.style.boxShadow = '0 2px 8px rgba(255,215,0,0.4)';
+                  }}
+                >
+                  🎁 Cadeau
+                </button>
+              )}
             </div>
           ))}
         </div>
@@ -301,6 +365,43 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
             }}>
               {messages.map((msg) => {
                 const isOwnMessage = msg.username === (currentUser?.name || 'Vous');
+                const isSystemMessage = msg.isSystem || msg.username === 'Système';
+
+                // Style spécial pour les messages système avec cadeaux
+                if (isSystemMessage && msg.giftData) {
+                  return (
+                    <div
+                      key={msg.id}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        marginBottom: '12px'
+                      }}
+                    >
+                      <div style={{
+                        background: 'linear-gradient(135deg, #FFD700, #FFA500)',
+                        color: '#000',
+                        padding: '12px 20px',
+                        borderRadius: '20px',
+                        maxWidth: '85%',
+                        textAlign: 'center',
+                        boxShadow: '0 4px 12px rgba(255,215,0,0.4)',
+                        border: '2px solid rgba(255,255,255,0.5)',
+                        fontWeight: '600',
+                        fontSize: '0.9rem'
+                      }}>
+                        <div style={{ fontSize: '1.5rem', marginBottom: '4px' }}>
+                          {msg.giftData.giftEmoji}
+                        </div>
+                        {msg.text}
+                        <div style={{ fontSize: '0.7rem', marginTop: '4px', opacity: 0.8 }}>
+                          {formatChatTime(msg.timestamp)}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+
                 return (
                   <div
                     key={msg.id}
@@ -641,6 +742,27 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
           </div>
         )}
       </div>
+
+      {/* Gift Selector Modal */}
+      {showGiftSelector && selectedMember && (
+        <GiftSelector
+          currentUser={currentUser}
+          receiverId={selectedMember.name}
+          onClose={() => {
+            setShowGiftSelector(false);
+            setSelectedMember(null);
+          }}
+          onGiftSent={handleGiftSent}
+        />
+      )}
+
+      {/* Magic Effect Animation */}
+      {magicEffect && (
+        <MagicEffect
+          gift={magicEffect}
+          onComplete={() => setMagicEffect(null)}
+        />
+      )}
     </div>
   );
 }
