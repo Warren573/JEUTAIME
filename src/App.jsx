@@ -14,14 +14,12 @@ import BarsScreen from './components/screens/BarsScreen';
 import ReferralScreen from './components/screens/ReferralScreen';
 
 // Games
-import HeroLoveQuest from './components/games/HeroLoveQuest';
 import PongGame from './components/games/PongGame';
 import WhackAMoleGame from './components/games/WhackAMoleGame';
 import BrickBreakerGame from './components/games/BrickBreakerGame';
 import MorpionGame from './components/games/MorpionGame';
 import CardGame from './components/games/CardGame';
 import StoryTimeGame from './components/games/StoryTimeGame';
-import PirateMonopolyGame from './components/games/PirateMonopolyGame';
 
 // Admin
 import { AdminProvider, useAdmin } from './contexts/AdminContext';
@@ -34,9 +32,6 @@ import ProfileCreation from './components/auth/ProfileCreation';
 
 // Points system
 import { awardDailyLogin } from './utils/pointsSystem';
-
-// Helper function for HeroLove Quest
-function rnd(min=1,max=6){ return Math.floor(Math.random()*(max-min+1))+min; }
 
 function MainApp() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -244,14 +239,12 @@ function MainApp() {
         {screen === 'journal' && !gameScreen && !selectedBar && <JournalScreen {...appState} />}
         {screen === 'settings' && !gameScreen && !selectedBar && <SettingsScreen {...appState} />}
 
-        {gameScreen === 'herolove' && <HeroLoveQuest {...appState} />}
         {gameScreen === 'pong' && <PongGame {...appState} />}
         {gameScreen === 'reactivity' && <WhackAMoleGame {...appState} />}
         {gameScreen === 'brickbreaker' && <BrickBreakerGame {...appState} />}
         {gameScreen === 'morpion' && <MorpionGame {...appState} />}
         {gameScreen === 'cards' && <CardGame {...appState} />}
         {gameScreen === 'storytime' && <StoryTimeGame {...appState} />}
-        {gameScreen === 'piratemonopoly' && <PirateMonopolyGame {...appState} />}
 
         {selectedBar && <BarDetailScreen {...appState} />}
       </div>
