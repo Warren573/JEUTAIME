@@ -128,23 +128,6 @@ function MainApp() {
   const [storyText, setStoryText] = useState('Il était une fois...');
   const [storyInput, setStoryInput] = useState('');
 
-  // HeroLove Quest states
-  const [heroPlayer, setHeroPlayer] = useState({
-    name: "Aventurier·e",
-    pos: {x:0,y:0},
-    charm: 2,
-    wit: 1,
-    humor: 2,
-    courage: 2,
-    confidence: 10,
-    coinsEarned: 0,
-    monstersDefeated: 0
-  });
-  const [heroMessage, setHeroMessage] = useState("🎮 Commence ton aventure romantique !");
-  const [heroGridSize] = useState(7);
-  const [heroGameOver, setHeroGameOver] = useState(false);
-  const [heroVictory, setHeroVictory] = useState(false);
-
   // Card Game states
   const [cardSymbols, setCardSymbols] = useState([]);
   const [cardRevealed, setCardRevealed] = useState([]);
@@ -187,11 +170,6 @@ function MainApp() {
     morpionTurn, setMorpionTurn,
     storyText, setStoryText,
     storyInput, setStoryInput,
-    heroPlayer, setHeroPlayer,
-    heroMessage, setHeroMessage,
-    heroGridSize,
-    heroGameOver, setHeroGameOver,
-    heroVictory, setHeroVictory,
     cardSymbols, setCardSymbols,
     cardRevealed, setCardRevealed,
     cardGains, setCardGains,
@@ -203,8 +181,7 @@ function MainApp() {
     adminMode, setAdminMode,
     isAdminAuthenticated,
     currentUser,
-    onLogout: handleLogout,
-    rnd
+    onLogout: handleLogout
   };
 
   // Show auth screen if not logged in
