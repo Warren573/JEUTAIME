@@ -14,28 +14,6 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
   const [magicEffect, setMagicEffect] = useState(null);
   const [giftReceiverEffect, setGiftReceiverEffect] = useState(null); // ID du membre qui reçoit un cadeau
 
-  // Transformer les participants du bar en membres avec avatars
-  const initialMembers = bar?.participants?.map((p, index) => ({
-    id: index + 1,
-    name: p.name,
-    gender: p.gender,
-    age: p.age,
-    online: p.online,
-    avatarOptions: generateAvatarOptions(p.name, p.gender),
-    isPatron: false,
-    skippedTurns: 0
-  })) || [];
-
-  // Ajouter l'utilisateur actuel
-  initialMembers.push({
-    id: initialMembers.length + 1,
-    name: currentUser?.name || 'Vous',
-    gender: currentUser?.gender || 'M',
-    avatarOptions: currentUser?.avatarData || generateAvatarOptions(currentUser?.name || 'Vous', currentUser?.gender || 'M'),
-    isPatron: true,
-    skippedTurns: 0
-  });
-
   // Chat discussion
   const [messages, setMessages] = useState([
     { id: 1, username: 'Sophie', text: 'Coucou les gens! 😊', timestamp: Date.now() - 3600000 },
@@ -51,7 +29,34 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
     { id: 3, user: 'Sophie', text: 'La carte menait vers une forêt enchantée où...', timestamp: Date.now() - 900000 }
   ]);
 
-  const [members, setMembers] = useState(initialMembers);
+  // Transformer les participants du bar en membres avec avatars + ajouter l'utilisateur
+  const [members, setMembers] = useState(() => {
+    const barMembers = bar?.participants?.map((p, index) => ({
+      id: index + 1,
+      name: p.name,
+      gender: p.gender,
+      age: p.age,
+      online: p.online,
+      avatarOptions: generateAvatarOptions(p.name, p.gender),
+      isPatron: false,
+      skippedTurns: 0
+    })) || [];
+
+    // Ajouter l'utilisateur actuel
+    const allMembers = [
+      ...barMembers,
+      {
+        id: barMembers.length + 1,
+        name: currentUser?.name || 'Vous',
+        gender: currentUser?.gender || 'M',
+        avatarOptions: currentUser?.avatarData || generateAvatarOptions(currentUser?.name || 'Vous', currentUser?.gender || 'M'),
+        isPatron: true,
+        skippedTurns: 0
+      }
+    ];
+
+    return allMembers;
+  });
 
   const [currentTurnIndex, setCurrentTurnIndex] = useState(0);
   const [newSentence, setNewSentence] = useState('');
@@ -377,8 +382,8 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
               {barTab === 'story' && member.skippedTurns > 0 && (
                 <div style={{ fontSize: '0.8rem', color: '#FFD700', marginTop: '2px' }}>⚠️{member.skippedTurns}</div>
               )}
-              {/* Bouton envoyer cadeau */}
-              {barTab === 'discuss' && member.name !== (currentUser?.name || 'Vous') && (
+              {/* Bouton envoyer cadeau - visible pour tous SAUF soi-même */}
+              {barTab === 'discuss' && !member.isPatron && (
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
