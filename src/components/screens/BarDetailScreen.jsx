@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import GiftSelector from '../gifts/GiftSelector';
 import MagicEffect from '../effects/MagicEffect';
+import Avatar from 'avataaars';
+import { generateAvatarOptions } from '../../utils/avatarGenerator';
 
 export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
   const [barTab, setBarTab] = useState('discuss');
@@ -10,6 +12,29 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
   const [showGiftSelector, setShowGiftSelector] = useState(false);
   const [selectedMember, setSelectedMember] = useState(null);
   const [magicEffect, setMagicEffect] = useState(null);
+  const [giftReceiverEffect, setGiftReceiverEffect] = useState(null); // ID du membre qui reçoit un cadeau
+
+  // Transformer les participants du bar en membres avec avatars
+  const initialMembers = bar?.participants?.map((p, index) => ({
+    id: index + 1,
+    name: p.name,
+    gender: p.gender,
+    age: p.age,
+    online: p.online,
+    avatarOptions: generateAvatarOptions(p.name, p.gender),
+    isPatron: false,
+    skippedTurns: 0
+  })) || [];
+
+  // Ajouter l'utilisateur actuel
+  initialMembers.push({
+    id: initialMembers.length + 1,
+    name: currentUser?.name || 'Vous',
+    gender: currentUser?.gender || 'M',
+    avatarOptions: currentUser?.avatarData || generateAvatarOptions(currentUser?.name || 'Vous', currentUser?.gender || 'M'),
+    isPatron: true,
+    skippedTurns: 0
+  });
 
   // Chat discussion
   const [messages, setMessages] = useState([
@@ -26,12 +51,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
     { id: 3, user: 'Sophie', text: 'La carte menait vers une forêt enchantée où...', timestamp: Date.now() - 900000 }
   ]);
 
-  const [members, setMembers] = useState([
-    { id: 1, name: 'Marie', emoji: '🌸', isPatron: false, skippedTurns: 0 },
-    { id: 2, name: 'Thomas', emoji: '⚔️', isPatron: false, skippedTurns: 0 },
-    { id: 3, name: 'Sophie', emoji: '📖', isPatron: false, skippedTurns: 1 },
-    { id: 4, name: currentUser?.name || 'Vous', emoji: '✨', isPatron: true, skippedTurns: 0 }
-  ]);
+  const [members, setMembers] = useState(initialMembers);
 
   const [currentTurnIndex, setCurrentTurnIndex] = useState(0);
   const [newSentence, setNewSentence] = useState('');
@@ -160,8 +180,16 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
   };
 
   const handleGiftSent = (gift, coinsRemaining) => {
-    // Afficher l'effet magique
+    // Afficher l'effet magique plein écran
     setMagicEffect(gift);
+
+    // Afficher l'effet sur l'avatar du destinataire
+    setGiftReceiverEffect(selectedMember?.id);
+
+    // Retirer l'effet après 3 secondes
+    setTimeout(() => {
+      setGiftReceiverEffect(null);
+    }, 3000);
 
     // Ajouter un message système dans le chat
     const giftMessage = {
@@ -237,8 +265,8 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
         {/* Membres du bar */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))',
-          gap: '8px',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(90px, 1fr))',
+          gap: '12px',
           marginTop: '12px'
         }}>
           {members.map((member) => (
@@ -248,20 +276,106 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
                 background: barTab === 'story' && member.id === members[currentTurnIndex]?.id
                   ? 'rgba(255, 215, 0, 0.25)'
                   : 'rgba(255,255,255,0.15)',
-                padding: '10px',
-                borderRadius: '10px',
+                padding: '12px',
+                borderRadius: '12px',
                 textAlign: 'center',
                 border: barTab === 'story' && member.id === members[currentTurnIndex]?.id ? '2px solid #FFD700' : 'none',
-                transition: 'all 0.3s'
+                transition: 'all 0.3s',
+                position: 'relative'
               }}
             >
-              <div style={{ fontSize: '1.5rem', marginBottom: '4px' }}>{member.emoji}</div>
-              <div style={{ color: 'white', fontWeight: '600', fontSize: '0.75rem' }}>
-                {member.name.length > 8 ? member.name.substring(0, 8) + '...' : member.name}
+              {/* Avatar avec indicateur en ligne */}
+              <div style={{
+                position: 'relative',
+                display: 'inline-block',
+                marginBottom: '6px'
+              }}>
+                {/* Effet de lueur magique si cadeau reçu */}
+                {giftReceiverEffect === member.id && (
+                  <>
+                    <div style={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      width: '80px',
+                      height: '80px',
+                      borderRadius: '50%',
+                      background: 'radial-gradient(circle, rgba(255,215,0,0.6) 0%, rgba(255,215,0,0) 70%)',
+                      animation: 'magicGlow 1.5s ease-in-out infinite',
+                      zIndex: 0,
+                      pointerEvents: 'none'
+                    }} />
+                    <div style={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      width: '90px',
+                      height: '90px',
+                      borderRadius: '50%',
+                      border: '2px solid rgba(255,215,0,0.8)',
+                      animation: 'magicRing 2s ease-out infinite',
+                      zIndex: 0,
+                      pointerEvents: 'none'
+                    }} />
+                  </>
+                )}
+                <div style={{
+                  width: '60px',
+                  height: '60px',
+                  borderRadius: '50%',
+                  overflow: 'hidden',
+                  border: giftReceiverEffect === member.id
+                    ? '3px solid #FFD700'
+                    : '3px solid rgba(255,255,255,0.3)',
+                  boxShadow: giftReceiverEffect === member.id
+                    ? '0 0 20px rgba(255,215,0,0.8), 0 4px 8px rgba(0,0,0,0.2)'
+                    : '0 4px 8px rgba(0,0,0,0.2)',
+                  transition: 'all 0.3s',
+                  position: 'relative',
+                  zIndex: 1
+                }}>
+                  <Avatar
+                    style={{ width: '60px', height: '60px' }}
+                    {...member.avatarOptions}
+                  />
+                </div>
+                {/* Indicateur en ligne */}
+                {member.online !== false && (
+                  <div style={{
+                    position: 'absolute',
+                    bottom: '2px',
+                    right: '2px',
+                    width: '14px',
+                    height: '14px',
+                    background: '#4CAF50',
+                    borderRadius: '50%',
+                    border: '2px solid white',
+                    boxShadow: '0 0 8px rgba(76, 175, 80, 0.6)',
+                    zIndex: 2
+                  }} />
+                )}
               </div>
-              {member.isPatron && <div style={{ fontSize: '0.9rem' }}>👑</div>}
+
+              {/* Styles pour les animations */}
+              <style>{`
+                @keyframes magicGlow {
+                  0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+                  50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.2); }
+                }
+                @keyframes magicRing {
+                  0% { opacity: 1; transform: translate(-50%, -50%) scale(0.8); }
+                  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+                }
+              `}</style>
+
+              <div style={{ color: 'white', fontWeight: '600', fontSize: '0.75rem' }}>
+                {member.name.length > 9 ? member.name.substring(0, 9) + '...' : member.name}
+              </div>
+              {member.isPatron && <div style={{ fontSize: '0.9rem', marginTop: '2px' }}>👑</div>}
               {barTab === 'story' && member.skippedTurns > 0 && (
-                <div style={{ fontSize: '0.8rem', color: '#FFD700' }}>⚠️{member.skippedTurns}</div>
+                <div style={{ fontSize: '0.8rem', color: '#FFD700', marginTop: '2px' }}>⚠️{member.skippedTurns}</div>
               )}
               {/* Bouton envoyer cadeau */}
               {barTab === 'discuss' && member.name !== (currentUser?.name || 'Vous') && (
@@ -281,7 +395,8 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
                     fontWeight: '600',
                     cursor: 'pointer',
                     boxShadow: '0 2px 8px rgba(255,215,0,0.4)',
-                    transition: 'all 0.2s'
+                    transition: 'all 0.2s',
+                    width: '100%'
                   }}
                   onMouseEnter={(e) => {
                     e.target.style.transform = 'scale(1.05)';
