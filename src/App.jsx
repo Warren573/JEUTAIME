@@ -33,6 +33,9 @@ import ProfileCreation from './components/auth/ProfileCreation';
 // Points system
 import { awardDailyLogin } from './utils/pointsSystem';
 
+// Data
+import { bars } from './data/appData';
+
 function MainApp() {
   const [currentUser, setCurrentUser] = useState(null);
   const [authMode, setAuthMode] = useState(null); // null, 'signup-profile'
@@ -223,7 +226,7 @@ function MainApp() {
         {gameScreen === 'cards' && <CardGame {...appState} />}
         {gameScreen === 'storytime' && <StoryTimeGame {...appState} />}
 
-        {selectedBar && <BarDetailScreen {...appState} />}
+        {selectedBar && <BarDetailScreen {...appState} bar={bars.find(b => b.id === selectedBar)} />}
       </div>
 
       <Navigation navItems={navItems} screen={screen} setScreen={setScreen} />
