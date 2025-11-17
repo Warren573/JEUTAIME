@@ -8,7 +8,6 @@ import LettersScreen from './components/screens/LettersScreen';
 import JournalScreen from './components/screens/JournalScreen';
 import SettingsScreen from './components/screens/SettingsScreen';
 import BarDetailScreen from './components/screens/BarDetailScreen';
-import RankingScreen from './components/screens/RankingScreen';
 
 // Games
 import HeroLoveQuest from './components/games/HeroLoveQuest';
@@ -18,6 +17,9 @@ import BrickBreakerGame from './components/games/BrickBreakerGame';
 import MorpionGame from './components/games/MorpionGame';
 import CardGame from './components/games/CardGame';
 import StoryTimeGame from './components/games/StoryTimeGame';
+import EmpiresEtheriaGame from './components/games/EmpiresEtheriaGame';
+import EmpiresEtheria3D from './components/games/empires3d/EmpiresEtheria3DWrapper';
+import EmpiresEtheriaIsometric from './components/games/EmpiresEtheriaIsometric';
 
 // Admin
 import { AdminProvider, useAdmin } from './contexts/AdminContext';
@@ -158,7 +160,6 @@ function MainApp() {
   const navItems = [
     { icon: '🏠', label: 'Accueil', id: 'home' },
     { icon: '👤', label: 'Profils', id: 'profiles' },
-    { icon: '🏆', label: 'Classement', id: 'ranking' },
     { icon: '👥', label: 'Social', id: 'social' },
     { icon: '💌', label: 'Lettres', id: 'letters' },
     { icon: '📰', label: 'Journal', id: 'journal' },
@@ -197,7 +198,7 @@ function MainApp() {
     showAdminPanel, setShowAdminPanel,
     adminMode, setAdminMode,
     isAdminAuthenticated,
-    currentUser,
+    currentUser, // Add currentUser to appState for games
     onLogout: handleLogout,
     rnd
   };
@@ -224,13 +225,10 @@ function MainApp() {
 
   return (
     <div style={{ maxWidth: '430px', margin: '0 auto', background: '#000', minHeight: '100vh', color: 'white', fontFamily: '-apple-system, sans-serif', paddingBottom: '100px' }}>
-      <Header userCoins={userCoins} adminMode={adminMode} isAdminAuthenticated={isAdminAuthenticated} />
-
       <div style={{ padding: '25px 20px' }}>
-        {screen === 'home' && !gameScreen && !selectedBar && <HomeScreen {...appState} />}
+        {screen === 'home' && !gameScreen && !selectedBar && <HomeScreen {...appState} currentUser={currentUser} />}
         {screen === 'profiles' && !gameScreen && !selectedBar && <ProfilesScreen {...appState} />}
-        {screen === 'ranking' && !gameScreen && !selectedBar && <RankingScreen currentUser={currentUser} />}
-        {screen === 'social' && !gameScreen && !selectedBar && <SocialScreen {...appState} />}
+        {screen === 'social' && !gameScreen && !selectedBar && <SocialScreen {...appState} currentUser={currentUser} />}
         {screen === 'letters' && !gameScreen && !selectedBar && <LettersScreen currentUser={currentUser} />}
         {screen === 'journal' && !gameScreen && !selectedBar && <JournalScreen {...appState} />}
         {screen === 'settings' && !gameScreen && !selectedBar && <SettingsScreen {...appState} />}
@@ -242,6 +240,9 @@ function MainApp() {
         {gameScreen === 'morpion' && <MorpionGame {...appState} />}
         {gameScreen === 'cards' && <CardGame {...appState} />}
         {gameScreen === 'storytime' && <StoryTimeGame {...appState} />}
+        {gameScreen === 'empires' && <EmpiresEtheriaGame {...appState} />}
+        {gameScreen === 'empires3d' && <EmpiresEtheria3D {...appState} />}
+        {gameScreen === 'empires-iso' && <EmpiresEtheriaIsometric currentUser={currentUser} onBack={() => setGameScreen(null)} />}
 
         {selectedBar && <BarDetailScreen {...appState} />}
       </div>

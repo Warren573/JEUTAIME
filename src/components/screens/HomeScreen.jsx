@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { receivedOfferings } from '../../data/appData';
 import { useAdmin } from '../../contexts/AdminContext';
+import { getTitleFromPoints } from '../../config/gameConfig';
 
-export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurrentProfile, setAdminMode }) {
+export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurrentProfile, setAdminMode, currentUser }) {
   const { adminLogin } = useAdmin();
+  const [selectedOffering, setSelectedOffering] = useState(null);
 
   const handleAdminTest = () => {
     // Auto-login as admin
@@ -14,84 +16,356 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
     setCurrentProfile(0);
     setScreen('profiles');
   };
-  return (
-    <div>
-      <h1 style={{ fontSize: '36px', marginBottom: '15px', fontWeight: '600' }}>Bienvenue sur JeuTaime</h1>
 
-      <div style={{ background: '#1a1a1a', borderRadius: '20px', padding: '25px', marginBottom: '30px' }}>
-        <h3 style={{ fontSize: '20px', marginBottom: '15px', fontWeight: '500' }}>L'application de rencontres anti-superficielle</h3>
-        <p style={{ fontSize: '15px', lineHeight: '1.7', color: '#aaa', margin: 0 }}>Découvrez les profils en profondeur. Les photos ne sont révélées qu'après 10 lettres échangées ou avec Premium.</p>
+  // Définition des offrandes disponibles selon DESIGN.png
+  const offerings = [
+    {
+      id: 'letter',
+      icon: '✉️',
+      secondIcon: '🌹',
+      name: 'Lettre parfumée',
+      description: 'Rose virtuelle',
+      price: 3500,
+      color: 'var(--color-romantic)'
+    },
+    {
+      id: 'rose',
+      icon: '🌹',
+      name: 'Rose virtuelle',
+      description: '',
+      price: 6000,
+      color: 'var(--color-romantic-light)'
+    },
+    {
+      id: 'music',
+      icon: '🎵',
+      name: 'Musique dédiée',
+      description: '',
+      price: 7500,
+      color: 'var(--color-gold)'
+    },
+    {
+      id: 'gift',
+      icon: '🎁',
+      name: 'Petit cadeau mignon',
+      description: '',
+      price: 5000,
+      color: 'var(--color-humorous)'
+    },
+    {
+      id: 'magic1',
+      icon: '🎩',
+      name: 'Magie romantique',
+      description: '',
+      price: 20000,
+      color: 'var(--color-friendly)'
+    },
+    {
+      id: 'magic2',
+      icon: '🪄',
+      name: 'Magie romantique',
+      description: '',
+      price: 2000,
+      color: 'var(--color-brown-light)'
+    }
+  ];
+
+  // Calculer le rang de l'utilisateur
+  const getUserRank = () => {
+    const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+    const sortedUsers = users
+      .filter(u => u.pseudo)
+      .sort((a, b) => (b.points || 0) - (a.points || 0));
+
+    const rank = sortedUsers.findIndex(u => u.email === currentUser?.email);
+    return rank >= 0 ? rank + 1 : null;
+  };
+
+  const userPoints = currentUser?.points || 0;
+  const userTitle = getTitleFromPoints(userPoints);
+  const userRank = getUserRank();
+
+  const getMedalEmoji = (rank) => {
+    if (rank === 1) return '🥇';
+    if (rank === 2) return '🥈';
+    if (rank === 3) return '🥉';
+    return `#${rank}`;
+  };
+
+  return (
+    <div style={{
+      minHeight: '100vh',
+      paddingBottom: '100px',
+      background: 'var(--color-beige-light)'
+    }}>
+      {/* En-tête JeuTaime */}
+      <div style={{
+        textAlign: 'center',
+        padding: 'var(--spacing-xl) var(--spacing-lg)',
+        background: 'linear-gradient(180deg, var(--color-cream) 0%, var(--color-beige-light) 100%)',
+        marginBottom: 'var(--spacing-lg)'
+      }}>
+        <h1 style={{
+          fontFamily: 'var(--font-heading)',
+          fontSize: '2.5rem',
+          color: 'var(--color-romantic)',
+          marginBottom: 'var(--spacing-sm)',
+          textShadow: '2px 2px 4px rgba(0,0,0,0.1)'
+        }}>
+          JeuT'aime
+        </h1>
+        <p style={{
+          fontSize: '1.1rem',
+          color: 'var(--color-text-secondary)',
+          fontWeight: '500'
+        }}>
+          Fais plaisir avec une offrande
+        </p>
       </div>
 
-      <div style={{ background: '#1a1a1a', borderRadius: '20px', padding: '25px', marginBottom: '30px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '25px' }}>
-          <div style={{ fontSize: '28px' }}>🎁</div>
-          <h3 style={{ fontSize: '20px', margin: 0, fontWeight: '600' }}>Bureau d'Offrandes</h3>
-          <span style={{ background: '#E91E63', color: 'white', borderRadius: '50%', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 'bold', marginLeft: 'auto' }}>
-            {receivedOfferings.length}
-          </span>
-        </div>
-
-        <div style={{ marginTop: '25px' }}>
-          <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#aaa', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-            Historique des 6 derniers mois
-          </h4>
-
-          <div style={{ background: '#0a0a0a', borderRadius: '15px', overflow: 'hidden', border: '1px solid #2a2a2a' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr 1fr', gap: '15px', background: 'linear-gradient(135deg, #E91E63, #C2185B)', padding: '15px', fontSize: '12px', fontWeight: 'bold', color: 'white' }}>
-              <div>📅 Date</div>
-              <div>🎁 Offrande</div>
-              <div>👤 De</div>
+      {/* Grille des offrandes - Style DESIGN.png */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(2, 1fr)',
+        gap: 'var(--spacing-md)',
+        padding: '0 var(--spacing-lg) var(--spacing-lg)'
+      }}>
+        {offerings.map((offering) => (
+          <div
+            key={offering.id}
+            onClick={() => setSelectedOffering(offering)}
+            className="card"
+            style={{
+              cursor: 'pointer',
+              textAlign: 'center',
+              padding: 'var(--spacing-lg)',
+              background: 'var(--color-cream)',
+              border: '3px solid var(--color-tan)',
+              borderRadius: 'var(--border-radius-lg)',
+              boxShadow: 'var(--shadow-md)',
+              transition: 'all var(--transition-normal)',
+              position: 'relative'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-8px)';
+              e.currentTarget.style.boxShadow = 'var(--shadow-xl)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+            }}
+          >
+            {/* Icône principale */}
+            <div style={{
+              fontSize: '4rem',
+              marginBottom: 'var(--spacing-sm)',
+              filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))'
+            }}>
+              {offering.icon}
+              {offering.secondIcon && (
+                <span style={{ marginLeft: '-10px' }}>{offering.secondIcon}</span>
+              )}
             </div>
 
-            <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
-              {receivedOfferings.map((offering, idx) => (
-                <div key={idx} style={{ display: 'grid', gridTemplateColumns: '80px 1fr 1fr', gap: '15px', padding: '12px 15px', borderBottom: '1px solid #2a2a2a', fontSize: '13px', alignItems: 'center' }}>
-                  <div style={{ color: '#aaa', fontSize: '12px', fontWeight: '500' }}>{offering.date}</div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <span style={{ fontSize: '20px' }}>{offering.icon}</span>
-                    <span style={{ color: offering.color, fontWeight: '600' }}>{offering.type}</span>
-                  </div>
-                  <div style={{ color: '#E91E63', fontSize: '12px', fontWeight: '600', wordBreak: 'break-word' }}>{offering.donor}</div>
-                </div>
-              ))}
+            {/* Nom de l'offrande */}
+            <h3 style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: '1rem',
+              color: 'var(--color-text-primary)',
+              marginBottom: 'var(--spacing-sm)',
+              fontWeight: '600',
+              minHeight: '40px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              {offering.name}
+            </h3>
+
+            {offering.description && (
+              <p style={{
+                fontSize: '0.85rem',
+                color: 'var(--color-text-light)',
+                marginBottom: 'var(--spacing-sm)'
+              }}>
+                {offering.description}
+              </p>
+            )}
+
+            {/* Prix avec icône de monnaie */}
+            <div className="currency" style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 'var(--spacing-xs)',
+              padding: 'var(--spacing-sm) var(--spacing-md)',
+              background: 'var(--color-gold)',
+              color: 'var(--color-brown-dark)',
+              borderRadius: 'var(--border-radius-xl)',
+              fontWeight: '700',
+              fontSize: '0.95rem',
+              boxShadow: 'var(--shadow-sm)'
+            }}>
+              <span className="currency-icon" style={{
+                width: '22px',
+                height: '22px',
+                background: 'var(--color-gold-dark)',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'var(--color-cream)',
+                fontSize: '0.75rem',
+                fontWeight: '700'
+              }}>
+                J
+              </span>
+              {offering.price} à Julien
             </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Accès rapide */}
+      <div style={{
+        marginTop: 'var(--spacing-xl)',
+        padding: '0 var(--spacing-lg)'
+      }}>
+        <div className="card" style={{
+          padding: 'var(--spacing-lg)',
+          background: 'var(--color-cream)',
+          border: '2px solid var(--color-brown-light)'
+        }}>
+          <h3 style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: '1.25rem',
+            color: 'var(--color-text-primary)',
+            marginBottom: 'var(--spacing-md)',
+            textAlign: 'center'
+          }}>
+            🎯 Accès rapide
+          </h3>
+
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'var(--spacing-sm)'
+          }}>
+            <button
+              onClick={() => setScreen('profiles')}
+              className="btn-primary"
+              style={{
+                padding: 'var(--spacing-md) var(--spacing-lg)',
+                fontSize: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 'var(--spacing-sm)'
+              }}
+            >
+              <span style={{ fontSize: '1.5rem' }}>👥</span> Découvrir des profils
+            </button>
+
+            <button
+              onClick={() => setScreen('social')}
+              className="btn-friendly"
+              style={{
+                padding: 'var(--spacing-md) var(--spacing-lg)',
+                fontSize: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 'var(--spacing-sm)'
+              }}
+            >
+              <span style={{ fontSize: '1.5rem' }}>🍸</span> Explorer les Bars
+            </button>
+
+            <button
+              onClick={() => setScreen('letters')}
+              className="btn-romantic"
+              style={{
+                padding: 'var(--spacing-md) var(--spacing-lg)',
+                fontSize: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 'var(--spacing-sm)'
+              }}
+            >
+              <span style={{ fontSize: '1.5rem' }}>💌</span> Mes Lettres ({myLetters.length})
+            </button>
+
+            <button
+              onClick={handleAdminTest}
+              className="btn-secondary"
+              style={{
+                padding: 'var(--spacing-md) var(--spacing-lg)',
+                fontSize: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 'var(--spacing-sm)',
+                border: '3px solid var(--color-gold)'
+              }}
+            >
+              <span style={{ fontSize: '1.5rem' }}>🛡️</span> Essai Profil Admin
+            </button>
           </div>
         </div>
       </div>
 
-      <div style={{ background: '#1a1a1a', borderRadius: '20px', padding: '20px 15px', marginBottom: '20px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
-          <div style={{ fontSize: '28px' }}>🎯</div>
-          <h3 style={{ fontSize: '18px', margin: 0, fontWeight: '500' }}>Démarrage rapide</h3>
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-          <button onClick={() => setScreen('profiles')} style={{ padding: '20px', background: 'linear-gradient(135deg, #E91E63, #C2185B)', border: 'none', color: 'white', borderRadius: '15px', cursor: 'pointer', fontWeight: '600', fontSize: '17px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
-            <span style={{ fontSize: '22px' }}>👥</span> Découvrir des profils
-          </button>
-          <button onClick={() => setScreen('social')} style={{ padding: '20px', background: 'linear-gradient(135deg, #2196F3, #1976D2)', border: 'none', color: 'white', borderRadius: '15px', cursor: 'pointer', fontWeight: '600', fontSize: '17px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
-            <span style={{ fontSize: '22px' }}>🍸</span> Explorer les Bars
-          </button>
-          <button onClick={() => setScreen('letters')} style={{ padding: '20px', background: 'linear-gradient(135deg, #9C27B0, #7B1FA2)', border: 'none', color: 'white', borderRadius: '15px', cursor: 'pointer', fontWeight: '600', fontSize: '17px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
-            <span style={{ fontSize: '22px' }}>💌</span> Mes Lettres ({myLetters.length})
-          </button>
-          <button
-            onClick={handleAdminTest}
-            style={{ padding: '20px', background: 'linear-gradient(135deg, #667eea, #764ba2)', border: '3px solid #FFD700', color: 'white', borderRadius: '15px', cursor: 'pointer', fontWeight: '700', fontSize: '17px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
-          >
-            <span style={{ fontSize: '22px' }}>🛡️</span> Essai Profil Admin
-          </button>
-        </div>
-      </div>
-
-      <div style={{ marginBottom: '20px', padding: '20px', background: '#0a0a0a', borderRadius: '15px' }}>
-        <h3 style={{ fontSize: '16px', marginBottom: '15px', fontWeight: '600' }}>📊 Stats</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', fontSize: '14px', color: '#aaa' }}>
-          <div>Profils vus: 12</div>
-          <div>Lettres: 5</div>
-          <div>Bars rejoints: {joinedBars.length}</div>
-          <div>Badges: 3/8</div>
+      {/* Stats de l'utilisateur */}
+      <div style={{
+        marginTop: 'var(--spacing-lg)',
+        padding: '0 var(--spacing-lg)'
+      }}>
+        <div className="card" style={{
+          padding: 'var(--spacing-lg)',
+          background: 'var(--color-beige)',
+          border: '2px solid var(--color-tan)'
+        }}>
+          <h3 style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: '1.1rem',
+            color: 'var(--color-text-primary)',
+            marginBottom: 'var(--spacing-md)',
+            textAlign: 'center'
+          }}>
+            📊 Mes Statistiques
+          </h3>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: 'var(--spacing-md)',
+            fontSize: '0.9rem',
+            color: 'var(--color-text-secondary)',
+            textAlign: 'center'
+          }}>
+            <div>
+              <div style={{ fontWeight: '700', fontSize: '1.5rem', color: 'var(--color-gold)' }}>
+                {userPoints}
+              </div>
+              <div>Points</div>
+            </div>
+            <div>
+              <div style={{ fontWeight: '700', fontSize: '1.5rem', color: 'var(--color-gold)' }}>
+                {userRank || '—'}
+              </div>
+              <div>Classement</div>
+            </div>
+            <div>
+              <div style={{ fontWeight: '700', fontSize: '1.5rem', color: 'var(--color-romantic)' }}>
+                {myLetters.length}
+              </div>
+              <div>Lettres</div>
+            </div>
+            <div>
+              <div style={{ fontWeight: '700', fontSize: '1.5rem', color: 'var(--color-friendly)' }}>
+                {joinedBars.length}
+              </div>
+              <div>Bars</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
