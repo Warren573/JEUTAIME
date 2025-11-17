@@ -270,8 +270,8 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
         {/* Membres du bar */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(90px, 1fr))',
-          gap: '12px',
+          gridTemplateColumns: '1fr 1fr',
+          gap: '20px',
           marginTop: '12px'
         }}>
           {members.map((member) => (
@@ -303,8 +303,8 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
                       top: '50%',
                       left: '50%',
                       transform: 'translate(-50%, -50%)',
-                      width: '80px',
-                      height: '80px',
+                      width: '120px',
+                      height: '120px',
                       borderRadius: '50%',
                       background: 'radial-gradient(circle, rgba(255,215,0,0.6) 0%, rgba(255,215,0,0) 70%)',
                       animation: 'magicGlow 1.5s ease-in-out infinite',
@@ -316,8 +316,8 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
                       top: '50%',
                       left: '50%',
                       transform: 'translate(-50%, -50%)',
-                      width: '90px',
-                      height: '90px',
+                      width: '130px',
+                      height: '130px',
                       borderRadius: '50%',
                       border: '2px solid rgba(255,215,0,0.8)',
                       animation: 'magicRing 2s ease-out infinite',
@@ -327,8 +327,8 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
                   </>
                 )}
                 <div style={{
-                  width: '60px',
-                  height: '60px',
+                  width: '100px',
+                  height: '100px',
                   borderRadius: '50%',
                   overflow: 'hidden',
                   border: giftReceiverEffect === member.id
@@ -342,7 +342,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
                   zIndex: 1
                 }}>
                   <Avatar
-                    style={{ width: '60px', height: '60px' }}
+                    style={{ width: '100px', height: '100px' }}
                     {...member.avatarOptions}
                   />
                 </div>
