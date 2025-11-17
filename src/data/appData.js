@@ -5,36 +5,33 @@ export const bars = [
     id: 1,
     icon: '🌹',
     name: 'Bar Romantique',
-    desc: 'Ambiance tamisée',
+    desc: '2H/2F - Ambiance tamisée',
     participants: [
       { name: 'Sophie', gender: 'F', age: 28, online: true },
       { name: 'Emma', gender: 'F', age: 26, online: true },
-      { name: 'Alexandre', gender: 'M', age: 32, online: true },
-      { name: 'Thomas', gender: 'M', age: 29, online: false }
+      { name: 'Alexandre', gender: 'M', age: 32, online: true }
     ]
   },
   {
     id: 2,
     icon: '😄',
     name: 'Bar Humoristique',
-    desc: 'Rires garantis',
+    desc: '2H/2F - Rires garantis',
     participants: [
       { name: 'Léa', gender: 'F', age: 25, online: true },
       { name: 'Clara', gender: 'F', age: 27, online: true },
-      { name: 'Jules', gender: 'M', age: 28, online: true },
-      { name: 'Martin', gender: 'M', age: 31, online: true }
+      { name: 'Jules', gender: 'M', age: 28, online: true }
     ]
   },
   {
     id: 3,
     icon: '🏴‍☠️',
     name: 'Bar Pirates',
-    desc: 'Aventures maritimes',
+    desc: '2H/2F - Aventures maritimes',
     participants: [
       { name: 'Océane', gender: 'F', age: 29, online: true },
-      { name: 'Nora', gender: 'F', age: 24, online: false },
-      { name: 'Lucas', gender: 'M', age: 30, online: true },
-      { name: 'Pierre', gender: 'M', age: 33, online: true }
+      { name: 'Marine', gender: 'F', age: 24, online: false },
+      { name: 'Lucas', gender: 'M', age: 30, online: true }
     ]
   },
   {
@@ -44,21 +41,19 @@ export const bars = [
     desc: '2H/2F - Renouvellement chaque lundi',
     participants: [
       { name: 'Zoé', gender: 'F', age: 26, online: true },
-      { name: 'Valerie', gender: 'F', age: 31, online: true },
-      { name: 'Kevin', gender: 'M', age: 27, online: true },
-      { name: 'David', gender: 'M', age: 34, online: true }
+      { name: 'Valérie', gender: 'F', age: 31, online: true },
+      { name: 'Kevin', gender: 'M', age: 27, online: true }
     ]
   },
   {
     id: 5,
     icon: '👑',
     name: 'Bar Caché',
-    desc: '3 énigmes pour accéder',
+    desc: '2H/2F - 3 énigmes pour accéder',
     participants: [
-      { name: 'Amelia', gender: 'F', age: 30, online: true },
+      { name: 'Amélia', gender: 'F', age: 30, online: true },
       { name: 'Victoria', gender: 'F', age: 28, online: true },
-      { name: 'Xavier', gender: 'M', age: 35, online: false },
-      { name: 'Nicolas', gender: 'M', age: 32, online: true }
+      { name: 'Xavier', gender: 'M', age: 35, online: false }
     ]
   }
 ];
