@@ -11,7 +11,7 @@ export default function Navigation({ navItems, screen, setScreen }) {
       margin: '0 auto',
       background: 'var(--color-brown-dark)',
       borderTop: '3px solid var(--color-gold)',
-      padding: '8px 5px 12px',
+      padding: '4px 5px 6px',
       display: 'grid',
       gridTemplateColumns: 'repeat(6, 1fr)',
       gap: '4px',
@@ -34,9 +34,9 @@ export default function Navigation({ navItems, screen, setScreen }) {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              gap: '4px',
-              fontSize: '10px',
-              padding: '8px 4px',
+              gap: '2px',
+              fontSize: '9px',
+              padding: '6px 4px',
               fontWeight: isActive ? '700' : '500',
               borderRadius: 'var(--border-radius-md)',
               transition: 'all var(--transition-normal)',
@@ -57,7 +57,7 @@ export default function Navigation({ navItems, screen, setScreen }) {
             }}
           >
             <div style={{
-              fontSize: '22px',
+              fontSize: '20px',
               filter: isActive ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' : 'none',
               transition: 'all var(--transition-normal)'
             }}>
