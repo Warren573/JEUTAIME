@@ -61,14 +61,13 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
         )}
       </div>
 
-      {/* Onglets - Corrigé pour éviter le débordement */}
+      {/* Onglets - Grille uniforme 2x2 */}
       <div style={{
-        display: 'flex',
-        flexWrap: 'wrap',
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
         gap: 'var(--spacing-xs)',
-        padding: '0 var(--spacing-md)',
-        marginBottom: 'var(--spacing-lg)',
-        justifyContent: 'center'
+        padding: '0 var(--spacing-sm)',
+        marginBottom: 'var(--spacing-lg)'
       }}>
         {['bars', 'ranking', 'games', 'adoption'].map((tab) => {
           const isActive = socialTab === tab;
@@ -77,7 +76,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
               key={tab}
               onClick={() => setSocialTab(tab)}
               style={{
-                padding: 'var(--spacing-sm) var(--spacing-md)',
+                padding: 'var(--spacing-md)',
                 background: isActive
                   ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))'
                   : 'var(--color-brown)',
@@ -85,11 +84,11 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                 color: isActive ? 'var(--color-brown-dark)' : 'var(--color-cream)',
                 borderRadius: 'var(--border-radius-md)',
                 cursor: 'pointer',
-                fontWeight: '600',
-                fontSize: '0.875rem',
+                fontWeight: '700',
+                fontSize: '0.9rem',
                 transition: 'all var(--transition-normal)',
                 boxShadow: isActive ? 'var(--shadow-md)' : 'var(--shadow-sm)',
-                minWidth: 'fit-content'
+                textAlign: 'center'
               }}
             >
               {tab === 'bars' && '🍸 Bars'}
@@ -359,36 +358,36 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
       )}
 
       {socialTab === 'games' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-          <div onClick={() => setGameScreen('reactivity')} style={{ background: '#1a1a1a', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', padding: '0 var(--spacing-sm)' }}>
+          <div onClick={() => setGameScreen('reactivity')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
             <div style={{ fontSize: '36px', marginBottom: '8px' }}>⚡</div>
-            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600' }}>Tape la Taupe</h4>
-            <p style={{ fontSize: '11px', color: '#888', margin: 0 }}>Solo</p>
+            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Tape la Taupe</h4>
+            <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo</p>
           </div>
-          <div onClick={() => setGameScreen('pong')} style={{ background: '#1a1a1a', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
+          <div onClick={() => setGameScreen('pong')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
             <div style={{ fontSize: '36px', marginBottom: '8px' }}>🎮</div>
-            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600' }}>Pong</h4>
-            <p style={{ fontSize: '11px', color: '#888', margin: 0 }}>2 joueurs</p>
+            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Pong</h4>
+            <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>2 joueurs</p>
           </div>
-          <div onClick={() => setGameScreen('brickbreaker')} style={{ background: '#1a1a1a', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
+          <div onClick={() => setGameScreen('brickbreaker')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
             <div style={{ fontSize: '36px', marginBottom: '8px' }}>🧱</div>
-            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600' }}>Casse Brique</h4>
-            <p style={{ fontSize: '11px', color: '#888', margin: 0 }}>Solo</p>
+            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Casse Brique</h4>
+            <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo</p>
           </div>
-          <div onClick={() => setGameScreen('morpion')} style={{ background: '#1a1a1a', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
+          <div onClick={() => setGameScreen('morpion')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
             <div style={{ fontSize: '36px', marginBottom: '8px' }}>⭕</div>
-            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600' }}>Morpion</h4>
-            <p style={{ fontSize: '11px', color: '#888', margin: 0 }}>2 joueurs</p>
+            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Morpion</h4>
+            <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>2 joueurs</p>
           </div>
-          <div onClick={() => setGameScreen('storytime')} style={{ background: '#1a1a1a', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer', gridColumn: '1 / -1' }}>
+          <div onClick={() => setGameScreen('storytime')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer', gridColumn: '1 / -1' }}>
             <div style={{ fontSize: '36px', marginBottom: '8px' }}>📖</div>
-            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600' }}>Continue l'histoire</h4>
-            <p style={{ fontSize: '11px', color: '#888', margin: 0 }}>Solo, 2 joueurs ou multijoueurs</p>
+            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Continue l'histoire</h4>
+            <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo, 2 joueurs ou multijoueurs</p>
           </div>
-          <div onClick={() => setGameScreen('cards')} style={{ background: '#1a1a1a', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer', gridColumn: '1 / -1' }}>
+          <div onClick={() => setGameScreen('cards')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer', gridColumn: '1 / -1' }}>
             <div style={{ fontSize: '36px', marginBottom: '8px' }}>🎴</div>
-            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600' }}>Jeu des Cartes</h4>
-            <p style={{ fontSize: '11px', color: '#888', margin: 0 }}>Solo - Gagne des pièces!</p>
+            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Jeu des Cartes</h4>
+            <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo - Gagne des pièces!</p>
           </div>
         </div>
       )}
