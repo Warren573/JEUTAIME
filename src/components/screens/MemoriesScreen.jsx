@@ -50,8 +50,9 @@ export default function MemoriesScreen({ currentUser }) {
   if (selectedMemory) {
     return (
       <div style={{
-        minHeight: '100vh',
-        paddingBottom: '100px',
+        height: '100vh',
+        overflowY: 'auto',
+        paddingBottom: '80px',
         background: 'var(--color-brown-dark)'
       }}>
         {/* Bouton retour */}
@@ -141,8 +142,9 @@ export default function MemoriesScreen({ currentUser }) {
 
   return (
     <div style={{
-      minHeight: '100vh',
-      paddingBottom: '100px',
+      height: '100vh',
+      overflowY: 'auto',
+      paddingBottom: '80px',
       background: 'var(--color-brown-dark)'
     }}>
       {/* En-tête Boîte à souvenirs */}

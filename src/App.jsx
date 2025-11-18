@@ -208,26 +208,33 @@ function MainApp() {
   }
 
   return (
-    <div style={{ maxWidth: '430px', margin: '0 auto', background: '#000', minHeight: '100vh', color: 'white', fontFamily: '-apple-system, sans-serif', paddingBottom: '100px' }}>
-      <div style={{ padding: '25px 20px' }}>
-        {screen === 'home' && !gameScreen && !selectedBar && <HomeScreen {...appState} />}
-        {screen === 'profiles' && !gameScreen && !selectedBar && <ProfilesScreen {...appState} />}
-        {screen === 'social' && !gameScreen && !selectedBar && <SocialScreen {...appState} currentUser={currentUser} />}
-        {screen === 'bars' && !gameScreen && !selectedBar && <BarsScreen setScreen={setScreen} setGameScreen={setGameScreen} setSelectedBar={setSelectedBar} currentUser={currentUser} />}
-        {screen === 'referral' && !gameScreen && !selectedBar && <ReferralScreen currentUser={currentUser} />}
-        {screen === 'letters' && !gameScreen && !selectedBar && <LettersScreen currentUser={currentUser} />}
-        {screen === 'journal' && !gameScreen && !selectedBar && <JournalScreen {...appState} />}
-        {screen === 'settings' && !gameScreen && !selectedBar && <SettingsScreen {...appState} />}
+    <div style={{
+      width: '100%',
+      maxWidth: '100vw',
+      margin: '0 auto',
+      background: '#000',
+      minHeight: '100vh',
+      color: 'white',
+      fontFamily: '-apple-system, sans-serif',
+      overflow: 'hidden'
+    }}>
+      {screen === 'home' && !gameScreen && !selectedBar && <HomeScreen {...appState} />}
+      {screen === 'profiles' && !gameScreen && !selectedBar && <ProfilesScreen {...appState} />}
+      {screen === 'social' && !gameScreen && !selectedBar && <SocialScreen {...appState} currentUser={currentUser} />}
+      {screen === 'bars' && !gameScreen && !selectedBar && <BarsScreen setScreen={setScreen} setGameScreen={setGameScreen} setSelectedBar={setSelectedBar} currentUser={currentUser} />}
+      {screen === 'referral' && !gameScreen && !selectedBar && <ReferralScreen currentUser={currentUser} />}
+      {screen === 'letters' && !gameScreen && !selectedBar && <LettersScreen currentUser={currentUser} />}
+      {screen === 'journal' && !gameScreen && !selectedBar && <JournalScreen {...appState} />}
+      {screen === 'settings' && !gameScreen && !selectedBar && <SettingsScreen {...appState} />}
 
-        {gameScreen === 'pong' && <PongGame {...appState} />}
-        {gameScreen === 'reactivity' && <WhackAMoleGame {...appState} />}
-        {gameScreen === 'brickbreaker' && <BrickBreakerGame {...appState} />}
-        {gameScreen === 'morpion' && <MorpionGame {...appState} />}
-        {gameScreen === 'cards' && <CardGame {...appState} />}
-        {gameScreen === 'storytime' && <StoryTimeGame {...appState} />}
+      {gameScreen === 'pong' && <PongGame {...appState} />}
+      {gameScreen === 'reactivity' && <WhackAMoleGame {...appState} />}
+      {gameScreen === 'brickbreaker' && <BrickBreakerGame {...appState} />}
+      {gameScreen === 'morpion' && <MorpionGame {...appState} />}
+      {gameScreen === 'cards' && <CardGame {...appState} />}
+      {gameScreen === 'storytime' && <StoryTimeGame {...appState} />}
 
-        {selectedBar && <BarDetailScreen {...appState} bar={bars.find(b => b.id === selectedBar)} />}
-      </div>
+      {selectedBar && <BarDetailScreen {...appState} bar={bars.find(b => b.id === selectedBar)} />}
 
       <Navigation navItems={navItems} screen={screen} setScreen={setScreen} />
 

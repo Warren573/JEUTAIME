@@ -31,8 +31,9 @@ export default function JournalScreen({ currentUser }) {
 
   return (
     <div style={{
-      minHeight: '100vh',
-      paddingBottom: '100px',
+      height: '100vh',
+      overflowY: 'auto',
+      paddingBottom: '80px',
       background: 'var(--color-beige-light)'
     }}>
       {/* En-tête Journal - Style gazette */}

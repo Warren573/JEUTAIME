@@ -95,9 +95,9 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
 
   return (
     <div style={{
-      maxHeight: 'calc(100vh - 80px)',
+      height: '100vh',
       overflowY: 'auto',
-      paddingBottom: '100px',
+      paddingBottom: '80px',
       background: 'var(--color-beige-light)'
     }}>
       {/* En-tête style Journal */}
