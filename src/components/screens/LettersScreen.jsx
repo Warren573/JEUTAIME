@@ -115,6 +115,10 @@ export default function LettersScreen({ currentUser }) {
         }}>
           💌 Lettres
         </h1>
+      </div>
+
+      {/* Message si pas de conversations */}
+      <div style={{ padding: '0 var(--spacing-sm)' }}>
         <p style={{
           textAlign: 'center',
           fontSize: '0.9rem',

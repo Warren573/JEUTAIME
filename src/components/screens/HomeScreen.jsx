@@ -123,8 +123,8 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
         </h1>
       </div>
 
-      <div style={{ padding: '0 var(--spacing-lg)' }}>
-        {/* PROFIL UTILISATEUR */}
+      {/* PROFIL UTILISATEUR */}
+      <div style={{ padding: '0 var(--spacing-md)' }}>
         <div style={{
           background: 'var(--color-cream)',
           borderRadius: 'var(--border-radius-lg)',

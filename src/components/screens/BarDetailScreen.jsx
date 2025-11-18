@@ -466,9 +466,8 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
         </div>
       </div>
 
-      <div style={{ padding: 'var(--spacing-lg)' }}>
-
-        {/* ONGLET DISCUSSION */}
+      {/* ONGLET DISCUSSION */}
+      <div style={{ padding: 'var(--spacing-sm)' }}>
         {barTab === 'discuss' && (
           <div>
             {/* Zone de chat */}

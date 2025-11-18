@@ -69,8 +69,8 @@ export default function JournalScreen({ currentUser }) {
         </p>
       </div>
 
-      <div style={{ padding: '0 var(--spacing-lg)' }}>
-        {/* Grille de sections style journal */}
+      {/* Grille de sections style journal */}
+      <div style={{ padding: '0 var(--spacing-sm)' }}>
         <div style={{
           display: 'grid',
           gridTemplateColumns: '1fr',

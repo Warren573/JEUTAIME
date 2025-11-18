@@ -100,8 +100,8 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
         </p>
       </div>
 
-      <div style={{ padding: '0 var(--spacing-lg)' }}>
-        {/* Bouton créer son bar (Premium) */}
+      {/* Bouton créer son bar (Premium) */}
+      <div style={{ padding: '0 var(--spacing-sm)' }}>
         {currentUser?.isPremium && (
           <div
             style={{
@@ -148,12 +148,13 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
             style={{
               background: bar.gradient,
               border: bar.border || 'none',
-              borderRadius: 'var(--border-radius-lg)',
-              padding: 'var(--spacing-lg)',
-              marginBottom: 'var(--spacing-lg)',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+              borderRadius: '0',
+              padding: 'var(--spacing-md)',
+              marginBottom: 'var(--spacing-xs)',
+              boxShadow: 'none',
               maxWidth: '100%',
-              boxSizing: 'border-box'
+              boxSizing: 'border-box',
+              borderBottom: '1px solid rgba(0,0,0,0.1)'
             }}
           >
             {/* En-tête de la carte */}

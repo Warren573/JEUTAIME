@@ -104,7 +104,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
       {/* Section Bars - Carte stylisée selon BARS.png */}
       {socialTab === 'bars' && (
         <div style={{
-          padding: '0 var(--spacing-lg)',
+          padding: '0 var(--spacing-sm)',
           position: 'relative'
         }}>
           {/* Bouton vers liste complète des bars thématiques */}

@@ -65,8 +65,8 @@ export default function ReferralScreen({ currentUser }) {
         </h1>
       </div>
 
-      <div style={{ padding: '0 var(--spacing-lg)' }}>
-        {/* Carte d'explication */}
+      {/* Carte d'explication */}
+      <div style={{ padding: '0 var(--spacing-sm)' }}>
         <div style={{
           background: 'linear-gradient(135deg, #4CAF50, #388E3C)',
           borderRadius: 'var(--border-radius-lg)',

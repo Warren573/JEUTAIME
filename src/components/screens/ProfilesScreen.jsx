@@ -308,11 +308,12 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
       {/* Carte profil */}
       <div style={{
         background: 'var(--color-cream)',
-        borderRadius: 'var(--border-radius-xl)',
+        borderRadius: '0',
         overflow: 'hidden',
-        marginBottom: 'var(--spacing-lg)',
-        border: '3px solid var(--color-brown)',
-        boxShadow: 'var(--shadow-lg)'
+        marginBottom: '0',
+        border: 'none',
+        borderBottom: '4px solid var(--color-brown-light)',
+        boxShadow: 'none'
       }}>
         {/* Avatar ou Photos carousel */}
         <div style={{ position: 'relative', height: '400px', background: 'var(--color-beige-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

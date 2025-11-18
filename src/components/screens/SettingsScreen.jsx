@@ -53,8 +53,8 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
         </h1>
       </div>
 
-      <div style={{ padding: '0 var(--spacing-lg)' }}>
-        {/* Tabs */}
+      {/* Tabs */}
+      <div style={{ padding: '0 var(--spacing-sm)' }}>
         <div style={{
           display: 'flex',
           flexWrap: 'wrap',
