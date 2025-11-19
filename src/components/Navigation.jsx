@@ -10,11 +10,11 @@ export default function Navigation({ navItems, screen, setScreen }) {
       maxWidth: '430px',
       margin: '0 auto',
       background: 'var(--color-brown-dark)',
-      borderTop: '3px solid var(--color-gold)',
-      padding: '4px 5px 6px',
+      borderTop: '2px solid var(--color-gold)',
+      padding: '2px 2px 3px',
       display: 'grid',
       gridTemplateColumns: 'repeat(6, 1fr)',
-      gap: '4px',
+      gap: '2px',
       boxShadow: '0 -4px 12px rgba(58, 40, 24, 0.3)',
       zIndex: 1000
     }}>
@@ -28,20 +28,20 @@ export default function Navigation({ navItems, screen, setScreen }) {
               background: isActive
                 ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))'
                 : 'transparent',
-              border: isActive ? '2px solid var(--color-gold-light)' : '2px solid transparent',
+              border: isActive ? '1px solid var(--color-gold-light)' : '1px solid transparent',
               color: isActive ? 'var(--color-brown-dark)' : 'var(--color-tan)',
               cursor: 'pointer',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              gap: '2px',
-              fontSize: '9px',
-              padding: '6px 4px',
+              gap: '1px',
+              fontSize: '8px',
+              padding: '4px 2px',
               fontWeight: isActive ? '700' : '500',
-              borderRadius: 'var(--border-radius-md)',
+              borderRadius: '6px',
               transition: 'all var(--transition-normal)',
-              transform: isActive ? 'scale(1.05)' : 'scale(1)',
-              boxShadow: isActive ? 'var(--shadow-md)' : 'none'
+              transform: isActive ? 'scale(1.02)' : 'scale(1)',
+              boxShadow: isActive ? 'var(--shadow-sm)' : 'none'
             }}
             onMouseEnter={(e) => {
               if (!isActive) {
@@ -57,17 +57,21 @@ export default function Navigation({ navItems, screen, setScreen }) {
             }}
           >
             <div style={{
-              fontSize: '20px',
+              fontSize: '18px',
               filter: isActive ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' : 'none',
               transition: 'all var(--transition-normal)'
             }}>
               {nav.icon}
             </div>
             <div style={{
-              wordBreak: 'break-word',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
               textAlign: 'center',
-              lineHeight: '1.1',
-              fontFamily: 'var(--font-primary)'
+              lineHeight: '1',
+              fontFamily: 'var(--font-primary)',
+              width: '100%',
+              maxWidth: '100%'
             }}>
               {nav.label}
             </div>
