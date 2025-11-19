@@ -218,7 +218,7 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins })
             transition: 'all 0.2s'
           }}
         >
-          🏪 Boutique
+          🏠 Refuge
         </button>
       </div>
 
@@ -246,7 +246,7 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins })
                   color: 'var(--color-text-secondary)',
                   marginBottom: 'var(--spacing-lg)'
                 }}>
-                  Rendez-vous dans la boutique pour adopter votre premier compagnon !
+                  Rendez-vous dans le refuge pour adopter votre premier compagnon !
                 </p>
                 <button
                   onClick={() => setAdoptionTab('shop')}
@@ -262,7 +262,7 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins })
                     boxShadow: 'var(--shadow-md)'
                   }}
                 >
-                  🏪 Aller à la boutique
+                  🏠 Aller au refuge
                 </button>
               </div>
             ) : (
@@ -526,7 +526,7 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins })
           </>
         )}
 
-        {/* BOUTIQUE */}
+        {/* REFUGE */}
         {adoptionTab === 'shop' && (
           <>
             {myPets.length >= 3 && (
@@ -549,7 +549,7 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins })
               gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
               gap: 'var(--spacing-md)'
             }}>
-              {Object.values(PETS).map((pet) => (
+              {Object.values(PETS).filter(pet => !myPets.find(p => p.type === pet.id)).map((pet) => (
                 <div
                   key={pet.id}
                   style={{
