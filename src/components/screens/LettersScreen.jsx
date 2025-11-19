@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { enrichedProfiles } from '../../data/appData';
+import { getAllUsers } from '../../utils/demoUsers';
 import ChatScreen from './ChatScreen';
 
 export default function LettersScreen({ currentUser }) {
@@ -19,10 +19,13 @@ export default function LettersScreen({ currentUser }) {
     // Charger les conversations
     const convos = JSON.parse(localStorage.getItem('jeutaime_conversations') || '{}');
 
+    // Récupérer tous les utilisateurs
+    const allUsers = getAllUsers();
+
     // Créer une liste de conversations avec infos
     const conversationsList = userMatches.map(match => {
       // Trouver le profil correspondant
-      const matchedProfile = enrichedProfiles.find(p => p.id === match.userId) || {
+      const matchedProfile = allUsers.find(p => p.id === match.userId) || {
         id: match.userId,
         name: match.userName,
         bio: 'Profil inconnu'

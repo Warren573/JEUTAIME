@@ -186,7 +186,8 @@ export const profileBadges = {
   'gamer': { emoji: '🎮', name: 'Joueur', color: '#9C27B0' },
   'writer': { emoji: '✍️', name: 'Écrivain', color: '#2196F3' },
   'admin': { emoji: '🛡️', name: 'Administrateur', color: '#667eea' },
-  'developer': { emoji: '💻', name: 'Développeur', color: '#764ba2' }
+  'developer': { emoji: '💻', name: 'Développeur', color: '#764ba2' },
+  'bot': { emoji: '🤖', name: 'Bot', color: '#607D8B' }
 };
 
 // Système d'adoption d'animaux virtuels

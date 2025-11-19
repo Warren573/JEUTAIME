@@ -33,6 +33,9 @@ import ProfileCreation from './components/auth/ProfileCreation';
 // Points system
 import { awardDailyLogin } from './utils/pointsSystem';
 
+// Demo users
+import { initializeDemoUsers } from './utils/demoUsers';
+
 // Data
 import { bars } from './data/appData';
 
@@ -47,7 +50,7 @@ function MainApp() {
   const [gameScreen, setGameScreen] = useState(null);
   const [selectedBar, setSelectedBar] = useState(null);
   const [barTab, setBarTab] = useState('discuss');
-  const [userCoins, setUserCoins] = useState(5245);
+  const [userCoins, setUserCoins] = useState(0);
   const [currentProfile, setCurrentProfile] = useState(0);
   const [premiumActive, setPremiumActive] = useState(false);
   const [joinedBars, setJoinedBars] = useState([1]);
@@ -58,6 +61,9 @@ function MainApp() {
 
   // Check if user is already logged in
   useEffect(() => {
+    // Initialiser les profils démo (bots) au démarrage
+    initializeDemoUsers();
+
     const savedUser = localStorage.getItem('jeutaime_current_user');
     if (savedUser) {
       const user = JSON.parse(savedUser);
@@ -77,6 +83,14 @@ function MainApp() {
       }
     }
   }, []);
+
+  // Synchroniser userCoins et premium avec currentUser
+  useEffect(() => {
+    if (currentUser) {
+      setUserCoins(currentUser.coins || 0);
+      setPremiumActive(currentUser.premium || false);
+    }
+  }, [currentUser]);
 
   // Reset selectedBar when screen changes (to allow navigation)
   useEffect(() => {

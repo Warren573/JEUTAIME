@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { enrichedProfiles, profileBadges } from '../../data/appData';
+import { profileBadges } from '../../data/appData';
+import { getAllUsers } from '../../utils/demoUsers';
 import QuestionGame from '../matching/QuestionGame';
 import { awardPoints, checkAndAwardBadge } from '../../utils/pointsSystem';
 import UserAvatar from '../avatar/UserAvatar';
@@ -16,7 +17,9 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
   const [showGiftSelector, setShowGiftSelector] = useState(false);
   const [magicEffect, setMagicEffect] = useState(null);
 
-  const currentProfileData = enrichedProfiles[currentProfile];
+  // Récupérer tous les utilisateurs sauf le currentUser
+  const allProfiles = getAllUsers().filter(u => u.email !== currentUser?.email);
+  const currentProfileData = allProfiles[currentProfile];
 
   // Calculer le nombre de lettres échangées avec ce profil
   const getLettersCount = (targetId) => {
@@ -86,10 +89,10 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
 
     saveSmiles(smiles);
 
-    // FOR DEMO: Since enrichedProfiles are not real users, automatically trigger mutual smile
-    // In a real app, this would wait for the other person to smile back
+    // Automatiquement déclencher le sourire mutuel pour les bots
+    // Dans une vraie app avec de vrais utilisateurs, il faudrait attendre que l'autre personne sourie en retour
 
-    // Check if target has questions defined (from real users in localStorage)
+    // Récupérer le profil cible (maintenant tous les profils sont dans localStorage)
     const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
     const realTargetUser = users.find(u => u.id === targetId);
 
@@ -147,7 +150,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
     saveSmiles(smiles);
 
     // Move to next profile
-    setCurrentProfile((currentProfile + 1) % enrichedProfiles.length);
+    setCurrentProfile((currentProfile + 1) % allProfiles.length);
   };
 
   const handleSendGift = () => {
@@ -193,14 +196,14 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
     // Close game and move to next profile
     setShowQuestionGame(false);
     setMutualSmileUser(null);
-    setCurrentProfile((currentProfile + 1) % enrichedProfiles.length);
+    setCurrentProfile((currentProfile + 1) % allProfiles.length);
   };
 
   const handleMatchFail = () => {
     // Close game and move to next profile
     setShowQuestionGame(false);
     setMutualSmileUser(null);
-    setCurrentProfile((currentProfile + 1) % enrichedProfiles.length);
+    setCurrentProfile((currentProfile + 1) % allProfiles.length);
   };
 
   const handleAdminEditProfile = () => {

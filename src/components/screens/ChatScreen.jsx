@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { awardPoints } from '../../utils/pointsSystem';
+import { updateUserStats, addPointsToUser } from '../../utils/demoUsers';
 import GiftSelector from '../gifts/GiftSelector';
 import UserAvatar from '../avatar/UserAvatar';
 
@@ -126,6 +127,16 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
 
     // Award points for receiving letter
     awardPoints(currentUser.email, 'LETTER_RECEIVED');
+
+    // Mettre à jour les stats du bot (si c'est un bot)
+    if (matchedUser?.isBot && matchedUser?.email) {
+      const currentBotStats = matchedUser.stats || { letters: 0, games: 0, bars: 0 };
+      updateUserStats(matchedUser.email, {
+        letters: currentBotStats.letters + 1
+      });
+      // Ajouter des points au bot aussi
+      addPointsToUser(matchedUser.email, 5); // 5 points pour envoyer une lettre
+    }
   };
 
   const isPhotoRevealed = () => {
