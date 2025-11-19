@@ -88,7 +88,10 @@ export const POINTS_ACTIONS = {
   SPELL_CAST: 15,
   DAILY_LOGIN: 10,
   SENTENCE_ADDED: 5,      // Ajouter une phrase à l'histoire dans un bar
-  STORY_COMPLETED: 50     // Bonus quand l'histoire est complétée (15+ phrases)
+  STORY_COMPLETED: 50,    // Bonus quand l'histoire est complétée (15+ phrases)
+  PET_CARE: 2,            // Nourrir, nettoyer ou faire dormir un animal
+  PET_PLAY: 3,            // Jouer avec un animal
+  PET_DAILY_CARE: 20      // Bonus quotidien si toutes les stats > 80%
 };
 
 // Fonction pour calculer le titre en fonction des points
