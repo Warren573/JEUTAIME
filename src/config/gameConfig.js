@@ -86,7 +86,9 @@ export const POINTS_ACTIONS = {
   DUEL_WON: 100,
   DUEL_LOST: -50,
   SPELL_CAST: 15,
-  DAILY_LOGIN: 10
+  DAILY_LOGIN: 10,
+  SENTENCE_ADDED: 5,      // Ajouter une phrase à l'histoire dans un bar
+  STORY_COMPLETED: 50     // Bonus quand l'histoire est complétée (15+ phrases)
 };
 
 // Fonction pour calculer le titre en fonction des points

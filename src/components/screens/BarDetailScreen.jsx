@@ -3,6 +3,15 @@ import GiftSelector from '../gifts/GiftSelector';
 import MagicEffect from '../effects/MagicEffect';
 import Avatar from 'avataaars';
 import { generateAvatarOptions } from '../../utils/avatarGenerator';
+import {
+  loadBarState,
+  saveBarState,
+  addStoryParagraph,
+  saveBarMessage,
+  loadBarMessages,
+  updateBarTurn,
+  completeStory
+} from '../../utils/barsSystem';
 
 export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
   const [barTab, setBarTab] = useState('discuss');
@@ -14,20 +23,19 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
   const [magicEffect, setMagicEffect] = useState(null);
   const [giftReceiverEffect, setGiftReceiverEffect] = useState(null); // ID du membre qui reçoit un cadeau
 
-  // Chat discussion
-  const [messages, setMessages] = useState([
-    { id: 1, username: 'Sophie', text: 'Coucou les gens! 😊', timestamp: Date.now() - 3600000 },
-    { id: 2, username: 'Alexandre', text: 'Salut! Ça va?', timestamp: Date.now() - 1800000 },
-    { id: 3, username: 'Emma', text: 'Super ambiance ce soir!', timestamp: Date.now() - 900000 }
-  ]);
+  // Chat discussion - Charger depuis localStorage
+  const [messages, setMessages] = useState(() => {
+    const barId = bar?.type || bar?.id || 'unknown';
+    return loadBarMessages(barId);
+  });
   const [messageInput, setMessageInput] = useState('');
 
-  // Système "Continuer l'histoire"
-  const [story, setStory] = useState([
-    { id: 1, user: 'Marie', text: 'Il était une fois, dans un royaume lointain...', timestamp: Date.now() - 3600000 },
-    { id: 2, user: 'Thomas', text: 'Un chevalier courageux découvrit une carte mystérieuse.', timestamp: Date.now() - 1800000 },
-    { id: 3, user: 'Sophie', text: 'La carte menait vers une forêt enchantée où...', timestamp: Date.now() - 900000 }
-  ]);
+  // Système "Continuer l'histoire" - Charger depuis localStorage
+  const [story, setStory] = useState(() => {
+    const barId = bar?.type || bar?.id || 'unknown';
+    const barState = loadBarState(barId);
+    return barState?.story || [];
+  });
 
   // Transformer les participants du bar en membres avec avatars + ajouter l'utilisateur
   const [members, setMembers] = useState(() => {
@@ -58,7 +66,11 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
     return allMembers;
   });
 
-  const [currentTurnIndex, setCurrentTurnIndex] = useState(0);
+  const [currentTurnIndex, setCurrentTurnIndex] = useState(() => {
+    const barId = bar?.type || bar?.id || 'unknown';
+    const barState = loadBarState(barId);
+    return barState?.currentTurnIndex || 0;
+  });
   const [newSentence, setNewSentence] = useState('');
   const [timeRemaining, setTimeRemaining] = useState(24 * 60 * 60); // 24h en secondes
   const [voteRestart, setVoteRestart] = useState({ voted: false, count: 0 });
@@ -76,12 +88,13 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
   const sendMessage = () => {
     if (!messageInput.trim()) return;
 
-    const newMessage = {
-      id: Date.now(),
-      username: currentUser?.name || 'Vous',
-      text: messageInput,
-      timestamp: Date.now()
-    };
+    const barId = bar?.type || bar?.id || 'unknown';
+    const newMessage = saveBarMessage(
+      barId,
+      currentUser?.email || 'guest',
+      currentUser?.name || 'Vous',
+      messageInput.trim()
+    );
 
     setMessages([...messages, newMessage]);
     setMessageInput('');
@@ -123,24 +136,56 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
       return;
     }
 
-    const newStoryEntry = {
-      id: story.length + 1,
-      user: currentUser?.name || 'Vous',
-      text: newSentence.trim(),
-      timestamp: Date.now()
-    };
+    const barId = bar?.type || bar?.id || 'unknown';
 
-    setStory([...story, newStoryEntry]);
+    // Ajouter la phrase avec récompenses automatiques
+    const newStoryEntry = addStoryParagraph(
+      barId,
+      currentUser?.email || 'guest',
+      currentUser?.name || 'Vous',
+      newSentence.trim()
+    );
+
+    // Mettre à jour l'affichage local
+    const updatedStory = [...story, newStoryEntry];
+    setStory(updatedStory);
     setNewSentence('');
     setTimeRemaining(24 * 60 * 60); // Reset timer
 
+    // Alert des récompenses
+    let rewardMsg = '✅ Phrase ajoutée ! +5 points +10 💰';
+
+    // Vérifier si l'histoire est complétée (15 phrases)
+    if (updatedStory.length === 15) {
+      completeStory(barId, updatedStory);
+      rewardMsg += '\n\n🎉 Histoire complétée ! Bonus : +50 points +100 💰\nL\'histoire a été sauvegardée dans l\'historique.';
+    }
+
+    if (currentUser?.email) {
+      alert(rewardMsg);
+    }
+
     // Passer au joueur suivant
-    setCurrentTurnIndex((currentTurnIndex + 1) % members.length);
+    const nextTurnIndex = (currentTurnIndex + 1) % members.length;
+    setCurrentTurnIndex(nextTurnIndex);
+    updateBarTurn(barId, nextTurnIndex, members);
   };
 
   const handleSaveToJournal = () => {
-    const storyText = story.map(s => `${s.user}: ${s.text}`).join('\n\n');
-    alert(`📔 Histoire sauvegardée dans votre journal !\n\n${storyText}`);
+    if (story.length === 0) {
+      alert('⚠️ L\'histoire est vide !');
+      return;
+    }
+
+    const barId = bar?.type || bar?.id || 'unknown';
+
+    // Compléter l'histoire et récompenser les participants
+    completeStory(barId, story);
+
+    alert(`📔 Histoire complétée et sauvegardée dans l'historique !\n\n✨ Tous les participants ont reçu leurs récompenses bonus !\n+50 points +100 💰\n\nL'histoire contient ${story.length} phrase(s).`);
+
+    // Réinitialiser l'histoire locale
+    setStory([]);
   };
 
   const handleExpelMember = (memberId) => {
@@ -196,15 +241,17 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
       setGiftReceiverEffect(null);
     }, 3000);
 
-    // Ajouter un message système dans le chat
-    const giftMessage = {
-      id: Date.now(),
-      username: 'Système',
-      text: `${currentUser?.name || 'Quelqu\'un'} a envoyé ${gift.giftEmoji} ${gift.giftName} à ${selectedMember?.name} !`,
-      timestamp: Date.now(),
-      isSystem: true,
-      giftData: gift
-    };
+    // Ajouter un message système dans le chat et sauvegarder
+    const barId = bar?.type || bar?.id || 'unknown';
+    const giftMessage = saveBarMessage(
+      barId,
+      'system',
+      'Système',
+      `${currentUser?.name || 'Quelqu\'un'} a envoyé ${gift.giftEmoji} ${gift.giftName} à ${selectedMember?.name} !`,
+      true,
+      gift
+    );
+
     setMessages([...messages, giftMessage]);
 
     // Fermer le sélecteur
