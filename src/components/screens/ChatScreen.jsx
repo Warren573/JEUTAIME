@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { awardPoints } from '../../utils/pointsSystem';
+import { updateUserStats, addPointsToUser } from '../../utils/demoUsers';
 import GiftSelector from '../gifts/GiftSelector';
+import UserAvatar from '../avatar/UserAvatar';
 
 export default function ChatScreen({ currentUser, matchedUser, onBack }) {
   const [messages, setMessages] = useState([]);
@@ -86,6 +88,11 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
     // Award points for sending letter
     awardPoints(currentUser.email, 'LETTER_SENT');
 
+    // Vérifier badge romantic (20 lettres envoyées)
+    if (updatedLetterCount.user >= 20) {
+      checkAndAwardBadge(currentUser.email, 'romantic');
+    }
+
     // Simulate response from matched user (for demo)
     setTimeout(() => {
       simulateMatchedUserResponse(updatedMessages, updatedLetterCount);
@@ -125,6 +132,16 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
 
     // Award points for receiving letter
     awardPoints(currentUser.email, 'LETTER_RECEIVED');
+
+    // Mettre à jour les stats du bot (si c'est un bot)
+    if (matchedUser?.isBot && matchedUser?.email) {
+      const currentBotStats = matchedUser.stats || { letters: 0, games: 0, bars: 0 };
+      updateUserStats(matchedUser.email, {
+        letters: currentBotStats.letters + 1
+      });
+      // Ajouter des points au bot aussi
+      addPointsToUser(matchedUser.email, 5); // 5 points pour envoyer une lettre
+    }
   };
 
   const isPhotoRevealed = () => {
@@ -197,11 +214,10 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '30px',
               filter: `blur(${Math.max(0, 10 - (photoOpacity * 10))}px)`,
               opacity: photoOpacity
             }}>
-              {matchedUser.avatarConfig ? '👤' : '😊'}
+              <UserAvatar user={matchedUser} size={60} emoji="😊" />
             </div>
             {!isPhotoRevealed() && (
               <div style={{

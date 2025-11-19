@@ -1,14 +1,41 @@
 import React, { useState } from 'react';
-import { getAllGifts } from '../../config/giftsConfig';
+import { getAllGifts, getAllSpells } from '../../config/giftsConfig';
 import { sendGift } from '../../utils/giftsSystem';
 
-export default function GiftSelector({ currentUser, receiverId, onClose, onGiftSent }) {
+export default function GiftSelector({ currentUser, receiverId, onClose, onGiftSent, barTheme }) {
   const [selectedGift, setSelectedGift] = useState(null);
-  const gifts = getAllGifts();
+  const [activeTab, setActiveTab] = useState('gifts'); // 'gifts' ou 'spells'
+
+  const allGifts = getAllGifts();
+  const allSpells = getAllSpells();
+
+  // Mapper le nom du bar à son thème
+  const getThemeFromBarName = (barName) => {
+    if (!barName) return 'all';
+    if (barName.toLowerCase().includes('romantique')) return 'romantic';
+    if (barName.toLowerCase().includes('humoristique')) return 'humor';
+    if (barName.toLowerCase().includes('pirate')) return 'pirate';
+    if (barName.toLowerCase().includes('caché')) return 'hidden';
+    if (barName.toLowerCase().includes('hebdomadaire')) return 'weekly';
+    return 'all';
+  };
+
+  const currentTheme = getThemeFromBarName(barTheme);
+
+  // Filtrer automatiquement selon le thème du bar
+  // Toujours inclure les items "all" + les items du thème spécifique
+  const gifts = currentTheme === 'all'
+    ? allGifts
+    : allGifts.filter(g => g.theme === 'all' || g.theme === currentTheme);
+  const spells = currentTheme === 'all'
+    ? allSpells
+    : allSpells.filter(s => s.theme === 'all' || s.theme === currentTheme);
+
+  const items = activeTab === 'gifts' ? gifts : spells;
 
   const handleSendGift = () => {
     if (!selectedGift) {
-      alert('Sélectionne un cadeau !');
+      alert(activeTab === 'gifts' ? 'Sélectionne un cadeau !' : 'Sélectionne un sort !');
       return;
     }
 
@@ -63,10 +90,10 @@ export default function GiftSelector({ currentUser, receiverId, onClose, onGiftS
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: '20px'
+        marginBottom: '15px'
       }}>
         <h2 style={{ fontSize: '24px', fontWeight: '700', margin: 0, color: 'white' }}>
-          🎁 Envoyer un Cadeau
+          {activeTab === 'gifts' ? '🎁 Cadeaux' : '✨ Sorts Magiques'}
         </h2>
         <button
           onClick={onClose}
@@ -81,6 +108,58 @@ export default function GiftSelector({ currentUser, receiverId, onClose, onGiftS
           }}
         >
           ✕
+        </button>
+      </div>
+
+      {/* Onglets Cadeaux/Sorts */}
+      <div style={{
+        display: 'flex',
+        gap: '10px',
+        marginBottom: '20px'
+      }}>
+        <button
+          onClick={() => {
+            setActiveTab('gifts');
+            setSelectedGift(null);
+          }}
+          style={{
+            flex: 1,
+            padding: '12px',
+            background: activeTab === 'gifts'
+              ? 'linear-gradient(135deg, #667eea, #764ba2)'
+              : '#1a1a1a',
+            border: 'none',
+            borderRadius: '10px',
+            color: 'white',
+            fontSize: '16px',
+            fontWeight: '600',
+            cursor: 'pointer',
+            transition: 'all 0.3s'
+          }}
+        >
+          🎁 Cadeaux ({gifts.length})
+        </button>
+        <button
+          onClick={() => {
+            setActiveTab('spells');
+            setSelectedGift(null);
+          }}
+          style={{
+            flex: 1,
+            padding: '12px',
+            background: activeTab === 'spells'
+              ? 'linear-gradient(135deg, #667eea, #764ba2)'
+              : '#1a1a1a',
+            border: 'none',
+            borderRadius: '10px',
+            color: 'white',
+            fontSize: '16px',
+            fontWeight: '600',
+            cursor: 'pointer',
+            transition: 'all 0.3s'
+          }}
+        >
+          ✨ Magie ({spells.length})
         </button>
       </div>
 
@@ -100,21 +179,21 @@ export default function GiftSelector({ currentUser, receiverId, onClose, onGiftS
         </div>
       </div>
 
-      {/* Liste des cadeaux */}
+      {/* Liste des cadeaux/sorts */}
       <div style={{
         flex: 1,
         overflowY: 'auto',
         marginBottom: '20px'
       }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-          {gifts.map((gift) => {
+          {items.map((gift) => {
             const canAfford = (currentUser.coins || 0) >= gift.cost;
             const isSelected = selectedGift?.id === gift.id;
 
             return (
               <div
                 key={gift.id}
-                onClick={() => canAfford && setSelected Gift(gift)}
+                onClick={() => canAfford && setSelectedGift(gift)}
                 style={{
                   background: isSelected
                     ? 'linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3))'
@@ -236,7 +315,9 @@ export default function GiftSelector({ currentUser, receiverId, onClose, onGiftS
           transition: 'all 0.3s'
         }}
       >
-        {selectedGift ? `Envoyer ${selectedGift.emoji}` : 'Sélectionne un cadeau'}
+        {selectedGift
+          ? (activeTab === 'gifts' ? `Envoyer ${selectedGift.emoji}` : `Lancer ${selectedGift.emoji}`)
+          : (activeTab === 'gifts' ? 'Sélectionne un cadeau' : 'Sélectionne un sort')}
       </button>
     </div>
   );

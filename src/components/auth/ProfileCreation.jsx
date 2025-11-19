@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import AvatarCreator from './AvatarCreator';
+import { applyReferralCode, initializeReferralCode } from '../../utils/referralSystem';
 
 export default function ProfileCreation({ email, onComplete }) {
   const [step, setStep] = useState(1);
@@ -33,9 +34,12 @@ export default function ProfileCreation({ email, onComplete }) {
     points: 0,
     coins: 100,
     premium: false,
-    badges: []
+    badges: [],
+    // Referral system
+    enteredReferralCode: ''
   });
   const [error, setError] = useState('');
+  const [referralMessage, setReferralMessage] = useState('');
 
   const totalSteps = 7;
 
@@ -141,11 +145,33 @@ export default function ProfileCreation({ email, onComplete }) {
         }
       };
 
+      // Remove the enteredReferralCode field from the user object
+      delete newUser.enteredReferralCode;
+
       // Sauvegarder l'utilisateur
       const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
       users.push(newUser);
       localStorage.setItem('jeutaime_users', JSON.stringify(users));
       localStorage.setItem('jeutaime_current_user', JSON.stringify(newUser));
+
+      // Générer le code de parrainage pour le nouvel utilisateur
+      initializeReferralCode(newUser.email);
+
+      // Appliquer le code de parrainage si fourni
+      if (profile.enteredReferralCode && profile.enteredReferralCode.trim() !== '') {
+        const result = applyReferralCode(newUser.email, profile.enteredReferralCode);
+        if (result.success) {
+          console.log('✨ Parrainage appliqué avec succès !');
+          // Recharger l'utilisateur pour obtenir les bonus
+          const updatedUsers = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+          const updatedUser = updatedUsers.find(u => u.email === newUser.email);
+          if (updatedUser) {
+            localStorage.setItem('jeutaime_current_user', JSON.stringify(updatedUser));
+            onComplete(updatedUser);
+            return;
+          }
+        }
+      }
 
       onComplete(newUser);
     }
@@ -254,6 +280,22 @@ export default function ProfileCreation({ email, onComplete }) {
                     👨 Homme
                   </button>
                 </div>
+              </div>
+
+              <div style={{ marginBottom: '20px', background: '#f0f9ff', padding: '15px', borderRadius: '10px', border: '2px dashed #3b82f6' }}>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '8px', color: '#1e40af' }}>
+                  Code de parrainage (optionnel) 🎁
+                </label>
+                <input
+                  type="text"
+                  value={profile.enteredReferralCode}
+                  onChange={(e) => setProfile({ ...profile, enteredReferralCode: e.target.value.toUpperCase() })}
+                  placeholder="EXEMPLE-1234"
+                  style={{ width: '100%', padding: '14px', border: '2px solid #3b82f6', borderRadius: '10px', fontSize: '16px', textTransform: 'uppercase' }}
+                />
+                <p style={{ fontSize: '12px', color: '#1e40af', marginTop: '8px', marginBottom: '0' }}>
+                  Si tu as un code de parrainage, tu recevras +50 points et +25 coins bonus ! 🎉
+                </p>
               </div>
             </>
           )}

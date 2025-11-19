@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { addCoinsToUser, addPointsToUser, updateUserStats } from '../../utils/demoUsers';
 
-export default function WhackAMoleGame({ setGameScreen, moleBestScore, setMoleBestScore }) {
+export default function WhackAMoleGame({ setGameScreen, moleBestScore, setMoleBestScore, currentUser, setUserCoins }) {
   const [localMoleScore, setLocalMoleScore] = useState(0);
   const [localMoleTimer, setLocalMoleTimer] = useState(30);
   const [localActiveMoles, setLocalActiveMoles] = useState([]);
@@ -19,7 +20,7 @@ export default function WhackAMoleGame({ setGameScreen, moleBestScore, setMoleBe
           if (localMoleScore > moleBestScore) {
             setMoleBestScore(localMoleScore);
           }
-          alert(`Fin du jeu! Score: ${localMoleScore}`);
+          handleGameEnd(localMoleScore);
           return 0;
         }
         return prev - 1;
@@ -60,6 +61,32 @@ export default function WhackAMoleGame({ setGameScreen, moleBestScore, setMoleBe
     } else {
       setLocalGameActive(false);
       alert(`Oups! Tu as cliqué sur un trou vide. Score: ${localMoleScore}`);
+    }
+  };
+
+  const handleGameEnd = (finalScore) => {
+    // Calcul des récompenses basées sur le score
+    const pointsPerMole = 2;
+    const coinsPerMole = 5;
+    const pointsEarned = finalScore * pointsPerMole;
+    const coinsEarned = finalScore * coinsPerMole;
+
+    if (currentUser?.email && finalScore > 0) {
+      addPointsToUser(currentUser.email, pointsEarned);
+      addCoinsToUser(currentUser.email, coinsEarned);
+
+      // Mettre à jour les stats de jeux
+      const currentStats = currentUser.stats || { letters: 0, games: 0, bars: 0 };
+      updateUserStats(currentUser.email, {
+        games: currentStats.games + 1
+      });
+
+      // Mettre à jour l'affichage des pièces
+      setUserCoins(prev => prev + coinsEarned);
+
+      alert(`⚡ Partie terminée !\n\nScore: ${finalScore} taupes tapées\n+${pointsEarned} points\n+${coinsEarned} 💰`);
+    } else {
+      alert(`Fin du jeu! Score: ${finalScore}`);
     }
   };
 

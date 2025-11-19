@@ -43,17 +43,17 @@ const AvatarCreator = ({ gender, onSave }) => {
   };
 
   const handleSave = () => {
-    // Convert SVG to data URL
-    const svgElement = document.getElementById("avatar-svg");
+    // Convert SVG to data URL (base64) for persistence
+    const svgElement = document.querySelector("#avatar-svg svg");
     if (svgElement) {
       const svgData = new XMLSerializer().serializeToString(svgElement);
-      const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
-      const svgUrl = URL.createObjectURL(svgBlob);
+      // Create a data URL instead of blob URL for persistence
+      const svgDataUrl = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
 
       // Save avatar config for later editing
       localStorage.setItem("userAvatarConfig", JSON.stringify(avatarConfig));
 
-      if (onSave) onSave(svgUrl, avatarConfig);
+      if (onSave) onSave(svgDataUrl, avatarConfig);
     }
   };
 

@@ -69,6 +69,20 @@ export const BADGES = {
     emoji: '🔮',
     description: 'Lance 20 sorts',
     points: 200
+  },
+  GAMER: {
+    id: 'gamer',
+    name: 'Pro Gamer',
+    emoji: '🎮',
+    description: 'Gagne 10 jeux',
+    points: 300
+  },
+  INFLUENCER: {
+    id: 'influencer',
+    name: 'Influenceur/Influenceuse',
+    emoji: '🌟',
+    description: 'Parraine 5 personnes',
+    points: 500
   }
 };
 
@@ -86,7 +100,16 @@ export const POINTS_ACTIONS = {
   DUEL_WON: 100,
   DUEL_LOST: -50,
   SPELL_CAST: 15,
-  DAILY_LOGIN: 10
+  DAILY_LOGIN: 10,
+  GAME_WON: 50,
+  GAME_LOST: -10,
+  REFERRAL_SPONSOR: 100,
+  REFERRAL_REFERRED: 50,
+  SENTENCE_ADDED: 5,      // Ajouter une phrase à l'histoire dans un bar
+  STORY_COMPLETED: 50,    // Bonus quand l'histoire est complétée (15+ phrases)
+  PET_CARE: 2,            // Nourrir, nettoyer ou faire dormir un animal
+  PET_PLAY: 3,            // Jouer avec un animal
+  PET_DAILY_CARE: 20      // Bonus quotidien si toutes les stats > 80%
 };
 
 // Fonction pour calculer le titre en fonction des points

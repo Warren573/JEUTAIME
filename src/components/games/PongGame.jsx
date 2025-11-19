@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { awardPoints, checkAndAwardBadge } from '../../utils/pointsSystem';
+import { addCoinsToUser, updateUserStats, incrementDuelWins } from '../../utils/demoUsers';
 
-export default function PongGame({ setGameScreen }) {
+const WINNING_SCORE = 5; // Premier à 5 points gagne
+
+export default function PongGame({ setGameScreen, currentUser, setUserCoins }) {
   const [localBallX, setLocalBallX] = useState(290);
   const [localBallY, setLocalBallY] = useState(190);
   const [localBallDirX, setLocalBallDirX] = useState(1);
@@ -12,6 +16,7 @@ export default function PongGame({ setGameScreen }) {
   const [localBotScore, setLocalBotScore] = useState(0);
   const [localGameActive, setLocalGameActive] = useState(false);
   const [keysPressed, setKeysPressed] = useState({});
+  const [gameFinished, setGameFinished] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -111,16 +116,27 @@ export default function PongGame({ setGameScreen }) {
         }
 
         if (prev <= 0) {
-          setLocalBotScore(s => s + 1);
-          setLocalGameActive(false);
-          alert('Le bot a marqué un point!');
+          setLocalBotScore(s => {
+            const newScore = s + 1;
+            setLocalGameActive(false);
+            if (newScore >= WINNING_SCORE) {
+              setGameFinished(true);
+              alert('😢 Défaite ! Le bot a gagné ' + newScore + ' - ' + localPlayerScore);
+            }
+            return newScore;
+          });
           return 190;
         }
 
         if (prev >= 385) {
-          setLocalPlayerScore(s => s + 1);
-          setLocalGameActive(false);
-          alert('Vous avez marqué un point!');
+          setLocalPlayerScore(s => {
+            const newScore = s + 1;
+            setLocalGameActive(false);
+            if (newScore >= WINNING_SCORE) {
+              handleVictory(newScore);
+            }
+            return newScore;
+          });
           return 190;
         }
 
@@ -130,6 +146,51 @@ export default function PongGame({ setGameScreen }) {
 
     return () => clearInterval(collisionCheck);
   }, [localGameActive, localBallY, localPaddleLeftY, localPaddleRightY]);
+
+  const handleVictory = (finalScore) => {
+    setGameFinished(true);
+    const pointsEarned = 20; // Points pour gagner un duel
+    const coinsEarned = 50; // Pièces pour gagner un duel
+
+    // Attribuer les points et pièces
+    if (currentUser?.email) {
+      awardPoints(currentUser.email, 'DUEL_WON');
+      addCoinsToUser(currentUser.email, coinsEarned);
+
+      // Mettre à jour les stats de jeux
+      const currentStats = currentUser.stats || { letters: 0, games: 0, bars: 0 };
+      updateUserStats(currentUser.email, {
+        games: currentStats.games + 1
+      });
+
+      // Incrémenter les victoires de duels et vérifier le badge warrior
+      const totalDuelWins = incrementDuelWins(currentUser.email);
+      if (totalDuelWins >= 5) {
+        checkAndAwardBadge(currentUser.email, 'warrior'); // 5 duels gagnés = badge warrior
+      }
+
+      // Mettre à jour l'affichage des pièces
+      setUserCoins(prev => prev + coinsEarned);
+
+      alert(`🎉 Victoire ! ${finalScore} - ${localBotScore}\n\n+${pointsEarned} points\n+${coinsEarned} 💰${totalDuelWins >= 5 ? '\n\n⚔️ Badge Warrior débloqué !' : ''}`);
+    } else {
+      alert(`🎉 Victoire ! ${finalScore} - ${localBotScore}`);
+    }
+  };
+
+  const resetGame = () => {
+    setLocalBallX(190);
+    setLocalBallY(140);
+    setLocalBallDirX(1);
+    setLocalBallDirY(1);
+    setLocalBallSpeed(4);
+    setLocalPaddleLeftY(118);
+    setLocalPaddleRightY(118);
+    setLocalPlayerScore(0);
+    setLocalBotScore(0);
+    setGameFinished(false);
+    setLocalGameActive(false);
+  };
 
   const startGame = () => {
     setLocalBallX(190);
@@ -159,24 +220,55 @@ export default function PongGame({ setGameScreen }) {
           <div>Bot: {localBotScore}</div>
         </div>
 
-        <p style={{ fontSize: '12px', color: '#888', marginBottom: '15px' }}>Utilise les flèches ↑↓ pour bouger ta raquette</p>
+        {gameFinished && (
+          <div style={{ marginBottom: '20px', padding: '15px', background: localPlayerScore >= WINNING_SCORE ? '#4CAF50' : '#f44336', borderRadius: '10px' }}>
+            <p style={{ fontSize: '18px', fontWeight: '600', margin: '0 0 10px 0' }}>
+              {localPlayerScore >= WINNING_SCORE ? '🎉 Victoire !' : '😢 Défaite'}
+            </p>
+            <p style={{ fontSize: '14px', margin: '0' }}>
+              {localPlayerScore >= WINNING_SCORE ? `+20 points et +50 💰` : 'Retente ta chance !'}
+            </p>
+          </div>
+        )}
 
-        <button
-          onClick={startGame}
-          disabled={localGameActive}
-          style={{
-            padding: '12px 24px',
-            background: localGameActive ? '#666' : 'linear-gradient(135deg, #E91E63, #C2185B)',
-            border: 'none',
-            color: 'white',
-            borderRadius: '10px',
-            cursor: localGameActive ? 'default' : 'pointer',
-            fontWeight: '600',
-            fontSize: '16px'
-          }}
-        >
-          {localGameActive ? 'Partie en cours...' : 'Jouer'}
-        </button>
+        <p style={{ fontSize: '12px', color: '#888', marginBottom: '15px' }}>
+          {gameFinished ? `Premier à ${WINNING_SCORE} points` : 'Utilise les flèches ↑↓ pour bouger ta raquette'}
+        </p>
+
+        {!gameFinished ? (
+          <button
+            onClick={startGame}
+            disabled={localGameActive}
+            style={{
+              padding: '12px 24px',
+              background: localGameActive ? '#666' : 'linear-gradient(135deg, #E91E63, #C2185B)',
+              border: 'none',
+              color: 'white',
+              borderRadius: '10px',
+              cursor: localGameActive ? 'default' : 'pointer',
+              fontWeight: '600',
+              fontSize: '16px'
+            }}
+          >
+            {localGameActive ? 'Partie en cours...' : (localPlayerScore > 0 || localBotScore > 0 ? 'Continuer' : 'Jouer')}
+          </button>
+        ) : (
+          <button
+            onClick={resetGame}
+            style={{
+              padding: '12px 24px',
+              background: 'linear-gradient(135deg, #4CAF50, #388E3C)',
+              border: 'none',
+              color: 'white',
+              borderRadius: '10px',
+              cursor: 'pointer',
+              fontWeight: '600',
+              fontSize: '16px'
+            }}
+          >
+            Nouvelle partie
+          </button>
+        )}
       </div>
     </div>
   );

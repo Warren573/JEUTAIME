@@ -5,36 +5,33 @@ export const bars = [
     id: 1,
     icon: '🌹',
     name: 'Bar Romantique',
-    desc: 'Ambiance tamisée',
+    desc: '2H/2F - Ambiance tamisée',
     participants: [
       { name: 'Sophie', gender: 'F', age: 28, online: true },
       { name: 'Emma', gender: 'F', age: 26, online: true },
-      { name: 'Alexandre', gender: 'M', age: 32, online: true },
-      { name: 'Thomas', gender: 'M', age: 29, online: false }
+      { name: 'Alexandre', gender: 'M', age: 32, online: true }
     ]
   },
   {
     id: 2,
     icon: '😄',
     name: 'Bar Humoristique',
-    desc: 'Rires garantis',
+    desc: '2H/2F - Rires garantis',
     participants: [
       { name: 'Léa', gender: 'F', age: 25, online: true },
       { name: 'Clara', gender: 'F', age: 27, online: true },
-      { name: 'Jules', gender: 'M', age: 28, online: true },
-      { name: 'Martin', gender: 'M', age: 31, online: true }
+      { name: 'Jules', gender: 'M', age: 28, online: true }
     ]
   },
   {
     id: 3,
     icon: '🏴‍☠️',
     name: 'Bar Pirates',
-    desc: 'Aventures maritimes',
+    desc: '2H/2F - Aventures maritimes',
     participants: [
       { name: 'Océane', gender: 'F', age: 29, online: true },
-      { name: 'Nora', gender: 'F', age: 24, online: false },
-      { name: 'Lucas', gender: 'M', age: 30, online: true },
-      { name: 'Pierre', gender: 'M', age: 33, online: true }
+      { name: 'Marine', gender: 'F', age: 24, online: false },
+      { name: 'Lucas', gender: 'M', age: 30, online: true }
     ]
   },
   {
@@ -44,21 +41,19 @@ export const bars = [
     desc: '2H/2F - Renouvellement chaque lundi',
     participants: [
       { name: 'Zoé', gender: 'F', age: 26, online: true },
-      { name: 'Valerie', gender: 'F', age: 31, online: true },
-      { name: 'Kevin', gender: 'M', age: 27, online: true },
-      { name: 'David', gender: 'M', age: 34, online: true }
+      { name: 'Valérie', gender: 'F', age: 31, online: true },
+      { name: 'Kevin', gender: 'M', age: 27, online: true }
     ]
   },
   {
     id: 5,
     icon: '👑',
     name: 'Bar Caché',
-    desc: '3 énigmes pour accéder',
+    desc: '2H/2F - 3 énigmes pour accéder',
     participants: [
-      { name: 'Amelia', gender: 'F', age: 30, online: true },
+      { name: 'Amélia', gender: 'F', age: 30, online: true },
       { name: 'Victoria', gender: 'F', age: 28, online: true },
-      { name: 'Xavier', gender: 'M', age: 35, online: false },
-      { name: 'Nicolas', gender: 'M', age: 32, online: true }
+      { name: 'Xavier', gender: 'M', age: 35, online: false }
     ]
   }
 ];
@@ -191,5 +186,34 @@ export const profileBadges = {
   'gamer': { emoji: '🎮', name: 'Joueur', color: '#9C27B0' },
   'writer': { emoji: '✍️', name: 'Écrivain', color: '#2196F3' },
   'admin': { emoji: '🛡️', name: 'Administrateur', color: '#667eea' },
-  'developer': { emoji: '💻', name: 'Développeur', color: '#764ba2' }
+  'developer': { emoji: '💻', name: 'Développeur', color: '#764ba2' },
+  'bot': { emoji: '🤖', name: 'Bot', color: '#607D8B' }
 };
+
+// Système d'adoption d'animaux virtuels
+export const availableAnimals = [
+  { id: 'cat', emoji: '🐱', name: 'Chat', description: 'Indépendant et câlin', personality: 'Mystérieux', power: '🔮 Vision nocturne', price: 0 },
+  { id: 'dog', emoji: '🐶', name: 'Chien', description: 'Fidèle et joueur', personality: 'Enthousiaste', power: '🎯 Détection émotions', price: 0 },
+  { id: 'rabbit', emoji: '🐰', name: 'Lapin', description: 'Doux et curieux', personality: 'Timide', power: '🌸 Chance en amour', price: 0 },
+  { id: 'hamster', emoji: '🐹', name: 'Hamster', description: 'Mignon et actif', personality: 'Énergique', power: '⚡ Énergie contagieuse', price: 0 },
+  { id: 'bird', emoji: '🐦', name: 'Oiseau', description: 'Libre et chanteur', personality: 'Joyeux', power: '🎵 Charme vocal', price: 0 },
+  { id: 'fox', emoji: '🦊', name: 'Renard', description: 'Rusé et charmant', personality: 'Malin', power: '🧠 Intelligence sociale', price: 0 },
+  { id: 'parrot', emoji: '🦜', name: 'Perroquet', description: 'Bavard et coloré', personality: 'Sociable', power: '💬 Communication parfaite', price: 100, premium: true },
+  { id: 'panda', emoji: '🐼', name: 'Panda', description: 'Rare et adorable', personality: 'Zen', power: '☮️ Aura de paix', price: 200, premium: true },
+  { id: 'dragon', emoji: '🐉', name: 'Dragon', description: 'Légendaire et puissant', personality: 'Noble', power: '🔥 Attraction irrésistible', price: 500, premium: true }
+];
+
+export const animalAccessories = [
+  { id: 'hat', emoji: '🎩', name: 'Chapeau élégant', price: 50 },
+  { id: 'bow', emoji: '🎀', name: 'Nœud papillon', price: 30 },
+  { id: 'crown', emoji: '👑', name: 'Couronne royale', price: 100 },
+  { id: 'glasses', emoji: '🕶️', name: 'Lunettes cool', price: 40 },
+  { id: 'scarf', emoji: '🧣', name: 'Écharpe', price: 35 },
+  { id: 'cape', emoji: '🦸', name: 'Cape de super-héros', price: 80 }
+];
+
+export const adoptableAnimals = [
+  { id: 1, animal: '🐱', name: 'Minou', owner: 'Sophie', age: 28, hunger: 60, happiness: 80, energy: 70, cleanliness: 50, affection: 90 },
+  { id: 2, animal: '🐶', name: 'Rex', owner: 'Thomas', age: 31, hunger: 30, happiness: 95, energy: 85, cleanliness: 80, affection: 70 },
+  { id: 3, animal: '🐰', name: 'Fluffy', owner: 'Marie', age: 26, hunger: 80, happiness: 60, energy: 40, cleanliness: 90, affection: 85 }
+];

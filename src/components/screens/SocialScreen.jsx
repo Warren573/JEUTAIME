@@ -1,7 +1,9 @@
 import React from 'react';
 import { bars } from '../../data/appData';
+import RankingScreen from './RankingScreen';
+import AdoptionScreen from './AdoptionScreen';
 
-export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, setSelectedBar, adminMode, isAdminAuthenticated }) {
+export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, setSelectedBar, adminMode, isAdminAuthenticated, currentUser, userCoins, setUserCoins, setScreen }) {
   const handleAdminEditBar = (bar, e) => {
     e.stopPropagation();
     alert(`Éditer bar: ${bar.name}`);
@@ -19,108 +21,373 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
   };
 
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px' }}>
-        <h1 style={{ fontSize: '32px', margin: 0, fontWeight: '600' }}>👥 Social</h1>
+    <div style={{
+      height: '100vh',
+      overflowY: 'auto',
+      paddingBottom: '80px',
+      background: 'var(--color-beige-light)'
+    }}>
+      {/* En-tête style Journal */}
+      <div style={{
+        background: 'var(--color-cream)',
+        borderBottom: '4px double var(--color-brown-dark)',
+        padding: 'var(--spacing-lg)',
+        marginBottom: 'var(--spacing-lg)',
+        boxShadow: 'var(--shadow-md)'
+      }}>
+        <h1 style={{
+          fontFamily: 'var(--font-heading)',
+          fontSize: '2.5rem',
+          textAlign: 'center',
+          margin: '0 0 var(--spacing-xs) 0',
+          color: 'var(--color-brown-dark)',
+          textTransform: 'uppercase',
+          letterSpacing: '2px',
+          borderBottom: '2px solid var(--color-gold)',
+          paddingBottom: 'var(--spacing-xs)'
+        }}>
+          👥 Social
+        </h1>
         {adminMode && isAdminAuthenticated && socialTab === 'bars' && (
-          <button
-            onClick={handleAdminCreateBar}
-            style={{ padding: '8px 16px', background: 'linear-gradient(135deg, #667eea, #764ba2)', border: 'none', borderRadius: '10px', color: 'white', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}
-          >
-            ➕ Nouveau Bar
-          </button>
+          <div style={{ textAlign: 'center', marginTop: 'var(--spacing-sm)' }}>
+            <button
+              onClick={handleAdminCreateBar}
+              className="btn-primary"
+              style={{ padding: 'var(--spacing-sm) var(--spacing-md)', fontSize: '0.875rem' }}
+            >
+              ➕ Nouveau Bar
+            </button>
+          </div>
         )}
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '25px' }}>
-        {['bars', 'games', 'adoption', 'contest'].map((tab) => (
-          <button key={tab} onClick={() => setSocialTab(tab)} style={{ padding: '12px 20px', background: socialTab === tab ? 'linear-gradient(135deg, #E91E63, #C2185B)' : '#1a1a1a', border: 'none', color: 'white', borderRadius: '15px', cursor: 'pointer', fontWeight: '600', fontSize: '15px', whiteSpace: 'nowrap' }}>
-            {tab === 'bars' && '🍸 Bars'}
-            {tab === 'games' && '🎮 Jeux'}
-            {tab === 'adoption' && '💝 Adoption'}
-            {tab === 'contest' && '🏆 Concours'}
-          </button>
-        ))}
+
+      {/* Onglets - Grille uniforme 2x2 */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: 'var(--spacing-xs)',
+        padding: '0 var(--spacing-sm)',
+        marginBottom: 'var(--spacing-lg)'
+      }}>
+        {['bars', 'ranking', 'games', 'adoption'].map((tab) => {
+          const isActive = socialTab === tab;
+          return (
+            <button
+              key={tab}
+              onClick={() => setSocialTab(tab)}
+              style={{
+                padding: 'var(--spacing-md)',
+                background: isActive
+                  ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))'
+                  : 'var(--color-brown)',
+                border: isActive ? '2px solid var(--color-gold-light)' : '2px solid var(--color-brown-dark)',
+                color: isActive ? 'var(--color-brown-dark)' : 'var(--color-cream)',
+                borderRadius: 'var(--border-radius-md)',
+                cursor: 'pointer',
+                fontWeight: '700',
+                fontSize: '0.9rem',
+                transition: 'all var(--transition-normal)',
+                boxShadow: isActive ? 'var(--shadow-md)' : 'var(--shadow-sm)',
+                textAlign: 'center'
+              }}
+            >
+              {tab === 'bars' && '🍸 Bars'}
+              {tab === 'ranking' && '🏆 Classement'}
+              {tab === 'games' && '🎮 Jeux'}
+              {tab === 'adoption' && '🐾 Adoption'}
+            </button>
+          );
+        })}
       </div>
 
+      {/* Section Bars - Carte stylisée selon BARS.png */}
       {socialTab === 'bars' && (
-        <div style={{ background: '#1a1a1a', borderRadius: '20px', padding: '25px' }}>
-          {bars.map((bar) => (
-            <div key={bar.id} style={{ background: '#0a0a0a', borderRadius: '15px', padding: '15px', marginBottom: '12px', position: 'relative' }}>
-              <div onClick={() => setSelectedBar(bar.id)} style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
-                <div style={{ fontSize: '40px' }}>{bar.icon}</div>
-                <div style={{ flex: 1 }}>
-                  <h3 style={{ fontSize: '18px', margin: 0, fontWeight: '600' }}>{bar.name}</h3>
-                  <p style={{ color: '#888', fontSize: '12px', margin: 0 }}>{bar.desc}</p>
-                  <div style={{ display: 'flex', gap: '8px', marginTop: '6px' }}>
-                    {bar.participants.map((p, idx) => (
-                      <div key={idx} style={{ width: '24px', height: '24px', borderRadius: '50%', background: p.online ? '#4CAF50' : '#666', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>
-                        {p.gender === 'F' ? '👩' : '👨'}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div style={{ fontSize: '20px' }}>→</div>
-              </div>
+        <div style={{
+          padding: '0 var(--spacing-sm)',
+          position: 'relative'
+        }}>
+          {/* Bouton vers liste complète des bars thématiques */}
+          <button
+            onClick={() => setScreen('bars')}
+            style={{
+              width: '100%',
+              padding: 'var(--spacing-md)',
+              marginBottom: 'var(--spacing-lg)',
+              background: 'linear-gradient(135deg, #7B1FA2, #4A148C)',
+              border: '3px solid #FFD700',
+              borderRadius: 'var(--border-radius-lg)',
+              color: '#FFD700',
+              fontSize: '1.1rem',
+              fontWeight: '700',
+              cursor: 'pointer',
+              boxShadow: '0 6px 16px rgba(123, 31, 162, 0.4)',
+              transition: 'transform 0.2s',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '10px'
+            }}
+            onMouseDown={(e) => e.target.style.transform = 'scale(0.98)'}
+            onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
+          >
+            <span style={{ fontSize: '1.5rem' }}>🍸</span>
+            Voir tous les Bars Thématiques
+            <span style={{
+              background: '#FFD700',
+              color: '#000',
+              padding: '3px 8px',
+              borderRadius: '12px',
+              fontSize: '0.7rem',
+              fontWeight: 'bold'
+            }}>NOUVEAU</span>
+          </button>
 
-              {/* Admin Actions */}
-              {adminMode && isAdminAuthenticated && (
-                <div style={{ display: 'flex', gap: '6px', marginTop: '10px', paddingTop: '10px', borderTop: '1px solid #333' }}>
+          {/* Titre section */}
+          <div style={{
+            textAlign: 'center',
+            marginBottom: 'var(--spacing-lg)',
+            background: 'linear-gradient(180deg, var(--color-gold-light), var(--color-gold))',
+            padding: 'var(--spacing-md)',
+            borderRadius: 'var(--border-radius-lg)',
+            boxShadow: 'var(--shadow-md)'
+          }}>
+            <h2 style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: '1.75rem',
+              color: 'var(--color-brown-dark)',
+              margin: 0,
+              textShadow: '1px 1px 2px rgba(255,255,255,0.5)'
+            }}>
+              ☀️ CARTE DES BARS ☀️
+            </h2>
+          </div>
+
+          {/* Grille des bars - Style carte illustrée */}
+          <div style={{
+            background: 'linear-gradient(180deg, var(--color-gold-light), var(--color-tan))',
+            borderRadius: 'var(--border-radius-xl)',
+            padding: 'var(--spacing-xl)',
+            boxShadow: 'var(--shadow-xl)',
+            border: '4px solid var(--color-brown)',
+            position: 'relative',
+            backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(139, 111, 71, 0.05) 10px, rgba(139, 111, 71, 0.05) 20px)'
+          }}>
+            {bars.map((bar, index) => {
+              // Positionnement différent pour chaque bar (effet carte)
+              const positions = [
+                { top: '10%', left: '15%' },
+                { top: '45%', right: '15%' },
+                { bottom: '15%', left: '20%' }
+              ];
+              const pos = positions[index % 3];
+
+              return (
+                <div
+                  key={bar.id}
+                  onClick={() => setSelectedBar(bar.id)}
+                  className="card"
+                  style={{
+                    cursor: 'pointer',
+                    marginBottom: 'var(--spacing-md)',
+                    padding: 'var(--spacing-md)',
+                    background: 'var(--color-cream)',
+                    border: '3px solid var(--color-brown)',
+                    borderRadius: 'var(--border-radius-lg)',
+                    boxShadow: 'var(--shadow-lg)',
+                    transition: 'all var(--transition-normal)',
+                    position: 'relative'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)';
+                    e.currentTarget.style.boxShadow = 'var(--shadow-xl)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                    e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
+                  }}
+                >
+                  {/* Ligne 1: Icône + Infos */}
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: 'var(--spacing-md)',
+                    marginBottom: 'var(--spacing-md)'
+                  }}>
+                    {/* Icône du bar */}
+                    <div style={{
+                      fontSize: '2.5rem',
+                      filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))',
+                      flexShrink: 0
+                    }}>
+                      {bar.icon}
+                    </div>
+
+                    {/* Infos du bar */}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <h3 style={{
+                        fontFamily: 'var(--font-heading)',
+                        fontSize: '1.25rem',
+                        margin: '0 0 var(--spacing-xs) 0',
+                        color: 'var(--color-text-primary)',
+                        fontWeight: '700'
+                      }}>
+                        {bar.name}
+                      </h3>
+                      <p style={{
+                        color: 'var(--color-text-light)',
+                        fontSize: '0.875rem',
+                        margin: '0 0 var(--spacing-sm) 0'
+                      }}>
+                        {bar.desc}
+                      </p>
+
+                      {/* Participants */}
+                      <div style={{
+                        display: 'flex',
+                        gap: 'var(--spacing-xs)',
+                        alignItems: 'center',
+                        flexWrap: 'wrap'
+                      }}>
+                        {bar.participants.slice(0, 5).map((p, idx) => (
+                          <div
+                            key={idx}
+                            style={{
+                              width: '32px',
+                              height: '32px',
+                              borderRadius: '50%',
+                              background: p.online
+                                ? 'linear-gradient(135deg, var(--color-friendly-light), var(--color-friendly))'
+                                : 'var(--color-brown-light)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '1rem',
+                              border: '2px solid var(--color-cream)',
+                              boxShadow: 'var(--shadow-sm)'
+                            }}
+                          >
+                            {p.gender === 'F' ? '👩' : '👨'}
+                          </div>
+                        ))}
+                        {bar.participants.length > 5 && (
+                          <div style={{
+                            fontSize: '0.875rem',
+                            color: 'var(--color-text-light)',
+                            fontWeight: '600'
+                          }}>
+                            +{bar.participants.length - 5}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Ligne 2: Bouton Discuter */}
                   <button
-                    onClick={(e) => handleAdminEditBar(bar, e)}
-                    style={{ flex: 1, padding: '8px', background: '#2196F3', border: 'none', borderRadius: '6px', color: 'white', fontSize: '11px', fontWeight: '600', cursor: 'pointer' }}
+                    className="btn-primary"
+                    style={{
+                      width: '100%',
+                      padding: 'var(--spacing-sm) var(--spacing-md)',
+                      fontSize: '0.875rem',
+                      fontWeight: '700'
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedBar(bar.id);
+                    }}
                   >
-                    ✏️ Éditer
+                    💬 Discuter
                   </button>
-                  <button
-                    onClick={(e) => handleAdminDeleteBar(bar, e)}
-                    style={{ flex: 1, padding: '8px', background: '#dc3545', border: 'none', borderRadius: '6px', color: 'white', fontSize: '11px', fontWeight: '600', cursor: 'pointer' }}
-                  >
-                    🗑️ Supprimer
-                  </button>
+
+                  {/* Admin Actions */}
+                  {adminMode && isAdminAuthenticated && (
+                    <div style={{
+                      display: 'flex',
+                      gap: 'var(--spacing-xs)',
+                      marginTop: 'var(--spacing-sm)',
+                      paddingTop: 'var(--spacing-sm)',
+                      borderTop: '2px solid var(--color-tan)'
+                    }}>
+                      <button
+                        onClick={(e) => handleAdminEditBar(bar, e)}
+                        style={{
+                          flex: 1,
+                          padding: 'var(--spacing-xs) var(--spacing-sm)',
+                          background: 'var(--color-info)',
+                          border: 'none',
+                          borderRadius: 'var(--border-radius-sm)',
+                          color: 'white',
+                          fontSize: '0.75rem',
+                          fontWeight: '600',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        ✏️ Éditer
+                      </button>
+                      <button
+                        onClick={(e) => handleAdminDeleteBar(bar, e)}
+                        style={{
+                          flex: 1,
+                          padding: 'var(--spacing-xs) var(--spacing-sm)',
+                          background: 'var(--color-error)',
+                          border: 'none',
+                          borderRadius: 'var(--border-radius-sm)',
+                          color: 'white',
+                          fontSize: '0.75rem',
+                          fontWeight: '600',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        🗑️ Supprimer
+                      </button>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          ))}
+              );
+            })}
+          </div>
         </div>
       )}
 
+      {socialTab === 'ranking' && (
+        <RankingScreen currentUser={currentUser} />
+      )}
+
+      {socialTab === 'adoption' && (
+        <AdoptionScreen currentUser={currentUser} userCoins={userCoins} setUserCoins={setUserCoins} />
+      )}
+
       {socialTab === 'games' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-          <div onClick={() => setGameScreen('reactivity')} style={{ background: '#1a1a1a', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', padding: '0 var(--spacing-sm)' }}>
+          <div onClick={() => setGameScreen('reactivity')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
             <div style={{ fontSize: '36px', marginBottom: '8px' }}>⚡</div>
-            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600' }}>Tape la Taupe</h4>
-            <p style={{ fontSize: '11px', color: '#888', margin: 0 }}>Solo</p>
+            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Tape la Taupe</h4>
+            <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo</p>
           </div>
-          <div onClick={() => setGameScreen('pong')} style={{ background: '#1a1a1a', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
+          <div onClick={() => setGameScreen('pong')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
             <div style={{ fontSize: '36px', marginBottom: '8px' }}>🎮</div>
-            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600' }}>Pong</h4>
-            <p style={{ fontSize: '11px', color: '#888', margin: 0 }}>2 joueurs</p>
+            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Pong</h4>
+            <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>2 joueurs</p>
           </div>
-          <div onClick={() => setGameScreen('brickbreaker')} style={{ background: '#1a1a1a', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
+          <div onClick={() => setGameScreen('brickbreaker')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
             <div style={{ fontSize: '36px', marginBottom: '8px' }}>🧱</div>
-            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600' }}>Casse Brique</h4>
-            <p style={{ fontSize: '11px', color: '#888', margin: 0 }}>Solo</p>
+            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Casse Brique</h4>
+            <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo</p>
           </div>
-          <div onClick={() => setGameScreen('morpion')} style={{ background: '#1a1a1a', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
+          <div onClick={() => setGameScreen('morpion')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
             <div style={{ fontSize: '36px', marginBottom: '8px' }}>⭕</div>
-            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600' }}>Morpion</h4>
-            <p style={{ fontSize: '11px', color: '#888', margin: 0 }}>2 joueurs</p>
+            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Morpion</h4>
+            <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>2 joueurs</p>
           </div>
-          <div onClick={() => setGameScreen('storytime')} style={{ background: '#1a1a1a', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer', gridColumn: '1 / -1' }}>
+          <div onClick={() => setGameScreen('storytime')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer', gridColumn: '1 / -1' }}>
             <div style={{ fontSize: '36px', marginBottom: '8px' }}>📖</div>
-            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600' }}>Continue l'histoire</h4>
-            <p style={{ fontSize: '11px', color: '#888', margin: 0 }}>Solo, 2 joueurs ou multijoueurs</p>
+            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Continue l'histoire</h4>
+            <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo, 2 joueurs ou multijoueurs</p>
           </div>
-          <div onClick={() => setGameScreen('cards')} style={{ background: '#1a1a1a', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer', gridColumn: '1 / -1' }}>
+          <div onClick={() => setGameScreen('cards')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer', gridColumn: '1 / -1' }}>
             <div style={{ fontSize: '36px', marginBottom: '8px' }}>🎴</div>
-            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600' }}>Jeu des Cartes</h4>
-            <p style={{ fontSize: '11px', color: '#888', margin: 0 }}>Solo - Gagne des pièces!</p>
-          </div>
-          <div onClick={() => setGameScreen('herolove')} style={{ background: 'linear-gradient(135deg, #E91E63, #C2185B)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer', gridColumn: '1 / -1', border: '3px solid #FFD700', position: 'relative' }}>
-            <div style={{ position: 'absolute', top: '5px', right: '5px', background: '#FFD700', color: '#000', padding: '3px 8px', borderRadius: '5px', fontSize: '10px', fontWeight: 'bold' }}>NEW!</div>
-            <div style={{ fontSize: '36px', marginBottom: '8px' }}>🎮</div>
-            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600' }}>HeroLove Quest</h4>
-            <p style={{ fontSize: '11px', color: '#fff', margin: 0 }}>Aventure RPG romantique - Gagne des pièces!</p>
+            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Jeu des Cartes</h4>
+            <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo - Gagne des pièces!</p>
           </div>
         </div>
       )}
