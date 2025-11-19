@@ -88,6 +88,11 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
     // Award points for sending letter
     awardPoints(currentUser.email, 'LETTER_SENT');
 
+    // Vérifier badge romantic (20 lettres envoyées)
+    if (updatedLetterCount.user >= 20) {
+      checkAndAwardBadge(currentUser.email, 'romantic');
+    }
+
     // Simulate response from matched user (for demo)
     setTimeout(() => {
       simulateMatchedUserResponse(updatedMessages, updatedLetterCount);

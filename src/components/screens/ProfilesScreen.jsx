@@ -145,6 +145,11 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
     // Add grimace
     if (!smiles[userId].grimaces.includes(targetId)) {
       smiles[userId].grimaces.push(targetId);
+
+      // Vérifier badge heartbreaker (50 grimaces)
+      if (smiles[userId].grimaces.length >= 50) {
+        checkAndAwardBadge(userId, 'heartbreaker');
+      }
     }
 
     saveSmiles(smiles);
