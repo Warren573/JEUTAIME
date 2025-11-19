@@ -11,8 +11,8 @@ import {
   getPetInteraction
 } from '../../utils/petsSystem';
 
-export default function AdoptionScreen({ currentUser, userCoins, setUserCoins }) {
-  const [adoptionTab, setAdoptionTab] = useState('mypets'); // 'mypets', 'shop'
+export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, setCurrentUser }) {
+  const [adoptionTab, setAdoptionTab] = useState('mypets'); // 'mypets', 'adopt', 'incarnate'
   const [myPets, setMyPets] = useState([]);
   const [selectedPet, setSelectedPet] = useState(null);
   const [interactionMessage, setInteractionMessage] = useState('');
@@ -97,6 +97,35 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins })
     }
   };
 
+  // Incarner un animal (devenir l'animal)
+  const handleIncarnate = (petId) => {
+    const pet = PETS[petId];
+    if (!pet) return;
+
+    const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+    const userIndex = users.findIndex(u => u.email === currentUser.email);
+
+    if (userIndex !== -1) {
+      // Changer l'avatar de l'utilisateur pour l'emoji de l'animal
+      users[userIndex].incarnatedAs = {
+        petId: pet.id,
+        emoji: pet.emoji,
+        name: pet.name,
+        since: new Date().toISOString()
+      };
+
+      localStorage.setItem('jeutaime_users', JSON.stringify(users));
+
+      // Mettre à jour currentUser
+      if (setCurrentUser) {
+        setCurrentUser({...users[userIndex]});
+      }
+
+      alert(`🎭 Transformation réussie !\n\nVous êtes maintenant un ${pet.name} ${pet.emoji}\n\nVotre avatar et votre profil reflètent maintenant votre nouvelle forme !`);
+      setAdoptionTab('mypets');
+    }
+  };
+
   // Barre de stat stylée
   const StatBar = ({ label, value, color, icon }) => (
     <div style={{ marginBottom: 'var(--spacing-sm)' }}>
@@ -176,13 +205,15 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins })
         gap: 'var(--spacing-sm)',
         marginBottom: 'var(--spacing-lg)',
         padding: '0 var(--spacing-sm)',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        flexWrap: 'wrap'
       }}>
         <button
           onClick={() => setAdoptionTab('mypets')}
           style={{
             flex: 1,
-            maxWidth: '200px',
+            minWidth: '130px',
+            maxWidth: '180px',
             padding: 'var(--spacing-md)',
             background: adoptionTab === 'mypets'
               ? 'linear-gradient(135deg, #667eea, #764ba2)'
@@ -190,7 +221,7 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins })
             border: 'none',
             borderRadius: 'var(--border-radius-lg)',
             color: 'white',
-            fontSize: '1rem',
+            fontSize: '0.9rem',
             fontWeight: '600',
             cursor: 'pointer',
             boxShadow: adoptionTab === 'mypets' ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
@@ -200,25 +231,48 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins })
           🐾 Mes Animaux ({myPets.length}/3)
         </button>
         <button
-          onClick={() => setAdoptionTab('shop')}
+          onClick={() => setAdoptionTab('adopt')}
           style={{
             flex: 1,
-            maxWidth: '200px',
+            minWidth: '130px',
+            maxWidth: '180px',
             padding: 'var(--spacing-md)',
-            background: adoptionTab === 'shop'
+            background: adoptionTab === 'adopt'
               ? 'linear-gradient(135deg, #FFD700, #FFA500)'
               : 'var(--color-brown-light)',
             border: 'none',
             borderRadius: 'var(--border-radius-lg)',
-            color: adoptionTab === 'shop' ? '#000' : 'white',
-            fontSize: '1rem',
+            color: adoptionTab === 'adopt' ? '#000' : 'white',
+            fontSize: '0.9rem',
             fontWeight: '600',
             cursor: 'pointer',
-            boxShadow: adoptionTab === 'shop' ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
+            boxShadow: adoptionTab === 'adopt' ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
             transition: 'all 0.2s'
           }}
         >
-          🏠 Refuge
+          🏠 Adopter
+        </button>
+        <button
+          onClick={() => setAdoptionTab('incarnate')}
+          style={{
+            flex: 1,
+            minWidth: '130px',
+            maxWidth: '180px',
+            padding: 'var(--spacing-md)',
+            background: adoptionTab === 'incarnate'
+              ? 'linear-gradient(135deg, #f093fb, #f5576c)'
+              : 'var(--color-brown-light)',
+            border: 'none',
+            borderRadius: 'var(--border-radius-lg)',
+            color: 'white',
+            fontSize: '0.9rem',
+            fontWeight: '600',
+            cursor: 'pointer',
+            boxShadow: adoptionTab === 'incarnate' ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
+            transition: 'all 0.2s'
+          }}
+        >
+          🎭 Incarner
         </button>
       </div>
 
@@ -249,7 +303,7 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins })
                   Rendez-vous dans le refuge pour adopter votre premier compagnon !
                 </p>
                 <button
-                  onClick={() => setAdoptionTab('shop')}
+                  onClick={() => setAdoptionTab('adopt')}
                   style={{
                     padding: 'var(--spacing-md) var(--spacing-lg)',
                     background: 'linear-gradient(135deg, #FFD700, #FFA500)',
@@ -262,7 +316,7 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins })
                     boxShadow: 'var(--shadow-md)'
                   }}
                 >
-                  🏠 Aller au refuge
+                  🏠 Adopter un compagnon
                 </button>
               </div>
             ) : (
@@ -526,8 +580,8 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins })
           </>
         )}
 
-        {/* REFUGE */}
-        {adoptionTab === 'shop' && (
+        {/* ADOPTER */}
+        {adoptionTab === 'adopt' && (
           <>
             {myPets.length >= 3 && (
               <div style={{
@@ -677,6 +731,176 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins })
                     onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
                   >
                     {myPets.length >= 3 ? '❌ Maximum atteint' : '🐾 Adopter'}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* INCARNER */}
+        {adoptionTab === 'incarnate' && (
+          <>
+            <div style={{
+              background: 'linear-gradient(135deg, #f093fb, #f5576c)',
+              borderRadius: 'var(--border-radius-xl)',
+              padding: 'var(--spacing-lg)',
+              marginBottom: 'var(--spacing-lg)',
+              color: 'white',
+              textAlign: 'center'
+            }}>
+              <h3 style={{ margin: '0 0 var(--spacing-sm) 0', fontSize: '1.3rem' }}>
+                🎭 Incarnez un animal
+              </h3>
+              <p style={{ margin: 0, fontSize: '0.95rem', opacity: 0.95 }}>
+                Transformez-vous en animal ! Votre avatar changera et vous deviendrez cet animal dans l'app.
+              </p>
+            </div>
+
+            {currentUser?.incarnatedAs && (
+              <div style={{
+                background: '#d4edda',
+                border: '2px solid #28a745',
+                borderRadius: 'var(--border-radius-md)',
+                padding: 'var(--spacing-md)',
+                marginBottom: 'var(--spacing-lg)',
+                textAlign: 'center'
+              }}>
+                <p style={{ margin: 0, color: '#155724', fontSize: '1rem' }}>
+                  ✨ Vous êtes actuellement incarné en <strong>{currentUser.incarnatedAs.name} {currentUser.incarnatedAs.emoji}</strong>
+                </p>
+              </div>
+            )}
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+              gap: 'var(--spacing-md)'
+            }}>
+              {Object.values(PETS).map((pet) => (
+                <div
+                  key={pet.id}
+                  style={{
+                    background: 'var(--color-cream)',
+                    borderRadius: 'var(--border-radius-xl)',
+                    padding: 'var(--spacing-lg)',
+                    border: currentUser?.incarnatedAs?.petId === pet.id
+                      ? '4px solid #f093fb'
+                      : pet.rarity === 'legendary'
+                      ? '3px solid #FFD700'
+                      : pet.rarity === 'rare'
+                      ? '3px solid #9C27B0'
+                      : pet.rarity === 'uncommon'
+                      ? '3px solid #2196F3'
+                      : '3px solid var(--color-brown)',
+                    boxShadow: currentUser?.incarnatedAs?.petId === pet.id
+                      ? '0 0 20px rgba(240, 147, 251, 0.5)'
+                      : 'var(--shadow-lg)',
+                    position: 'relative',
+                    textAlign: 'center'
+                  }}
+                >
+                  {currentUser?.incarnatedAs?.petId === pet.id && (
+                    <div style={{
+                      position: 'absolute',
+                      top: '-10px',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      background: '#f093fb',
+                      color: 'white',
+                      padding: '6px 16px',
+                      borderRadius: '20px',
+                      fontSize: '0.75rem',
+                      fontWeight: '700',
+                      textTransform: 'uppercase',
+                      boxShadow: 'var(--shadow-md)'
+                    }}>
+                      ✨ Forme actuelle
+                    </div>
+                  )}
+
+                  {/* Badge rareté */}
+                  <div style={{
+                    position: 'absolute',
+                    top: '10px',
+                    right: '10px',
+                    background: pet.rarity === 'legendary'
+                      ? '#FFD700'
+                      : pet.rarity === 'rare'
+                      ? '#9C27B0'
+                      : pet.rarity === 'uncommon'
+                      ? '#2196F3'
+                      : '#757575',
+                    color: 'white',
+                    padding: '4px 10px',
+                    borderRadius: '12px',
+                    fontSize: '0.7rem',
+                    fontWeight: '600',
+                    textTransform: 'uppercase'
+                  }}>
+                    {pet.rarity === 'legendary' ? '✨ Légendaire' :
+                     pet.rarity === 'rare' ? '💎 Rare' :
+                     pet.rarity === 'uncommon' ? '⭐ Peu commun' :
+                     '🌟 Commun'}
+                  </div>
+
+                  <div style={{ fontSize: '100px', marginBottom: 'var(--spacing-sm)' }}>
+                    {pet.emoji}
+                  </div>
+                  <h3 style={{
+                    fontSize: '1.5rem',
+                    margin: '0 0 var(--spacing-xs) 0',
+                    color: 'var(--color-brown-dark)'
+                  }}>
+                    {pet.name}
+                  </h3>
+                  <p style={{
+                    color: 'var(--color-text-secondary)',
+                    fontSize: '0.9rem',
+                    marginBottom: 'var(--spacing-sm)'
+                  }}>
+                    {pet.description}
+                  </p>
+                  <div style={{
+                    background: 'var(--color-beige-light)',
+                    padding: 'var(--spacing-sm)',
+                    borderRadius: 'var(--border-radius-md)',
+                    marginBottom: 'var(--spacing-md)',
+                    textAlign: 'left',
+                    fontSize: '0.85rem'
+                  }}>
+                    <p style={{ margin: '6px 0' }}>
+                      <strong>Personnalité:</strong> {pet.personality}
+                    </p>
+                    <p style={{ margin: '6px 0' }}>
+                      <strong>Nourriture préférée:</strong> {pet.favoriteFood}
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => handleIncarnate(pet.id)}
+                    style={{
+                      width: '100%',
+                      padding: 'var(--spacing-md)',
+                      background: currentUser?.incarnatedAs?.petId === pet.id
+                        ? 'linear-gradient(135deg, #666, #888)'
+                        : 'linear-gradient(135deg, #f093fb, #f5576c)',
+                      border: 'none',
+                      borderRadius: 'var(--border-radius-lg)',
+                      color: 'white',
+                      fontSize: '1rem',
+                      fontWeight: '600',
+                      cursor: currentUser?.incarnatedAs?.petId === pet.id ? 'default' : 'pointer',
+                      boxShadow: 'var(--shadow-md)',
+                      transition: 'transform 0.2s',
+                      opacity: currentUser?.incarnatedAs?.petId === pet.id ? 0.7 : 1
+                    }}
+                    onMouseDown={(e) => {
+                      if (currentUser?.incarnatedAs?.petId !== pet.id) e.currentTarget.style.transform = 'scale(0.95)';
+                    }}
+                    onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                  >
+                    {currentUser?.incarnatedAs?.petId === pet.id ? '✓ Forme actuelle' : '🎭 Incarner'}
                   </button>
                 </div>
               ))}

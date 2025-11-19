@@ -177,6 +177,7 @@ function MainApp() {
     selectedBar, setSelectedBar,
     barTab, setBarTab,
     userCoins, setUserCoins,
+    setCurrentUser,
     currentProfile, setCurrentProfile,
     premiumActive, setPremiumActive,
     joinedBars, setJoinedBars,
