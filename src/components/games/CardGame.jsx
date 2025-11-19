@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { addCoinsToUser, addPointsToUser, updateUserStats } from '../../utils/demoUsers';
 
 export default function CardGame({
   setGameScreen,
@@ -11,7 +12,9 @@ export default function CardGame({
   cardGameOver,
   setCardGameOver,
   cardMessage,
-  setCardMessage
+  setCardMessage,
+  currentUser,
+  setUserCoins
 }) {
   const initCardGame = () => {
     const symbols = ["❤️", "❤️", "♣️", "♣️", "♠️", "♦️", "♦️", "♦️", "❤️", "♣️"];
@@ -80,6 +83,7 @@ export default function CardGame({
     if (allRevealed) {
       setCardGameOver(true);
       setCardMessage('Toutes les cartes sont retournées! Partie terminée. 🎉');
+      saveGameRewards(newGains); // Sauvegarder les gains accumulés
     }
   };
 
@@ -94,12 +98,31 @@ export default function CardGame({
     if (heartsLeft) {
       setCardMessage('Raté 😔 Il restait des cœurs! Tu perds tout.');
       setCardGains(0);
+      saveGameRewards(0); // Perte, 0 pièces
     } else {
       const newGains = cardGains * 2;
       setCardGains(newGains);
       setCardMessage(`Bravo 🥳 Tu avais raison! Il n'y avait plus de cœurs! Tes gains sont doublés: ${newGains} pièces!`);
+      saveGameRewards(newGains); // Victoire avec gains doublés
     }
     setCardGameOver(true);
+  };
+
+  const saveGameRewards = (finalGains) => {
+    if (currentUser?.email && finalGains > 0) {
+      // Ajouter les pièces gagnées
+      addCoinsToUser(currentUser.email, finalGains);
+      setUserCoins(prev => prev + finalGains);
+
+      // Ajouter des points (1 point par pièce gagnée)
+      addPointsToUser(currentUser.email, finalGains);
+
+      // Mettre à jour les stats de jeux
+      const currentStats = currentUser.stats || { letters: 0, games: 0, bars: 0 };
+      updateUserStats(currentUser.email, {
+        games: currentStats.games + 1
+      });
+    }
   };
 
   useEffect(() => {

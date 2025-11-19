@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import Header from './components/Header';
 import Navigation from './components/Navigation';
 import HomeScreen from './components/screens/HomeScreen';
 import ProfilesScreen from './components/screens/ProfilesScreen';
 import SocialScreen from './components/screens/SocialScreen';
 import LettersScreen from './components/screens/LettersScreen';
 import JournalScreen from './components/screens/JournalScreen';
+import MemoriesScreen from './components/screens/MemoriesScreen';
+import BadgesScreen from './components/screens/BadgesScreen';
 import SettingsScreen from './components/screens/SettingsScreen';
 import BarDetailScreen from './components/screens/BarDetailScreen';
 import RankingScreen from './components/screens/RankingScreen';
+import BarsScreen from './components/screens/BarsScreen';
+import ReferralScreen from './components/screens/ReferralScreen';
 
 // Games
-import HeroLoveQuest from './components/games/HeroLoveQuest';
 import PongGame from './components/games/PongGame';
 import WhackAMoleGame from './components/games/WhackAMoleGame';
 import BrickBreakerGame from './components/games/BrickBreakerGame';
@@ -31,8 +33,11 @@ import ProfileCreation from './components/auth/ProfileCreation';
 // Points system
 import { awardDailyLogin } from './utils/pointsSystem';
 
-// Helper function for HeroLove Quest
-function rnd(min=1,max=6){ return Math.floor(Math.random()*(max-min+1))+min; }
+// Demo users
+import { initializeDemoUsers } from './utils/demoUsers';
+
+// Data
+import { bars } from './data/appData';
 
 function MainApp() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -45,7 +50,7 @@ function MainApp() {
   const [gameScreen, setGameScreen] = useState(null);
   const [selectedBar, setSelectedBar] = useState(null);
   const [barTab, setBarTab] = useState('discuss');
-  const [userCoins, setUserCoins] = useState(5245);
+  const [userCoins, setUserCoins] = useState(0);
   const [currentProfile, setCurrentProfile] = useState(0);
   const [premiumActive, setPremiumActive] = useState(false);
   const [joinedBars, setJoinedBars] = useState([1]);
@@ -56,6 +61,9 @@ function MainApp() {
 
   // Check if user is already logged in
   useEffect(() => {
+    // Initialiser les profils démo (bots) au démarrage
+    initializeDemoUsers();
+
     const savedUser = localStorage.getItem('jeutaime_current_user');
     if (savedUser) {
       const user = JSON.parse(savedUser);
@@ -75,6 +83,21 @@ function MainApp() {
       }
     }
   }, []);
+
+  // Synchroniser userCoins et premium avec currentUser
+  useEffect(() => {
+    if (currentUser) {
+      setUserCoins(currentUser.coins || 0);
+      setPremiumActive(currentUser.premium || false);
+    }
+  }, [currentUser]);
+
+  // Reset selectedBar when screen changes (to allow navigation)
+  useEffect(() => {
+    if (selectedBar && screen !== 'bars') {
+      setSelectedBar(null);
+    }
+  }, [screen]);
 
   const handleLogin = (user) => {
     setCurrentUser(user);
@@ -122,23 +145,6 @@ function MainApp() {
   const [storyText, setStoryText] = useState('Il était une fois...');
   const [storyInput, setStoryInput] = useState('');
 
-  // HeroLove Quest states
-  const [heroPlayer, setHeroPlayer] = useState({
-    name: "Aventurier·e",
-    pos: {x:0,y:0},
-    charm: 2,
-    wit: 1,
-    humor: 2,
-    courage: 2,
-    confidence: 10,
-    coinsEarned: 0,
-    monstersDefeated: 0
-  });
-  const [heroMessage, setHeroMessage] = useState("🎮 Commence ton aventure romantique !");
-  const [heroGridSize] = useState(7);
-  const [heroGameOver, setHeroGameOver] = useState(false);
-  const [heroVictory, setHeroVictory] = useState(false);
-
   // Card Game states
   const [cardSymbols, setCardSymbols] = useState([]);
   const [cardRevealed, setCardRevealed] = useState([]);
@@ -158,7 +164,6 @@ function MainApp() {
   const navItems = [
     { icon: '🏠', label: 'Accueil', id: 'home' },
     { icon: '👤', label: 'Profils', id: 'profiles' },
-    { icon: '🏆', label: 'Classement', id: 'ranking' },
     { icon: '👥', label: 'Social', id: 'social' },
     { icon: '💌', label: 'Lettres', id: 'letters' },
     { icon: '📰', label: 'Journal', id: 'journal' },
@@ -182,11 +187,6 @@ function MainApp() {
     morpionTurn, setMorpionTurn,
     storyText, setStoryText,
     storyInput, setStoryInput,
-    heroPlayer, setHeroPlayer,
-    heroMessage, setHeroMessage,
-    heroGridSize,
-    heroGameOver, setHeroGameOver,
-    heroVictory, setHeroVictory,
     cardSymbols, setCardSymbols,
     cardRevealed, setCardRevealed,
     cardGains, setCardGains,
@@ -198,8 +198,7 @@ function MainApp() {
     adminMode, setAdminMode,
     isAdminAuthenticated,
     currentUser,
-    onLogout: handleLogout,
-    rnd
+    onLogout: handleLogout
   };
 
   // Show auth screen if not logged in
@@ -223,28 +222,33 @@ function MainApp() {
   }
 
   return (
-    <div style={{ maxWidth: '430px', margin: '0 auto', background: '#000', minHeight: '100vh', color: 'white', fontFamily: '-apple-system, sans-serif', paddingBottom: '100px' }}>
-      <Header userCoins={userCoins} adminMode={adminMode} isAdminAuthenticated={isAdminAuthenticated} />
+    <div style={{
+      width: '100%',
+      maxWidth: '100vw',
+      margin: '0 auto',
+      background: '#000',
+      minHeight: '100vh',
+      color: 'white',
+      fontFamily: '-apple-system, sans-serif',
+      overflow: 'hidden'
+    }}>
+      {screen === 'home' && !gameScreen && !selectedBar && <HomeScreen {...appState} />}
+      {screen === 'profiles' && !gameScreen && !selectedBar && <ProfilesScreen {...appState} />}
+      {screen === 'social' && !gameScreen && !selectedBar && <SocialScreen {...appState} currentUser={currentUser} />}
+      {screen === 'bars' && !gameScreen && !selectedBar && <BarsScreen setScreen={setScreen} setGameScreen={setGameScreen} setSelectedBar={setSelectedBar} currentUser={currentUser} />}
+      {screen === 'referral' && !gameScreen && !selectedBar && <ReferralScreen currentUser={currentUser} />}
+      {screen === 'letters' && !gameScreen && !selectedBar && <LettersScreen currentUser={currentUser} />}
+      {screen === 'journal' && !gameScreen && !selectedBar && <JournalScreen {...appState} />}
+      {screen === 'settings' && !gameScreen && !selectedBar && <SettingsScreen {...appState} />}
 
-      <div style={{ padding: '25px 20px' }}>
-        {screen === 'home' && !gameScreen && !selectedBar && <HomeScreen {...appState} />}
-        {screen === 'profiles' && !gameScreen && !selectedBar && <ProfilesScreen {...appState} />}
-        {screen === 'ranking' && !gameScreen && !selectedBar && <RankingScreen currentUser={currentUser} />}
-        {screen === 'social' && !gameScreen && !selectedBar && <SocialScreen {...appState} />}
-        {screen === 'letters' && !gameScreen && !selectedBar && <LettersScreen currentUser={currentUser} />}
-        {screen === 'journal' && !gameScreen && !selectedBar && <JournalScreen {...appState} />}
-        {screen === 'settings' && !gameScreen && !selectedBar && <SettingsScreen {...appState} />}
+      {gameScreen === 'pong' && <PongGame {...appState} currentUser={currentUser} />}
+      {gameScreen === 'reactivity' && <WhackAMoleGame {...appState} currentUser={currentUser} />}
+      {gameScreen === 'brickbreaker' && <BrickBreakerGame {...appState} currentUser={currentUser} />}
+      {gameScreen === 'morpion' && <MorpionGame {...appState} currentUser={currentUser} />}
+      {gameScreen === 'cards' && <CardGame {...appState} currentUser={currentUser} />}
+      {gameScreen === 'storytime' && <StoryTimeGame {...appState} currentUser={currentUser} />}
 
-        {gameScreen === 'herolove' && <HeroLoveQuest {...appState} />}
-        {gameScreen === 'pong' && <PongGame {...appState} />}
-        {gameScreen === 'reactivity' && <WhackAMoleGame {...appState} />}
-        {gameScreen === 'brickbreaker' && <BrickBreakerGame {...appState} />}
-        {gameScreen === 'morpion' && <MorpionGame {...appState} />}
-        {gameScreen === 'cards' && <CardGame {...appState} />}
-        {gameScreen === 'storytime' && <StoryTimeGame {...appState} />}
-
-        {selectedBar && <BarDetailScreen {...appState} />}
-      </div>
+      {selectedBar && <BarDetailScreen {...appState} bar={bars.find(b => b.id === selectedBar)} />}
 
       <Navigation navItems={navItems} screen={screen} setScreen={setScreen} />
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getReferralStats, copyReferralCode } from '../../utils/referralSystem';
 
-export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogout }) {
+export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogout, setScreen }) {
   const [settingsTab, setSettingsTab] = useState('profile');
   const [referralStats, setReferralStats] = useState(null);
   const [copiedCode, setCopiedCode] = useState(false);
@@ -45,56 +45,107 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
   };
 
   return (
-    <div>
-      <h1 style={{ fontSize: '32px', marginBottom: '20px', fontWeight: '600' }}>⚙️ Paramètres</h1>
+    <div style={{
+      height: '100vh',
+      overflowY: 'auto',
+      paddingBottom: '80px',
+      background: 'var(--color-beige-light)'
+    }}>
+      {/* En-tête style Journal */}
+      <div style={{
+        background: 'var(--color-cream)',
+        borderBottom: '4px double var(--color-brown-dark)',
+        padding: 'var(--spacing-lg)',
+        marginBottom: 'var(--spacing-lg)',
+        boxShadow: 'var(--shadow-md)'
+      }}>
+        <h1 style={{
+          fontFamily: 'var(--font-heading)',
+          fontSize: '2.5rem',
+          textAlign: 'center',
+          margin: '0 0 var(--spacing-xs) 0',
+          color: 'var(--color-brown-dark)',
+          textTransform: 'uppercase',
+          letterSpacing: '2px',
+          borderBottom: '2px solid var(--color-gold)',
+          paddingBottom: 'var(--spacing-xs)'
+        }}>
+          ⚙️ Paramètres
+        </h1>
+      </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', overflowX: 'auto' }}>
-        {['profile', 'referral', 'shop', 'notifications', 'privacy', 'account'].map((tab) => (
-          <button key={tab} onClick={() => setSettingsTab(tab)} style={{ padding: '10px 18px', background: settingsTab === tab ? '#E91E63' : '#1a1a1a', border: 'none', color: 'white', borderRadius: '10px', cursor: 'pointer', fontWeight: '600', fontSize: '13px', whiteSpace: 'nowrap' }}>
-            {tab === 'profile' ? '👤 Profil' : tab === 'referral' ? '🎁 Parrainage' : tab === 'shop' ? '🛍️ Boutique' : tab === 'notifications' ? '🔔 Notifs' : tab === 'privacy' ? '🔒 Confidentialité' : '⚙️ Compte'}
-          </button>
-        ))}
-      </div>
+      <div style={{ padding: '0 var(--spacing-sm)' }}>
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 'var(--spacing-xs)',
+          marginBottom: 'var(--spacing-lg)',
+          justifyContent: 'center'
+        }}>
+          {['profile', 'referral', 'shop', 'notifications', 'privacy', 'account'].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setSettingsTab(tab)}
+              style={{
+                padding: 'var(--spacing-sm) var(--spacing-md)',
+                background: settingsTab === tab
+                  ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))'
+                  : 'var(--color-brown)',
+                border: settingsTab === tab ? '2px solid var(--color-gold-light)' : '2px solid var(--color-brown-dark)',
+                color: settingsTab === tab ? 'var(--color-brown-dark)' : 'var(--color-cream)',
+                borderRadius: 'var(--border-radius-md)',
+                cursor: 'pointer',
+                fontWeight: '600',
+                fontSize: '0.875rem',
+                transition: 'all var(--transition-normal)',
+                boxShadow: settingsTab === tab ? 'var(--shadow-md)' : 'var(--shadow-sm)',
+                minWidth: 'fit-content'
+              }}
+            >
+              {tab === 'profile' ? '👤 Profil' : tab === 'referral' ? '🎁 Parrainage' : tab === 'shop' ? '🛍️ Boutique' : tab === 'notifications' ? '🔔 Notifs' : tab === 'privacy' ? '🔒 Confidentialité' : '⚙️ Compte'}
+            </button>
+          ))}
+        </div>
 
       {/* PROFIL */}
       {settingsTab === 'profile' && (
         <div>
           {/* Bio obligatoire */}
-          <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid #E91E63' }}>
+          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid #E91E63' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
               <div style={{ fontSize: '24px' }}>❓</div>
               <h3 style={{ fontSize: '16px', margin: 0, fontWeight: '600', color: '#E91E63' }}>Bio (Obligatoire - Min 50 caractères)</h3>
             </div>
             <textarea
               placeholder="Décrivez-vous de manière authentique. C'est la première chose que les autres verront..."
-              style={{ width: '100%', padding: '12px', background: '#0a0a0a', border: '1px solid #E91E63', borderRadius: '8px', color: 'white', fontSize: '14px', minHeight: '100px', resize: 'vertical', fontFamily: 'inherit' }}>
+              style={{ width: '100%', padding: '12px', background: 'var(--color-beige)', border: '1px solid #E91E63', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', minHeight: '100px', resize: 'vertical', fontFamily: 'inherit' }}>
             </textarea>
             <div style={{ fontSize: '12px', color: '#888', marginTop: '8px' }}>0 / 500 caractères <span style={{ color: '#E91E63' }}>(minimum 50)</span></div>
           </div>
 
           {/* Informations Personnelles */}
-          <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', marginBottom: '15px' }}>
+          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px' }}>
             <h3 style={{ fontSize: '16px', margin: '0 0 15px 0', fontWeight: '600' }}>Informations Personnelles</h3>
 
             <div style={{ marginBottom: '12px' }}>
               <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px' }}>Code Postal</label>
-              <input type="text" placeholder="75001" style={{ width: '100%', padding: '10px', background: '#0a0a0a', border: '1px solid #333', borderRadius: '8px', color: 'white', fontSize: '14px' }} />
+              <input type="text" placeholder="75001" style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }} />
             </div>
 
             <div style={{ marginBottom: '12px' }}>
               <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px' }}>Ville</label>
-              <input type="text" placeholder="Paris" style={{ width: '100%', padding: '10px', background: '#0a0a0a', border: '1px solid #333', borderRadius: '8px', color: 'white', fontSize: '14px' }} />
+              <input type="text" placeholder="Paris" style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }} />
             </div>
 
             <div style={{ marginBottom: '12px' }}>
               <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px' }}>Date de naissance</label>
-              <input type="date" style={{ width: '100%', padding: '10px', background: '#0a0a0a', border: '1px solid #333', borderRadius: '8px', color: 'white', fontSize: '14px' }} />
+              <input type="date" style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }} />
             </div>
 
             <div style={{ marginBottom: '12px' }}>
               <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px' }}>Genre</label>
-              <select style={{ width: '100%', padding: '10px', background: '#0a0a0a', border: '1px solid #333', borderRadius: '8px', color: 'white', fontSize: '14px' }}>
+              <select style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}>
                 <option>Sélectionnez votre genre</option>
                 <option>Homme</option>
                 <option>Femme</option>
@@ -103,7 +154,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
           </div>
 
           {/* Tes 3 Questions */}
-          <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid #667eea' }}>
+          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid #667eea' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
               <div style={{ fontSize: '24px' }}>🎯</div>
               <h3 style={{ fontSize: '16px', margin: 0, fontWeight: '600', color: '#667eea' }}>Tes 3 Questions</h3>
@@ -111,40 +162,40 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
             <p style={{ fontSize: '13px', color: '#aaa', marginBottom: '20px' }}>Les autres devront y répondre après un sourire mutuel</p>
 
             {/* Question 1 */}
-            <div style={{ marginBottom: '20px', padding: '15px', background: '#0a0a0a', borderRadius: '10px', border: '1px solid #667eea' }}>
+            <div style={{ marginBottom: '20px', padding: '15px', background: 'var(--color-beige)', borderRadius: '10px', border: '1px solid #667eea' }}>
               <h4 style={{ fontSize: '14px', fontWeight: '600', marginBottom: '10px', color: '#667eea' }}>Question 1</h4>
               <input
                 type="text"
                 placeholder="Ex: Aimes-tu le fromage ?"
                 value={questions.question1.text}
                 onChange={(e) => setQuestions({ ...questions, question1: { ...questions.question1, text: e.target.value } })}
-                style={{ width: '100%', padding: '10px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '8px', color: 'white', fontSize: '14px', marginBottom: '10px' }}
+                style={{ width: '100%', padding: '10px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', marginBottom: '10px' }}
               />
               <input
                 type="text"
                 placeholder="A. Réponse A"
                 value={questions.question1.answerA}
                 onChange={(e) => setQuestions({ ...questions, question1: { ...questions.question1, answerA: e.target.value } })}
-                style={{ width: '100%', padding: '8px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '13px', marginBottom: '8px' }}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px' }}
               />
               <input
                 type="text"
                 placeholder="B. Réponse B"
                 value={questions.question1.answerB}
                 onChange={(e) => setQuestions({ ...questions, question1: { ...questions.question1, answerB: e.target.value } })}
-                style={{ width: '100%', padding: '8px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '13px', marginBottom: '8px' }}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px' }}
               />
               <input
                 type="text"
                 placeholder="C. Réponse C"
                 value={questions.question1.answerC}
                 onChange={(e) => setQuestions({ ...questions, question1: { ...questions.question1, answerC: e.target.value } })}
-                style={{ width: '100%', padding: '8px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '13px', marginBottom: '8px' }}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px' }}
               />
               <select
                 value={questions.question1.correctAnswer}
                 onChange={(e) => setQuestions({ ...questions, question1: { ...questions.question1, correctAnswer: e.target.value } })}
-                style={{ width: '100%', padding: '8px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '13px' }}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px' }}
               >
                 <option value="">Bonne réponse ?</option>
                 <option value="A">A</option>
@@ -154,40 +205,40 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
             </div>
 
             {/* Question 2 */}
-            <div style={{ marginBottom: '20px', padding: '15px', background: '#0a0a0a', borderRadius: '10px', border: '1px solid #764ba2' }}>
+            <div style={{ marginBottom: '20px', padding: '15px', background: 'var(--color-beige)', borderRadius: '10px', border: '1px solid #764ba2' }}>
               <h4 style={{ fontSize: '14px', fontWeight: '600', marginBottom: '10px', color: '#764ba2' }}>Question 2</h4>
               <input
                 type="text"
                 placeholder="Ex: Préfères-tu la mer ou la montagne ?"
                 value={questions.question2.text}
                 onChange={(e) => setQuestions({ ...questions, question2: { ...questions.question2, text: e.target.value } })}
-                style={{ width: '100%', padding: '10px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '8px', color: 'white', fontSize: '14px', marginBottom: '10px' }}
+                style={{ width: '100%', padding: '10px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', marginBottom: '10px' }}
               />
               <input
                 type="text"
                 placeholder="A. Réponse A"
                 value={questions.question2.answerA}
                 onChange={(e) => setQuestions({ ...questions, question2: { ...questions.question2, answerA: e.target.value } })}
-                style={{ width: '100%', padding: '8px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '13px', marginBottom: '8px' }}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px' }}
               />
               <input
                 type="text"
                 placeholder="B. Réponse B"
                 value={questions.question2.answerB}
                 onChange={(e) => setQuestions({ ...questions, question2: { ...questions.question2, answerB: e.target.value } })}
-                style={{ width: '100%', padding: '8px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '13px', marginBottom: '8px' }}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px' }}
               />
               <input
                 type="text"
                 placeholder="C. Réponse C"
                 value={questions.question2.answerC}
                 onChange={(e) => setQuestions({ ...questions, question2: { ...questions.question2, answerC: e.target.value } })}
-                style={{ width: '100%', padding: '8px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '13px', marginBottom: '8px' }}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px' }}
               />
               <select
                 value={questions.question2.correctAnswer}
                 onChange={(e) => setQuestions({ ...questions, question2: { ...questions.question2, correctAnswer: e.target.value } })}
-                style={{ width: '100%', padding: '8px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '13px' }}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px' }}
               >
                 <option value="">Bonne réponse ?</option>
                 <option value="A">A</option>
@@ -197,40 +248,40 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
             </div>
 
             {/* Question 3 */}
-            <div style={{ marginBottom: '15px', padding: '15px', background: '#0a0a0a', borderRadius: '10px', border: '1px solid #f093fb' }}>
+            <div style={{ marginBottom: '15px', padding: '15px', background: 'var(--color-beige)', borderRadius: '10px', border: '1px solid #f093fb' }}>
               <h4 style={{ fontSize: '14px', fontWeight: '600', marginBottom: '10px', color: '#f093fb' }}>Question 3</h4>
               <input
                 type="text"
                 placeholder="Ex: Quel est ton super-pouvoir idéal ?"
                 value={questions.question3.text}
                 onChange={(e) => setQuestions({ ...questions, question3: { ...questions.question3, text: e.target.value } })}
-                style={{ width: '100%', padding: '10px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '8px', color: 'white', fontSize: '14px', marginBottom: '10px' }}
+                style={{ width: '100%', padding: '10px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', marginBottom: '10px' }}
               />
               <input
                 type="text"
                 placeholder="A. Réponse A"
                 value={questions.question3.answerA}
                 onChange={(e) => setQuestions({ ...questions, question3: { ...questions.question3, answerA: e.target.value } })}
-                style={{ width: '100%', padding: '8px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '13px', marginBottom: '8px' }}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px' }}
               />
               <input
                 type="text"
                 placeholder="B. Réponse B"
                 value={questions.question3.answerB}
                 onChange={(e) => setQuestions({ ...questions, question3: { ...questions.question3, answerB: e.target.value } })}
-                style={{ width: '100%', padding: '8px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '13px', marginBottom: '8px' }}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px' }}
               />
               <input
                 type="text"
                 placeholder="C. Réponse C"
                 value={questions.question3.answerC}
                 onChange={(e) => setQuestions({ ...questions, question3: { ...questions.question3, answerC: e.target.value } })}
-                style={{ width: '100%', padding: '8px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '13px', marginBottom: '8px' }}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px' }}
               />
               <select
                 value={questions.question3.correctAnswer}
                 onChange={(e) => setQuestions({ ...questions, question3: { ...questions.question3, correctAnswer: e.target.value } })}
-                style={{ width: '100%', padding: '8px', background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '13px' }}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px' }}
               >
                 <option value="">Bonne réponse ?</option>
                 <option value="A">A</option>
@@ -412,13 +463,13 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
 
           <h3 style={{ fontSize: '18px', margin: '0 0 15px 0', fontWeight: '600' }}>💰 Packs de pièces</h3>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '20px' }}>
-            <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', textAlign: 'center', border: '2px solid #333', cursor: 'pointer' }}>
+            <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', textAlign: 'center', border: '2px solid var(--color-brown-light)', cursor: 'pointer' }}>
               <div style={{ fontSize: '36px', marginBottom: '8px' }}>💰</div>
               <div style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '5px', color: '#FFD700' }}>1 000</div>
               <div style={{ fontSize: '12px', color: '#888', marginBottom: '10px' }}>pièces</div>
               <button style={{ width: '100%', padding: '8px', background: '#E91E63', border: 'none', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '13px' }}>2,99€</button>
             </div>
-            <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', textAlign: 'center', border: '2px solid #E91E63', cursor: 'pointer', position: 'relative' }}>
+            <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', textAlign: 'center', border: '2px solid #E91E63', cursor: 'pointer', position: 'relative' }}>
               <div style={{ position: 'absolute', top: '5px', right: '5px', background: '#E91E63', color: 'white', padding: '3px 8px', borderRadius: '5px', fontSize: '10px', fontWeight: 'bold' }}>+20%</div>
               <div style={{ fontSize: '36px', marginBottom: '8px' }}>💎</div>
               <div style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '5px', color: '#FFD700' }}>2 500</div>
@@ -431,7 +482,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
 
       {/* NOTIFICATIONS, PRIVACY - Version simplifiée */}
       {(settingsTab === 'notifications' || settingsTab === 'privacy') && (
-        <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '30px', textAlign: 'center' }}>
+        <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '30px', textAlign: 'center' }}>
           <div style={{ fontSize: '64px', marginBottom: '20px' }}>🚧</div>
           <h3 style={{ fontSize: '18px', marginBottom: '10px', fontWeight: '600' }}>Section en construction</h3>
           <p style={{ fontSize: '14px', color: '#888' }}>Cette section sera disponible prochainement</p>
@@ -441,7 +492,39 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
       {/* ACCOUNT */}
       {settingsTab === 'account' && (
         <div>
-          <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', marginBottom: '15px' }}>
+          {/* Parrainage */}
+          <div
+            onClick={() => setScreen('referral')}
+            style={{
+              background: 'linear-gradient(135deg, #4CAF50, #388E3C)',
+              borderRadius: '15px',
+              padding: '20px',
+              marginBottom: '15px',
+              cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(76, 175, 80, 0.3)',
+              transition: 'transform 0.2s',
+              border: '2px solid #66BB6A'
+            }}
+            onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.98)'}
+            onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <span style={{ fontSize: '28px' }}>🤝</span>
+                <div>
+                  <h3 style={{ fontSize: '16px', margin: '0 0 4px 0', fontWeight: '700', color: 'var(--color-text-primary)' }}>
+                    Parrainage
+                  </h3>
+                  <p style={{ fontSize: '13px', margin: 0, color: 'rgba(255,255,255,0.9)' }}>
+                    Invitez vos amis et gagnez des pièces
+                  </p>
+                </div>
+              </div>
+              <div style={{ fontSize: '20px', color: 'var(--color-text-primary)' }}>→</div>
+            </div>
+          </div>
+
+          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px' }}>
             <h3 style={{ fontSize: '16px', margin: '0 0 15px 0', fontWeight: '600' }}>Compte</h3>
 
             <button style={{ width: '100%', padding: '15px', background: '#dc3545', border: 'none', color: 'white', borderRadius: '12px', cursor: 'pointer', fontWeight: '600', fontSize: '14px', marginBottom: '10px' }}>
@@ -457,7 +540,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
           </div>
 
           {/* Admin Panel Access - Hidden section */}
-          <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', border: '1px solid #333' }}>
+          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', border: '2px solid var(--color-brown-light)' }}>
             <h3 style={{ fontSize: '16px', margin: '0 0 15px 0', fontWeight: '600', color: '#667eea' }}>🛠️ Développeur</h3>
             <p style={{ fontSize: '13px', color: '#888', marginBottom: '15px' }}>
               Accès réservé aux administrateurs et développeurs
@@ -471,6 +554,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }
