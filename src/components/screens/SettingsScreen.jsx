@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getReferralStats, copyReferralCode } from '../../utils/referralSystem';
 
 export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogout }) {
   const [settingsTab, setSettingsTab] = useState('profile');
+  const [referralStats, setReferralStats] = useState(null);
+  const [copiedCode, setCopiedCode] = useState(false);
 
   // Questions state for editing
   const [questions, setQuestions] = useState({
@@ -23,15 +26,33 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
     }
   };
 
+  // Load referral stats when tab is opened
+  useEffect(() => {
+    if (settingsTab === 'referral' && currentUser) {
+      const stats = getReferralStats(currentUser.email);
+      setReferralStats(stats);
+    }
+  }, [settingsTab, currentUser]);
+
+  const handleCopyReferralCode = async () => {
+    if (referralStats?.code) {
+      const success = await copyReferralCode(referralStats.code);
+      if (success) {
+        setCopiedCode(true);
+        setTimeout(() => setCopiedCode(false), 2000);
+      }
+    }
+  };
+
   return (
     <div>
       <h1 style={{ fontSize: '32px', marginBottom: '20px', fontWeight: '600' }}>⚙️ Paramètres</h1>
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', overflowX: 'auto' }}>
-        {['profile', 'shop', 'notifications', 'privacy', 'account'].map((tab) => (
+        {['profile', 'referral', 'shop', 'notifications', 'privacy', 'account'].map((tab) => (
           <button key={tab} onClick={() => setSettingsTab(tab)} style={{ padding: '10px 18px', background: settingsTab === tab ? '#E91E63' : '#1a1a1a', border: 'none', color: 'white', borderRadius: '10px', cursor: 'pointer', fontWeight: '600', fontSize: '13px', whiteSpace: 'nowrap' }}>
-            {tab === 'profile' ? '👤 Profil' : tab === 'shop' ? '🛍️ Boutique' : tab === 'notifications' ? '🔔 Notifs' : tab === 'privacy' ? '🔒 Confidentialité' : '⚙️ Compte'}
+            {tab === 'profile' ? '👤 Profil' : tab === 'referral' ? '🎁 Parrainage' : tab === 'shop' ? '🛍️ Boutique' : tab === 'notifications' ? '🔔 Notifs' : tab === 'privacy' ? '🔒 Confidentialité' : '⚙️ Compte'}
           </button>
         ))}
       </div>
@@ -230,6 +251,146 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
           <button style={{ width: '100%', padding: '15px', background: 'linear-gradient(135deg, #E91E63, #C2185B)', border: 'none', color: 'white', borderRadius: '12px', cursor: 'pointer', fontWeight: '700', fontSize: '16px', boxShadow: '0 4px 15px rgba(233, 30, 99, 0.3)' }}>
             💾 Enregistrer mon profil
           </button>
+        </div>
+      )}
+
+      {/* PARRAINAGE */}
+      {settingsTab === 'referral' && (
+        <div>
+          {/* Hero section */}
+          <div style={{ background: 'linear-gradient(135deg, #667eea, #764ba2)', padding: '25px', borderRadius: '15px', marginBottom: '20px', textAlign: 'center' }}>
+            <div style={{ fontSize: '48px', marginBottom: '10px' }}>🎁</div>
+            <h2 style={{ fontSize: '24px', fontWeight: '700', margin: '0 0 10px 0', color: 'white' }}>Programme de Parrainage</h2>
+            <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.9)', margin: 0 }}>
+              Invite tes amis et gagnez des récompenses ensemble !
+            </p>
+          </div>
+
+          {/* Mon code de parrainage */}
+          <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', marginBottom: '20px', border: '2px solid #667eea' }}>
+            <h3 style={{ fontSize: '18px', margin: '0 0 15px 0', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span>🔑</span> Mon code de parrainage
+            </h3>
+
+            {referralStats && (
+              <>
+                <div style={{ background: '#0a0a0a', padding: '20px', borderRadius: '10px', marginBottom: '15px', textAlign: 'center' }}>
+                  <div style={{ fontSize: '32px', fontWeight: '700', color: '#667eea', letterSpacing: '2px', marginBottom: '10px' }}>
+                    {referralStats.code}
+                  </div>
+                  <button
+                    onClick={handleCopyReferralCode}
+                    style={{
+                      padding: '12px 24px',
+                      background: copiedCode ? '#4CAF50' : 'linear-gradient(135deg, #667eea, #764ba2)',
+                      border: 'none',
+                      color: 'white',
+                      borderRadius: '10px',
+                      cursor: 'pointer',
+                      fontWeight: '600',
+                      transition: 'all 0.3s'
+                    }}
+                  >
+                    {copiedCode ? '✅ Copié !' : '📋 Copier le code'}
+                  </button>
+                </div>
+
+                <div style={{ background: '#0a0a0a', padding: '15px', borderRadius: '10px' }}>
+                  <h4 style={{ fontSize: '14px', margin: '0 0 10px 0', fontWeight: '600', color: '#888' }}>
+                    Comment ça marche ?
+                  </h4>
+                  <ol style={{ margin: 0, paddingLeft: '20px', fontSize: '13px', lineHeight: '1.8', color: '#aaa' }}>
+                    <li>Partage ton code avec tes amis</li>
+                    <li>Ils l'entrent lors de leur inscription</li>
+                    <li>Tu reçois <strong style={{ color: '#667eea' }}>+100 points</strong> et <strong style={{ color: '#FFD700' }}>+50 coins</strong> par filleul</li>
+                    <li>Ton filleul reçoit <strong style={{ color: '#667eea' }}>+50 points</strong> et <strong style={{ color: '#FFD700' }}>+25 coins</strong> bonus</li>
+                    <li>Parraine 5 personnes pour débloquer le badge <strong style={{ color: '#667eea' }}>Influenceur 🌟</strong> (+500 pts)</li>
+                  </ol>
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Mes filleuls */}
+          <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', marginBottom: '20px' }}>
+            <h3 style={{ fontSize: '18px', margin: '0 0 15px 0', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span>👥</span> Mes filleuls ({referralStats?.referrals?.length || 0})
+            </h3>
+
+            {referralStats?.referrals && referralStats.referrals.length > 0 ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {referralStats.referrals.map((referral, index) => (
+                  <div key={index} style={{ background: '#0a0a0a', padding: '15px', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '20px'
+                    }}>
+                      😊
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: '600', fontSize: '15px', marginBottom: '2px' }}>{referral.pseudo}</div>
+                      <div style={{ fontSize: '12px', color: '#888' }}>
+                        Inscrit le {new Date(referral.date).toLocaleDateString('fr-FR')}
+                      </div>
+                    </div>
+                    <div style={{
+                      background: 'linear-gradient(135deg, #4CAF50, #45a049)',
+                      padding: '6px 12px',
+                      borderRadius: '20px',
+                      fontSize: '12px',
+                      fontWeight: '600'
+                    }}>
+                      +100 pts
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{ textAlign: 'center', padding: '40px 20px', color: '#888' }}>
+                <div style={{ fontSize: '48px', marginBottom: '15px' }}>👤</div>
+                <p style={{ fontSize: '14px', marginBottom: '5px' }}>Tu n'as pas encore de filleuls</p>
+                <p style={{ fontSize: '12px', margin: 0 }}>Partage ton code pour commencer à gagner des récompenses !</p>
+              </div>
+            )}
+          </div>
+
+          {/* Si parrain */}
+          {referralStats?.referredBy && (
+            <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', border: '2px solid #4CAF50' }}>
+              <h3 style={{ fontSize: '18px', margin: '0 0 15px 0', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span>🎉</span> Mon parrain
+              </h3>
+              <div style={{ background: '#0a0a0a', padding: '15px', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{
+                  width: '50px',
+                  height: '50px',
+                  borderRadius: '50%',
+                  background: 'linear-gradient(135deg, #4CAF50, #45a049)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '24px'
+                }}>
+                  ⭐
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: '600', fontSize: '16px', marginBottom: '2px' }}>{referralStats.referredBy.pseudo}</div>
+                  <div style={{ fontSize: '12px', color: '#888' }}>
+                    T'a parrainé le {new Date(referralStats.referredBy.date).toLocaleDateString('fr-FR')}
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#4CAF50', marginTop: '5px', fontWeight: '600' }}>
+                    Bonus reçu : +50 pts + 25 🪙
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

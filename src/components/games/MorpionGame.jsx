@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { awardPoints, checkAndAwardBadge } from '../../utils/pointsSystem';
 
-export default function MorpionGame({ setGameScreen, morpionBoard, setMorpionBoard, morpionTurn, setMorpionTurn }) {
+export default function MorpionGame({ setGameScreen, morpionBoard, setMorpionBoard, morpionTurn, setMorpionTurn, currentUser, setUserCoins }) {
   const calculateWinner = (squares) => {
     const lines = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
     for (let i = 0; i < lines.length; i++) {
@@ -19,6 +20,64 @@ export default function MorpionGame({ setGameScreen, morpionBoard, setMorpionBoa
   };
 
   const winner = calculateWinner(morpionBoard);
+
+  // Award rewards when game is won
+  useEffect(() => {
+    if (winner && currentUser) {
+      // Track games won
+      const gamesStats = JSON.parse(localStorage.getItem('jeutaime_games_stats') || '{}');
+      const userEmail = currentUser.email;
+
+      if (!gamesStats[userEmail]) {
+        gamesStats[userEmail] = { gamesWon: 0, gamesLost: 0 };
+      }
+
+      // Only award once per game
+      const gameState = morpionBoard.join('');
+      const lastGameState = localStorage.getItem('jeutaime_last_morpion_state');
+
+      if (gameState !== lastGameState) {
+        // Player X wins (human player)
+        if (winner === 'X') {
+          gamesStats[userEmail].gamesWon++;
+
+          // Award points
+          awardPoints(userEmail, 'GAME_WON');
+
+          // Award coins
+          const coinReward = 25;
+          setUserCoins(c => c + coinReward);
+
+          // Update user coins in localStorage
+          const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+          const userIndex = users.findIndex(u => u.email === userEmail);
+          if (userIndex !== -1) {
+            users[userIndex].coins = (users[userIndex].coins || 0) + coinReward;
+            localStorage.setItem('jeutaime_users', JSON.stringify(users));
+            const currentUser = JSON.parse(localStorage.getItem('jeutaime_current_user'));
+            if (currentUser && currentUser.email === userEmail) {
+              currentUser.coins = users[userIndex].coins;
+              localStorage.setItem('jeutaime_current_user', JSON.stringify(currentUser));
+            }
+          }
+
+          // Check for GAMER badge (10 wins)
+          if (gamesStats[userEmail].gamesWon >= 10) {
+            checkAndAwardBadge(userEmail, 'gamer');
+          }
+
+          console.log(`🎮 Victoire au Morpion ! +50 pts, +${coinReward} 🪙`);
+        } else {
+          // Player lost
+          gamesStats[userEmail].gamesLost++;
+          awardPoints(userEmail, 'GAME_LOST');
+        }
+
+        localStorage.setItem('jeutaime_games_stats', JSON.stringify(gamesStats));
+        localStorage.setItem('jeutaime_last_morpion_state', gameState);
+      }
+    }
+  }, [winner, currentUser, morpionBoard, setUserCoins]);
 
   return (
     <div>
