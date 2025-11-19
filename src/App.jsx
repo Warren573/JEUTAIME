@@ -241,12 +241,12 @@ function MainApp() {
       {screen === 'journal' && !gameScreen && !selectedBar && <JournalScreen {...appState} />}
       {screen === 'settings' && !gameScreen && !selectedBar && <SettingsScreen {...appState} />}
 
-      {gameScreen === 'pong' && <PongGame {...appState} />}
-      {gameScreen === 'reactivity' && <WhackAMoleGame {...appState} />}
-      {gameScreen === 'brickbreaker' && <BrickBreakerGame {...appState} />}
-      {gameScreen === 'morpion' && <MorpionGame {...appState} />}
-      {gameScreen === 'cards' && <CardGame {...appState} />}
-      {gameScreen === 'storytime' && <StoryTimeGame {...appState} />}
+      {gameScreen === 'pong' && <PongGame {...appState} currentUser={currentUser} />}
+      {gameScreen === 'reactivity' && <WhackAMoleGame {...appState} currentUser={currentUser} />}
+      {gameScreen === 'brickbreaker' && <BrickBreakerGame {...appState} currentUser={currentUser} />}
+      {gameScreen === 'morpion' && <MorpionGame {...appState} currentUser={currentUser} />}
+      {gameScreen === 'cards' && <CardGame {...appState} currentUser={currentUser} />}
+      {gameScreen === 'storytime' && <StoryTimeGame {...appState} currentUser={currentUser} />}
 
       {selectedBar && <BarDetailScreen {...appState} bar={bars.find(b => b.id === selectedBar)} />}
 

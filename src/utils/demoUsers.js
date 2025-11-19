@@ -187,3 +187,24 @@ export function getUserById(id) {
   const users = getAllUsers();
   return users.find(u => u.id === id);
 }
+
+/**
+ * Incrémente le compteur de victoires de duels et vérifie le badge warrior
+ */
+export function incrementDuelWins(email) {
+  const users = getAllUsers();
+  const userIndex = users.findIndex(u => u.email === email);
+
+  if (userIndex === -1) return false;
+
+  // Initialiser duelWins si nécessaire
+  if (!users[userIndex].duelWins) {
+    users[userIndex].duelWins = 0;
+  }
+
+  users[userIndex].duelWins += 1;
+  localStorage.setItem('jeutaime_users', JSON.stringify(users));
+
+  // Retourner le nombre de victoires
+  return users[userIndex].duelWins;
+}
