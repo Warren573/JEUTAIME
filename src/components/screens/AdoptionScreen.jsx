@@ -1,302 +1,535 @@
 import React, { useState, useEffect } from 'react';
-import { availableAnimals, adoptableAnimals } from '../../data/appData';
+import {
+  PETS,
+  getUserPets,
+  adoptPet,
+  feedPet,
+  playWithPet,
+  cleanPet,
+  putPetToSleep,
+  getPetStatus,
+  getPetInteraction
+} from '../../utils/petsSystem';
 
 export default function AdoptionScreen({ currentUser, userCoins, setUserCoins }) {
-  const [adoptionTab, setAdoptionTab] = useState('status'); // 'status', 'incarnate', 'adopt'
-  const [userStatus, setUserStatus] = useState(null); // null, {type: 'animal', animalId}, {type: 'adoptedBy', userId}
+  const [adoptionTab, setAdoptionTab] = useState('mypets'); // 'mypets', 'shop'
+  const [myPets, setMyPets] = useState([]);
+  const [selectedPet, setSelectedPet] = useState(null);
+  const [interactionMessage, setInteractionMessage] = useState('');
+  const [refreshKey, setRefreshKey] = useState(0);
 
-  // Charger le statut utilisateur
+  // Charger les animaux de l'utilisateur
   useEffect(() => {
-    const savedStatus = localStorage.getItem(`jeutaime_adoption_${currentUser?.email || 'guest'}`);
-    if (savedStatus) {
-      setUserStatus(JSON.parse(savedStatus));
+    if (currentUser?.email) {
+      const pets = getUserPets(currentUser.email);
+      setMyPets(pets);
+      if (pets.length > 0 && !selectedPet) {
+        setSelectedPet(pets[0]);
+      }
     }
-  }, [currentUser]);
+  }, [currentUser, refreshKey]);
 
-  // Sauvegarder le statut
-  const saveStatus = (status) => {
-    localStorage.setItem(`jeutaime_adoption_${currentUser?.email || 'guest'}`, JSON.stringify(status));
-    setUserStatus(status);
+  // Rafraîchir toutes les 30 secondes pour mettre à jour les stats
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRefreshKey(prev => prev + 1);
+    }, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Adopter un animal
+  const handleAdopt = (petId) => {
+    const result = adoptPet(currentUser.email, petId);
+
+    if (result.success) {
+      setUserCoins(result.coinsRemaining);
+      setRefreshKey(prev => prev + 1);
+      alert(`🎉 Félicitations ! Vous avez adopté un ${result.pet.name} !\n\nPrenez-en bien soin en le nourrissant, jouant avec lui, et en le gardant propre et reposé.`);
+      setAdoptionTab('mypets');
+      setSelectedPet(result.pet);
+    } else {
+      alert(`❌ ${result.error}`);
+    }
   };
 
-  // Incarner un animal
-  const handleIncarnate = (animal) => {
-    if (userStatus) {
-      alert('Vous avez déjà un statut ! Annulez-le d\'abord.');
-      return;
+  // Actions sur l'animal
+  const handleFeed = () => {
+    const result = feedPet(currentUser.email, selectedPet.id);
+    if (result.success) {
+      setSelectedPet(result.pet);
+      setRefreshKey(prev => prev + 1);
+      const message = getPetInteraction(result.pet.type);
+      setInteractionMessage(`${message}\n\n🍽️ +40 Faim | +10 Bonheur | +5 Exp\n💰 +2 points +5 coins`);
+      setTimeout(() => setInteractionMessage(''), 4000);
     }
-
-    if (animal.premium && !currentUser?.premium) {
-      alert('Cet animal nécessite un abonnement Premium !');
-      return;
-    }
-
-    if (animal.price > userCoins) {
-      alert(`Pas assez de coins ! Il vous faut ${animal.price} coins.`);
-      return;
-    }
-
-    const newStatus = {
-      type: 'animal',
-      animalId: animal.id,
-      animalData: animal,
-      since: new Date().toISOString()
-    };
-
-    saveStatus(newStatus);
-    setUserCoins(userCoins - animal.price);
-    alert(`Vous incarnez maintenant un ${animal.name} ! 🎭`);
-    setAdoptionTab('status');
   };
 
-  // Adopter un utilisateur-animal
-  const handleAdopt = (animalUser) => {
-    if (userStatus) {
-      alert('Vous avez déjà un statut ! Annulez-le d\'abord.');
-      return;
+  const handlePlay = () => {
+    const result = playWithPet(currentUser.email, selectedPet.id);
+    if (result.success) {
+      setSelectedPet(result.pet);
+      setRefreshKey(prev => prev + 1);
+      const message = getPetInteraction(result.pet.type);
+      setInteractionMessage(`${message}\n\n🎮 +30 Bonheur | -15 Énergie | +8 Exp\n💰 +3 points +8 coins`);
+      setTimeout(() => setInteractionMessage(''), 4000);
     }
-
-    const newStatus = {
-      type: 'adopted',
-      adoptedUserId: animalUser.id,
-      adoptedData: animalUser,
-      since: new Date().toISOString()
-    };
-
-    saveStatus(newStatus);
-    alert(`Vous avez adopté ${animalUser.name} ! 💕`);
-    setAdoptionTab('status');
   };
 
-  // Annuler le statut
-  const handleCancel = () => {
-    if (confirm('Êtes-vous sûr de vouloir annuler votre statut ?')) {
-      localStorage.removeItem(`jeutaime_adoption_${currentUser?.email || 'guest'}`);
-      setUserStatus(null);
-      alert('Statut annulé avec succès !');
+  const handleClean = () => {
+    const result = cleanPet(currentUser.email, selectedPet.id);
+    if (result.success) {
+      setSelectedPet(result.pet);
+      setRefreshKey(prev => prev + 1);
+      const message = getPetInteraction(result.pet.type);
+      setInteractionMessage(`${message}\n\n🧼 +100 Propreté | +15 Bonheur | +5 Exp\n💰 +2 points +5 coins`);
+      setTimeout(() => setInteractionMessage(''), 4000);
     }
+  };
+
+  const handleSleep = () => {
+    const result = putPetToSleep(currentUser.email, selectedPet.id);
+    if (result.success) {
+      setSelectedPet(result.pet);
+      setRefreshKey(prev => prev + 1);
+      const message = getPetInteraction(result.pet.type);
+      setInteractionMessage(`${message}\n\n😴 +100 Énergie | +5 Exp\n💰 +2 points +5 coins`);
+      setTimeout(() => setInteractionMessage(''), 4000);
+    }
+  };
+
+  // Barre de stat stylée
+  const StatBar = ({ label, value, color, icon }) => (
+    <div style={{ marginBottom: 'var(--spacing-sm)' }}>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        marginBottom: '4px',
+        fontSize: '0.85rem',
+        fontWeight: '600'
+      }}>
+        <span>{icon} {label}</span>
+        <span style={{ color: color }}>{Math.round(value)}%</span>
+      </div>
+      <div style={{
+        background: 'var(--color-tan)',
+        borderRadius: '10px',
+        height: '12px',
+        overflow: 'hidden',
+        border: '2px solid var(--color-brown-light)'
+      }}>
+        <div style={{
+          width: `${value}%`,
+          height: '100%',
+          background: `linear-gradient(90deg, ${color}, ${color}dd)`,
+          transition: 'width 0.3s ease'
+        }} />
+      </div>
+    </div>
+  );
+
+  const getPetData = (petType) => {
+    return Object.values(PETS).find(p => p.id === petType);
   };
 
   return (
-    <div>
+    <div style={{
+      height: '100vh',
+      overflowY: 'auto',
+      paddingBottom: '80px',
+      background: 'var(--color-beige-light)'
+    }}>
+      {/* En-tête */}
+      <div style={{
+        background: 'var(--color-cream)',
+        borderBottom: '4px double var(--color-brown-dark)',
+        padding: 'var(--spacing-lg)',
+        marginBottom: 'var(--spacing-lg)',
+        boxShadow: 'var(--shadow-md)'
+      }}>
+        <h1 style={{
+          fontFamily: 'var(--font-heading)',
+          fontSize: '2.5rem',
+          textAlign: 'center',
+          margin: '0 0 var(--spacing-xs) 0',
+          color: 'var(--color-brown-dark)',
+          textTransform: 'uppercase',
+          letterSpacing: '2px',
+          borderBottom: '2px solid var(--color-gold)',
+          paddingBottom: 'var(--spacing-xs)'
+        }}>
+          🐾 Adoption
+        </h1>
+        <p style={{
+          textAlign: 'center',
+          color: 'var(--color-text-secondary)',
+          fontSize: '0.95rem',
+          fontStyle: 'italic',
+          margin: 'var(--spacing-sm) 0 0 0'
+        }}>
+          Adoptez et prenez soin de vos compagnons virtuels
+        </p>
+      </div>
+
       {/* Tabs */}
       <div style={{
         display: 'flex',
-        flexWrap: 'wrap',
-        gap: 'var(--spacing-xs)',
+        gap: 'var(--spacing-sm)',
         marginBottom: 'var(--spacing-lg)',
-        padding: '0 var(--spacing-md)',
+        padding: '0 var(--spacing-sm)',
         justifyContent: 'center'
       }}>
-        {['status', 'incarnate', 'adopt'].map(tab => (
-          <button
-            key={tab}
-            onClick={() => setAdoptionTab(tab)}
-            style={{
-              padding: 'var(--spacing-sm) var(--spacing-md)',
-              background: adoptionTab === tab ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))' : 'var(--color-brown)',
-              border: adoptionTab === tab ? '2px solid var(--color-gold-light)' : '2px solid var(--color-brown-dark)',
-              color: adoptionTab === tab ? 'var(--color-brown-dark)' : 'var(--color-cream)',
-              borderRadius: 'var(--border-radius-md)',
-              cursor: 'pointer',
-              fontWeight: '600',
-              fontSize: '0.875rem',
-              transition: 'all var(--transition-normal)',
-              boxShadow: adoptionTab === tab ? 'var(--shadow-md)' : 'var(--shadow-sm)'
-            }}
-          >
-            {tab === 'status' ? '👤 Mon Statut' :
-             tab === 'incarnate' ? '🎭 Incarner' :
-             '💕 Adopter'}
-          </button>
-        ))}
+        <button
+          onClick={() => setAdoptionTab('mypets')}
+          style={{
+            flex: 1,
+            maxWidth: '200px',
+            padding: 'var(--spacing-md)',
+            background: adoptionTab === 'mypets'
+              ? 'linear-gradient(135deg, #667eea, #764ba2)'
+              : 'var(--color-brown-light)',
+            border: 'none',
+            borderRadius: 'var(--border-radius-lg)',
+            color: 'white',
+            fontSize: '1rem',
+            fontWeight: '600',
+            cursor: 'pointer',
+            boxShadow: adoptionTab === 'mypets' ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
+            transition: 'all 0.2s'
+          }}
+        >
+          🐾 Mes Animaux ({myPets.length}/3)
+        </button>
+        <button
+          onClick={() => setAdoptionTab('shop')}
+          style={{
+            flex: 1,
+            maxWidth: '200px',
+            padding: 'var(--spacing-md)',
+            background: adoptionTab === 'shop'
+              ? 'linear-gradient(135deg, #FFD700, #FFA500)'
+              : 'var(--color-brown-light)',
+            border: 'none',
+            borderRadius: 'var(--border-radius-lg)',
+            color: adoptionTab === 'shop' ? '#000' : 'white',
+            fontSize: '1rem',
+            fontWeight: '600',
+            cursor: 'pointer',
+            boxShadow: adoptionTab === 'shop' ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
+            transition: 'all 0.2s'
+          }}
+        >
+          🏪 Boutique
+        </button>
       </div>
 
-      <div style={{ padding: '0 var(--spacing-md)' }}>
-        {/* Mon Statut */}
-        {adoptionTab === 'status' && (
-          <div style={{
-            background: 'var(--color-cream)',
-            borderRadius: 'var(--border-radius-xl)',
-            padding: 'var(--spacing-xl)',
-            border: '3px solid var(--color-brown)',
-            boxShadow: 'var(--shadow-lg)',
-            textAlign: 'center'
-          }}>
-            {!userStatus ? (
-              <>
-                <div style={{ fontSize: '80px', marginBottom: 'var(--spacing-md)' }}>🤷</div>
+      <div style={{ padding: '0 var(--spacing-sm)' }}>
+        {/* MES ANIMAUX */}
+        {adoptionTab === 'mypets' && (
+          <>
+            {myPets.length === 0 ? (
+              <div style={{
+                background: 'var(--color-cream)',
+                borderRadius: 'var(--border-radius-xl)',
+                padding: 'var(--spacing-xl)',
+                textAlign: 'center',
+                border: '3px solid var(--color-brown)'
+              }}>
+                <div style={{ fontSize: '80px', marginBottom: 'var(--spacing-md)' }}>🐾</div>
                 <h3 style={{
                   fontSize: '1.5rem',
                   marginBottom: 'var(--spacing-sm)',
                   color: 'var(--color-brown-dark)'
                 }}>
-                  Aucun statut
+                  Aucun animal adopté
                 </h3>
                 <p style={{
                   color: 'var(--color-text-secondary)',
-                  marginBottom: 'var(--spacing-lg)',
-                  fontSize: '0.95rem'
+                  marginBottom: 'var(--spacing-lg)'
                 }}>
-                  Vous pouvez choisir d'incarner un animal OU d'adopter un autre utilisateur-animal.
+                  Rendez-vous dans la boutique pour adopter votre premier compagnon !
                 </p>
+                <button
+                  onClick={() => setAdoptionTab('shop')}
+                  style={{
+                    padding: 'var(--spacing-md) var(--spacing-lg)',
+                    background: 'linear-gradient(135deg, #FFD700, #FFA500)',
+                    border: 'none',
+                    borderRadius: 'var(--border-radius-lg)',
+                    color: '#000',
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    boxShadow: 'var(--shadow-md)'
+                  }}
+                >
+                  🏪 Aller à la boutique
+                </button>
+              </div>
+            ) : (
+              <>
+                {/* Sélecteur d'animal */}
                 <div style={{
                   display: 'flex',
                   gap: 'var(--spacing-sm)',
-                  justifyContent: 'center',
-                  flexWrap: 'wrap'
-                }}>
-                  <button
-                    onClick={() => setAdoptionTab('incarnate')}
-                    style={{
-                      padding: 'var(--spacing-md) var(--spacing-lg)',
-                      background: 'linear-gradient(135deg, #667eea, #764ba2)',
-                      border: '2px solid var(--color-brown)',
-                      borderRadius: 'var(--border-radius-md)',
-                      color: 'white',
-                      fontSize: '1rem',
-                      fontWeight: '600',
-                      cursor: 'pointer',
-                      boxShadow: 'var(--shadow-md)'
-                    }}
-                  >
-                    🎭 Incarner un animal
-                  </button>
-                  <button
-                    onClick={() => setAdoptionTab('adopt')}
-                    style={{
-                      padding: 'var(--spacing-md) var(--spacing-lg)',
-                      background: 'linear-gradient(135deg, #E91E63, #C2185B)',
-                      border: '2px solid var(--color-brown)',
-                      borderRadius: 'var(--border-radius-md)',
-                      color: 'white',
-                      fontSize: '1rem',
-                      fontWeight: '600',
-                      cursor: 'pointer',
-                      boxShadow: 'var(--shadow-md)'
-                    }}
-                  >
-                    💕 Adopter quelqu'un
-                  </button>
-                </div>
-              </>
-            ) : userStatus.type === 'animal' ? (
-              <>
-                <div style={{ fontSize: '100px', marginBottom: 'var(--spacing-md)' }}>
-                  {userStatus.animalData.emoji}
-                </div>
-                <h3 style={{
-                  fontSize: '1.8rem',
-                  marginBottom: 'var(--spacing-xs)',
-                  color: 'var(--color-brown-dark)'
-                }}>
-                  Vous incarnez un {userStatus.animalData.name}
-                </h3>
-                <p style={{
-                  color: 'var(--color-text-secondary)',
-                  fontSize: '0.9rem',
-                  marginBottom: 'var(--spacing-sm)'
-                }}>
-                  {userStatus.animalData.description}
-                </p>
-                <div style={{
-                  background: 'var(--color-beige-light)',
-                  padding: 'var(--spacing-md)',
-                  borderRadius: 'var(--border-radius-md)',
-                  border: '2px solid var(--color-brown)',
                   marginBottom: 'var(--spacing-lg)',
-                  textAlign: 'left'
+                  overflowX: 'auto',
+                  padding: 'var(--spacing-xs)'
                 }}>
-                  <p style={{ margin: '8px 0', fontSize: '0.9rem' }}>
-                    <strong>Personnalité:</strong> {userStatus.animalData.personality}
-                  </p>
-                  <p style={{ margin: '8px 0', fontSize: '0.9rem' }}>
-                    <strong>Pouvoir:</strong> {userStatus.animalData.power}
-                  </p>
-                  <p style={{ margin: '8px 0', fontSize: '0.85rem', color: 'var(--color-text-light)' }}>
-                    <strong>Depuis le:</strong> {new Date(userStatus.since).toLocaleDateString('fr-FR')}
-                  </p>
+                  {myPets.map((pet) => {
+                    const status = getPetStatus(pet);
+                    return (
+                      <button
+                        key={pet.id}
+                        onClick={() => setSelectedPet(pet)}
+                        style={{
+                          minWidth: '100px',
+                          padding: 'var(--spacing-sm)',
+                          background: selectedPet?.id === pet.id
+                            ? 'linear-gradient(135deg, #667eea, #764ba2)'
+                            : 'var(--color-cream)',
+                          border: `3px solid ${selectedPet?.id === pet.id ? '#667eea' : 'var(--color-brown)'}`,
+                          borderRadius: 'var(--border-radius-lg)',
+                          cursor: 'pointer',
+                          textAlign: 'center',
+                          transition: 'all 0.2s',
+                          position: 'relative'
+                        }}
+                      >
+                        <div style={{ fontSize: '40px' }}>{pet.emoji}</div>
+                        <div style={{
+                          fontSize: '0.75rem',
+                          fontWeight: '600',
+                          color: selectedPet?.id === pet.id ? 'white' : 'var(--color-text-primary)',
+                          marginTop: '4px'
+                        }}>
+                          Niv. {pet.level}
+                        </div>
+                        <div style={{
+                          position: 'absolute',
+                          top: '4px',
+                          right: '4px',
+                          fontSize: '12px'
+                        }}>
+                          {status.emoji}
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
-                <button
-                  onClick={handleCancel}
-                  style={{
-                    padding: 'var(--spacing-sm) var(--spacing-lg)',
-                    background: '#f44336',
-                    border: '2px solid #c62828',
-                    borderRadius: 'var(--border-radius-md)',
-                    color: 'white',
-                    fontSize: '0.95rem',
-                    fontWeight: '600',
-                    cursor: 'pointer',
-                    boxShadow: 'var(--shadow-sm)'
-                  }}
-                >
-                  ❌ Annuler mon statut
-                </button>
-              </>
-            ) : (
-              <>
-                <div style={{ fontSize: '100px', marginBottom: 'var(--spacing-md)' }}>
-                  {userStatus.adoptedData.animal}
-                </div>
-                <h3 style={{
-                  fontSize: '1.8rem',
-                  marginBottom: 'var(--spacing-xs)',
-                  color: 'var(--color-brown-dark)'
-                }}>
-                  Vous avez adopté {userStatus.adoptedData.name}
-                </h3>
-                <p style={{
-                  color: 'var(--color-text-secondary)',
-                  fontSize: '0.9rem',
-                  marginBottom: 'var(--spacing-lg)'
-                }}>
-                  {userStatus.adoptedData.name} est votre compagnon adopté depuis le{' '}
-                  {new Date(userStatus.since).toLocaleDateString('fr-FR')}
-                </p>
-                <div style={{
-                  background: 'var(--color-beige-light)',
-                  padding: 'var(--spacing-md)',
-                  borderRadius: 'var(--border-radius-md)',
-                  border: '2px solid var(--color-brown)',
-                  marginBottom: 'var(--spacing-lg)',
-                  textAlign: 'left'
-                }}>
-                  <p style={{ margin: '8px 0', fontSize: '0.9rem' }}>
-                    <strong>Propriétaire:</strong> {userStatus.adoptedData.owner}
-                  </p>
-                  <p style={{ margin: '8px 0', fontSize: '0.9rem' }}>
-                    <strong>Bonheur:</strong> {userStatus.adoptedData.happiness}%
-                  </p>
-                  <p style={{ margin: '8px 0', fontSize: '0.9rem' }}>
-                    <strong>Affection:</strong> {userStatus.adoptedData.affection}%
-                  </p>
-                </div>
-                <button
-                  onClick={handleCancel}
-                  style={{
-                    padding: 'var(--spacing-sm) var(--spacing-lg)',
-                    background: '#f44336',
-                    border: '2px solid #c62828',
-                    borderRadius: 'var(--border-radius-md)',
-                    color: 'white',
-                    fontSize: '0.95rem',
-                    fontWeight: '600',
-                    cursor: 'pointer',
-                    boxShadow: 'var(--shadow-sm)'
-                  }}
-                >
-                  💔 Abandonner
-                </button>
+
+                {/* Affichage de l'animal sélectionné */}
+                {selectedPet && (
+                  <div style={{
+                    background: 'var(--color-cream)',
+                    borderRadius: 'var(--border-radius-xl)',
+                    padding: 'var(--spacing-lg)',
+                    border: '3px solid var(--color-brown)',
+                    boxShadow: 'var(--shadow-lg)',
+                    marginBottom: 'var(--spacing-lg)'
+                  }}>
+                    {/* Message d'interaction */}
+                    {interactionMessage && (
+                      <div style={{
+                        background: 'linear-gradient(135deg, #4CAF50, #2E7D32)',
+                        color: 'white',
+                        padding: 'var(--spacing-md)',
+                        borderRadius: 'var(--border-radius-lg)',
+                        marginBottom: 'var(--spacing-md)',
+                        textAlign: 'center',
+                        fontSize: '0.9rem',
+                        fontWeight: '600',
+                        whiteSpace: 'pre-line',
+                        animation: 'fadeIn 0.3s ease'
+                      }}>
+                        {interactionMessage}
+                      </div>
+                    )}
+
+                    {/* Animal affiché */}
+                    <div style={{ textAlign: 'center', marginBottom: 'var(--spacing-lg)' }}>
+                      <div style={{ fontSize: '120px', marginBottom: 'var(--spacing-sm)' }}>
+                        {selectedPet.emoji}
+                      </div>
+                      <h2 style={{
+                        fontSize: '1.8rem',
+                        margin: '0 0 var(--spacing-xs) 0',
+                        color: 'var(--color-brown-dark)'
+                      }}>
+                        {selectedPet.name}
+                      </h2>
+                      <div style={{
+                        display: 'flex',
+                        gap: 'var(--spacing-md)',
+                        justifyContent: 'center',
+                        fontSize: '0.9rem',
+                        color: 'var(--color-text-secondary)'
+                      }}>
+                        <span>⭐ Niveau {selectedPet.level}</span>
+                        <span>📊 {selectedPet.experience} exp</span>
+                        <span style={{ color: getPetStatus(selectedPet).color, fontWeight: '600' }}>
+                          {getPetStatus(selectedPet).emoji} {getPetStatus(selectedPet).status}
+                        </span>
+                      </div>
+                      <div style={{
+                        fontSize: '0.8rem',
+                        color: 'var(--color-text-light)',
+                        marginTop: 'var(--spacing-xs)',
+                        fontStyle: 'italic'
+                      }}>
+                        {getPetData(selectedPet.type)?.personality}
+                      </div>
+                    </div>
+
+                    {/* Stats */}
+                    <div style={{
+                      background: 'var(--color-beige-light)',
+                      padding: 'var(--spacing-md)',
+                      borderRadius: 'var(--border-radius-lg)',
+                      border: '2px solid var(--color-brown-light)',
+                      marginBottom: 'var(--spacing-lg)'
+                    }}>
+                      <h3 style={{
+                        fontSize: '1.1rem',
+                        marginBottom: 'var(--spacing-md)',
+                        color: 'var(--color-brown-dark)',
+                        textAlign: 'center'
+                      }}>
+                        📊 Statistiques
+                      </h3>
+                      <StatBar label="Faim" value={selectedPet.stats.hunger} color="#FF9800" icon="🍽️" />
+                      <StatBar label="Bonheur" value={selectedPet.stats.happiness} color="#E91E63" icon="😊" />
+                      <StatBar label="Énergie" value={selectedPet.stats.energy} color="#2196F3" icon="⚡" />
+                      <StatBar label="Propreté" value={selectedPet.stats.cleanliness} color="#4CAF50" icon="✨" />
+                    </div>
+
+                    {/* Actions */}
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 1fr',
+                      gap: 'var(--spacing-sm)'
+                    }}>
+                      <button
+                        onClick={handleFeed}
+                        style={{
+                          padding: 'var(--spacing-md)',
+                          background: 'linear-gradient(135deg, #FF9800, #F57C00)',
+                          border: 'none',
+                          borderRadius: 'var(--border-radius-lg)',
+                          color: 'white',
+                          fontSize: '0.95rem',
+                          fontWeight: '600',
+                          cursor: 'pointer',
+                          boxShadow: 'var(--shadow-md)',
+                          transition: 'transform 0.2s'
+                        }}
+                        onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
+                        onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                      >
+                        🍽️ Nourrir
+                      </button>
+                      <button
+                        onClick={handlePlay}
+                        style={{
+                          padding: 'var(--spacing-md)',
+                          background: 'linear-gradient(135deg, #E91E63, #C2185B)',
+                          border: 'none',
+                          borderRadius: 'var(--border-radius-lg)',
+                          color: 'white',
+                          fontSize: '0.95rem',
+                          fontWeight: '600',
+                          cursor: 'pointer',
+                          boxShadow: 'var(--shadow-md)',
+                          transition: 'transform 0.2s'
+                        }}
+                        onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
+                        onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                      >
+                        🎮 Jouer
+                      </button>
+                      <button
+                        onClick={handleClean}
+                        style={{
+                          padding: 'var(--spacing-md)',
+                          background: 'linear-gradient(135deg, #4CAF50, #2E7D32)',
+                          border: 'none',
+                          borderRadius: 'var(--border-radius-lg)',
+                          color: 'white',
+                          fontSize: '0.95rem',
+                          fontWeight: '600',
+                          cursor: 'pointer',
+                          boxShadow: 'var(--shadow-md)',
+                          transition: 'transform 0.2s'
+                        }}
+                        onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
+                        onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                      >
+                        🧼 Nettoyer
+                      </button>
+                      <button
+                        onClick={handleSleep}
+                        style={{
+                          padding: 'var(--spacing-md)',
+                          background: 'linear-gradient(135deg, #2196F3, #1976D2)',
+                          border: 'none',
+                          borderRadius: 'var(--border-radius-lg)',
+                          color: 'white',
+                          fontSize: '0.95rem',
+                          fontWeight: '600',
+                          cursor: 'pointer',
+                          boxShadow: 'var(--shadow-md)',
+                          transition: 'transform 0.2s'
+                        }}
+                        onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
+                        onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                      >
+                        😴 Dormir
+                      </button>
+                    </div>
+
+                    {/* Stats d'interactions */}
+                    <div style={{
+                      marginTop: 'var(--spacing-lg)',
+                      padding: 'var(--spacing-md)',
+                      background: 'var(--color-beige-light)',
+                      borderRadius: 'var(--border-radius-md)',
+                      border: '2px solid var(--color-brown-light)'
+                    }}>
+                      <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 1fr 1fr 1fr',
+                        gap: 'var(--spacing-sm)',
+                        textAlign: 'center',
+                        fontSize: '0.8rem'
+                      }}>
+                        <div>
+                          <div style={{ fontSize: '1.2rem', marginBottom: '2px' }}>🍽️</div>
+                          <div style={{ fontWeight: '600' }}>{selectedPet.interactions.fed}</div>
+                        </div>
+                        <div>
+                          <div style={{ fontSize: '1.2rem', marginBottom: '2px' }}>🎮</div>
+                          <div style={{ fontWeight: '600' }}>{selectedPet.interactions.played}</div>
+                        </div>
+                        <div>
+                          <div style={{ fontSize: '1.2rem', marginBottom: '2px' }}>🧼</div>
+                          <div style={{ fontWeight: '600' }}>{selectedPet.interactions.cleaned}</div>
+                        </div>
+                        <div>
+                          <div style={{ fontSize: '1.2rem', marginBottom: '2px' }}>😴</div>
+                          <div style={{ fontWeight: '600' }}>{selectedPet.interactions.slept}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </>
             )}
-          </div>
+          </>
         )}
 
-        {/* Incarner un animal */}
-        {adoptionTab === 'incarnate' && (
+        {/* BOUTIQUE */}
+        {adoptionTab === 'shop' && (
           <>
-            {userStatus && (
+            {myPets.length >= 3 && (
               <div style={{
                 background: '#fff3cd',
                 border: '2px solid #ffc107',
@@ -306,173 +539,144 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins })
                 textAlign: 'center'
               }}>
                 <p style={{ margin: 0, color: '#856404', fontSize: '0.9rem' }}>
-                  ⚠️ Vous avez déjà un statut. Annulez-le d'abord pour incarner un animal.
+                  ⚠️ Vous avez déjà 3 animaux (maximum). Vous ne pouvez plus en adopter.
                 </p>
               </div>
             )}
+
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
               gap: 'var(--spacing-md)'
             }}>
-              {availableAnimals.map(animal => (
+              {Object.values(PETS).map((pet) => (
                 <div
-                  key={animal.id}
+                  key={pet.id}
                   style={{
                     background: 'var(--color-cream)',
-                    borderRadius: 'var(--border-radius-lg)',
+                    borderRadius: 'var(--border-radius-xl)',
                     padding: 'var(--spacing-lg)',
-                    border: animal.premium ? '3px solid var(--color-gold)' : '3px solid var(--color-brown)',
-                    boxShadow: 'var(--shadow-md)',
+                    border: pet.rarity === 'legendary'
+                      ? '3px solid #FFD700'
+                      : pet.rarity === 'rare'
+                      ? '3px solid #9C27B0'
+                      : pet.rarity === 'uncommon'
+                      ? '3px solid #2196F3'
+                      : '3px solid var(--color-brown)',
+                    boxShadow: 'var(--shadow-lg)',
                     position: 'relative',
                     textAlign: 'center'
                   }}
                 >
-                  {animal.premium && (
-                    <div style={{
-                      position: 'absolute',
-                      top: '10px',
-                      right: '10px',
-                      background: 'var(--color-gold)',
-                      color: 'var(--color-brown-dark)',
-                      padding: '4px 8px',
-                      borderRadius: '12px',
-                      fontSize: '0.75rem',
-                      fontWeight: '600'
-                    }}>
-                      👑 Premium
-                    </div>
-                  )}
-                  <div style={{ fontSize: '80px', marginBottom: 'var(--spacing-sm)' }}>
-                    {animal.emoji}
+                  {/* Badge rareté */}
+                  <div style={{
+                    position: 'absolute',
+                    top: '10px',
+                    right: '10px',
+                    background: pet.rarity === 'legendary'
+                      ? '#FFD700'
+                      : pet.rarity === 'rare'
+                      ? '#9C27B0'
+                      : pet.rarity === 'uncommon'
+                      ? '#2196F3'
+                      : '#757575',
+                    color: 'white',
+                    padding: '4px 10px',
+                    borderRadius: '12px',
+                    fontSize: '0.7rem',
+                    fontWeight: '600',
+                    textTransform: 'uppercase'
+                  }}>
+                    {pet.rarity === 'legendary' ? '✨ Légendaire' :
+                     pet.rarity === 'rare' ? '💎 Rare' :
+                     pet.rarity === 'uncommon' ? '⭐ Peu commun' :
+                     '🌟 Commun'}
+                  </div>
+
+                  <div style={{ fontSize: '100px', marginBottom: 'var(--spacing-sm)' }}>
+                    {pet.emoji}
                   </div>
                   <h3 style={{
-                    fontSize: '1.3rem',
+                    fontSize: '1.5rem',
                     margin: '0 0 var(--spacing-xs) 0',
                     color: 'var(--color-brown-dark)'
                   }}>
-                    {animal.name}
+                    {pet.name}
                   </h3>
                   <p style={{
                     color: 'var(--color-text-secondary)',
-                    fontSize: '0.85rem',
-                    marginBottom: 'var(--spacing-xs)'
-                  }}>
-                    {animal.description}
-                  </p>
-                  <p style={{
-                    fontSize: '0.8rem',
-                    color: 'var(--color-text-light)',
+                    fontSize: '0.9rem',
                     marginBottom: 'var(--spacing-sm)'
                   }}>
-                    <strong>Personnalité:</strong> {animal.personality}<br />
-                    <strong>Pouvoir:</strong> {animal.power}
-                  </p>
-                  <button
-                    onClick={() => handleIncarnate(animal)}
-                    disabled={userStatus !== null}
-                    style={{
-                      width: '100%',
-                      padding: 'var(--spacing-sm)',
-                      background: userStatus ? '#ccc' : (animal.price === 0 ? 'linear-gradient(135deg, #667eea, #764ba2)' : 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))'),
-                      border: '2px solid var(--color-brown)',
-                      borderRadius: 'var(--border-radius-md)',
-                      color: userStatus ? '#666' : 'white',
-                      fontSize: '0.95rem',
-                      fontWeight: '600',
-                      cursor: userStatus ? 'not-allowed' : 'pointer',
-                      boxShadow: 'var(--shadow-sm)'
-                    }}
-                  >
-                    {userStatus ? '✓ Déjà un statut' : (animal.price === 0 ? '🎭 Incarner (Gratuit)' : `🎭 Incarner (${animal.price} coins)`)}
-                  </button>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-
-        {/* Adopter un utilisateur-animal */}
-        {adoptionTab === 'adopt' && (
-          <>
-            {userStatus && (
-              <div style={{
-                background: '#fff3cd',
-                border: '2px solid #ffc107',
-                borderRadius: 'var(--border-radius-md)',
-                padding: 'var(--spacing-md)',
-                marginBottom: 'var(--spacing-lg)',
-                textAlign: 'center'
-              }}>
-                <p style={{ margin: 0, color: '#856404', fontSize: '0.9rem' }}>
-                  ⚠️ Vous avez déjà un statut. Annulez-le d'abord pour adopter quelqu'un.
-                </p>
-              </div>
-            )}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-              gap: 'var(--spacing-md)'
-            }}>
-              {adoptableAnimals.map(animalUser => (
-                <div
-                  key={animalUser.id}
-                  style={{
-                    background: 'var(--color-cream)',
-                    borderRadius: 'var(--border-radius-lg)',
-                    padding: 'var(--spacing-lg)',
-                    border: '3px solid var(--color-brown)',
-                    boxShadow: 'var(--shadow-md)',
-                    textAlign: 'center'
-                  }}
-                >
-                  <div style={{ fontSize: '80px', marginBottom: 'var(--spacing-sm)' }}>
-                    {animalUser.animal}
-                  </div>
-                  <h3 style={{
-                    fontSize: '1.3rem',
-                    margin: '0 0 var(--spacing-xs) 0',
-                    color: 'var(--color-brown-dark)'
-                  }}>
-                    {animalUser.name}
-                  </h3>
-                  <p style={{
-                    color: 'var(--color-text-secondary)',
-                    fontSize: '0.85rem',
-                    marginBottom: 'var(--spacing-md)'
-                  }}>
-                    Utilisateur de {animalUser.owner}, {animalUser.age} ans
+                    {pet.description}
                   </p>
                   <div style={{
                     background: 'var(--color-beige-light)',
                     padding: 'var(--spacing-sm)',
                     borderRadius: 'var(--border-radius-md)',
-                    border: '1px solid var(--color-brown)',
                     marginBottom: 'var(--spacing-md)',
                     textAlign: 'left',
                     fontSize: '0.85rem'
                   }}>
-                    <p style={{ margin: '4px 0' }}><strong>Bonheur:</strong> {animalUser.happiness}%</p>
-                    <p style={{ margin: '4px 0' }}><strong>Affection:</strong> {animalUser.affection}%</p>
-                    <p style={{ margin: '4px 0' }}><strong>Énergie:</strong> {animalUser.energy}%</p>
+                    <p style={{ margin: '6px 0' }}>
+                      <strong>Personnalité:</strong> {pet.personality}
+                    </p>
+                    <p style={{ margin: '6px 0' }}>
+                      <strong>Nourriture préférée:</strong> {pet.favoriteFood}
+                    </p>
                   </div>
+
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 'var(--spacing-sm)',
+                    marginBottom: 'var(--spacing-md)',
+                    fontSize: '1.2rem',
+                    fontWeight: '700',
+                    color: 'var(--color-gold-dark)'
+                  }}>
+                    <span className="currency-icon" style={{
+                      width: '28px',
+                      height: '28px',
+                      background: 'var(--color-gold)',
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'var(--color-cream)',
+                      fontSize: '0.9rem',
+                      fontWeight: '700'
+                    }}>
+                      J
+                    </span>
+                    {pet.adoptionCost} coins
+                  </div>
+
                   <button
-                    onClick={() => handleAdopt(animalUser)}
-                    disabled={userStatus !== null}
+                    onClick={() => handleAdopt(pet.id)}
+                    disabled={myPets.length >= 3}
                     style={{
                       width: '100%',
-                      padding: 'var(--spacing-sm)',
-                      background: userStatus ? '#ccc' : 'linear-gradient(135deg, #E91E63, #C2185B)',
-                      border: '2px solid var(--color-brown)',
-                      borderRadius: 'var(--border-radius-md)',
+                      padding: 'var(--spacing-md)',
+                      background: myPets.length >= 3
+                        ? '#ccc'
+                        : 'linear-gradient(135deg, #4CAF50, #2E7D32)',
+                      border: 'none',
+                      borderRadius: 'var(--border-radius-lg)',
                       color: 'white',
-                      fontSize: '0.95rem',
+                      fontSize: '1rem',
                       fontWeight: '600',
-                      cursor: userStatus ? 'not-allowed' : 'pointer',
-                      boxShadow: 'var(--shadow-sm)'
+                      cursor: myPets.length >= 3 ? 'not-allowed' : 'pointer',
+                      boxShadow: 'var(--shadow-md)',
+                      transition: 'transform 0.2s'
                     }}
+                    onMouseDown={(e) => {
+                      if (myPets.length < 3) e.currentTarget.style.transform = 'scale(0.95)';
+                    }}
+                    onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
                   >
-                    {userStatus ? '✓ Déjà un statut' : '💕 Adopter (Gratuit)'}
+                    {myPets.length >= 3 ? '❌ Maximum atteint' : '🐾 Adopter'}
                   </button>
                 </div>
               ))}
@@ -480,6 +684,13 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins })
           </>
         )}
       </div>
+
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
 }
