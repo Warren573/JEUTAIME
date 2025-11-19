@@ -11,10 +11,10 @@ export default function Navigation({ navItems, screen, setScreen }) {
       margin: '0 auto',
       background: 'var(--color-brown-dark)',
       borderTop: '2px solid var(--color-gold)',
-      padding: '3px 3px 4px',
+      padding: '4px 4px 5px',
       display: 'grid',
       gridTemplateColumns: 'repeat(6, 1fr)',
-      gap: '3px',
+      gap: '4px',
       boxShadow: '0 -4px 12px rgba(58, 40, 24, 0.3)',
       zIndex: 1000
     }}>
@@ -34,9 +34,9 @@ export default function Navigation({ navItems, screen, setScreen }) {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              gap: '2px',
-              fontSize: '9px',
-              padding: '5px 3px',
+              gap: '3px',
+              fontSize: '10px',
+              padding: '6px 4px',
               fontWeight: isActive ? '700' : '500',
               borderRadius: '6px',
               transition: 'all var(--transition-normal)',
@@ -57,7 +57,7 @@ export default function Navigation({ navItems, screen, setScreen }) {
             }}
           >
             <div style={{
-              fontSize: '19px',
+              fontSize: '21px',
               filter: isActive ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' : 'none',
               transition: 'all var(--transition-normal)'
             }}>
