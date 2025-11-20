@@ -116,12 +116,22 @@ export default function BadgesScreen({ currentUser }) {
           fontSize: '2rem',
           textAlign: 'center',
           color: 'var(--color-cream)',
-          margin: '0 0 var(--spacing-sm) 0',
+          margin: '0 0 var(--spacing-xs) 0',
           textTransform: 'uppercase',
           letterSpacing: '2px'
         }}>
           BADGES
         </h1>
+        <p style={{
+          textAlign: 'center',
+          color: 'var(--color-cream)',
+          fontSize: '0.95rem',
+          fontStyle: 'italic',
+          margin: '0 0 var(--spacing-sm) 0',
+          opacity: 0.9
+        }}>
+          Collectionnez des badges en accomplissant des défis
+        </p>
         <p style={{
           textAlign: 'center',
           fontSize: '1rem',
