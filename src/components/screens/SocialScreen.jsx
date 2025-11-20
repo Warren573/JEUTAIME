@@ -29,41 +29,37 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
       display: 'flex',
       flexDirection: 'column'
     }}>
-      {/* En-tête style Journal - Affiché seulement quand un onglet est sélectionné */}
-      {socialTab !== null && (
-        <div style={{
-          background: 'var(--color-cream)',
-          borderBottom: '4px double var(--color-brown-dark)',
-          padding: 'var(--spacing-lg)',
-          marginBottom: 'var(--spacing-lg)',
-          boxShadow: 'var(--shadow-md)'
+      {/* Logo Social harmonisé - Toujours visible */}
+      <div style={{
+        background: 'linear-gradient(135deg, var(--color-brown), var(--color-brown-dark))',
+        borderBottom: '3px solid var(--color-gold)',
+        padding: socialTab === null ? 'var(--spacing-md)' : 'var(--spacing-lg)',
+        boxShadow: 'var(--shadow-lg)'
+      }}>
+        <h1 style={{
+          fontFamily: 'var(--font-heading)',
+          fontSize: socialTab === null ? '1.8rem' : '2.5rem',
+          textAlign: 'center',
+          margin: 0,
+          color: 'var(--color-cream)',
+          textTransform: 'uppercase',
+          letterSpacing: '2px',
+          textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
         }}>
-          <h1 style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: '2.5rem',
-            textAlign: 'center',
-            margin: '0 0 var(--spacing-xs) 0',
-            color: 'var(--color-brown-dark)',
-            textTransform: 'uppercase',
-            letterSpacing: '2px',
-            borderBottom: '2px solid var(--color-gold)',
-            paddingBottom: 'var(--spacing-xs)'
-          }}>
-            👥 Social
-          </h1>
-          {adminMode && isAdminAuthenticated && socialTab === 'bars' && (
-            <div style={{ textAlign: 'center', marginTop: 'var(--spacing-sm)' }}>
-              <button
-                onClick={handleAdminCreateBar}
-                className="btn-primary"
-                style={{ padding: 'var(--spacing-sm) var(--spacing-md)', fontSize: '0.875rem' }}
-              >
-                ➕ Nouveau Bar
-              </button>
-            </div>
-          )}
-        </div>
-      )}
+          👥 Social
+        </h1>
+        {adminMode && isAdminAuthenticated && socialTab === 'bars' && (
+          <div style={{ textAlign: 'center', marginTop: 'var(--spacing-sm)' }}>
+            <button
+              onClick={handleAdminCreateBar}
+              className="btn-primary"
+              style={{ padding: 'var(--spacing-sm) var(--spacing-md)', fontSize: '0.875rem' }}
+            >
+              ➕ Nouveau Bar
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Onglets - Grille uniforme 2x2 - Affichés seulement si pas de tab actif */}
       {socialTab === null && (
@@ -81,8 +77,8 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
             gap: 'var(--spacing-md)',
             width: '100%',
             maxWidth: '600px',
-            height: '80vh',
-            maxHeight: '500px'
+            height: '70vh',
+            maxHeight: '450px'
           }}>
             {['bars', 'ranking', 'games', 'adoption'].map((tab) => {
               const icons = {
@@ -135,7 +131,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
 
       {/* Bouton retour quand un onglet est sélectionné */}
       {socialTab !== null && (
-        <div style={{ padding: '0 var(--spacing-sm)', marginBottom: 'var(--spacing-md)' }}>
+        <div style={{ padding: '0 var(--spacing-sm)', marginTop: 'var(--spacing-md)', marginBottom: 'var(--spacing-md)' }}>
           <button
             onClick={() => setSocialTab(null)}
             style={{
