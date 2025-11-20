@@ -51,6 +51,22 @@ export default function BrickBreakerGame({ setGameScreen, currentUser, setUserCo
     gameStateRef.current.bricks = bricks;
   }, []);
 
+  // Touch control handler
+  const handleTouchMove = (e) => {
+    if (!gameRunning) return;
+    const touch = e.touches[0];
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const touchX = touch.clientX - rect.left;
+
+    // Map touch position to paddle position (340px width, 60px paddle)
+    const scaledTouchX = touchX / (rect.width / CANVAS_WIDTH);
+    const newPaddleX = Math.max(0, Math.min(CANVAS_WIDTH - PADDLE_WIDTH, scaledTouchX - PADDLE_WIDTH / 2));
+    gameStateRef.current.paddleX = newPaddleX;
+  };
+
   // Keyboard controls
   useEffect(() => {
     const keyDownHandler = (e) => {
@@ -357,7 +373,7 @@ export default function BrickBreakerGame({ setGameScreen, currentUser, setUserCo
         <div style={{ marginBottom: '15px', color: '#888' }}>
           {!gameRunning && !gameOver && !gameWon && (
             <p style={{ fontSize: '14px', marginBottom: '10px' }}>
-              Utilise les flèches ← → pour déplacer la raquette
+              👆 Glisse ton doigt sur l'écran pour déplacer la raquette
             </p>
           )}
         </div>
@@ -374,7 +390,8 @@ export default function BrickBreakerGame({ setGameScreen, currentUser, setUserCo
             ref={canvasRef}
             width={CANVAS_WIDTH}
             height={CANVAS_HEIGHT}
-            style={{ display: 'block', borderRadius: '8px', maxWidth: '100%', height: 'auto' }}
+            onTouchMove={handleTouchMove}
+            style={{ display: 'block', borderRadius: '8px', maxWidth: '100%', height: 'auto', touchAction: 'none' }}
           />
         </div>
 
