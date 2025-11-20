@@ -3,9 +3,9 @@
 export const bars = [
   {
     id: 1,
-    icon: '🌹',
-    name: 'Bar Romantique',
-    desc: '2H/2F - Ambiance tamisée',
+    icon: '🏊',
+    name: 'Piscine',
+    desc: '2H/2F - Ambiance aquatique et détente',
     participants: [
       { name: 'Sophie', gender: 'F', age: 28, online: true },
       { name: 'Emma', gender: 'F', age: 26, online: true },
@@ -14,9 +14,9 @@ export const bars = [
   },
   {
     id: 2,
-    icon: '😄',
-    name: 'Bar Humoristique',
-    desc: '2H/2F - Rires garantis',
+    icon: '☕',
+    name: 'Café de Paris',
+    desc: '2H/2F - Ambiance parisienne chic',
     participants: [
       { name: 'Léa', gender: 'F', age: 25, online: true },
       { name: 'Clara', gender: 'F', age: 27, online: true },
@@ -26,7 +26,7 @@ export const bars = [
   {
     id: 3,
     icon: '🏴‍☠️',
-    name: 'Bar Pirates',
+    name: 'Île des pirates',
     desc: '2H/2F - Aventures maritimes',
     participants: [
       { name: 'Océane', gender: 'F', age: 29, online: true },
@@ -36,9 +36,9 @@ export const bars = [
   },
   {
     id: 4,
-    icon: '📅',
-    name: 'Bar Hebdomadaire',
-    desc: '2H/2F - Renouvellement chaque lundi',
+    icon: '🎭',
+    name: 'Théâtre improvisé',
+    desc: '2H/2F - Spectacles et fous rires',
     participants: [
       { name: 'Zoé', gender: 'F', age: 26, online: true },
       { name: 'Valérie', gender: 'F', age: 31, online: true },
@@ -47,9 +47,9 @@ export const bars = [
   },
   {
     id: 5,
-    icon: '👑',
-    name: 'Bar Caché',
-    desc: '2H/2F - 3 énigmes pour accéder',
+    icon: '🍸',
+    name: 'Bar à cocktails',
+    desc: '2H/2F - Mixologie et saveurs exotiques',
     participants: [
       { name: 'Amélia', gender: 'F', age: 30, online: true },
       { name: 'Victoria', gender: 'F', age: 28, online: true },
