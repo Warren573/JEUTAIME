@@ -299,7 +299,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
     }}>
       {/* En-tête du bar */}
       <div style={{
-        background: bar?.gradient || 'linear-gradient(135deg, #667eea, #764ba2)',
+        background: bar?.bgGradient || 'linear-gradient(135deg, #667eea, #764ba2)',
         padding: 'var(--spacing-lg)',
         boxShadow: 'var(--shadow-md)',
         borderBottom: '4px solid rgba(0,0,0,0.2)'
@@ -342,7 +342,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
           margin: '0 0 12px 0',
           fontWeight: '700'
         }}>
-          {bar?.emoji} {bar?.name}
+          {bar?.icon} {bar?.name}
         </h1>
 
         {/* Membres du bar */}
