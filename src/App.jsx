@@ -99,6 +99,20 @@ function MainApp() {
     }
   }, [screen]);
 
+  // Reset gameScreen when screen changes (to allow navigation from games)
+  useEffect(() => {
+    if (gameScreen && screen !== 'social') {
+      setGameScreen(null);
+    }
+  }, [screen]);
+
+  // Reset gameScreen when socialTab changes (to allow navigation within social)
+  useEffect(() => {
+    if (gameScreen && socialTab !== 'games') {
+      setGameScreen(null);
+    }
+  }, [socialTab]);
+
   const handleLogin = (user) => {
     setCurrentUser(user);
     setUserCoins(user.coins || 100);
