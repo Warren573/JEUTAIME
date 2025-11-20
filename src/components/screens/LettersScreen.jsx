@@ -113,11 +113,20 @@ export default function LettersScreen({ currentUser }) {
           color: 'var(--color-brown-dark)',
           textTransform: 'uppercase',
           letterSpacing: '2px',
-          borderBottom: '2px solid var(--color-gold)',
+          borderBottom: '2px solid var(--color-text-primary)',
           paddingBottom: 'var(--spacing-xs)'
         }}>
           💌 Lettres
         </h1>
+        <p style={{
+          textAlign: 'center',
+          color: 'var(--color-text-secondary)',
+          fontSize: '0.95rem',
+          fontStyle: 'italic',
+          margin: 0
+        }}>
+          Vos conversations et messages privés
+        </p>
       </div>
 
       {/* Message si pas de conversations */}

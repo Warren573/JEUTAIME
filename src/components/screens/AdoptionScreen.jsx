@@ -183,7 +183,7 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
           color: 'var(--color-brown-dark)',
           textTransform: 'uppercase',
           letterSpacing: '2px',
-          borderBottom: '2px solid var(--color-gold)',
+          borderBottom: '2px solid var(--color-text-primary)',
           paddingBottom: 'var(--spacing-xs)'
         }}>
           🐾 Adoption
