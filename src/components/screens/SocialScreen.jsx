@@ -61,44 +61,68 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
         )}
       </div>
 
-      {/* Onglets - Grille uniforme 2x2 */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: 'var(--spacing-xs)',
-        padding: '0 var(--spacing-sm)',
-        marginBottom: 'var(--spacing-lg)'
-      }}>
-        {['bars', 'ranking', 'games', 'adoption'].map((tab) => {
-          const isActive = socialTab === tab;
-          return (
-            <button
-              key={tab}
-              onClick={() => setSocialTab(tab)}
-              style={{
-                padding: 'var(--spacing-md)',
-                background: isActive
-                  ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))'
-                  : 'var(--color-brown)',
-                border: isActive ? '2px solid var(--color-gold-light)' : '2px solid var(--color-brown-dark)',
-                color: isActive ? 'var(--color-brown-dark)' : 'var(--color-cream)',
-                borderRadius: 'var(--border-radius-md)',
-                cursor: 'pointer',
-                fontWeight: '700',
-                fontSize: '0.9rem',
-                transition: 'all var(--transition-normal)',
-                boxShadow: isActive ? 'var(--shadow-md)' : 'var(--shadow-sm)',
-                textAlign: 'center'
-              }}
-            >
-              {tab === 'bars' && '🍸 Bars'}
-              {tab === 'ranking' && '🏆 Classement'}
-              {tab === 'games' && '🎮 Jeux'}
-              {tab === 'adoption' && '🐾 Adoption'}
-            </button>
-          );
-        })}
-      </div>
+      {/* Onglets - Grille uniforme 2x2 - Affichés seulement si pas de tab actif */}
+      {socialTab === null && (
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: 'var(--spacing-xs)',
+          padding: '0 var(--spacing-sm)',
+          marginBottom: 'var(--spacing-lg)'
+        }}>
+          {['bars', 'ranking', 'games', 'adoption'].map((tab) => {
+            return (
+              <button
+                key={tab}
+                onClick={() => setSocialTab(tab)}
+                style={{
+                  padding: 'var(--spacing-md)',
+                  background: 'var(--color-brown)',
+                  border: '2px solid var(--color-brown-dark)',
+                  color: 'var(--color-cream)',
+                  borderRadius: 'var(--border-radius-md)',
+                  cursor: 'pointer',
+                  fontWeight: '700',
+                  fontSize: '0.9rem',
+                  transition: 'all var(--transition-normal)',
+                  boxShadow: 'var(--shadow-sm)',
+                  textAlign: 'center'
+                }}
+              >
+                {tab === 'bars' && '🍸 Bars'}
+                {tab === 'ranking' && '🏆 Classement'}
+                {tab === 'games' && '🎮 Jeux'}
+                {tab === 'adoption' && '🐾 Adoption'}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Bouton retour quand un onglet est sélectionné */}
+      {socialTab !== null && (
+        <div style={{ padding: '0 var(--spacing-sm)', marginBottom: 'var(--spacing-md)' }}>
+          <button
+            onClick={() => setSocialTab(null)}
+            style={{
+              padding: 'var(--spacing-sm) var(--spacing-md)',
+              background: 'var(--color-brown-light)',
+              border: '2px solid var(--color-brown)',
+              borderRadius: 'var(--border-radius-md)',
+              color: 'var(--color-cream)',
+              fontSize: '0.9rem',
+              fontWeight: '600',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--spacing-xs)',
+              boxShadow: 'var(--shadow-sm)'
+            }}
+          >
+            ← Retour
+          </button>
+        </div>
+      )}
 
       {/* Section Bars - Carte stylisée selon BARS.png */}
       {socialTab === 'bars' && (
@@ -388,31 +412,6 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
             <div style={{ fontSize: '36px', marginBottom: '8px' }}>🎴</div>
             <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Jeu des Cartes</h4>
             <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo - Gagne des pièces!</p>
-          </div>
-        </div>
-      )}
-
-      {socialTab === 'adoption' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-          <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '15px', textAlign: 'center' }}>
-            <div style={{ fontSize: '36px', marginBottom: '8px' }}>🐱</div>
-            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600' }}>Minou</h4>
-            <button style={{ width: '100%', padding: '6px', background: '#E91E63', border: 'none', color: 'white', borderRadius: '6px', fontSize: '11px', cursor: 'pointer', fontWeight: '600' }}>Adopter</button>
-          </div>
-          <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '15px', textAlign: 'center' }}>
-            <div style={{ fontSize: '36px', marginBottom: '8px' }}>🐶</div>
-            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600' }}>Chouchou</h4>
-            <button style={{ width: '100%', padding: '6px', background: '#2196F3', border: 'none', color: 'white', borderRadius: '6px', fontSize: '11px', cursor: 'pointer', fontWeight: '600' }}>Adopter</button>
-          </div>
-          <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '15px', textAlign: 'center' }}>
-            <div style={{ fontSize: '36px', marginBottom: '8px' }}>🦜</div>
-            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600' }}>Perroquets</h4>
-            <button style={{ width: '100%', padding: '6px', background: '#9C27B0', border: 'none', color: 'white', borderRadius: '6px', fontSize: '11px', cursor: 'pointer', fontWeight: '600' }}>Adopter</button>
-          </div>
-          <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '15px', textAlign: 'center' }}>
-            <div style={{ fontSize: '36px', marginBottom: '8px' }}>🦆</div>
-            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600' }}>Cancan</h4>
-            <button style={{ width: '100%', padding: '6px', background: '#FF9800', border: 'none', color: 'white', borderRadius: '6px', fontSize: '11px', cursor: 'pointer', fontWeight: '600' }}>Adopter</button>
           </div>
         </div>
       )}

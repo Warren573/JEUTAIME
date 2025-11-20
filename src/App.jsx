@@ -46,7 +46,7 @@ function MainApp() {
   const [signupPassword, setSignupPassword] = useState('');
 
   const [screen, setScreen] = useState('home');
-  const [socialTab, setSocialTab] = useState('bars');
+  const [socialTab, setSocialTab] = useState(null);
   const [gameScreen, setGameScreen] = useState(null);
   const [selectedBar, setSelectedBar] = useState(null);
   const [barTab, setBarTab] = useState('discuss');
