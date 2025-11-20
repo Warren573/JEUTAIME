@@ -93,13 +93,13 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
           }}>
             {['bars', 'ranking', 'games', 'adoption'].map((tab) => {
               const icons = {
-                bars: '🍸',
+                bars: '✨',
                 ranking: '🏆',
                 games: '🎮',
                 adoption: '🐾'
               };
               const labels = {
-                bars: 'Bars',
+                bars: 'Salons',
                 ranking: 'Classement',
                 games: 'Jeux',
                 adoption: 'Adoption'
@@ -171,7 +171,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
           padding: '0 var(--spacing-sm)',
           position: 'relative'
         }}>
-          {/* Bouton vers liste complète des bars thématiques */}
+          {/* Bouton vers liste complète des salons magiques */}
           <button
             onClick={() => setScreen('bars')}
             style={{
@@ -195,8 +195,8 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
             onMouseDown={(e) => e.target.style.transform = 'scale(0.98)'}
             onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
           >
-            <span style={{ fontSize: '1.5rem' }}>🍸</span>
-            Voir tous les Bars Thématiques
+            <span style={{ fontSize: '1.5rem' }}>✨</span>
+            Voir tous les Salons Magiques
             <span style={{
               background: '#FFD700',
               color: '#000',
@@ -223,11 +223,11 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
               margin: 0,
               textShadow: '1px 1px 2px rgba(255,255,255,0.5)'
             }}>
-              ☀️ CARTE DES BARS ☀️
+              ✨ CARTE DES SALONS ✨
             </h2>
           </div>
 
-          {/* Grille des bars - Style carte illustrée */}
+          {/* Grille des salons - Style carte illustrée */}
           <div style={{
             background: 'linear-gradient(180deg, var(--color-gold-light), var(--color-tan))',
             borderRadius: 'var(--border-radius-xl)',
