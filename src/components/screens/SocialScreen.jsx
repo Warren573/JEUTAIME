@@ -31,23 +31,34 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
     }}>
       {/* Logo Social harmonisé - Toujours visible */}
       <div style={{
-        background: 'linear-gradient(135deg, var(--color-brown), var(--color-brown-dark))',
-        borderBottom: '3px solid var(--color-gold)',
+        background: 'var(--color-cream)',
+        borderBottom: '4px double var(--color-brown-dark)',
         padding: socialTab === null ? 'var(--spacing-md)' : 'var(--spacing-lg)',
-        boxShadow: 'var(--shadow-lg)'
+        marginBottom: socialTab === null ? 'var(--spacing-md)' : 'var(--spacing-lg)',
+        boxShadow: 'var(--shadow-md)'
       }}>
         <h1 style={{
           fontFamily: 'var(--font-heading)',
           fontSize: socialTab === null ? '1.8rem' : '2.5rem',
           textAlign: 'center',
-          margin: 0,
-          color: 'var(--color-cream)',
+          margin: '0 0 var(--spacing-xs) 0',
+          color: 'var(--color-brown-dark)',
           textTransform: 'uppercase',
           letterSpacing: '2px',
-          textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
+          borderBottom: '2px solid var(--color-gold)',
+          paddingBottom: 'var(--spacing-xs)'
         }}>
           👥 Social
         </h1>
+        <p style={{
+          textAlign: 'center',
+          color: 'var(--color-text-secondary)',
+          fontSize: '0.95rem',
+          fontStyle: 'italic',
+          margin: 0
+        }}>
+          {socialTab === null ? 'Choisis une catégorie' : 'Rencontre et partage'}
+        </p>
         {adminMode && isAdminAuthenticated && socialTab === 'bars' && (
           <div style={{ textAlign: 'center', marginTop: 'var(--spacing-sm)' }}>
             <button
