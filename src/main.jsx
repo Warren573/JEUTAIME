@@ -8,4 +8,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <App />
   </React.StrictMode>,
 )
-/* Force cache bust for iPhone - Version: 1.2.0 - Bars renommés avec nouveaux thèmes */
+/* Force cache bust for iPhone - Version: 1.2.1 - Onglet Bars → Salons magiques ✨ */
