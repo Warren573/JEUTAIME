@@ -18,6 +18,20 @@ export default function PongGame({ setGameScreen, currentUser, setUserCoins }) {
   const [keysPressed, setKeysPressed] = useState({});
   const [gameFinished, setGameFinished] = useState(false);
 
+  // Touch control handler
+  const handleTouchMove = (e) => {
+    if (!localGameActive) return;
+    const touch = e.touches[0];
+    const canvas = e.currentTarget;
+    const rect = canvas.getBoundingClientRect();
+    const touchY = touch.clientY - rect.top;
+
+    // Map touch position to paddle position (260px height, 54px paddle)
+    const maxPaddleY = 206; // 260 - 54
+    const newPaddleY = Math.max(0, Math.min(maxPaddleY, touchY - 27)); // Center paddle on touch
+    setLocalPaddleLeftY(newPaddleY / 0.87); // Inverse scale factor
+  };
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.code === 'ArrowUp' || e.code === 'ArrowDown') {
@@ -231,16 +245,19 @@ export default function PongGame({ setGameScreen, currentUser, setUserCoins }) {
       <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600', color: 'var(--color-brown-dark)' }}>🎮 Pong</h2>
 
       <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '15px', textAlign: 'center' }}>
-        <div style={{
-          position: 'relative',
-          width: '340px',
-          height: '260px',
-          background: '#0a0a0a',
-          border: '2px solid #888',
-          marginBottom: '20px',
-          margin: '0 auto 20px',
-          maxWidth: '100%'
-        }}>
+        <div
+          onTouchMove={handleTouchMove}
+          style={{
+            position: 'relative',
+            width: '340px',
+            height: '260px',
+            background: '#0a0a0a',
+            border: '2px solid #888',
+            marginBottom: '20px',
+            margin: '0 auto 20px',
+            maxWidth: '100%',
+            touchAction: 'none'
+          }}>
           <div style={{ position: 'absolute', left: '10px', top: `${localPaddleLeftY * 0.87}px`, width: '12px', height: '54px', background: '#f5f5f5', borderRadius: '6px' }} />
           <div style={{ position: 'absolute', right: '10px', top: `${localPaddleRightY * 0.87}px`, width: '12px', height: '54px', background: '#f5f5f5', borderRadius: '6px' }} />
           <div style={{ position: 'absolute', left: `${localBallX * 0.87}px`, top: `${localBallY * 0.87}px`, width: '12px', height: '12px', background: '#FFD700', borderRadius: '50%' }} />
@@ -263,7 +280,7 @@ export default function PongGame({ setGameScreen, currentUser, setUserCoins }) {
         )}
 
         <p style={{ fontSize: '12px', color: '#888', marginBottom: '15px' }}>
-          {gameFinished ? `Premier à ${WINNING_SCORE} points` : 'Utilise les flèches ↑↓ pour bouger ta raquette'}
+          {gameFinished ? `Premier à ${WINNING_SCORE} points` : '👆 Glisse ton doigt sur l\'écran pour bouger ta raquette'}
         </p>
 
         {!gameFinished ? (
