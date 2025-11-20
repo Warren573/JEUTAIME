@@ -80,9 +80,30 @@ export default function MorpionGame({ setGameScreen, morpionBoard, setMorpionBoa
   }, [winner, currentUser, morpionBoard, setUserCoins]);
 
   return (
-    <div>
-      <button onClick={() => setGameScreen(null)} style={{ padding: '10px 20px', background: '#1a1a1a', border: '1px solid #333', color: 'white', borderRadius: '10px', marginBottom: '20px', cursor: 'pointer', fontWeight: '600' }}>← Retour</button>
-      <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600' }}>⭕ Morpion</h2>
+    <div style={{
+      height: '100vh',
+      overflowY: 'auto',
+      paddingBottom: '100px',
+      background: 'var(--color-beige-light)',
+      padding: 'var(--spacing-md)'
+    }}>
+      <button
+        onClick={() => setGameScreen(null)}
+        style={{
+          padding: '12px 24px',
+          background: 'var(--color-brown)',
+          border: '2px solid var(--color-gold)',
+          color: 'var(--color-cream)',
+          borderRadius: 'var(--border-radius-md)',
+          marginBottom: '20px',
+          cursor: 'pointer',
+          fontWeight: '700',
+          fontSize: '1rem',
+          boxShadow: 'var(--shadow-md)'
+        }}>
+        ← Retour aux jeux
+      </button>
+      <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600', color: 'var(--color-brown-dark)' }}>⭕ Morpion</h2>
       <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '30px', textAlign: 'center' }}>
         <p style={{ fontSize: '16px', marginBottom: '20px', fontWeight: '600' }}>Joueur: {morpionTurn}</p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 80px)', gap: '5px', margin: '0 auto 30px', width: 'fit-content' }}>

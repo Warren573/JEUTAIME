@@ -8,4 +8,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <App />
   </React.StrictMode>,
 )
-/* Force cache bust for iPhone - Version: 1.1.5 - Tous les logos harmonisés avec sous-titres */
+/* Force cache bust for iPhone - Version: 1.1.6 - Jeux améliorés avec boutons retour visibles */

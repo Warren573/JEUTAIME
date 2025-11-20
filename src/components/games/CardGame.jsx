@@ -132,9 +132,31 @@ export default function CardGame({
   }, []);
 
   return (
-    <div>
-      <button onClick={() => setGameScreen(null)} style={{ padding: '10px 20px', background: '#1a1a1a', border: '1px solid #333', color: 'white', borderRadius: '10px', marginBottom: '20px', cursor: 'pointer', fontWeight: '600' }}>← Retour</button>
-      <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600' }}>🎴 Jeu des Cartes</h2>
+    <div style={{
+      height: '100vh',
+      overflowY: 'auto',
+      paddingBottom: '100px',
+      background: 'var(--color-beige-light)',
+      padding: 'var(--spacing-md)'
+    }}>
+      <button
+        onClick={() => setGameScreen(null)}
+        style={{
+          padding: '12px 24px',
+          background: 'var(--color-brown)',
+          border: '2px solid var(--color-gold)',
+          color: 'var(--color-cream)',
+          borderRadius: 'var(--border-radius-md)',
+          marginBottom: '20px',
+          cursor: 'pointer',
+          fontWeight: '700',
+          fontSize: '1rem',
+          boxShadow: 'var(--shadow-md)'
+        }}
+      >
+        ← Retour aux jeux
+      </button>
+      <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600', color: 'var(--color-brown-dark)' }}>🎴 Jeu des Cartes</h2>
       <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px' }}>
         <p style={{ textAlign: 'center', fontSize: '16px', marginBottom: '10px', color: '#ccc' }}>{cardMessage}</p>
         <p style={{ textAlign: 'center', fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}>💰 Gains: {cardGains} pièces</p>
