@@ -23,6 +23,10 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
   const [magicEffect, setMagicEffect] = useState(null);
   const [giftReceiverEffect, setGiftReceiverEffect] = useState(null); // ID du membre qui reçoit un cadeau
 
+  // Système d'actions magiques
+  const [magicState, setMagicState] = useState('initial'); // 'initial' or 'frog' (for theater)
+  const [magicAnimation, setMagicAnimation] = useState(false);
+
   // Chat discussion - Charger depuis localStorage
   const [messages, setMessages] = useState(() => {
     const barId = bar?.type || bar?.id || 'unknown';
@@ -259,6 +263,33 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
     setSelectedMember(null);
   };
 
+  const handleMagicAction = () => {
+    const action = bar.magicAction;
+    if (!action) return;
+
+    // Déclencher l'animation
+    setMagicAnimation(true);
+
+    // Pour le théâtre avec transformation en crapaud
+    if (action.secondEmoji && magicState === 'initial') {
+      // Première étape : transformation en crapaud
+      setMagicState('frog');
+      alert(action.message);
+    } else if (action.secondEmoji && magicState === 'frog') {
+      // Deuxième étape : bisou pour rompre le charme
+      setMagicState('initial');
+      alert(action.message2);
+    } else {
+      // Actions simples (piscine, café, pirates, cocktails)
+      alert(action.message);
+    }
+
+    // Arrêter l'animation après 2 secondes
+    setTimeout(() => {
+      setMagicAnimation(false);
+    }, 2000);
+  };
+
   return (
     <div style={{
       height: '100vh',
@@ -492,6 +523,25 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
             💬 Discussion
           </button>
           <button
+            onClick={() => setBarTab('magic')}
+            style={{
+              flex: 1,
+              padding: '10px',
+              background: barTab === 'magic'
+                ? 'rgba(255,255,255,0.3)'
+                : 'rgba(255,255,255,0.1)',
+              border: barTab === 'magic' ? '2px solid rgba(255,255,255,0.5)' : 'none',
+              color: 'white',
+              borderRadius: '10px',
+              cursor: 'pointer',
+              fontWeight: '700',
+              fontSize: '0.9rem',
+              transition: 'all 0.2s'
+            }}
+          >
+            ✨ Magie
+          </button>
+          <button
             onClick={() => setBarTab('story')}
             style={{
               flex: 1,
@@ -508,7 +558,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
               transition: 'all 0.2s'
             }}
           >
-            📖 Continuer l'histoire
+            📖 Histoire
           </button>
         </div>
       </div>
@@ -703,6 +753,134 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
                 </div>
               </div>
             )}
+          </div>
+        )}
+
+        {/* ONGLET MAGIE */}
+        {barTab === 'magic' && bar.magicAction && (
+          <div style={{
+            background: bar.bgGradient || 'linear-gradient(135deg, #667eea, #764ba2)',
+            borderRadius: '15px',
+            padding: 'var(--spacing-xl)',
+            boxShadow: 'var(--shadow-lg)',
+            textAlign: 'center',
+            minHeight: '400px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 'var(--spacing-lg)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}>
+            {/* Animation de fond */}
+            {magicAnimation && (
+              <div style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: '300px',
+                height: '300px',
+                borderRadius: '50%',
+                background: 'radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%)',
+                animation: 'magicPulse 1s ease-out',
+                pointerEvents: 'none',
+                zIndex: 0
+              }} />
+            )}
+
+            <style>{`
+              @keyframes magicPulse {
+                0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+                100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+              }
+              @keyframes float {
+                0%, 100% { transform: translateY(0); }
+                50% { transform: translateY(-20px); }
+              }
+              @keyframes bounce {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.1); }
+              }
+            `}</style>
+
+            {/* Emoji géant de l'action */}
+            <div style={{
+              fontSize: '6rem',
+              animation: magicAnimation ? 'bounce 0.5s ease-in-out' : 'float 3s ease-in-out infinite',
+              filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.3))',
+              zIndex: 1
+            }}>
+              {magicState === 'frog' && bar.magicAction.secondEmoji
+                ? bar.magicAction.secondEmoji
+                : bar.magicAction.emoji}
+            </div>
+
+            {/* Titre de l'action */}
+            <h2 style={{
+              fontSize: '1.8rem',
+              color: 'white',
+              fontWeight: '700',
+              margin: 0,
+              textShadow: '2px 2px 8px rgba(0,0,0,0.4)',
+              zIndex: 1
+            }}>
+              {bar.magicAction.name}
+            </h2>
+
+            {/* Bouton d'action magique */}
+            <button
+              onClick={handleMagicAction}
+              style={{
+                padding: 'var(--spacing-md) var(--spacing-xl)',
+                background: 'rgba(255,255,255,0.95)',
+                border: '3px solid rgba(255,215,0,0.8)',
+                borderRadius: '20px',
+                color: '#000',
+                fontSize: '1.2rem',
+                fontWeight: '700',
+                cursor: 'pointer',
+                boxShadow: '0 8px 20px rgba(0,0,0,0.3)',
+                transition: 'all 0.3s',
+                zIndex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'scale(1.05)';
+                e.target.style.boxShadow = '0 12px 30px rgba(255,215,0,0.5)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'scale(1)';
+                e.target.style.boxShadow = '0 8px 20px rgba(0,0,0,0.3)';
+              }}
+            >
+              <span style={{ fontSize: '1.5rem' }}>
+                {magicState === 'frog' && bar.magicAction.secondEmoji
+                  ? bar.magicAction.secondEmoji
+                  : bar.magicAction.emoji}
+              </span>
+              {magicState === 'frog' && bar.magicAction.secondEmoji
+                ? 'Donner un bisou'
+                : bar.magicAction.name}
+            </button>
+
+            {/* Message indicatif */}
+            <p style={{
+              color: 'rgba(255,255,255,0.9)',
+              fontSize: '0.95rem',
+              textAlign: 'center',
+              maxWidth: '80%',
+              textShadow: '1px 1px 4px rgba(0,0,0,0.3)',
+              margin: 0,
+              zIndex: 1
+            }}>
+              {magicState === 'frog'
+                ? '💋 Clique pour rompre le charme!'
+                : 'Clique pour activer la magie du salon!'}
+            </p>
           </div>
         )}
 

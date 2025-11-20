@@ -8,4 +8,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <App />
   </React.StrictMode>,
 )
-/* Force redeploy Wed Nov 19 20:31:22 UTC 2025 */
+/* Force cache bust for iPhone - Version: 1.4.0 - Actions magiques à l'intérieur des salons ✨🏰 */
