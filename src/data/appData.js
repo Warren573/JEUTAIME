@@ -6,6 +6,7 @@ export const bars = [
     icon: '🏊',
     name: 'Piscine',
     desc: '2H/2F - Ambiance aquatique et détente',
+    gift: { emoji: '🌊', name: 'Vague magique', effect: 'Transformation aquatique' },
     participants: [
       { name: 'Sophie', gender: 'F', age: 28, online: true },
       { name: 'Emma', gender: 'F', age: 26, online: true },
@@ -17,6 +18,7 @@ export const bars = [
     icon: '☕',
     name: 'Café de Paris',
     desc: '2H/2F - Ambiance parisienne chic',
+    gift: { emoji: '☕', name: 'Café enchanté', effect: 'Boost de charisme' },
     participants: [
       { name: 'Léa', gender: 'F', age: 25, online: true },
       { name: 'Clara', gender: 'F', age: 27, online: true },
@@ -28,6 +30,7 @@ export const bars = [
     icon: '🏴‍☠️',
     name: 'Île des pirates',
     desc: '2H/2F - Aventures maritimes',
+    gift: { emoji: '💎', name: 'Trésor de pirate', effect: '+50 pièces d\'or' },
     participants: [
       { name: 'Océane', gender: 'F', age: 29, online: true },
       { name: 'Marine', gender: 'F', age: 24, online: false },
@@ -39,6 +42,7 @@ export const bars = [
     icon: '🎭',
     name: 'Théâtre improvisé',
     desc: '2H/2F - Spectacles et fous rires',
+    gift: { emoji: '🎭', name: 'Masque de transformation', effect: 'Change ton apparence' },
     participants: [
       { name: 'Zoé', gender: 'F', age: 26, online: true },
       { name: 'Valérie', gender: 'F', age: 31, online: true },
@@ -50,6 +54,7 @@ export const bars = [
     icon: '🍸',
     name: 'Bar à cocktails',
     desc: '2H/2F - Mixologie et saveurs exotiques',
+    gift: { emoji: '🍸', name: 'Cocktail magique', effect: 'Philtre d\'amour' },
     participants: [
       { name: 'Amélia', gender: 'F', age: 30, online: true },
       { name: 'Victoria', gender: 'F', age: 28, online: true },

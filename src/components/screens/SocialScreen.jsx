@@ -306,6 +306,39 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                         {bar.desc}
                       </p>
 
+                      {/* Cadeau magique */}
+                      {bar.gift && (
+                        <div style={{
+                          background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.2))',
+                          border: '2px solid var(--color-gold)',
+                          borderRadius: 'var(--border-radius-md)',
+                          padding: 'var(--spacing-xs) var(--spacing-sm)',
+                          marginBottom: 'var(--spacing-sm)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 'var(--spacing-xs)'
+                        }}>
+                          <span style={{ fontSize: '1.5rem' }}>{bar.gift.emoji}</span>
+                          <div style={{ flex: 1 }}>
+                            <div style={{
+                              fontSize: '0.75rem',
+                              fontWeight: '700',
+                              color: 'var(--color-brown-dark)',
+                              marginBottom: '2px'
+                            }}>
+                              {bar.gift.name}
+                            </div>
+                            <div style={{
+                              fontSize: '0.7rem',
+                              color: 'var(--color-text-light)',
+                              fontStyle: 'italic'
+                            }}>
+                              {bar.gift.effect}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
                       {/* Participants */}
                       <div style={{
                         display: 'flex',
