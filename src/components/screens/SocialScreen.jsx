@@ -91,7 +91,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                 textAlign: 'center'
               }}
             >
-              {tab === 'bars' && '🍸 Bars'}
+              {tab === 'bars' && '✨ Salons'}
               {tab === 'ranking' && '🏆 Classement'}
               {tab === 'games' && '🎮 Jeux'}
               {tab === 'adoption' && '🐾 Adoption'}
@@ -106,7 +106,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
           padding: '0 var(--spacing-sm)',
           position: 'relative'
         }}>
-          {/* Bouton vers liste complète des bars thématiques */}
+          {/* Bouton vers liste complète des salons magiques */}
           <button
             onClick={() => setScreen('bars')}
             style={{
@@ -130,8 +130,8 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
             onMouseDown={(e) => e.target.style.transform = 'scale(0.98)'}
             onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
           >
-            <span style={{ fontSize: '1.5rem' }}>🍸</span>
-            Voir tous les Bars Thématiques
+            <span style={{ fontSize: '1.5rem' }}>✨</span>
+            Voir tous les Salons Magiques
             <span style={{
               background: '#FFD700',
               color: '#000',
@@ -158,7 +158,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
               margin: 0,
               textShadow: '1px 1px 2px rgba(255,255,255,0.5)'
             }}>
-              ☀️ CARTE DES BARS ☀️
+              ✨ CARTE DES SALONS ✨
             </h2>
           </div>
 
@@ -190,8 +190,8 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                     cursor: 'pointer',
                     marginBottom: 'var(--spacing-md)',
                     padding: 'var(--spacing-md)',
-                    background: 'var(--color-cream)',
-                    border: '3px solid var(--color-brown)',
+                    background: bar.bgGradient || 'var(--color-cream)',
+                    border: '3px solid rgba(255,255,255,0.5)',
                     borderRadius: 'var(--border-radius-lg)',
                     boxShadow: 'var(--shadow-lg)',
                     transition: 'all var(--transition-normal)',
@@ -228,15 +228,17 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                         fontFamily: 'var(--font-heading)',
                         fontSize: '1.25rem',
                         margin: '0 0 var(--spacing-xs) 0',
-                        color: 'var(--color-text-primary)',
-                        fontWeight: '700'
+                        color: '#FFFFFF',
+                        fontWeight: '700',
+                        textShadow: '2px 2px 4px rgba(0,0,0,0.5)'
                       }}>
                         {bar.name}
                       </h3>
                       <p style={{
-                        color: 'var(--color-text-light)',
+                        color: 'rgba(255,255,255,0.9)',
                         fontSize: '0.875rem',
-                        margin: '0 0 var(--spacing-sm) 0'
+                        margin: '0 0 var(--spacing-sm) 0',
+                        textShadow: '1px 1px 2px rgba(0,0,0,0.5)'
                       }}>
                         {bar.desc}
                       </p>
