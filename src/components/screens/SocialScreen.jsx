@@ -25,77 +25,111 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
       height: '100vh',
       overflowY: 'auto',
       paddingBottom: '80px',
-      background: 'var(--color-beige-light)'
+      background: 'var(--color-beige-light)',
+      display: 'flex',
+      flexDirection: 'column'
     }}>
-      {/* En-tête style Journal */}
-      <div style={{
-        background: 'var(--color-cream)',
-        borderBottom: '4px double var(--color-brown-dark)',
-        padding: 'var(--spacing-lg)',
-        marginBottom: 'var(--spacing-lg)',
-        boxShadow: 'var(--shadow-md)'
-      }}>
-        <h1 style={{
-          fontFamily: 'var(--font-heading)',
-          fontSize: '2.5rem',
-          textAlign: 'center',
-          margin: '0 0 var(--spacing-xs) 0',
-          color: 'var(--color-brown-dark)',
-          textTransform: 'uppercase',
-          letterSpacing: '2px',
-          borderBottom: '2px solid var(--color-gold)',
-          paddingBottom: 'var(--spacing-xs)'
+      {/* En-tête style Journal - Affiché seulement quand un onglet est sélectionné */}
+      {socialTab !== null && (
+        <div style={{
+          background: 'var(--color-cream)',
+          borderBottom: '4px double var(--color-brown-dark)',
+          padding: 'var(--spacing-lg)',
+          marginBottom: 'var(--spacing-lg)',
+          boxShadow: 'var(--shadow-md)'
         }}>
-          👥 Social
-        </h1>
-        {adminMode && isAdminAuthenticated && socialTab === 'bars' && (
-          <div style={{ textAlign: 'center', marginTop: 'var(--spacing-sm)' }}>
-            <button
-              onClick={handleAdminCreateBar}
-              className="btn-primary"
-              style={{ padding: 'var(--spacing-sm) var(--spacing-md)', fontSize: '0.875rem' }}
-            >
-              ➕ Nouveau Bar
-            </button>
-          </div>
-        )}
-      </div>
+          <h1 style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: '2.5rem',
+            textAlign: 'center',
+            margin: '0 0 var(--spacing-xs) 0',
+            color: 'var(--color-brown-dark)',
+            textTransform: 'uppercase',
+            letterSpacing: '2px',
+            borderBottom: '2px solid var(--color-gold)',
+            paddingBottom: 'var(--spacing-xs)'
+          }}>
+            👥 Social
+          </h1>
+          {adminMode && isAdminAuthenticated && socialTab === 'bars' && (
+            <div style={{ textAlign: 'center', marginTop: 'var(--spacing-sm)' }}>
+              <button
+                onClick={handleAdminCreateBar}
+                className="btn-primary"
+                style={{ padding: 'var(--spacing-sm) var(--spacing-md)', fontSize: '0.875rem' }}
+              >
+                ➕ Nouveau Bar
+              </button>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Onglets - Grille uniforme 2x2 - Affichés seulement si pas de tab actif */}
       {socialTab === null && (
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: 'var(--spacing-xs)',
-          padding: '0 var(--spacing-sm)',
-          marginBottom: 'var(--spacing-lg)'
+          flex: 1,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: 'var(--spacing-lg)'
         }}>
-          {['bars', 'ranking', 'games', 'adoption'].map((tab) => {
-            return (
-              <button
-                key={tab}
-                onClick={() => setSocialTab(tab)}
-                style={{
-                  padding: 'var(--spacing-md)',
-                  background: 'var(--color-brown)',
-                  border: '2px solid var(--color-brown-dark)',
-                  color: 'var(--color-cream)',
-                  borderRadius: 'var(--border-radius-md)',
-                  cursor: 'pointer',
-                  fontWeight: '700',
-                  fontSize: '0.9rem',
-                  transition: 'all var(--transition-normal)',
-                  boxShadow: 'var(--shadow-sm)',
-                  textAlign: 'center'
-                }}
-              >
-                {tab === 'bars' && '🍸 Bars'}
-                {tab === 'ranking' && '🏆 Classement'}
-                {tab === 'games' && '🎮 Jeux'}
-                {tab === 'adoption' && '🐾 Adoption'}
-              </button>
-            );
-          })}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gridTemplateRows: '1fr 1fr',
+            gap: 'var(--spacing-md)',
+            width: '100%',
+            maxWidth: '600px',
+            height: '80vh',
+            maxHeight: '500px'
+          }}>
+            {['bars', 'ranking', 'games', 'adoption'].map((tab) => {
+              const icons = {
+                bars: '🍸',
+                ranking: '🏆',
+                games: '🎮',
+                adoption: '🐾'
+              };
+              const labels = {
+                bars: 'Bars',
+                ranking: 'Classement',
+                games: 'Jeux',
+                adoption: 'Adoption'
+              };
+              return (
+                <button
+                  key={tab}
+                  onClick={() => setSocialTab(tab)}
+                  style={{
+                    padding: 'var(--spacing-xl)',
+                    background: 'linear-gradient(135deg, var(--color-brown), var(--color-brown-dark))',
+                    border: '3px solid var(--color-gold)',
+                    color: 'var(--color-cream)',
+                    borderRadius: 'var(--border-radius-xl)',
+                    cursor: 'pointer',
+                    fontWeight: '700',
+                    fontSize: '1.2rem',
+                    transition: 'all var(--transition-normal)',
+                    boxShadow: 'var(--shadow-lg)',
+                    textAlign: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 'var(--spacing-sm)'
+                  }}
+                  onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
+                  onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                  onTouchStart={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
+                  onTouchEnd={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                >
+                  <div style={{ fontSize: '4rem' }}>{icons[tab]}</div>
+                  <div>{labels[tab]}</div>
+                </button>
+              );
+            })}
+          </div>
         </div>
       )}
 
