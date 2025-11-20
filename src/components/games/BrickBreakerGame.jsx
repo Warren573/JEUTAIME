@@ -10,19 +10,19 @@ export default function BrickBreakerGame({ setGameScreen, currentUser, setUserCo
   const [gameWon, setGameWon] = useState(false);
   const animationFrameRef = useRef(null);
 
-  // Game config
-  const CANVAS_WIDTH = 480;
-  const CANVAS_HEIGHT = 400;
-  const PADDLE_WIDTH = 80;
+  // Game config - Reduced for mobile
+  const CANVAS_WIDTH = 340;
+  const CANVAS_HEIGHT = 280;
+  const PADDLE_WIDTH = 60;
   const PADDLE_HEIGHT = 10;
-  const BALL_RADIUS = 6;
+  const BALL_RADIUS = 5;
   const BRICK_ROWS = 5;
   const BRICK_COLS = 8;
-  const BRICK_WIDTH = 55;
-  const BRICK_HEIGHT = 20;
-  const BRICK_PADDING = 5;
-  const BRICK_OFFSET_TOP = 40;
-  const BRICK_OFFSET_LEFT = 10;
+  const BRICK_WIDTH = 38;
+  const BRICK_HEIGHT = 15;
+  const BRICK_PADDING = 3;
+  const BRICK_OFFSET_TOP = 30;
+  const BRICK_OFFSET_LEFT = 7;
 
   // Game state refs
   const gameStateRef = useRef({
@@ -353,7 +353,7 @@ export default function BrickBreakerGame({ setGameScreen, currentUser, setUserCo
 
       <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600', color: 'var(--color-brown-dark)' }}>🧱 Casse Brique</h2>
 
-      <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', textAlign: 'center' }}>
+      <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '15px', textAlign: 'center' }}>
         <div style={{ marginBottom: '15px', color: '#888' }}>
           {!gameRunning && !gameOver && !gameWon && (
             <p style={{ fontSize: '14px', marginBottom: '10px' }}>
@@ -367,13 +367,14 @@ export default function BrickBreakerGame({ setGameScreen, currentUser, setUserCo
           borderRadius: '10px',
           padding: '10px',
           display: 'inline-block',
-          marginBottom: '20px'
+          marginBottom: '20px',
+          maxWidth: '100%'
         }}>
           <canvas
             ref={canvasRef}
             width={CANVAS_WIDTH}
             height={CANVAS_HEIGHT}
-            style={{ display: 'block', borderRadius: '8px' }}
+            style={{ display: 'block', borderRadius: '8px', maxWidth: '100%', height: 'auto' }}
           />
         </div>
 

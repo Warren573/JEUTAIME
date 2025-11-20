@@ -8,4 +8,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <App />
   </React.StrictMode>,
 )
-/* Force cache bust for iPhone - Version: 1.1.6 - Jeux améliorés avec boutons retour visibles */
+/* Force cache bust for iPhone - Version: 1.1.7 - Pong et Casse-Brique responsive mobile */

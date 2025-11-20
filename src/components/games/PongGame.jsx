@@ -230,11 +230,20 @@ export default function PongGame({ setGameScreen, currentUser, setUserCoins }) {
       </button>
       <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600', color: 'var(--color-brown-dark)' }}>🎮 Pong</h2>
 
-      <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', textAlign: 'center' }}>
-        <div style={{ position: 'relative', width: '400px', height: '300px', background: '#0a0a0a', border: '2px solid #888', marginBottom: '20px', margin: '0 auto 20px' }}>
-          <div style={{ position: 'absolute', left: '10px', top: `${localPaddleLeftY}px`, width: '15px', height: '64px', background: '#f5f5f5', borderRadius: '6px' }} />
-          <div style={{ position: 'absolute', right: '10px', top: `${localPaddleRightY}px`, width: '15px', height: '64px', background: '#f5f5f5', borderRadius: '6px' }} />
-          <div style={{ position: 'absolute', left: `${localBallX}px`, top: `${localBallY}px`, width: '15px', height: '15px', background: '#FFD700', borderRadius: '50%' }} />
+      <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '15px', textAlign: 'center' }}>
+        <div style={{
+          position: 'relative',
+          width: '340px',
+          height: '260px',
+          background: '#0a0a0a',
+          border: '2px solid #888',
+          marginBottom: '20px',
+          margin: '0 auto 20px',
+          maxWidth: '100%'
+        }}>
+          <div style={{ position: 'absolute', left: '10px', top: `${localPaddleLeftY * 0.87}px`, width: '12px', height: '54px', background: '#f5f5f5', borderRadius: '6px' }} />
+          <div style={{ position: 'absolute', right: '10px', top: `${localPaddleRightY * 0.87}px`, width: '12px', height: '54px', background: '#f5f5f5', borderRadius: '6px' }} />
+          <div style={{ position: 'absolute', left: `${localBallX * 0.87}px`, top: `${localBallY * 0.87}px`, width: '12px', height: '12px', background: '#FFD700', borderRadius: '50%' }} />
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'space-around', fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}>
