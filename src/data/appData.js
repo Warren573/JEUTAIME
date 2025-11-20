@@ -3,9 +3,16 @@
 export const bars = [
   {
     id: 1,
-    icon: '🌹',
-    name: 'Bar Romantique',
-    desc: '2H/2F - Ambiance tamisée',
+    icon: '🏊',
+    name: 'Piscine',
+    desc: '2H/2F - Ambiance aquatique et détente',
+    bgGradient: 'linear-gradient(180deg, #4FC3F7 0%, #0288D1 100%)',
+    magicAction: {
+      name: 'Faire une bombe',
+      emoji: '💦',
+      animation: 'splash',
+      message: 'SPLASH! Tu as éclaboussé tout le monde! 🌊'
+    },
     participants: [
       { name: 'Sophie', gender: 'F', age: 28, online: true },
       { name: 'Emma', gender: 'F', age: 26, online: true },
@@ -14,9 +21,16 @@ export const bars = [
   },
   {
     id: 2,
-    icon: '😄',
-    name: 'Bar Humoristique',
-    desc: '2H/2F - Rires garantis',
+    icon: '☕',
+    name: 'Café de Paris',
+    desc: '2H/2F - Élégance parisienne',
+    bgGradient: 'linear-gradient(180deg, #8D6E63 0%, #5D4037 100%)',
+    magicAction: {
+      name: 'Offrir un café',
+      emoji: '☕',
+      animation: 'coffee',
+      message: 'Tu as offert un délicieux café! ☕✨'
+    },
     participants: [
       { name: 'Léa', gender: 'F', age: 25, online: true },
       { name: 'Clara', gender: 'F', age: 27, online: true },
@@ -26,8 +40,15 @@ export const bars = [
   {
     id: 3,
     icon: '🏴‍☠️',
-    name: 'Bar Pirates',
+    name: 'Île des pirates',
     desc: '2H/2F - Aventures maritimes',
+    bgGradient: 'linear-gradient(180deg, #FF6F00 0%, #BF360C 100%)',
+    magicAction: {
+      name: 'Chercher un trésor',
+      emoji: '💎',
+      animation: 'treasure',
+      message: 'Trésor trouvé! +50 pièces d\'or! 💰✨'
+    },
     participants: [
       { name: 'Océane', gender: 'F', age: 29, online: true },
       { name: 'Marine', gender: 'F', age: 24, online: false },
@@ -36,9 +57,17 @@ export const bars = [
   },
   {
     id: 4,
-    icon: '📅',
-    name: 'Bar Hebdomadaire',
-    desc: '2H/2F - Renouvellement chaque lundi',
+    icon: '🎭',
+    name: 'Théâtre improvisé',
+    desc: '2H/2F - Spectacles et transformations',
+    bgGradient: 'linear-gradient(180deg, #AB47BC 0%, #6A1B9A 100%)',
+    magicAction: {
+      name: 'Transformation magique',
+      emoji: '🐸',
+      secondEmoji: '💋',
+      message: 'Transformé en crapaud! 🐸 Donne un bisou pour rompre le charme!',
+      message2: 'Le charme est rompu! 💋✨'
+    },
     participants: [
       { name: 'Zoé', gender: 'F', age: 26, online: true },
       { name: 'Valérie', gender: 'F', age: 31, online: true },
@@ -47,9 +76,16 @@ export const bars = [
   },
   {
     id: 5,
-    icon: '👑',
-    name: 'Bar Caché',
-    desc: '2H/2F - 3 énigmes pour accéder',
+    icon: '🍸',
+    name: 'Bar à cocktails',
+    desc: '2H/2F - Mixologie et ambiance festive',
+    bgGradient: 'linear-gradient(180deg, #EC407A 0%, #C2185B 100%)',
+    magicAction: {
+      name: 'Servir un cocktail',
+      emoji: '🍸',
+      animation: 'cocktail',
+      message: 'Cocktail magique servi! 🍸 Philtre d\'amour activé! 💖'
+    },
     participants: [
       { name: 'Amélia', gender: 'F', age: 30, online: true },
       { name: 'Victoria', gender: 'F', age: 28, online: true },
