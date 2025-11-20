@@ -8,4 +8,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <App />
   </React.StrictMode>,
 )
-/* Force cache bust for iPhone - Version: 1.1.2 - Onglets Social plein écran sans logo */
+/* Force cache bust for iPhone - Version: 1.1.3 - Logo Social harmonisé avec onglets */
