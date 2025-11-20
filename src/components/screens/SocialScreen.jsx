@@ -1,9 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { bars } from '../../data/appData';
 import RankingScreen from './RankingScreen';
 import AdoptionScreen from './AdoptionScreen';
 
 export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, setSelectedBar, adminMode, isAdminAuthenticated, currentUser, userCoins, setUserCoins, setScreen, setCurrentUser }) {
+  const [magicStates, setMagicStates] = useState({});
+  const [animatingBars, setAnimatingBars] = useState({});
+
+  const handleMagicAction = (bar, e) => {
+    e.stopPropagation();
+
+    // Animation
+    setAnimatingBars(prev => ({ ...prev, [bar.id]: true }));
+    setTimeout(() => {
+      setAnimatingBars(prev => ({ ...prev, [bar.id]: false }));
+    }, 1500);
+
+    // Théâtre: transformation en crapaud + bisou
+    if (bar.id === 4) {
+      const currentState = magicStates[bar.id] || 'normal';
+      if (currentState === 'normal') {
+        setMagicStates(prev => ({ ...prev, [bar.id]: 'frog' }));
+        alert(bar.magicAction.message);
+      } else {
+        setMagicStates(prev => ({ ...prev, [bar.id]: 'normal' }));
+        alert(bar.magicAction.message2);
+      }
+    } else {
+      // Autres salons
+      alert(bar.magicAction.message);
+
+      // Île des pirates: ajouter des pièces
+      if (bar.id === 3 && setUserCoins) {
+        setUserCoins(prev => prev + 50);
+      }
+    }
+  };
+
   const handleAdminEditBar = (bar, e) => {
     e.stopPropagation();
     alert(`Éditer bar: ${bar.name}`);
@@ -255,20 +288,27 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                     cursor: 'pointer',
                     marginBottom: 'var(--spacing-md)',
                     padding: 'var(--spacing-md)',
-                    background: 'var(--color-cream)',
-                    border: '3px solid var(--color-brown)',
+                    background: bar.bgGradient || 'var(--color-cream)',
+                    border: '3px solid rgba(255,255,255,0.5)',
                     borderRadius: 'var(--border-radius-lg)',
-                    boxShadow: 'var(--shadow-lg)',
+                    boxShadow: animatingBars[bar.id]
+                      ? '0 0 30px rgba(255,215,0,0.8), 0 0 60px rgba(255,215,0,0.4)'
+                      : 'var(--shadow-lg)',
                     transition: 'all var(--transition-normal)',
-                    position: 'relative'
+                    position: 'relative',
+                    transform: animatingBars[bar.id] ? 'scale(1.05)' : 'scale(1)'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)';
-                    e.currentTarget.style.boxShadow = 'var(--shadow-xl)';
+                    if (!animatingBars[bar.id]) {
+                      e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)';
+                      e.currentTarget.style.boxShadow = '0 12px 24px rgba(0,0,0,0.3)';
+                    }
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                    e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
+                    if (!animatingBars[bar.id]) {
+                      e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                      e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
+                    }
                   }}
                 >
                   {/* Ligne 1: Icône + Infos */}
@@ -293,50 +333,59 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                         fontFamily: 'var(--font-heading)',
                         fontSize: '1.25rem',
                         margin: '0 0 var(--spacing-xs) 0',
-                        color: 'var(--color-text-primary)',
-                        fontWeight: '700'
+                        color: '#FFFFFF',
+                        fontWeight: '700',
+                        textShadow: '2px 2px 4px rgba(0,0,0,0.5)'
                       }}>
                         {bar.name}
                       </h3>
                       <p style={{
-                        color: 'var(--color-text-light)',
+                        color: 'rgba(255,255,255,0.9)',
                         fontSize: '0.875rem',
-                        margin: '0 0 var(--spacing-sm) 0'
+                        margin: '0 0 var(--spacing-sm) 0',
+                        textShadow: '1px 1px 2px rgba(0,0,0,0.5)'
                       }}>
                         {bar.desc}
                       </p>
 
-                      {/* Cadeau magique */}
-                      {bar.gift && (
-                        <div style={{
-                          background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.2))',
-                          border: '2px solid var(--color-gold)',
-                          borderRadius: 'var(--border-radius-md)',
-                          padding: 'var(--spacing-xs) var(--spacing-sm)',
-                          marginBottom: 'var(--spacing-sm)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: 'var(--spacing-xs)'
-                        }}>
-                          <span style={{ fontSize: '1.5rem' }}>{bar.gift.emoji}</span>
-                          <div style={{ flex: 1 }}>
-                            <div style={{
-                              fontSize: '0.75rem',
-                              fontWeight: '700',
-                              color: 'var(--color-brown-dark)',
-                              marginBottom: '2px'
-                            }}>
-                              {bar.gift.name}
-                            </div>
-                            <div style={{
-                              fontSize: '0.7rem',
-                              color: 'var(--color-text-light)',
-                              fontStyle: 'italic'
-                            }}>
-                              {bar.gift.effect}
-                            </div>
+                      {/* Action magique */}
+                      {bar.magicAction && (
+                        <button
+                          onClick={(e) => handleMagicAction(bar, e)}
+                          style={{
+                            width: '100%',
+                            background: 'rgba(255, 255, 255, 0.95)',
+                            border: '3px solid rgba(255, 215, 0, 0.8)',
+                            borderRadius: 'var(--border-radius-md)',
+                            padding: 'var(--spacing-sm)',
+                            marginBottom: 'var(--spacing-sm)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 'var(--spacing-sm)',
+                            cursor: 'pointer',
+                            transition: 'all 0.3s ease',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                            fontWeight: '700',
+                            fontSize: '0.9rem',
+                            color: '#000'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'scale(1.05)';
+                            e.currentTarget.style.boxShadow = '0 6px 20px rgba(255,215,0,0.6)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'scale(1)';
+                            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+                          }}
+                        >
+                          <span style={{ fontSize: '2rem' }}>
+                            {magicStates[bar.id] === 'frog' ? bar.magicAction.secondEmoji : bar.magicAction.emoji}
+                          </span>
+                          <div style={{ flex: 1, textAlign: 'left' }}>
+                            {magicStates[bar.id] === 'frog' ? 'Donner un bisou 💋' : bar.magicAction.name}
                           </div>
-                        </div>
+                          <span style={{ fontSize: '1.5rem' }}>✨</span>
+                        </button>
                       )}
 
                       {/* Participants */}
