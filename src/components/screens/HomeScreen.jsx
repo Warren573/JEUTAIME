@@ -485,6 +485,36 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
             </button>
 
             <button
+              onClick={() => setScreen('memories')}
+              style={{
+                padding: 'var(--spacing-md) var(--spacing-lg)',
+                fontSize: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 'var(--spacing-sm)',
+                background: 'linear-gradient(135deg, #8B7355, #A0826D)',
+                color: 'white',
+                border: 'none',
+                borderRadius: 'var(--border-radius-lg)',
+                cursor: 'pointer',
+                fontWeight: '600',
+                boxShadow: 'var(--shadow-md)',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = 'var(--shadow-lg)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = 'var(--shadow-md)';
+              }}
+            >
+              <span style={{ fontSize: '1.5rem' }}>📦</span> Boîte à souvenirs
+            </button>
+
+            <button
               onClick={handleAdminTest}
               className="btn-secondary"
               style={{

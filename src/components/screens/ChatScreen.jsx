@@ -3,12 +3,14 @@ import { awardPoints } from '../../utils/pointsSystem';
 import { updateUserStats, addPointsToUser } from '../../utils/demoUsers';
 import GiftSelector from '../gifts/GiftSelector';
 import UserAvatar from '../avatar/UserAvatar';
+import BreakupModal from '../modals/BreakupModal';
 
 export default function ChatScreen({ currentUser, matchedUser, onBack }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [letterCount, setLetterCount] = useState({ user: 0, matched: 0 });
   const [showGiftSelector, setShowGiftSelector] = useState(false);
+  const [showBreakupModal, setShowBreakupModal] = useState(false);
   const [userCoins, setUserCoins] = useState(currentUser?.coins || 0);
   const messagesEndRef = useRef(null);
 
@@ -179,22 +181,43 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
         marginBottom: '15px',
         boxShadow: '0 5px 15px rgba(102, 126, 234, 0.3)'
       }}>
-        <button
-          onClick={onBack}
-          style={{
-            background: 'rgba(255,255,255,0.2)',
-            border: 'none',
-            color: 'white',
-            padding: '8px 15px',
-            borderRadius: '10px',
-            cursor: 'pointer',
-            marginBottom: '15px',
-            fontSize: '14px',
-            fontWeight: '600'
-          }}
-        >
-          ← Retour
-        </button>
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
+          <button
+            onClick={onBack}
+            style={{
+              background: 'rgba(255,255,255,0.2)',
+              border: 'none',
+              color: 'white',
+              padding: '8px 15px',
+              borderRadius: '10px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: '600',
+              flex: 1
+            }}
+          >
+            ← Retour
+          </button>
+          <button
+            onClick={() => setShowBreakupModal(true)}
+            style={{
+              background: 'rgba(255,255,255,0.2)',
+              border: 'none',
+              color: 'white',
+              padding: '8px 15px',
+              borderRadius: '10px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: '600',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+            title="Archiver cette conversation"
+          >
+            📦 Archiver
+          </button>
+        </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
           {/* Avatar/Photo avec floutage progressif */}
@@ -462,6 +485,35 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
             const updatedMessages = [...messages, giftMessage];
             setMessages(updatedMessages);
             saveConversation(updatedMessages, letterCount);
+          }}
+        />
+      )}
+
+      {/* Breakup Modal */}
+      {showBreakupModal && (
+        <BreakupModal
+          currentUser={currentUser}
+          profile={matchedUser}
+          messages={messages}
+          onClose={() => setShowBreakupModal(false)}
+          onBreakup={(memory) => {
+            // Supprimer le match
+            const matches = JSON.parse(localStorage.getItem('jeutaime_matches') || '{}');
+            if (matches[currentUser?.email]) {
+              matches[currentUser.email] = matches[currentUser.email].filter(
+                m => m.userId !== matchedUser.id
+              );
+              localStorage.setItem('jeutaime_matches', JSON.stringify(matches));
+            }
+
+            // Supprimer la conversation active
+            const conversations = JSON.parse(localStorage.getItem('jeutaime_conversations') || '{}');
+            const convKey = getConversationKey(currentUser.email, matchedUser.id);
+            delete conversations[convKey];
+            localStorage.setItem('jeutaime_conversations', JSON.stringify(conversations));
+
+            // Retour à la liste des conversations
+            onBack();
           }}
         />
       )}

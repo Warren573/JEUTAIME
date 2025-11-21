@@ -253,6 +253,7 @@ function MainApp() {
       {screen === 'bars' && !gameScreen && !selectedBar && <BarsScreen setScreen={setScreen} setGameScreen={setGameScreen} setSelectedBar={setSelectedBar} currentUser={currentUser} />}
       {screen === 'referral' && !gameScreen && !selectedBar && <ReferralScreen currentUser={currentUser} />}
       {screen === 'letters' && !gameScreen && !selectedBar && <LettersScreen currentUser={currentUser} />}
+      {screen === 'memories' && !gameScreen && !selectedBar && <MemoriesScreen currentUser={currentUser} setScreen={setScreen} />}
       {screen === 'journal' && !gameScreen && !selectedBar && <JournalScreen {...appState} />}
       {screen === 'settings' && !gameScreen && !selectedBar && <SettingsScreen {...appState} />}
 
