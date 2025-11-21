@@ -8,6 +8,7 @@ import JournalScreen from './components/screens/JournalScreen';
 import MemoriesScreen from './components/screens/MemoriesScreen';
 import BadgesScreen from './components/screens/BadgesScreen';
 import SettingsScreen from './components/screens/SettingsScreen';
+import PhotoBookScreen from './components/screens/PhotoBookScreen';
 import BarDetailScreen from './components/screens/BarDetailScreen';
 import RankingScreen from './components/screens/RankingScreen';
 import BarsScreen from './components/screens/BarsScreen';
@@ -254,6 +255,7 @@ function MainApp() {
       {screen === 'referral' && !gameScreen && !selectedBar && <ReferralScreen currentUser={currentUser} />}
       {screen === 'letters' && !gameScreen && !selectedBar && <LettersScreen currentUser={currentUser} />}
       {screen === 'memories' && !gameScreen && !selectedBar && <MemoriesScreen currentUser={currentUser} setScreen={setScreen} />}
+      {screen === 'photobook' && !gameScreen && !selectedBar && <PhotoBookScreen currentUser={currentUser} setScreen={setScreen} />}
       {screen === 'journal' && !gameScreen && !selectedBar && <JournalScreen {...appState} />}
       {screen === 'settings' && !gameScreen && !selectedBar && <SettingsScreen {...appState} />}
 
