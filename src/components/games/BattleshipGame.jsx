@@ -555,41 +555,12 @@ export default function BattleshipGame({ currentUser, opponent, onClose, onGameE
 
         {/* Grids */}
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: phase === 'placement' ? '1fr' : '1fr 1fr',
+          display: 'flex',
+          flexDirection: 'column',
           gap: '8px',
           marginBottom: '10px'
         }}>
-          {/* Player grid */}
-          {(phase === 'placement' || phase === 'battle' || phase === 'gameover') && (
-            <div>
-              <div style={{
-                fontSize: '0.75rem',
-                fontWeight: '700',
-                marginBottom: '4px',
-                textAlign: 'center',
-                color: '#0D47A1',
-                letterSpacing: '0.5px'
-              }}>
-                {phase === 'placement' ? '📍 MES NAVIRES' : '🛡️ MA FLOTTE'}
-              </div>
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: `repeat(${GRID_SIZE}, 1fr)`,
-                gap: '1px',
-                background: '#1976D2',
-                padding: '3px',
-                borderRadius: '8px',
-                boxShadow: '0 3px 8px rgba(25,118,210,0.4)'
-              }}>
-                {playerGrid.map((row, rowIndex) =>
-                  row.map((_, colIndex) => renderCell(rowIndex, colIndex, true))
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Opponent grid (only in battle phase) */}
+          {/* Opponent grid (only in battle phase) - FIRST */}
           {(phase === 'battle' || phase === 'gameover') && (
             <div>
               <div style={{
@@ -613,6 +584,35 @@ export default function BattleshipGame({ currentUser, opponent, onClose, onGameE
               }}>
                 {opponentGrid.map((row, rowIndex) =>
                   row.map((_, colIndex) => renderCell(rowIndex, colIndex, false))
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Player grid - SECOND */}
+          {(phase === 'placement' || phase === 'battle' || phase === 'gameover') && (
+            <div>
+              <div style={{
+                fontSize: '0.75rem',
+                fontWeight: '700',
+                marginBottom: '4px',
+                textAlign: 'center',
+                color: '#0D47A1',
+                letterSpacing: '0.5px'
+              }}>
+                {phase === 'placement' ? '📍 MES NAVIRES' : '🛡️ MA FLOTTE'}
+              </div>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: `repeat(${GRID_SIZE}, 1fr)`,
+                gap: '1px',
+                background: '#1976D2',
+                padding: '3px',
+                borderRadius: '8px',
+                boxShadow: '0 3px 8px rgba(25,118,210,0.4)'
+              }}>
+                {playerGrid.map((row, rowIndex) =>
+                  row.map((_, colIndex) => renderCell(rowIndex, colIndex, true))
                 )}
               </div>
             </div>
