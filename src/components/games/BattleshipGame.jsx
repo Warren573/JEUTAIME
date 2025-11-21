@@ -139,18 +139,18 @@ export default function BattleshipGame({ currentUser, opponent, onClose, onGameE
     if (hit) {
       const newScore = { ...score, player: score.player + 1 };
       setScore(newScore);
-      setMessage('💥 Touché !');
+      setMessage('🔥 Touché ! Navire ennemi en feu !');
 
       // Check if all opponent ships are sunk
       if (checkAllShipsSunk(opponentGrid, newShots)) {
         setWinner('player');
         setPhase('gameover');
-        setMessage('🏆 VICTOIRE ! Tous les navires ennemis coulés !');
+        setMessage('🏆 VICTOIRE ! Toute la flotte ennemie a coulé ! ⚓');
         if (onGameEnd) onGameEnd('player', newScore);
         return;
       }
     } else {
-      setMessage('💦 Plouf ! Raté...');
+      setMessage('🌊 Dans l\'eau ! Tire ailleurs...');
     }
 
     // Opponent turn after a delay
@@ -179,18 +179,18 @@ export default function BattleshipGame({ currentUser, opponent, onClose, onGameE
     if (hit) {
       const newScore = { ...score, opponent: score.opponent + 1 };
       setScore(newScore);
-      setMessage(`💥 L'adversaire t'a touché en ${String.fromCharCode(65 + row)}${col + 1} !`);
+      setMessage(`🔥 Touché ! L'ennemi a détruit un de tes navires !`);
 
       // Check if all player ships are sunk
       if (checkAllShipsSunk(playerGrid, newShots)) {
         setWinner('opponent');
         setPhase('gameover');
-        setMessage('😞 DÉFAITE ! Tous tes navires ont coulé...');
+        setMessage('💀 DÉFAITE ! Toute ta flotte a coulé... ⚓');
         if (onGameEnd) onGameEnd('opponent', newScore);
         return;
       }
     } else {
-      setMessage('💦 L\'adversaire a raté son tir !');
+      setMessage('🌊 L\'ennemi a raté ! Ton tour !');
     }
 
     setTimeout(() => {
@@ -249,14 +249,18 @@ export default function BattleshipGame({ currentUser, opponent, onClose, onGameE
     const shotValue = shots[row][col];
 
     let content = '';
-    let bgColor = 'var(--color-beige-light)';
-    let borderColor = 'var(--color-brown-light)';
+    let bgColor = '#E3F2FD'; // Eau claire par défaut
+    let borderColor = '#90CAF9';
+    let boxShadow = 'inset 0 0 0 1px rgba(33, 150, 243, 0.3)';
 
     if (phase === 'placement' && isPlayerGrid) {
       if (cellValue) {
-        const ship = SHIPS.find(s => s.id === cellValue);
-        content = ship?.emoji || '🟦';
-        bgColor = '#3498DB';
+        content = '🚢';
+        bgColor = '#2196F3';
+        borderColor = '#1976D2';
+        boxShadow = '0 2px 4px rgba(33, 150, 243, 0.4)';
+      } else {
+        bgColor = '#B3E5FC';
       }
 
       // Preview
@@ -265,29 +269,38 @@ export default function BattleshipGame({ currentUser, opponent, onClose, onGameE
         const isValidPlacement = canPlaceShip(playerGrid, row, col, SHIPS[currentShipIndex].size, shipOrientation);
 
         if (previewCells.some(c => c.row === row && c.col === col)) {
-          bgColor = isValidPlacement ? 'rgba(52, 152, 219, 0.3)' : 'rgba(231, 76, 60, 0.3)';
+          bgColor = isValidPlacement ? 'rgba(76, 175, 80, 0.4)' : 'rgba(244, 67, 54, 0.4)';
+          borderColor = isValidPlacement ? '#4CAF50' : '#F44336';
         }
       }
     } else if (phase === 'battle' || phase === 'gameover') {
       if (isPlayerGrid) {
         // Show player's ships and opponent hits
-        if (cellValue) {
-          const ship = SHIPS.find(s => s.id === cellValue);
-          content = ship?.emoji || '🟦';
-          bgColor = shotValue === 'hit' ? '#E74C3C' : '#3498DB';
-        }
-        if (shotValue === 'miss') {
-          content = '💦';
-          bgColor = '#95A5A6';
+        if (shotValue === 'hit') {
+          content = '🔥';
+          bgColor = '#FF5722';
+          borderColor = '#D84315';
+          boxShadow = '0 0 12px rgba(255, 87, 34, 0.6), inset 0 0 8px rgba(0, 0, 0, 0.3)';
+        } else if (shotValue === 'miss') {
+          content = '🌊';
+          bgColor = '#00BCD4';
+          borderColor = '#0097A7';
+        } else if (cellValue) {
+          content = '🚢';
+          bgColor = '#2196F3';
+          borderColor = '#1976D2';
         }
       } else {
         // Show only hits and misses on opponent grid
         if (shotValue === 'hit') {
-          content = '💥';
-          bgColor = '#E74C3C';
+          content = '🔥';
+          bgColor = '#FF5722';
+          borderColor = '#D84315';
+          boxShadow = '0 0 12px rgba(255, 87, 34, 0.6), inset 0 0 8px rgba(0, 0, 0, 0.3)';
         } else if (shotValue === 'miss') {
-          content = '💦';
-          bgColor = '#95A5A6';
+          content = '🌊';
+          bgColor = '#00BCD4';
+          borderColor = '#0097A7';
         }
       }
     }
@@ -302,21 +315,37 @@ export default function BattleshipGame({ currentUser, opponent, onClose, onGameE
             handleCellClick(row, col);
           }
         }}
-        onMouseEnter={() => isPlayerGrid && phase === 'placement' && setHoveredCell({ row, col })}
-        onMouseLeave={() => isPlayerGrid && phase === 'placement' && setHoveredCell(null)}
+        onMouseEnter={(e) => {
+          if (isPlayerGrid && phase === 'placement') {
+            setHoveredCell({ row, col });
+          }
+          if (phase === 'battle' && !isPlayerGrid && isPlayerTurn && !shotValue) {
+            e.currentTarget.style.transform = 'scale(1.1)';
+            e.currentTarget.style.zIndex = '10';
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (isPlayerGrid && phase === 'placement') {
+            setHoveredCell(null);
+          }
+          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.zIndex = '1';
+        }}
         style={{
           width: '100%',
           aspectRatio: '1',
           background: bgColor,
-          border: `1px solid ${borderColor}`,
+          border: `2px solid ${borderColor}`,
+          borderRadius: '4px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: '1.2rem',
+          fontSize: content ? '0.9rem' : '0',
           cursor: phase === 'battle' && !isPlayerGrid && isPlayerTurn && !shotValue ? 'crosshair' :
                   phase === 'placement' && isPlayerGrid ? 'pointer' : 'default',
-          transition: 'all 0.2s',
-          position: 'relative'
+          transition: 'all 0.2s ease',
+          position: 'relative',
+          boxShadow: boxShadow
         }}
       >
         {content}
@@ -331,24 +360,24 @@ export default function BattleshipGame({ currentUser, opponent, onClose, onGameE
       left: 0,
       right: 0,
       bottom: 0,
-      background: 'rgba(0, 0, 0, 0.9)',
+      background: 'linear-gradient(180deg, rgba(13, 71, 161, 0.95) 0%, rgba(1, 87, 155, 0.95) 100%)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: 10000,
-      padding: 'var(--spacing-md)',
+      padding: '10px',
       overflow: 'auto'
     }}>
       <div style={{
-        background: 'var(--color-cream)',
-        borderRadius: 'var(--border-radius-xl)',
-        padding: 'var(--spacing-lg)',
-        maxWidth: '900px',
+        background: 'linear-gradient(180deg, #E3F2FD 0%, #BBDEFB 100%)',
+        borderRadius: '20px',
+        padding: '12px',
+        maxWidth: '650px',
         width: '100%',
-        maxHeight: '95vh',
+        maxHeight: '98vh',
         overflow: 'auto',
-        boxShadow: 'var(--shadow-xl)',
-        border: '4px solid var(--color-brown-dark)',
+        boxShadow: '0 10px 40px rgba(0, 0, 0, 0.4)',
+        border: '4px solid #1976D2',
         position: 'relative'
       }}>
         {/* Close button */}
@@ -377,33 +406,37 @@ export default function BattleshipGame({ currentUser, opponent, onClose, onGameE
         </button>
 
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: 'var(--spacing-md)' }}>
+        <div style={{ textAlign: 'center', marginBottom: '10px' }}>
           <h2 style={{
             fontFamily: 'var(--font-heading)',
-            fontSize: '1.5rem',
-            color: 'var(--color-text-primary)',
-            margin: '0 0 var(--spacing-xs) 0'
+            fontSize: '1.4rem',
+            color: '#0D47A1',
+            margin: '0 0 6px 0',
+            textShadow: '0 1px 2px rgba(0,0,0,0.1)'
           }}>
-            ⚓ Bataille Navale
+            ⚓ Bataille Navale ⚓
           </h2>
           <div style={{
-            fontSize: '0.9rem',
-            color: 'var(--color-text-secondary)',
-            fontWeight: '600',
-            marginBottom: 'var(--spacing-xs)'
+            fontSize: '0.8rem',
+            color: '#1565C0',
+            fontWeight: '700',
+            marginBottom: '8px',
+            letterSpacing: '0.5px'
           }}>
-            {phase === 'placement' ? '📍 Phase de placement' :
-             phase === 'battle' ? '⚔️ En combat' : '🏁 Partie terminée'}
+            {phase === 'placement' ? '📍 PLACEMENT DES NAVIRES' :
+             phase === 'battle' ? '⚔️ COMBAT NAVAL' : '🏁 BATAILLE TERMINÉE'}
           </div>
           <div style={{
-            padding: 'var(--spacing-sm)',
+            padding: '8px 12px',
             background: phase === 'gameover' ?
-              (winner === 'player' ? '#4CAF50' : '#E74C3C') :
-              'var(--color-beige-light)',
-            borderRadius: 'var(--border-radius-md)',
-            border: '2px solid var(--color-brown-light)',
-            color: phase === 'gameover' ? 'white' : 'var(--color-text-primary)',
-            fontWeight: 'bold'
+              (winner === 'player' ? 'linear-gradient(135deg, #4CAF50, #2E7D32)' : 'linear-gradient(135deg, #F44336, #C62828)') :
+              'linear-gradient(135deg, #FFF3E0, #FFE0B2)',
+            borderRadius: '12px',
+            border: phase === 'gameover' ? 'none' : '2px solid #FF9800',
+            color: phase === 'gameover' ? 'white' : '#E65100',
+            fontWeight: 'bold',
+            fontSize: '0.85rem',
+            boxShadow: phase === 'gameover' ? '0 4px 12px rgba(0,0,0,0.3)' : '0 2px 6px rgba(255,152,0,0.3)'
           }}>
             {message}
           </div>
@@ -413,40 +446,42 @@ export default function BattleshipGame({ currentUser, opponent, onClose, onGameE
         {phase === 'placement' && (
           <div style={{
             display: 'flex',
-            gap: 'var(--spacing-sm)',
-            marginBottom: 'var(--spacing-md)',
+            gap: '6px',
+            marginBottom: '10px',
             justifyContent: 'center',
             flexWrap: 'wrap'
           }}>
             <button
               onClick={toggleOrientation}
               style={{
-                padding: 'var(--spacing-sm) var(--spacing-md)',
-                background: 'linear-gradient(135deg, #3498DB, #2980B9)',
+                padding: '6px 12px',
+                background: 'linear-gradient(135deg, #2196F3, #1976D2)',
                 color: 'white',
                 border: 'none',
-                borderRadius: 'var(--border-radius-md)',
+                borderRadius: '10px',
                 cursor: 'pointer',
                 fontWeight: '600',
-                fontSize: '0.9rem'
+                fontSize: '0.75rem',
+                boxShadow: '0 2px 6px rgba(33,150,243,0.4)'
               }}
             >
-              🔄 Rotation ({shipOrientation === 'horizontal' ? 'Horizontal' : 'Vertical'})
+              🔄 {shipOrientation === 'horizontal' ? '→' : '↓'}
             </button>
             <button
               onClick={resetShips}
               style={{
-                padding: 'var(--spacing-sm) var(--spacing-md)',
-                background: 'linear-gradient(135deg, #E74C3C, #C0392B)',
+                padding: '6px 12px',
+                background: 'linear-gradient(135deg, #F44336, #C62828)',
                 color: 'white',
                 border: 'none',
-                borderRadius: 'var(--border-radius-md)',
+                borderRadius: '10px',
                 cursor: 'pointer',
                 fontWeight: '600',
-                fontSize: '0.9rem'
+                fontSize: '0.75rem',
+                boxShadow: '0 2px 6px rgba(244,67,54,0.4)'
               }}
             >
-              🔄 Recommencer
+              ↺ Reset
             </button>
           </div>
         )}
@@ -455,8 +490,8 @@ export default function BattleshipGame({ currentUser, opponent, onClose, onGameE
         {phase === 'placement' && (
           <div style={{
             display: 'flex',
-            gap: 'var(--spacing-xs)',
-            marginBottom: 'var(--spacing-md)',
+            gap: '4px',
+            marginBottom: '10px',
             justifyContent: 'center',
             flexWrap: 'wrap'
           }}>
@@ -464,21 +499,22 @@ export default function BattleshipGame({ currentUser, opponent, onClose, onGameE
               <div
                 key={ship.id}
                 style={{
-                  padding: 'var(--spacing-xs)',
-                  background: index < currentShipIndex ? '#4CAF50' :
-                             index === currentShipIndex ? '#3498DB' :
-                             'var(--color-beige-light)',
-                  borderRadius: 'var(--border-radius-md)',
-                  border: '2px solid var(--color-brown-light)',
-                  fontSize: '0.8rem',
+                  padding: '4px 6px',
+                  background: index < currentShipIndex ? 'linear-gradient(135deg, #4CAF50, #2E7D32)' :
+                             index === currentShipIndex ? 'linear-gradient(135deg, #FF9800, #F57C00)' :
+                             '#E0E0E0',
+                  borderRadius: '8px',
+                  border: index === currentShipIndex ? '2px solid #FFA726' : 'none',
+                  fontSize: '0.7rem',
                   textAlign: 'center',
-                  minWidth: '80px',
-                  color: index <= currentShipIndex ? 'white' : 'var(--color-text-primary)'
+                  minWidth: '65px',
+                  color: index <= currentShipIndex ? 'white' : '#757575',
+                  fontWeight: '600',
+                  boxShadow: index === currentShipIndex ? '0 2px 8px rgba(255,152,0,0.5)' : 'none'
                 }}
               >
-                <div>{ship.emoji}</div>
-                <div style={{ fontWeight: '600', fontSize: '0.7rem' }}>{ship.name}</div>
-                <div style={{ fontSize: '0.7rem' }}>{ship.size} cases</div>
+                <div style={{ fontSize: '1rem' }}>{ship.emoji}</div>
+                <div style={{ fontSize: '0.65rem' }}>{ship.size}×</div>
               </div>
             ))}
           </div>
@@ -489,27 +525,29 @@ export default function BattleshipGame({ currentUser, opponent, onClose, onGameE
           <div style={{
             display: 'flex',
             justifyContent: 'space-around',
-            marginBottom: 'var(--spacing-md)',
-            padding: 'var(--spacing-sm)',
-            background: 'var(--color-beige-light)',
-            borderRadius: 'var(--border-radius-md)',
-            border: '2px solid var(--color-brown-light)'
+            alignItems: 'center',
+            marginBottom: '10px',
+            padding: '8px',
+            background: 'linear-gradient(135deg, #FFF3E0, #FFE0B2)',
+            borderRadius: '12px',
+            border: '2px solid #FF9800',
+            boxShadow: '0 2px 6px rgba(255,152,0,0.3)'
           }}>
             <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>
-                {currentUser?.name || 'Toi'}
+              <div style={{ fontSize: '0.7rem', color: '#1976D2', fontWeight: '600' }}>
+                {currentUser?.name || 'TOI'}
               </div>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#4CAF50' }}>
-                {score.player} 💥
+              <div style={{ fontSize: '1.3rem', fontWeight: 'bold', color: '#2196F3' }}>
+                {score.player} 🔥
               </div>
             </div>
-            <div style={{ fontSize: '1.5rem', color: 'var(--color-text-light)' }}>VS</div>
+            <div style={{ fontSize: '1.2rem', color: '#FF9800', fontWeight: 'bold' }}>VS</div>
             <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>
-                {opponent?.name || 'Adversaire'}
+              <div style={{ fontSize: '0.7rem', color: '#C62828', fontWeight: '600' }}>
+                {opponent?.name || 'ENNEMI'}
               </div>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#E74C3C' }}>
-                {score.opponent} 💥
+              <div style={{ fontSize: '1.3rem', fontWeight: 'bold', color: '#F44336' }}>
+                {score.opponent} 🔥
               </div>
             </div>
           </div>
@@ -519,28 +557,30 @@ export default function BattleshipGame({ currentUser, opponent, onClose, onGameE
         <div style={{
           display: 'grid',
           gridTemplateColumns: phase === 'placement' ? '1fr' : '1fr 1fr',
-          gap: 'var(--spacing-md)',
-          marginBottom: 'var(--spacing-md)'
+          gap: '8px',
+          marginBottom: '10px'
         }}>
           {/* Player grid */}
           {(phase === 'placement' || phase === 'battle' || phase === 'gameover') && (
             <div>
               <div style={{
-                fontSize: '0.9rem',
-                fontWeight: 'bold',
-                marginBottom: 'var(--spacing-xs)',
+                fontSize: '0.75rem',
+                fontWeight: '700',
+                marginBottom: '4px',
                 textAlign: 'center',
-                color: 'var(--color-text-primary)'
+                color: '#0D47A1',
+                letterSpacing: '0.5px'
               }}>
-                {phase === 'placement' ? '📍 Place tes navires' : '🛡️ Ta flotte'}
+                {phase === 'placement' ? '📍 MES NAVIRES' : '🛡️ MA FLOTTE'}
               </div>
               <div style={{
                 display: 'grid',
                 gridTemplateColumns: `repeat(${GRID_SIZE}, 1fr)`,
-                gap: '2px',
-                background: 'var(--color-brown-dark)',
-                padding: '2px',
-                borderRadius: 'var(--border-radius-md)'
+                gap: '1px',
+                background: '#1976D2',
+                padding: '3px',
+                borderRadius: '8px',
+                boxShadow: '0 3px 8px rgba(25,118,210,0.4)'
               }}>
                 {playerGrid.map((row, rowIndex) =>
                   row.map((_, colIndex) => renderCell(rowIndex, colIndex, true))
@@ -553,21 +593,23 @@ export default function BattleshipGame({ currentUser, opponent, onClose, onGameE
           {(phase === 'battle' || phase === 'gameover') && (
             <div>
               <div style={{
-                fontSize: '0.9rem',
-                fontWeight: 'bold',
-                marginBottom: 'var(--spacing-xs)',
+                fontSize: '0.75rem',
+                fontWeight: '700',
+                marginBottom: '4px',
                 textAlign: 'center',
-                color: 'var(--color-text-primary)'
+                color: '#C62828',
+                letterSpacing: '0.5px'
               }}>
-                🎯 Flotte ennemie
+                🎯 FLOTTE ENNEMIE
               </div>
               <div style={{
                 display: 'grid',
                 gridTemplateColumns: `repeat(${GRID_SIZE}, 1fr)`,
-                gap: '2px',
-                background: 'var(--color-brown-dark)',
-                padding: '2px',
-                borderRadius: 'var(--border-radius-md)'
+                gap: '1px',
+                background: '#C62828',
+                padding: '3px',
+                borderRadius: '8px',
+                boxShadow: '0 3px 8px rgba(198,40,40,0.4)'
               }}>
                 {opponentGrid.map((row, rowIndex) =>
                   row.map((_, colIndex) => renderCell(rowIndex, colIndex, false))
@@ -580,17 +622,18 @@ export default function BattleshipGame({ currentUser, opponent, onClose, onGameE
         {/* Legend */}
         <div style={{
           display: 'flex',
-          gap: 'var(--spacing-md)',
+          gap: '12px',
           justifyContent: 'center',
-          fontSize: '0.8rem',
-          color: 'var(--color-text-secondary)',
-          flexWrap: 'wrap'
+          fontSize: '0.7rem',
+          color: '#0D47A1',
+          flexWrap: 'wrap',
+          fontWeight: '600'
         }}>
           {(phase === 'battle' || phase === 'gameover') && (
             <>
-              <div>💥 = Touché</div>
-              <div>💦 = Raté</div>
-              <div>🟦 = Navire</div>
+              <div>🔥 = Touché</div>
+              <div>🌊 = Raté</div>
+              <div>🚢 = Navire</div>
             </>
           )}
         </div>
