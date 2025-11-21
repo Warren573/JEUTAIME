@@ -346,12 +346,14 @@ export default function PhotoBookScreen({ currentUser, setScreen }) {
                   padding: 'var(--spacing-md)',
                   border: '3px solid var(--color-gold)',
                   boxShadow: 'var(--shadow-lg)',
-                  marginBottom: 'var(--spacing-lg)'
+                  marginBottom: 'var(--spacing-lg)',
+                  overflow: 'hidden'
                 }}>
                   <div style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(6, 1fr)',
-                    gap: 'var(--spacing-sm)'
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(50px, 1fr))',
+                    gap: 'var(--spacing-sm)',
+                    maxWidth: '100%'
                   }}>
                     {photoBook.stickers.map((sticker) => (
                       <div
@@ -444,7 +446,8 @@ export default function PhotoBookScreen({ currentUser, setScreen }) {
               background: 'var(--color-cream)',
               padding: 'var(--spacing-md)',
               border: '2px solid var(--color-tan)',
-              boxShadow: 'var(--shadow-md)'
+              boxShadow: 'var(--shadow-md)',
+              overflow: 'hidden'
             }}>
               <h4 style={{
                 fontSize: '1rem',
@@ -456,8 +459,9 @@ export default function PhotoBookScreen({ currentUser, setScreen }) {
               </h4>
               <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(6, 1fr)',
-                gap: 'var(--spacing-sm)'
+                gridTemplateColumns: 'repeat(auto-fit, minmax(50px, 1fr))',
+                gap: 'var(--spacing-sm)',
+                maxWidth: '100%'
               }}>
                 {STICKER_CATEGORIES[selectedCategory].emojis.map((emoji) => {
                   const isInCollection = photoBook.stickers.some(s => s.emoji === emoji);
