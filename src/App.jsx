@@ -39,6 +39,10 @@ import { awardDailyLogin } from './utils/pointsSystem';
 // Demo users
 import { initializeDemoUsers } from './utils/demoUsers';
 
+// Ad system
+import { shouldShowAd, markAdAsShown, getRandomAd } from './utils/adSystem';
+import AdOverlay from './components/AdOverlay';
+
 // Data
 import { bars } from './data/appData';
 
@@ -59,6 +63,8 @@ function MainApp() {
   const [joinedBars, setJoinedBars] = useState([1]);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
   const [adminMode, setAdminMode] = useState(false);
+  const [showAd, setShowAd] = useState(false);
+  const [currentAd, setCurrentAd] = useState(null);
 
   const { isAdminAuthenticated } = useAdmin();
 
@@ -83,6 +89,14 @@ function MainApp() {
         if (updatedUser) {
           setCurrentUser(updatedUser);
         }
+      }
+
+      // Vérifier si l'utilisateur doit voir une pub
+      if (shouldShowAd()) {
+        const ad = getRandomAd();
+        setCurrentAd(ad);
+        setShowAd(true);
+        markAdAsShown();
       }
     }
   }, []);
@@ -132,6 +146,14 @@ function MainApp() {
         setCurrentUser(updatedUser);
         setUserCoins(updatedUser.coins || 100);
       }
+    }
+
+    // Vérifier si l'utilisateur doit voir une pub
+    if (shouldShowAd()) {
+      const ad = getRandomAd();
+      setCurrentAd(ad);
+      setShowAd(true);
+      markAdAsShown();
     }
   };
 
@@ -301,6 +323,14 @@ function MainApp() {
         >
           {adminMode ? '🛡️' : '🔒'}
         </button>
+      )}
+
+      {/* Publicité au lancement */}
+      {showAd && currentAd && (
+        <AdOverlay
+          ad={currentAd}
+          onClose={() => setShowAd(false)}
+        />
       )}
     </div>
   );
