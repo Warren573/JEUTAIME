@@ -22,9 +22,24 @@ export default function BattleshipGame({ currentUser, opponent, onClose, onGameE
   const [score, setScore] = useState({ player: 0, opponent: 0 });
   const [hoveredCell, setHoveredCell] = useState(null);
   const [winner, setWinner] = useState(null);
+  const [sunkShipAnimation, setSunkShipAnimation] = useState(null); // { shipName, isPlayer }
 
   function createEmptyGrid() {
     return Array(GRID_SIZE).fill(null).map(() => Array(GRID_SIZE).fill(null));
+  }
+
+  function isShipSunk(grid, shots, shipId) {
+    // Check if all cells of a specific ship have been hit
+    for (let row = 0; row < GRID_SIZE; row++) {
+      for (let col = 0; col < GRID_SIZE; col++) {
+        if (grid[row][col] === shipId) {
+          if (shots[row][col] !== 'hit') {
+            return false; // Found a ship cell that hasn't been hit
+          }
+        }
+      }
+    }
+    return true;
   }
 
   // Initialize opponent grid with random ship placement
@@ -139,7 +154,17 @@ export default function BattleshipGame({ currentUser, opponent, onClose, onGameE
     if (hit) {
       const newScore = { ...score, player: score.player + 1 };
       setScore(newScore);
-      setMessage('🔥 Touché ! Navire ennemi en feu !');
+
+      // Check if we just sunk a ship
+      const hitShipId = opponentGrid[row][col];
+      if (isShipSunk(opponentGrid, newShots, hitShipId)) {
+        const ship = SHIPS.find(s => s.id === hitShipId);
+        setSunkShipAnimation({ shipName: ship.name, isPlayer: false });
+        setMessage(`💀 COULÉ ! ${ship.name} ennemi a coulé ! 🌊`);
+        setTimeout(() => setSunkShipAnimation(null), 3000);
+      } else {
+        setMessage('🔥 Touché ! Navire ennemi en feu !');
+      }
 
       // Check if all opponent ships are sunk
       if (checkAllShipsSunk(opponentGrid, newShots)) {
@@ -179,7 +204,17 @@ export default function BattleshipGame({ currentUser, opponent, onClose, onGameE
     if (hit) {
       const newScore = { ...score, opponent: score.opponent + 1 };
       setScore(newScore);
-      setMessage(`🔥 Touché ! L'ennemi a détruit un de tes navires !`);
+
+      // Check if opponent just sunk one of our ships
+      const hitShipId = playerGrid[row][col];
+      if (isShipSunk(playerGrid, newShots, hitShipId)) {
+        const ship = SHIPS.find(s => s.id === hitShipId);
+        setSunkShipAnimation({ shipName: ship.name, isPlayer: true });
+        setMessage(`💀 COULÉ ! Ton ${ship.name} a coulé ! 🌊`);
+        setTimeout(() => setSunkShipAnimation(null), 3000);
+      } else {
+        setMessage(`🔥 Touché ! L'ennemi a touché un de tes navires !`);
+      }
 
       // Check if all player ships are sunk
       if (checkAllShipsSunk(playerGrid, newShots)) {
@@ -404,6 +439,56 @@ export default function BattleshipGame({ currentUser, opponent, onClose, onGameE
         >
           ×
         </button>
+
+        {/* Sunk Ship Animation */}
+        {sunkShipAnimation && (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            background: sunkShipAnimation.isPlayer ?
+              'linear-gradient(135deg, #F44336, #C62828)' :
+              'linear-gradient(135deg, #4CAF50, #2E7D32)',
+            padding: '20px 30px',
+            borderRadius: '20px',
+            border: '4px solid white',
+            boxShadow: '0 10px 40px rgba(0, 0, 0, 0.6)',
+            zIndex: 1000,
+            animation: 'sunkShipPop 3s ease-in-out',
+            textAlign: 'center'
+          }}>
+            <style>{`
+              @keyframes sunkShipPop {
+                0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+                10% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+                20% { transform: translate(-50%, -50%) scale(1); }
+                80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+                100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+              }
+            `}</style>
+            <div style={{ fontSize: '3rem', marginBottom: '10px' }}>
+              💀 ⚓ 🌊
+            </div>
+            <div style={{
+              color: 'white',
+              fontWeight: 'bold',
+              fontSize: '1.2rem',
+              textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+            }}>
+              {sunkShipAnimation.shipName}
+            </div>
+            <div style={{
+              color: 'white',
+              fontSize: '1.5rem',
+              fontWeight: 'bold',
+              marginTop: '5px',
+              textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+            }}>
+              COULÉ !
+            </div>
+          </div>
+        )}
 
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '10px' }}>
