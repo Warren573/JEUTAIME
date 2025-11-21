@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import GiftSelector from '../gifts/GiftSelector';
 import MagicEffect from '../effects/MagicEffect';
 import RockPaperScissorsGame from '../games/RockPaperScissorsGame';
+import BattleshipGame from '../games/BattleshipGame';
 import Avatar from 'avataaars';
 import { generateAvatarOptions } from '../../utils/avatarGenerator';
 import {
@@ -27,6 +28,10 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
   // Système Pierre-Feuille-Ciseaux
   const [showRPSGame, setShowRPSGame] = useState(false);
   const [rpsOpponent, setRPSOpponent] = useState(null);
+
+  // Système Bataille Navale
+  const [showBattleshipGame, setShowBattleshipGame] = useState(false);
+  const [battleshipOpponent, setBattleshipOpponent] = useState(null);
 
   // Chat discussion - Charger depuis localStorage
   const [messages, setMessages] = useState(() => {
@@ -297,6 +302,37 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
     setRPSOpponent(null);
   };
 
+  const handlePlayBattleship = (member) => {
+    setBattleshipOpponent(member);
+    setShowBattleshipGame(true);
+  };
+
+  const handleBattleshipGameEnd = (winner, score) => {
+    const barId = bar?.type || bar?.id || 'unknown';
+
+    // Message système pour annoncer le résultat
+    let resultText = '';
+    if (winner === 'player') {
+      resultText = `⚓ ${currentUser?.name || 'Toi'} a coulé la flotte de ${battleshipOpponent?.name} à la Bataille Navale ! (${score.player} touches vs ${score.opponent})`;
+    } else if (winner === 'opponent') {
+      resultText = `🚢 ${battleshipOpponent?.name} a coulé la flotte de ${currentUser?.name || 'Toi'} à la Bataille Navale ! (${score.opponent} touches vs ${score.player})`;
+    }
+
+    const gameMessage = saveBarMessage(
+      barId,
+      'system',
+      'Système',
+      resultText,
+      true
+    );
+
+    setMessages([...messages, gameMessage]);
+
+    // Fermer le jeu
+    setShowBattleshipGame(false);
+    setBattleshipOpponent(null);
+  };
+
   return (
     <div style={{
       height: '100vh',
@@ -528,6 +564,36 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
                     title="Pierre-Feuille-Ciseaux"
                   >
                     ✊
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePlayBattleship(member);
+                    }}
+                    style={{
+                      flex: 1,
+                      padding: '4px 8px',
+                      background: 'linear-gradient(135deg, #3498DB, #2980B9)',
+                      border: 'none',
+                      borderRadius: '8px',
+                      color: 'white',
+                      fontSize: '0.7rem',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      boxShadow: '0 2px 8px rgba(52,152,219,0.4)',
+                      transition: 'all 0.2s'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.transform = 'scale(1.05)';
+                      e.target.style.boxShadow = '0 4px 12px rgba(52,152,219,0.6)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.transform = 'scale(1)';
+                      e.target.style.boxShadow = '0 2px 8px rgba(52,152,219,0.4)';
+                    }}
+                    title="Bataille Navale"
+                  >
+                    ⚓
                   </button>
                 </div>
               )}
@@ -1009,6 +1075,19 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
             setRPSOpponent(null);
           }}
           onGameEnd={handleRPSGameEnd}
+        />
+      )}
+
+      {/* Battleship Game */}
+      {showBattleshipGame && battleshipOpponent && (
+        <BattleshipGame
+          currentUser={currentUser}
+          opponent={battleshipOpponent}
+          onClose={() => {
+            setShowBattleshipGame(false);
+            setBattleshipOpponent(null);
+          }}
+          onGameEnd={handleBattleshipGameEnd}
         />
       )}
     </div>

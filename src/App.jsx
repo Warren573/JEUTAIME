@@ -21,6 +21,7 @@ import BrickBreakerGame from './components/games/BrickBreakerGame';
 import MorpionGame from './components/games/MorpionGame';
 import CardGame from './components/games/CardGame';
 import StoryTimeGame from './components/games/StoryTimeGame';
+import BattleshipGame from './components/games/BattleshipGame';
 
 // Admin
 import { AdminProvider, useAdmin } from './contexts/AdminContext';
@@ -265,6 +266,7 @@ function MainApp() {
       {gameScreen === 'morpion' && <MorpionGame {...appState} currentUser={currentUser} />}
       {gameScreen === 'cards' && <CardGame {...appState} currentUser={currentUser} />}
       {gameScreen === 'storytime' && <StoryTimeGame {...appState} currentUser={currentUser} />}
+      {gameScreen === 'battleship' && <BattleshipGame {...appState} currentUser={currentUser} />}
 
       {selectedBar && <BarDetailScreen {...appState} bar={bars.find(b => b.id === selectedBar)} />}
 
