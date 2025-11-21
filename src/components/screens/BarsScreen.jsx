@@ -100,6 +100,73 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
         </p>
       </div>
 
+      {/* Collaborations Éphémères */}
+      <div style={{ padding: '0 var(--spacing-md)', marginBottom: 'var(--spacing-lg)' }}>
+        <div
+          onClick={() => setScreen('collaborations')}
+          style={{
+            background: 'linear-gradient(135deg, #667eea, #764ba2)',
+            borderRadius: 'var(--border-radius-xl)',
+            padding: 'var(--spacing-lg)',
+            boxShadow: '0 6px 20px rgba(102, 126, 234, 0.4)',
+            border: '3px solid rgba(255, 255, 255, 0.3)',
+            cursor: 'pointer',
+            transition: 'all 0.3s',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-4px)';
+            e.currentTarget.style.boxShadow = '0 8px 24px rgba(102, 126, 234, 0.6)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.4)';
+          }}
+        >
+          {/* Badge "NOUVEAU" */}
+          <div style={{
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            background: '#FFD700',
+            color: '#000',
+            padding: '4px 12px',
+            borderRadius: '20px',
+            fontSize: '0.7rem',
+            fontWeight: '900',
+            letterSpacing: '1px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+          }}>
+            ✨ NOUVEAU
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+            <span style={{ fontSize: '3rem' }}>🤝</span>
+            <div style={{ flex: 1 }}>
+              <h3 style={{
+                color: 'white',
+                margin: '0 0 8px 0',
+                fontSize: '1.5rem',
+                fontWeight: '800',
+                textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+              }}>
+                Collaborations Éphémères
+              </h3>
+              <p style={{
+                color: 'rgba(255,255,255,0.95)',
+                margin: 0,
+                fontSize: '0.9rem',
+                lineHeight: '1.4'
+              }}>
+                Les bars s'associent pour des événements uniques! 48h de folie avec bonus exclusifs 🎉
+              </p>
+            </div>
+            <span style={{ fontSize: '2rem', color: 'white' }}>→</span>
+          </div>
+        </div>
+      </div>
+
       {/* Bouton créer son bar (Premium) */}
       <div style={{ padding: '0 var(--spacing-sm)' }}>
         {currentUser?.isPremium && (
