@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import GiftSelector from '../gifts/GiftSelector';
 import MagicEffect from '../effects/MagicEffect';
+import RockPaperScissorsGame from '../games/RockPaperScissorsGame';
 import Avatar from 'avataaars';
 import { generateAvatarOptions } from '../../utils/avatarGenerator';
 import {
@@ -22,6 +23,10 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
   const [selectedMember, setSelectedMember] = useState(null);
   const [magicEffect, setMagicEffect] = useState(null);
   const [giftReceiverEffect, setGiftReceiverEffect] = useState(null); // ID du membre qui reçoit un cadeau
+
+  // Système Pierre-Feuille-Ciseaux
+  const [showRPSGame, setShowRPSGame] = useState(false);
+  const [rpsOpponent, setRPSOpponent] = useState(null);
 
   // Chat discussion - Charger depuis localStorage
   const [messages, setMessages] = useState(() => {
@@ -259,6 +264,39 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
     setSelectedMember(null);
   };
 
+  const handlePlayRPS = (member) => {
+    setRPSOpponent(member);
+    setShowRPSGame(true);
+  };
+
+  const handleRPSGameEnd = (winner, score) => {
+    const barId = bar?.type || bar?.id || 'unknown';
+
+    // Message système pour annoncer le résultat
+    let resultText = '';
+    if (winner === 'player') {
+      resultText = `🏆 ${currentUser?.name || 'Toi'} a gagné contre ${rpsOpponent?.name} au Pierre-Feuille-Ciseaux ! (${score.player}-${score.opponent})`;
+    } else if (winner === 'opponent') {
+      resultText = `😢 ${rpsOpponent?.name} a gagné contre ${currentUser?.name || 'Toi'} au Pierre-Feuille-Ciseaux ! (${score.opponent}-${score.player})`;
+    } else {
+      resultText = `🤝 Égalité entre ${currentUser?.name || 'Toi'} et ${rpsOpponent?.name} ! (${score.player}-${score.opponent})`;
+    }
+
+    const gameMessage = saveBarMessage(
+      barId,
+      'system',
+      'Système',
+      resultText,
+      true
+    );
+
+    setMessages([...messages, gameMessage]);
+
+    // Fermer le jeu
+    setShowRPSGame(false);
+    setRPSOpponent(null);
+  };
+
   return (
     <div style={{
       height: '100vh',
@@ -429,38 +467,69 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
               {barTab === 'story' && member.skippedTurns > 0 && (
                 <div style={{ fontSize: '0.8rem', color: '#FFD700', marginTop: '2px' }}>⚠️{member.skippedTurns}</div>
               )}
-              {/* Bouton envoyer cadeau - visible pour tous SAUF soi-même */}
+              {/* Boutons actions - visible pour tous SAUF soi-même */}
               {barTab === 'discuss' && !member.isPatron && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleSendGiftToMember(member);
-                  }}
-                  style={{
-                    marginTop: '6px',
-                    padding: '4px 8px',
-                    background: 'linear-gradient(135deg, #FFD700, #FFA500)',
-                    border: 'none',
-                    borderRadius: '8px',
-                    color: '#000',
-                    fontSize: '0.7rem',
-                    fontWeight: '600',
-                    cursor: 'pointer',
-                    boxShadow: '0 2px 8px rgba(255,215,0,0.4)',
-                    transition: 'all 0.2s',
-                    width: '100%'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.transform = 'scale(1.05)';
-                    e.target.style.boxShadow = '0 4px 12px rgba(255,215,0,0.6)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.transform = 'scale(1)';
-                    e.target.style.boxShadow = '0 2px 8px rgba(255,215,0,0.4)';
-                  }}
-                >
-                  🎁 Cadeau
-                </button>
+                <div style={{ display: 'flex', gap: '4px', marginTop: '6px', width: '100%' }}>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSendGiftToMember(member);
+                    }}
+                    style={{
+                      flex: 1,
+                      padding: '4px 8px',
+                      background: 'linear-gradient(135deg, #FFD700, #FFA500)',
+                      border: 'none',
+                      borderRadius: '8px',
+                      color: '#000',
+                      fontSize: '0.7rem',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      boxShadow: '0 2px 8px rgba(255,215,0,0.4)',
+                      transition: 'all 0.2s'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.transform = 'scale(1.05)';
+                      e.target.style.boxShadow = '0 4px 12px rgba(255,215,0,0.6)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.transform = 'scale(1)';
+                      e.target.style.boxShadow = '0 2px 8px rgba(255,215,0,0.4)';
+                    }}
+                  >
+                    🎁
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePlayRPS(member);
+                    }}
+                    style={{
+                      flex: 1,
+                      padding: '4px 8px',
+                      background: 'linear-gradient(135deg, #4CAF50, #2E7D32)',
+                      border: 'none',
+                      borderRadius: '8px',
+                      color: 'white',
+                      fontSize: '0.7rem',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      boxShadow: '0 2px 8px rgba(76,175,80,0.4)',
+                      transition: 'all 0.2s'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.transform = 'scale(1.05)';
+                      e.target.style.boxShadow = '0 4px 12px rgba(76,175,80,0.6)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.transform = 'scale(1)';
+                      e.target.style.boxShadow = '0 2px 8px rgba(76,175,80,0.4)';
+                    }}
+                    title="Pierre-Feuille-Ciseaux"
+                  >
+                    ✊
+                  </button>
+                </div>
               )}
             </div>
           ))}
@@ -927,6 +996,19 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
         <MagicEffect
           gift={magicEffect}
           onComplete={() => setMagicEffect(null)}
+        />
+      )}
+
+      {/* Rock Paper Scissors Game */}
+      {showRPSGame && rpsOpponent && (
+        <RockPaperScissorsGame
+          currentUser={currentUser}
+          opponent={rpsOpponent}
+          onClose={() => {
+            setShowRPSGame(false);
+            setRPSOpponent(null);
+          }}
+          onGameEnd={handleRPSGameEnd}
         />
       )}
     </div>
