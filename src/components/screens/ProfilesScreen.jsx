@@ -272,16 +272,23 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
 
       {/* Tabs */}
       {(() => {
-        // Calculer les compteurs réels
+        // Calculer les compteurs réels (sans l'admin)
         const matches = JSON.parse(localStorage.getItem('jeutaime_matches') || '{}');
-        const matchCount = (matches[currentUser?.email] || []).length;
+        const allMatches = matches[currentUser?.email] || [];
+        const matchCount = allMatches.filter(match => match.userId !== 0 && match.userId !== '0').length;
 
         const smiles = JSON.parse(localStorage.getItem('jeutaime_smiles') || '{}');
         let likesCount = 0;
         Object.keys(smiles).forEach(userId => {
           const userData = smiles[userId];
           if (userData.sentTo && userData.sentTo.includes(currentUser?.email || currentUser?.id)) {
-            likesCount++;
+            // Trouver l'utilisateur qui a envoyé le smile
+            const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+            const sender = users.find(u => u.email === userId || u.id === userId);
+            // Ne compter que si ce n'est pas l'admin
+            if (sender && sender.id !== 0 && sender.id !== '0' && !sender.isAdmin) {
+              likesCount++;
+            }
           }
         });
 
@@ -361,7 +368,9 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
       {/* Vue Matches */}
       {viewMode === 'matches' && currentUser && (() => {
         const matches = JSON.parse(localStorage.getItem('jeutaime_matches') || '{}');
-        const userMatches = matches[currentUser.email] || [];
+        const allMatches = matches[currentUser.email] || [];
+        // Filtrer les matches avec l'admin (id = 0)
+        const userMatches = allMatches.filter(match => match.userId !== 0 && match.userId !== '0');
 
         return (
           <div style={{
@@ -495,7 +504,8 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
             // Trouver l'utilisateur qui a envoyé le smile
             const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
             const sender = users.find(u => u.email === userId || u.id === userId);
-            if (sender) {
+            // Filtrer l'admin (id = 0 ou isAdmin = true)
+            if (sender && sender.id !== 0 && sender.id !== '0' && !sender.isAdmin) {
               receivedSmiles.push({
                 from: sender.pseudo || sender.name || 'Anonyme',
                 avatar: sender.avatarOptions,
