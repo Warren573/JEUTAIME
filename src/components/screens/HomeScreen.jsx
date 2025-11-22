@@ -6,6 +6,7 @@ import UserAvatar from '../avatar/UserAvatar';
 
 export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurrentProfile, setAdminMode, currentUser }) {
   const { adminLogin } = useAdmin();
+  const [showFullGuide, setShowFullGuide] = useState(false);
 
   const handleAdminTest = () => {
     // Auto-login as admin
@@ -167,59 +168,85 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
 
         {/* CADEAUX & OFFRANDES REÇUS */}
         <div style={{
-          background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)',
+          background: 'var(--color-cream)',
           borderRadius: 'var(--border-radius-lg)',
           padding: 'var(--spacing-lg)',
           marginBottom: 'var(--spacing-lg)',
-          border: '3px solid #DAA520',
-          boxShadow: '0 8px 24px rgba(255, 215, 0, 0.3)'
+          border: '3px solid var(--color-gold)',
+          boxShadow: 'var(--shadow-lg)',
+          position: 'relative',
+          overflow: 'hidden'
         }}>
+          {/* Motif décoratif */}
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            fontSize: '6rem',
+            opacity: 0.08,
+            transform: 'rotate(15deg)',
+            pointerEvents: 'none'
+          }}>
+            🎁
+          </div>
+
           <div style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginBottom: 'var(--spacing-md)'
+            marginBottom: 'var(--spacing-md)',
+            position: 'relative',
+            zIndex: 1
           }}>
             <h3 style={{
-              fontSize: '1.4rem',
+              fontSize: '1.25rem',
               margin: 0,
-              color: '#000',
-              fontWeight: '800',
-              textShadow: '0 2px 4px rgba(0,0,0,0.1)'
+              color: 'var(--color-text-primary)',
+              fontWeight: '700',
+              borderBottom: '2px solid var(--color-gold)',
+              paddingBottom: 'var(--spacing-xs)',
+              flex: 1
             }}>
               🎁 Mes Cadeaux Reçus
             </h3>
             <div style={{
-              background: 'rgba(0, 0, 0, 0.2)',
-              padding: '6px 12px',
+              background: 'var(--color-gold)',
+              padding: '6px 14px',
               borderRadius: '20px',
-              color: '#000',
+              color: 'var(--color-brown-dark)',
               fontWeight: '700',
-              fontSize: '0.9rem'
+              fontSize: '0.85rem',
+              marginLeft: 'var(--spacing-sm)',
+              boxShadow: 'var(--shadow-sm)'
             }}>
-              {receivedOfferings.length} total
+              {receivedOfferings.length}
             </div>
           </div>
 
           <p style={{
-            fontSize: '0.9rem',
-            color: 'rgba(0, 0, 0, 0.7)',
+            fontSize: '0.85rem',
+            color: 'var(--color-text-secondary)',
             marginBottom: 'var(--spacing-md)',
-            fontWeight: '600'
+            fontStyle: 'italic',
+            position: 'relative',
+            zIndex: 1
           }}>
-            Les personnes qui t'ont envoyé des offrandes ✨
+            Les offrandes que tu as reçues de tes admirateurs ✨
           </p>
 
           {/* Grille des offrandes reçues */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
             gap: 'var(--spacing-sm)',
-            maxHeight: '400px',
+            maxHeight: '350px',
             overflowY: 'auto',
             padding: 'var(--spacing-xs)',
-            background: 'rgba(255, 255, 255, 0.3)',
-            borderRadius: 'var(--border-radius-md)'
+            background: 'var(--color-beige-light)',
+            borderRadius: 'var(--border-radius-md)',
+            border: '2px solid var(--color-tan)',
+            position: 'relative',
+            zIndex: 1
           }}>
             {receivedOfferings.map((offering) => (
               <div
@@ -227,25 +254,25 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
                 style={{
                   background: 'white',
                   borderRadius: 'var(--border-radius-md)',
-                  padding: 'var(--spacing-md)',
+                  padding: 'var(--spacing-sm)',
                   textAlign: 'center',
-                  border: `3px solid ${offering.color}`,
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                  border: `2px solid ${offering.color}`,
+                  boxShadow: 'var(--shadow-sm)',
                   transition: 'all 0.2s',
                   cursor: 'pointer'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)';
-                  e.currentTarget.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.25)';
+                  e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-md)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
                 }}
               >
                 {/* Icône de l'offrande */}
                 <div style={{
-                  fontSize: '2.5rem',
+                  fontSize: '2.2rem',
                   marginBottom: 'var(--spacing-xs)',
                   filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
                 }}>
@@ -254,19 +281,19 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
 
                 {/* Type de cadeau */}
                 <div style={{
-                  fontSize: '0.75rem',
+                  fontSize: '0.7rem',
                   fontWeight: '700',
                   color: offering.color,
                   marginBottom: 'var(--spacing-xs)',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.5px'
+                  letterSpacing: '0.3px'
                 }}>
                   {offering.type}
                 </div>
 
                 {/* Nom du donneur */}
                 <div style={{
-                  fontSize: '0.85rem',
+                  fontSize: '0.8rem',
                   fontWeight: '600',
                   color: 'var(--color-text-primary)',
                   marginBottom: '2px',
@@ -279,7 +306,7 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
 
                 {/* Date */}
                 <div style={{
-                  fontSize: '0.7rem',
+                  fontSize: '0.65rem',
                   color: 'var(--color-text-light)',
                   fontStyle: 'italic'
                 }}>
@@ -294,11 +321,16 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
             <div style={{
               textAlign: 'center',
               padding: 'var(--spacing-xl)',
-              color: 'rgba(0, 0, 0, 0.5)',
-              fontStyle: 'italic'
+              background: 'var(--color-beige-light)',
+              borderRadius: 'var(--border-radius-md)',
+              border: '2px solid var(--color-tan)',
+              color: 'var(--color-text-secondary)',
+              fontStyle: 'italic',
+              position: 'relative',
+              zIndex: 1
             }}>
               <div style={{ fontSize: '3rem', marginBottom: 'var(--spacing-sm)' }}>🎁</div>
-              <div>Aucun cadeau reçu pour le moment...</div>
+              <div style={{ fontWeight: '600' }}>Aucun cadeau reçu pour le moment...</div>
               <div style={{ fontSize: '0.85rem', marginTop: 'var(--spacing-xs)' }}>
                 Sois actif pour recevoir des offrandes !
               </div>
@@ -325,44 +357,163 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
           }}>
             💡 Comment ça marche ?
           </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
-            <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
-              <div style={{ fontSize: '1.5rem', flexShrink: 0 }}>👤</div>
-              <div>
-                <strong style={{ color: 'var(--color-text-primary)' }}>Profils :</strong>{' '}
-                <span style={{ color: 'var(--color-text-secondary)' }}>
-                  Découvre des profils, envoie des sourires. Les photos se débloquent après 10 lettres échangées chacune.
-                </span>
+
+          {/* Version courte */}
+          {!showFullGuide && (
+            <>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)' }}>
+                <div style={{ display: 'flex', gap: 'var(--spacing-sm)', alignItems: 'center' }}>
+                  <div style={{ fontSize: '1.3rem', flexShrink: 0 }}>👤</div>
+                  <div style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)' }}>
+                    Découvre des profils et envoie des sourires
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: 'var(--spacing-sm)', alignItems: 'center' }}>
+                  <div style={{ fontSize: '1.3rem', flexShrink: 0 }}>💌</div>
+                  <div style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)' }}>
+                    Échange des lettres pour débloquer les photos
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: 'var(--spacing-sm)', alignItems: 'center' }}>
+                  <div style={{ fontSize: '1.3rem', flexShrink: 0 }}>🍸</div>
+                  <div style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)' }}>
+                    Rejoins des bars et joue à des mini-jeux
+                  </div>
+                </div>
               </div>
-            </div>
-            <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
-              <div style={{ fontSize: '1.5rem', flexShrink: 0 }}>💌</div>
-              <div>
-                <strong style={{ color: 'var(--color-text-primary)' }}>Lettres :</strong>{' '}
-                <span style={{ color: 'var(--color-text-secondary)' }}>
-                  Échange des messages avec tes matchs. Plus tu écris, plus tu débloqueras leurs photos !
-                </span>
+              <button
+                onClick={() => setShowFullGuide(true)}
+                style={{
+                  marginTop: 'var(--spacing-md)',
+                  padding: 'var(--spacing-sm) var(--spacing-md)',
+                  background: 'var(--color-gold)',
+                  border: 'none',
+                  borderRadius: 'var(--border-radius-md)',
+                  color: 'var(--color-brown-dark)',
+                  fontWeight: '600',
+                  fontSize: '0.85rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  boxShadow: 'var(--shadow-sm)',
+                  width: '100%'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = 'translateY(-2px)';
+                  e.target.style.boxShadow = 'var(--shadow-md)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.boxShadow = 'var(--shadow-sm)';
+                }}
+              >
+                📖 En savoir plus
+              </button>
+            </>
+          )}
+
+          {/* Version complète */}
+          {showFullGuide && (
+            <>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
+                <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
+                  <div style={{ fontSize: '1.5rem', flexShrink: 0 }}>👤</div>
+                  <div>
+                    <strong style={{ color: 'var(--color-text-primary)' }}>Profils :</strong>{' '}
+                    <span style={{ color: 'var(--color-text-secondary)' }}>
+                      Découvre des profils, envoie des sourires. Les photos se débloquent après 10 lettres échangées chacune.
+                    </span>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
+                  <div style={{ fontSize: '1.5rem', flexShrink: 0 }}>💌</div>
+                  <div>
+                    <strong style={{ color: 'var(--color-text-primary)' }}>Lettres :</strong>{' '}
+                    <span style={{ color: 'var(--color-text-secondary)' }}>
+                      Échange des messages avec tes matchs. Plus tu écris, plus tu débloqueras leurs photos !
+                    </span>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
+                  <div style={{ fontSize: '1.5rem', flexShrink: 0 }}>🍸</div>
+                  <div>
+                    <strong style={{ color: 'var(--color-text-primary)' }}>Bars :</strong>{' '}
+                    <span style={{ color: 'var(--color-text-secondary)' }}>
+                      Rejoins des bars thématiques pour discuter et jouer avec d'autres membres.
+                    </span>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
+                  <div style={{ fontSize: '1.5rem', flexShrink: 0 }}>🎮</div>
+                  <div>
+                    <strong style={{ color: 'var(--color-text-primary)' }}>Mini-jeux :</strong>{' '}
+                    <span style={{ color: 'var(--color-text-secondary)' }}>
+                      Bataille navale, Pierre-Feuille-Ciseaux et bien d'autres jeux pour t'amuser !
+                    </span>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
+                  <div style={{ fontSize: '1.5rem', flexShrink: 0 }}>📦</div>
+                  <div>
+                    <strong style={{ color: 'var(--color-text-primary)' }}>Boîte à souvenirs :</strong>{' '}
+                    <span style={{ color: 'var(--color-text-secondary)' }}>
+                      Archive tes conversations terminées et revisite tes meilleurs moments.
+                    </span>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
+                  <div style={{ fontSize: '1.5rem', flexShrink: 0 }}>📸</div>
+                  <div>
+                    <strong style={{ color: 'var(--color-text-primary)' }}>Book Photos :</strong>{' '}
+                    <span style={{ color: 'var(--color-text-secondary)' }}>
+                      Créé ton album photo personnel avec filtres et stickers pour te démarquer.
+                    </span>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
+                  <div style={{ fontSize: '1.5rem', flexShrink: 0 }}>⭐</div>
+                  <div>
+                    <strong style={{ color: 'var(--color-text-primary)' }}>Points & Classement :</strong>{' '}
+                    <span style={{ color: 'var(--color-text-secondary)' }}>
+                      Gagne des points en étant actif : sourires, matches, jeux, lettres. Monte dans le classement et débloque des titres !
+                    </span>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
+                  <div style={{ fontSize: '1.5rem', flexShrink: 0 }}>🤝</div>
+                  <div>
+                    <strong style={{ color: 'var(--color-text-primary)' }}>Collaborations :</strong>{' '}
+                    <span style={{ color: 'var(--color-text-secondary)' }}>
+                      Participe aux événements éphémères entre bars pour des rencontres uniques.
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
-              <div style={{ fontSize: '1.5rem', flexShrink: 0 }}>🍸</div>
-              <div>
-                <strong style={{ color: 'var(--color-text-primary)' }}>Bars :</strong>{' '}
-                <span style={{ color: 'var(--color-text-secondary)' }}>
-                  Rejoins des bars thématiques pour discuter et jouer avec d'autres membres.
-                </span>
-              </div>
-            </div>
-            <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
-              <div style={{ fontSize: '1.5rem', flexShrink: 0 }}>⭐</div>
-              <div>
-                <strong style={{ color: 'var(--color-text-primary)' }}>Points :</strong>{' '}
-                <span style={{ color: 'var(--color-text-secondary)' }}>
-                  Gagne des points en étant actif : sourires, matches, jeux, lettres. Monte dans le classement !
-                </span>
-              </div>
-            </div>
-          </div>
+              <button
+                onClick={() => setShowFullGuide(false)}
+                style={{
+                  marginTop: 'var(--spacing-md)',
+                  padding: 'var(--spacing-sm) var(--spacing-md)',
+                  background: 'var(--color-beige)',
+                  border: '2px solid var(--color-brown-light)',
+                  borderRadius: 'var(--border-radius-md)',
+                  color: 'var(--color-text-primary)',
+                  fontWeight: '600',
+                  fontSize: '0.85rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  width: '100%'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = 'var(--color-tan)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = 'var(--color-beige)';
+                }}
+              >
+                ✕ Réduire
+              </button>
+            </>
+          )}
         </div>
 
         {/* ACCÈS RAPIDE */}
