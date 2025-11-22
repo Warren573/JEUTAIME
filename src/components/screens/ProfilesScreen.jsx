@@ -5,10 +5,14 @@ import Avatar from 'avataaars';
 import { getUserPhotoBook } from '../../utils/photoBookSystem';
 import { getTitleFromPoints } from '../../config/gameConfig';
 import AvatarCreator from '../auth/AvatarCreator';
+import QuestionGame from '../matching/QuestionGame';
+import { awardPoints, checkAndAwardBadge } from '../../utils/pointsSystem';
 
 export default function ProfilesScreen({ currentProfile, setCurrentProfile, adminMode, isAdminAuthenticated, currentUser, setCurrentUser }) {
-  const [viewMode, setViewMode] = useState('myprofile');
+  const [viewMode, setViewMode] = useState('discover');
   const [showAvatarEditor, setShowAvatarEditor] = useState(false);
+  const [showQuestionGame, setShowQuestionGame] = useState(false);
+  const [mutualSmileUser, setMutualSmileUser] = useState(null);
 
   // Nettoyer les données admin au montage du composant
   useEffect(() => {
@@ -61,6 +65,140 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
       console.log('🧹 Données admin nettoyées du localStorage');
     }
   }, [currentUser]);
+
+  // Récupérer tous les utilisateurs sauf le currentUser ET l'admin
+  const allProfiles = getAllUsers().filter(u => {
+    // Exclure l'utilisateur actuel
+    if (u.email === currentUser?.email) return false;
+    // Exclure l'admin par ID, propriété isAdmin, ou nom
+    if (u.id === 0 || u.id === '0' || u.isAdmin) return false;
+    if (u.name && u.name.toLowerCase().includes('admin')) return false;
+    return true;
+  });
+  const currentProfileData = allProfiles[currentProfile];
+
+  // Fonctions pour gérer les interactions
+  const handleSmile = () => {
+    if (!currentProfileData) return;
+
+    const smiles = JSON.parse(localStorage.getItem('jeutaime_smiles') || '{}');
+    const userId = currentUser?.email || 'guest';
+    const targetId = currentProfileData.id;
+
+    if (!smiles[userId]) {
+      smiles[userId] = { sentTo: [], receivedFrom: [], grimaces: [] };
+    }
+
+    // Add smile
+    if (!smiles[userId].sentTo.includes(targetId)) {
+      smiles[userId].sentTo.push(targetId);
+
+      // Award points for sending smile
+      if (currentUser) {
+        awardPoints(currentUser.email, 'SMILE_SENT');
+
+        // Check if this is the first smile (badge)
+        if (smiles[userId].sentTo.length === 1) {
+          checkAndAwardBadge(currentUser.email, 'first_smile');
+        }
+      }
+    }
+
+    localStorage.setItem('jeutaime_smiles', JSON.stringify(smiles));
+
+    // Simuler un match mutuel et afficher le jeu de questions
+    const demoUser = {
+      ...currentProfileData,
+      question1: {
+        text: "Quel est votre plat préféré ?",
+        answerA: "Pizza",
+        answerB: "Sushi",
+        answerC: "Burger",
+        correctAnswer: "A"
+      },
+      question2: {
+        text: "Préférez-vous la mer ou la montagne ?",
+        answerA: "La mer",
+        answerB: "La montagne",
+        answerC: "Les deux !",
+        correctAnswer: "C"
+      },
+      question3: {
+        text: "Quel genre de film aimez-vous ?",
+        answerA: "Comédie",
+        answerB: "Action",
+        answerC: "Romance",
+        correctAnswer: "A"
+      }
+    };
+
+    setMutualSmileUser(demoUser);
+    setShowQuestionGame(true);
+  };
+
+  const handleGrimace = () => {
+    if (!currentProfileData) return;
+
+    const smiles = JSON.parse(localStorage.getItem('jeutaime_smiles') || '{}');
+    const userId = currentUser?.email || 'guest';
+    const targetId = currentProfileData.id;
+
+    if (!smiles[userId]) {
+      smiles[userId] = { sentTo: [], receivedFrom: [], grimaces: [] };
+    }
+
+    // Add grimace
+    if (!smiles[userId].grimaces.includes(targetId)) {
+      smiles[userId].grimaces.push(targetId);
+    }
+
+    localStorage.setItem('jeutaime_smiles', JSON.stringify(smiles));
+
+    // Move to next profile
+    setCurrentProfile((currentProfile + 1) % allProfiles.length);
+  };
+
+  const handleMatchSuccess = (matchedUser, userScore, otherScore) => {
+    // Save match to localStorage
+    const matches = JSON.parse(localStorage.getItem('jeutaime_matches') || '{}');
+    const userId = currentUser?.email || 'guest';
+
+    if (!matches[userId]) {
+      matches[userId] = [];
+    }
+
+    const matchData = {
+      userId: matchedUser.id,
+      userName: matchedUser.name,
+      userScore: userScore,
+      otherScore: otherScore,
+      date: new Date().toISOString()
+    };
+
+    matches[userId].push(matchData);
+    localStorage.setItem('jeutaime_matches', JSON.stringify(matches));
+
+    // Award points for successful match
+    if (currentUser) {
+      awardPoints(currentUser.email, 'MATCH_SUCCESS');
+
+      // Check if this is the first match (badge)
+      if (matches[userId].length === 1) {
+        checkAndAwardBadge(currentUser.email, 'first_match');
+      }
+    }
+
+    // Close game and move to next profile
+    setShowQuestionGame(false);
+    setMutualSmileUser(null);
+    setCurrentProfile((currentProfile + 1) % allProfiles.length);
+  };
+
+  const handleMatchFail = () => {
+    setShowQuestionGame(false);
+    setMutualSmileUser(null);
+    setCurrentProfile((currentProfile + 1) % allProfiles.length);
+  };
 
   return (
     <div style={{
@@ -149,6 +287,21 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
             }}>
               👤 Mon Profil
             </button>
+            <button onClick={() => setViewMode('discover')} style={{
+              padding: 'var(--spacing-sm) var(--spacing-md)',
+              background: viewMode === 'discover' ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))' : 'var(--color-brown)',
+              border: viewMode === 'discover' ? '2px solid var(--color-gold-light)' : '2px solid var(--color-brown-dark)',
+              color: viewMode === 'discover' ? 'var(--color-brown-dark)' : 'var(--color-cream)',
+              borderRadius: 'var(--border-radius-md)',
+              cursor: 'pointer',
+              fontWeight: '600',
+              fontSize: '0.875rem',
+              minWidth: 'fit-content',
+              transition: 'all var(--transition-normal)',
+              boxShadow: viewMode === 'discover' ? 'var(--shadow-md)' : 'var(--shadow-sm)'
+            }}>
+              🔍 Découvrir
+            </button>
             <button onClick={() => setViewMode('matches')} style={{
               padding: 'var(--spacing-sm) var(--spacing-md)',
               background: viewMode === 'matches' ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))' : 'var(--color-brown)',
@@ -182,6 +335,162 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
           </div>
         );
       })()}
+
+      {/* Vue Découvrir */}
+      {viewMode === 'discover' && currentProfileData && (
+        <div style={{
+          maxWidth: '500px',
+          margin: '0 auto',
+          background: 'var(--color-cream)',
+          borderRadius: 'var(--border-radius-xl)',
+          overflow: 'hidden',
+          boxShadow: 'var(--shadow-lg)',
+          border: '3px solid var(--color-gold)'
+        }}>
+          {/* Avatar */}
+          <div style={{
+            position: 'relative',
+            background: 'linear-gradient(135deg, var(--color-beige-light), var(--color-cream))',
+            padding: 'var(--spacing-xl)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
+          }}>
+            {currentProfileData.avatarOptions ? (
+              <div style={{
+                width: '200px',
+                height: '200px',
+                borderRadius: '50%',
+                overflow: 'hidden',
+                border: '4px solid var(--color-gold)',
+                boxShadow: 'var(--shadow-md)'
+              }}>
+                <Avatar
+                  style={{ width: '200px', height: '200px' }}
+                  avatarStyle='Circle'
+                  {...currentProfileData.avatarOptions}
+                />
+              </div>
+            ) : (
+              <div style={{
+                width: '200px',
+                height: '200px',
+                borderRadius: '50%',
+                background: 'var(--color-beige-light)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '5rem',
+                border: '4px solid var(--color-gold)',
+                boxShadow: 'var(--shadow-md)'
+              }}>
+                👤
+              </div>
+            )}
+
+            {/* Info profil */}
+            <div style={{ textAlign: 'center', marginTop: 'var(--spacing-md)' }}>
+              <h2 style={{
+                fontSize: '1.75rem',
+                fontWeight: '700',
+                color: 'var(--color-text-primary)',
+                marginBottom: 'var(--spacing-xs)'
+              }}>
+                {currentProfileData.pseudo || currentProfileData.name}
+              </h2>
+
+              {currentProfileData.bio && (
+                <p style={{
+                  fontSize: '0.875rem',
+                  color: 'var(--color-text-secondary)',
+                  fontStyle: 'italic',
+                  marginTop: 'var(--spacing-sm)',
+                  padding: '0 var(--spacing-md)'
+                }}>
+                  "{currentProfileData.bio}"
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Boutons d'action */}
+          <div style={{
+            padding: 'var(--spacing-lg)',
+            display: 'flex',
+            gap: 'var(--spacing-md)',
+            justifyContent: 'center'
+          }}>
+            <button
+              onClick={handleGrimace}
+              style={{
+                width: '80px',
+                height: '80px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #dc3545, #c82333)',
+                border: '3px solid var(--color-cream)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '2rem',
+                cursor: 'pointer',
+                boxShadow: 'var(--shadow-md)',
+                transition: 'all var(--transition-normal)',
+                color: 'white'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            >
+              <span>😝</span>
+              <span style={{ fontSize: '0.625rem', marginTop: '4px' }}>Non</span>
+            </button>
+
+            <button
+              onClick={handleSmile}
+              style={{
+                width: '80px',
+                height: '80px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))',
+                border: '3px solid var(--color-cream)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '2rem',
+                cursor: 'pointer',
+                boxShadow: 'var(--shadow-md)',
+                transition: 'all var(--transition-normal)',
+                color: 'var(--color-brown-dark)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            >
+              <span>😊</span>
+              <span style={{ fontSize: '0.625rem', marginTop: '4px' }}>Oui</span>
+            </button>
+          </div>
+
+          {/* Navigation */}
+          <div style={{
+            padding: 'var(--spacing-md)',
+            textAlign: 'center',
+            fontSize: '0.875rem',
+            color: 'var(--color-text-secondary)',
+            borderTop: '2px solid var(--color-gold-light)'
+          }}>
+            Profil {currentProfile + 1} sur {allProfiles.length}
+          </div>
+        </div>
+      )}
 
       {/* Vue Matches */}
       {viewMode === 'matches' && currentUser && (() => {
@@ -791,6 +1100,16 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
             </button>
           </div>
         </div>
+      )}
+
+      {/* Question Game Modal */}
+      {showQuestionGame && mutualSmileUser && (
+        <QuestionGame
+          currentUser={currentUser}
+          matchedUser={mutualSmileUser}
+          onMatchSuccess={handleMatchSuccess}
+          onMatchFail={handleMatchFail}
+        />
       )}
     </div>
   );
