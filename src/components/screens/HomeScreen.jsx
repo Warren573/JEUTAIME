@@ -377,7 +377,7 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
                 <div style={{ display: 'flex', gap: 'var(--spacing-sm)', alignItems: 'center' }}>
                   <div style={{ fontSize: '1.3rem', flexShrink: 0 }}>🍸</div>
                   <div style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)' }}>
-                    Rejoins des bars et joue à des mini-jeux
+                    Rejoins des salons et joue à des mini-jeux
                   </div>
                 </div>
               </div>
@@ -436,9 +436,9 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
                 <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
                   <div style={{ fontSize: '1.5rem', flexShrink: 0 }}>🍸</div>
                   <div>
-                    <strong style={{ color: 'var(--color-text-primary)' }}>Bars :</strong>{' '}
+                    <strong style={{ color: 'var(--color-text-primary)' }}>Salons :</strong>{' '}
                     <span style={{ color: 'var(--color-text-secondary)' }}>
-                      Rejoins des bars thématiques pour discuter et jouer avec d'autres membres.
+                      Rejoins des salons thématiques pour discuter et jouer avec d'autres membres.
                     </span>
                   </div>
                 </div>
@@ -483,7 +483,7 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
                   <div>
                     <strong style={{ color: 'var(--color-text-primary)' }}>Collaborations :</strong>{' '}
                     <span style={{ color: 'var(--color-text-secondary)' }}>
-                      Participe aux événements éphémères entre bars pour des rencontres uniques.
+                      Participe aux événements éphémères entre salons pour des rencontres uniques.
                     </span>
                   </div>
                 </div>
