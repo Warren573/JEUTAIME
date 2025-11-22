@@ -25,42 +25,51 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
   useEffect(() => {
     if (!currentUser) return;
 
-    // Nettoyer les matches
+    let dataModified = false;
+
+    // Nettoyer les matches - filtrer l'admin par ID et par nom
     const matches = JSON.parse(localStorage.getItem('jeutaime_matches') || '{}');
     if (matches[currentUser.email]) {
-      const cleanedMatches = matches[currentUser.email].filter(match => match.userId !== 0 && match.userId !== '0');
-      if (cleanedMatches.length !== matches[currentUser.email].length) {
-        matches[currentUser.email] = cleanedMatches;
+      const originalLength = matches[currentUser.email].length;
+      matches[currentUser.email] = matches[currentUser.email].filter(match => {
+        // Filtrer par ID
+        if (match.userId === 0 || match.userId === '0') return false;
+        // Filtrer par nom contenant "Admin"
+        if (match.userName && match.userName.toLowerCase().includes('admin')) return false;
+        return true;
+      });
+
+      if (matches[currentUser.email].length !== originalLength) {
         localStorage.setItem('jeutaime_matches', JSON.stringify(matches));
+        dataModified = true;
       }
     }
 
-    // Nettoyer les smiles - supprimer l'admin des sentTo de tous les utilisateurs
+    // Nettoyer les smiles - supprimer l'admin des sentTo
     const smiles = JSON.parse(localStorage.getItem('jeutaime_smiles') || '{}');
-    let smilesModified = false;
+    const allUsers = getAllUsers(); // Récupérer tous les utilisateurs (y compris enrichedProfiles)
 
-    // Supprimer l'email de l'utilisateur actuel des sentTo de l'admin (si admin a envoyé des smiles)
     Object.keys(smiles).forEach(userId => {
-      // Vérifier si c'est l'admin
-      const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
-      const user = users.find(u => u.email === userId || u.id === userId);
+      // Chercher l'utilisateur dans getAllUsers qui inclut enrichedProfiles
+      const user = allUsers.find(u => u.email === userId || u.id?.toString() === userId);
 
-      if (user && (user.id === 0 || user.id === '0' || user.isAdmin)) {
+      if (user && (user.id === 0 || user.id === '0' || user.isAdmin || (user.name && user.name.toLowerCase().includes('admin')))) {
         // C'est l'admin, supprimer currentUser de ses sentTo
-        if (smiles[userId].sentTo) {
+        if (smiles[userId] && smiles[userId].sentTo) {
           const originalLength = smiles[userId].sentTo.length;
           smiles[userId].sentTo = smiles[userId].sentTo.filter(target =>
-            target !== currentUser.email && target !== currentUser.id
+            target !== currentUser.email && target !== currentUser.id?.toString()
           );
           if (smiles[userId].sentTo.length !== originalLength) {
-            smilesModified = true;
+            dataModified = true;
           }
         }
       }
     });
 
-    if (smilesModified) {
+    if (dataModified) {
       localStorage.setItem('jeutaime_smiles', JSON.stringify(smiles));
+      console.log('🧹 Données admin nettoyées du localStorage');
     }
   }, [currentUser]);
 
@@ -318,18 +327,22 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
         // Calculer les compteurs réels (sans l'admin)
         const matches = JSON.parse(localStorage.getItem('jeutaime_matches') || '{}');
         const allMatches = matches[currentUser?.email] || [];
-        const matchCount = allMatches.filter(match => match.userId !== 0 && match.userId !== '0').length;
+        const matchCount = allMatches.filter(match => {
+          if (match.userId === 0 || match.userId === '0') return false;
+          if (match.userName && match.userName.toLowerCase().includes('admin')) return false;
+          return true;
+        }).length;
 
         const smiles = JSON.parse(localStorage.getItem('jeutaime_smiles') || '{}');
+        const allUsers = getAllUsers();
         let likesCount = 0;
         Object.keys(smiles).forEach(userId => {
           const userData = smiles[userId];
           if (userData.sentTo && userData.sentTo.includes(currentUser?.email || currentUser?.id)) {
-            // Trouver l'utilisateur qui a envoyé le smile
-            const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
-            const sender = users.find(u => u.email === userId || u.id === userId);
+            // Trouver l'utilisateur qui a envoyé le smile (chercher dans getAllUsers)
+            const sender = allUsers.find(u => u.email === userId || u.id?.toString() === userId);
             // Ne compter que si ce n'est pas l'admin
-            if (sender && sender.id !== 0 && sender.id !== '0' && !sender.isAdmin) {
+            if (sender && sender.id !== 0 && sender.id !== '0' && !sender.isAdmin && !(sender.name && sender.name.toLowerCase().includes('admin'))) {
               likesCount++;
             }
           }
@@ -412,8 +425,12 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
       {viewMode === 'matches' && currentUser && (() => {
         const matches = JSON.parse(localStorage.getItem('jeutaime_matches') || '{}');
         const allMatches = matches[currentUser.email] || [];
-        // Filtrer les matches avec l'admin (id = 0)
-        const userMatches = allMatches.filter(match => match.userId !== 0 && match.userId !== '0');
+        // Filtrer les matches avec l'admin (id = 0 ou nom contenant "admin")
+        const userMatches = allMatches.filter(match => {
+          if (match.userId === 0 || match.userId === '0') return false;
+          if (match.userName && match.userName.toLowerCase().includes('admin')) return false;
+          return true;
+        });
 
         return (
           <div style={{
@@ -539,16 +556,16 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
       {viewMode === 'likes' && currentUser && (() => {
         const smiles = JSON.parse(localStorage.getItem('jeutaime_smiles') || '{}');
         const receivedSmiles = [];
+        const allUsers = getAllUsers();
 
         // Parcourir tous les utilisateurs pour trouver ceux qui ont envoyé des smiles au currentUser
         Object.keys(smiles).forEach(userId => {
           const userData = smiles[userId];
           if (userData.sentTo && userData.sentTo.includes(currentUser.email || currentUser.id)) {
-            // Trouver l'utilisateur qui a envoyé le smile
-            const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
-            const sender = users.find(u => u.email === userId || u.id === userId);
-            // Filtrer l'admin (id = 0 ou isAdmin = true)
-            if (sender && sender.id !== 0 && sender.id !== '0' && !sender.isAdmin) {
+            // Trouver l'utilisateur qui a envoyé le smile (chercher dans getAllUsers)
+            const sender = allUsers.find(u => u.email === userId || u.id?.toString() === userId);
+            // Filtrer l'admin (id = 0, isAdmin = true, ou nom contenant "admin")
+            if (sender && sender.id !== 0 && sender.id !== '0' && !sender.isAdmin && !(sender.name && sender.name.toLowerCase().includes('admin'))) {
               receivedSmiles.push({
                 from: sender.pseudo || sender.name || 'Anonyme',
                 avatar: sender.avatarOptions,
