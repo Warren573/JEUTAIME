@@ -6,7 +6,6 @@ import UserAvatar from '../avatar/UserAvatar';
 
 export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurrentProfile, setAdminMode, currentUser }) {
   const { adminLogin } = useAdmin();
-  const [selectedOffering, setSelectedOffering] = useState(null);
 
   const handleAdminTest = () => {
     // Auto-login as admin
@@ -17,59 +16,6 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
     setCurrentProfile(0);
     setScreen('profiles');
   };
-
-  // Définition des offrandes disponibles selon DESIGN.png
-  const offerings = [
-    {
-      id: 'letter',
-      icon: '✉️',
-      secondIcon: '🌹',
-      name: 'Lettre parfumée',
-      description: 'Rose virtuelle',
-      price: 3500,
-      color: 'var(--color-romantic)'
-    },
-    {
-      id: 'rose',
-      icon: '🌹',
-      name: 'Rose virtuelle',
-      description: '',
-      price: 6000,
-      color: 'var(--color-romantic-light)'
-    },
-    {
-      id: 'music',
-      icon: '🎵',
-      name: 'Musique dédiée',
-      description: '',
-      price: 7500,
-      color: 'var(--color-gold)'
-    },
-    {
-      id: 'gift',
-      icon: '🎁',
-      name: 'Petit cadeau mignon',
-      description: '',
-      price: 5000,
-      color: 'var(--color-humorous)'
-    },
-    {
-      id: 'magic1',
-      icon: '🎩',
-      name: 'Magie romantique',
-      description: '',
-      price: 20000,
-      color: 'var(--color-friendly)'
-    },
-    {
-      id: 'magic2',
-      icon: '🪄',
-      name: 'Magie romantique',
-      description: '',
-      price: 2000,
-      color: 'var(--color-brown-light)'
-    }
-  ];
 
   // Calculer le rang de l'utilisateur
   const getUserRank = () => {
@@ -419,13 +365,13 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
           </div>
         </div>
 
-        {/* BUREAU D'OFFRANDES */}
+        {/* ACCÈS RAPIDE */}
         <div style={{
           background: 'var(--color-cream)',
           borderRadius: 'var(--border-radius-lg)',
           padding: 'var(--spacing-lg)',
           marginBottom: 'var(--spacing-lg)',
-          border: '2px solid var(--color-brown)',
+          border: '2px solid var(--color-brown-light)',
           boxShadow: 'var(--shadow-md)'
         }}>
           <h3 style={{
@@ -434,206 +380,78 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
             color: 'var(--color-text-primary)',
             fontWeight: '700',
             borderBottom: '2px solid var(--color-gold)',
-            paddingBottom: 'var(--spacing-xs)'
-          }}>
-            🎁 Bureau d'Offrandes
-          </h3>
-          <p style={{
-            fontSize: '0.9rem',
-            color: 'var(--color-text-secondary)',
-            marginBottom: 'var(--spacing-md)',
-            fontStyle: 'italic'
-          }}>
-            Envoie des cadeaux virtuels pour faire plaisir à tes matchs !
-          </p>
-
-          {/* Grille des offrandes */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-            gap: 'var(--spacing-md)',
-            maxWidth: '900px',
-            margin: '0 auto',
-            width: '100%',
-            justifyContent: 'center'
-          }}>
-        {offerings.map((offering) => (
-          <div
-            key={offering.id}
-            onClick={() => setSelectedOffering(offering)}
-            className="card"
-            style={{
-              cursor: 'pointer',
-              textAlign: 'center',
-              padding: 'var(--spacing-lg)',
-              background: 'var(--color-cream)',
-              border: '3px solid var(--color-tan)',
-              borderRadius: 'var(--border-radius-lg)',
-              boxShadow: 'var(--shadow-md)',
-              transition: 'all var(--transition-normal)',
-              position: 'relative',
-              maxWidth: '100%',
-              boxSizing: 'border-box'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-8px)';
-              e.currentTarget.style.boxShadow = 'var(--shadow-xl)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-            }}
-          >
-            {/* Icône principale */}
-            <div style={{
-              fontSize: '4rem',
-              marginBottom: 'var(--spacing-sm)',
-              filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))'
-            }}>
-              {offering.icon}
-              {offering.secondIcon && (
-                <span style={{ marginLeft: '-10px' }}>{offering.secondIcon}</span>
-              )}
-            </div>
-
-            {/* Nom de l'offrande */}
-            <h3 style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: '1rem',
-              color: 'var(--color-text-primary)',
-              marginBottom: 'var(--spacing-sm)',
-              fontWeight: '600',
-              minHeight: '40px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              {offering.name}
-            </h3>
-
-            {offering.description && (
-              <p style={{
-                fontSize: '0.85rem',
-                color: 'var(--color-text-light)',
-                marginBottom: 'var(--spacing-sm)'
-              }}>
-                {offering.description}
-              </p>
-            )}
-
-            {/* Prix avec icône de monnaie */}
-            <div className="currency" style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 'var(--spacing-xs)',
-              padding: 'var(--spacing-sm) var(--spacing-md)',
-              background: 'var(--color-gold)',
-              color: 'var(--color-brown-dark)',
-              borderRadius: 'var(--border-radius-xl)',
-              fontWeight: '700',
-              fontSize: '0.95rem',
-              boxShadow: 'var(--shadow-sm)'
-            }}>
-              <span className="currency-icon" style={{
-                width: '22px',
-                height: '22px',
-                background: 'var(--color-gold-dark)',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--color-cream)',
-                fontSize: '0.75rem',
-                fontWeight: '700'
-              }}>
-                J
-              </span>
-              {offering.price} à Julien
-            </div>
-          </div>
-        ))}
-          </div>
-        </div>
-
-      {/* Accès rapide - Action rapides vers fonctionnalités */}
-      <div style={{
-        marginTop: 'var(--spacing-xl)',
-        padding: '0 var(--spacing-lg)'
-      }}>
-        <div className="card" style={{
-          padding: 'var(--spacing-lg)',
-          background: 'var(--color-cream)',
-          border: '2px solid var(--color-brown-light)'
-        }}>
-          <h3 style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: '1.25rem',
-            color: 'var(--color-text-primary)',
-            marginBottom: 'var(--spacing-md)',
+            paddingBottom: 'var(--spacing-xs)',
             textAlign: 'center'
           }}>
-            🎯 Accès rapide
+            🎯 Accès Rapide
           </h3>
 
           <div style={{
-            display: 'flex',
-            flexDirection: 'column',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
             gap: 'var(--spacing-sm)'
           }}>
             <button
               onClick={() => setScreen('profiles')}
               className="btn-primary"
               style={{
-                padding: 'var(--spacing-md) var(--spacing-lg)',
+                padding: 'var(--spacing-md)',
                 fontSize: '1rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: 'var(--spacing-sm)'
+                gap: 'var(--spacing-sm)',
+                flexDirection: 'column'
               }}
             >
-              <span style={{ fontSize: '1.5rem' }}>👥</span> Découvrir des profils
-            </button>
-
-            <button
-              onClick={() => setScreen('social')}
-              className="btn-friendly"
-              style={{
-                padding: 'var(--spacing-md) var(--spacing-lg)',
-                fontSize: '1rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 'var(--spacing-sm)'
-              }}
-            >
-              <span style={{ fontSize: '1.5rem' }}>🍸</span> Explorer les Bars
+              <span style={{ fontSize: '2rem' }}>👥</span>
+              <span>Découvrir des profils</span>
             </button>
 
             <button
               onClick={() => setScreen('letters')}
               className="btn-romantic"
               style={{
-                padding: 'var(--spacing-md) var(--spacing-lg)',
-                fontSize: '1rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 'var(--spacing-sm)'
-              }}
-            >
-              <span style={{ fontSize: '1.5rem' }}>💌</span> Mes Lettres ({myLetters.length})
-            </button>
-
-            <button
-              onClick={() => setScreen('memories')}
-              style={{
-                padding: 'var(--spacing-md) var(--spacing-lg)',
+                padding: 'var(--spacing-md)',
                 fontSize: '1rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: 'var(--spacing-sm)',
+                flexDirection: 'column'
+              }}
+            >
+              <span style={{ fontSize: '2rem' }}>💌</span>
+              <span>Mes Lettres ({myLetters.length})</span>
+            </button>
+
+            <button
+              onClick={() => setScreen('social')}
+              className="btn-friendly"
+              style={{
+                padding: 'var(--spacing-md)',
+                fontSize: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 'var(--spacing-sm)',
+                flexDirection: 'column'
+              }}
+            >
+              <span style={{ fontSize: '2rem' }}>🍸</span>
+              <span>Explorer les Bars</span>
+            </button>
+
+            <button
+              onClick={() => setScreen('memories')}
+              style={{
+                padding: 'var(--spacing-md)',
+                fontSize: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 'var(--spacing-sm)',
+                flexDirection: 'column',
                 background: 'linear-gradient(135deg, #8B7355, #A0826D)',
                 color: 'white',
                 border: 'none',
@@ -652,18 +470,20 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
                 e.target.style.boxShadow = 'var(--shadow-md)';
               }}
             >
-              <span style={{ fontSize: '1.5rem' }}>📦</span> Boîte à souvenirs
+              <span style={{ fontSize: '2rem' }}>📦</span>
+              <span>Boîte à souvenirs</span>
             </button>
 
             <button
               onClick={() => setScreen('photobook')}
               style={{
-                padding: 'var(--spacing-md) var(--spacing-lg)',
+                padding: 'var(--spacing-md)',
                 fontSize: '1rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: 'var(--spacing-sm)',
+                flexDirection: 'column',
                 background: 'linear-gradient(135deg, #FF6B9D, #C06C84)',
                 color: 'white',
                 border: 'none',
@@ -682,82 +502,43 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
                 e.target.style.boxShadow = 'var(--shadow-md)';
               }}
             >
-              <span style={{ fontSize: '1.5rem' }}>📸</span> Book Photos
+              <span style={{ fontSize: '2rem' }}>📸</span>
+              <span>Book Photos</span>
             </button>
 
             <button
-              onClick={handleAdminTest}
-              className="btn-secondary"
+              onClick={() => setScreen('collaborations')}
               style={{
-                padding: 'var(--spacing-md) var(--spacing-lg)',
+                padding: 'var(--spacing-md)',
                 fontSize: '1rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: 'var(--spacing-sm)',
-                border: '3px solid var(--color-gold)'
+                flexDirection: 'column',
+                background: 'linear-gradient(135deg, #9C27B0, #6A1B9A)',
+                color: 'white',
+                border: 'none',
+                borderRadius: 'var(--border-radius-lg)',
+                cursor: 'pointer',
+                fontWeight: '600',
+                boxShadow: 'var(--shadow-md)',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = 'var(--shadow-lg)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = 'var(--shadow-md)';
               }}
             >
-              <span style={{ fontSize: '1.5rem' }}>🛡️</span> Essai Profil Admin
+              <span style={{ fontSize: '2rem' }}>🤝</span>
+              <span>Collaborations</span>
             </button>
           </div>
         </div>
-      </div>
-
-      {/* Stats de l'utilisateur */}
-      <div style={{
-        marginTop: 'var(--spacing-lg)',
-        padding: '0 var(--spacing-lg)'
-      }}>
-        <div className="card" style={{
-          padding: 'var(--spacing-lg)',
-          background: 'var(--color-beige)',
-          border: '2px solid var(--color-tan)'
-        }}>
-          <h3 style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: '1.1rem',
-            color: 'var(--color-text-primary)',
-            marginBottom: 'var(--spacing-md)',
-            textAlign: 'center'
-          }}>
-            📊 Mes Statistiques
-          </h3>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: 'var(--spacing-md)',
-            fontSize: '0.9rem',
-            color: 'var(--color-text-secondary)',
-            textAlign: 'center'
-          }}>
-            <div>
-              <div style={{ fontWeight: '700', fontSize: '1.5rem', color: 'var(--color-gold)' }}>
-                {userPoints}
-              </div>
-              <div>Points</div>
-            </div>
-            <div>
-              <div style={{ fontWeight: '700', fontSize: '1.5rem', color: 'var(--color-gold)' }}>
-                {userRank || '—'}
-              </div>
-              <div>Classement</div>
-            </div>
-            <div>
-              <div style={{ fontWeight: '700', fontSize: '1.5rem', color: 'var(--color-romantic)' }}>
-                {myLetters.length}
-              </div>
-              <div>Lettres</div>
-            </div>
-            <div>
-              <div style={{ fontWeight: '700', fontSize: '1.5rem', color: 'var(--color-friendly)' }}>
-                {joinedBars.length}
-              </div>
-              <div>Bars</div>
-            </div>
-          </div>
-        </div>
-      </div>
       </div>
     </div>
   );
