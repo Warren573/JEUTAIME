@@ -271,75 +271,349 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
       </div>
 
       {/* Tabs */}
-      <div style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: 'var(--spacing-xs)',
-        marginBottom: 'var(--spacing-lg)',
-        padding: '0 var(--spacing-md)',
-        justifyContent: 'center'
-      }}>
-        <button onClick={() => setViewMode('myprofile')} style={{
-          padding: 'var(--spacing-sm) var(--spacing-md)',
-          background: viewMode === 'myprofile' ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))' : 'var(--color-brown)',
-          border: viewMode === 'myprofile' ? '2px solid var(--color-gold-light)' : '2px solid var(--color-brown-dark)',
-          color: viewMode === 'myprofile' ? 'var(--color-brown-dark)' : 'var(--color-cream)',
-          borderRadius: 'var(--border-radius-md)',
-          cursor: 'pointer',
-          fontWeight: '600',
-          fontSize: '0.875rem',
-          minWidth: 'fit-content',
-          transition: 'all var(--transition-normal)',
-          boxShadow: viewMode === 'myprofile' ? 'var(--shadow-md)' : 'var(--shadow-sm)'
-        }}>
-          👤 Mon Profil
-        </button>
-        <button onClick={() => setViewMode('discover')} style={{
-          padding: 'var(--spacing-sm) var(--spacing-md)',
-          background: viewMode === 'discover' ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))' : 'var(--color-brown)',
-          border: viewMode === 'discover' ? '2px solid var(--color-gold-light)' : '2px solid var(--color-brown-dark)',
-          color: viewMode === 'discover' ? 'var(--color-brown-dark)' : 'var(--color-cream)',
-          borderRadius: 'var(--border-radius-md)',
-          cursor: 'pointer',
-          fontWeight: '600',
-          fontSize: '0.875rem',
-          minWidth: 'fit-content',
-          transition: 'all var(--transition-normal)',
-          boxShadow: viewMode === 'discover' ? 'var(--shadow-md)' : 'var(--shadow-sm)'
-        }}>
-          🔍 Découvrir
-        </button>
-        <button onClick={() => setViewMode('matches')} style={{
-          padding: 'var(--spacing-sm) var(--spacing-md)',
-          background: viewMode === 'matches' ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))' : 'var(--color-brown)',
-          border: viewMode === 'matches' ? '2px solid var(--color-gold-light)' : '2px solid var(--color-brown-dark)',
-          color: viewMode === 'matches' ? 'var(--color-brown-dark)' : 'var(--color-cream)',
-          borderRadius: 'var(--border-radius-md)',
-          cursor: 'pointer',
-          fontWeight: '600',
-          fontSize: '0.875rem',
-          minWidth: 'fit-content',
-          transition: 'all var(--transition-normal)',
-          boxShadow: viewMode === 'matches' ? 'var(--shadow-md)' : 'var(--shadow-sm)'
-        }}>
-          💕 Matches (3)
-        </button>
-        <button onClick={() => setViewMode('likes')} style={{
-          padding: 'var(--spacing-sm) var(--spacing-md)',
-          background: viewMode === 'likes' ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))' : 'var(--color-brown)',
-          border: viewMode === 'likes' ? '2px solid var(--color-gold-light)' : '2px solid var(--color-brown-dark)',
-          color: viewMode === 'likes' ? 'var(--color-brown-dark)' : 'var(--color-cream)',
-          borderRadius: 'var(--border-radius-md)',
-          cursor: 'pointer',
-          fontWeight: '600',
-          fontSize: '0.875rem',
-          minWidth: 'fit-content',
-          transition: 'all var(--transition-normal)',
-          boxShadow: viewMode === 'likes' ? 'var(--shadow-md)' : 'var(--shadow-sm)'
-        }}>
-          ❤️ Likes reçus (12)
-        </button>
-      </div>
+      {(() => {
+        // Calculer les compteurs réels
+        const matches = JSON.parse(localStorage.getItem('jeutaime_matches') || '{}');
+        const matchCount = (matches[currentUser?.email] || []).length;
+
+        const smiles = JSON.parse(localStorage.getItem('jeutaime_smiles') || '{}');
+        let likesCount = 0;
+        Object.keys(smiles).forEach(userId => {
+          const userData = smiles[userId];
+          if (userData.sentTo && userData.sentTo.includes(currentUser?.email || currentUser?.id)) {
+            likesCount++;
+          }
+        });
+
+        return (
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 'var(--spacing-xs)',
+            marginBottom: 'var(--spacing-lg)',
+            padding: '0 var(--spacing-md)',
+            justifyContent: 'center'
+          }}>
+            <button onClick={() => setViewMode('myprofile')} style={{
+              padding: 'var(--spacing-sm) var(--spacing-md)',
+              background: viewMode === 'myprofile' ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))' : 'var(--color-brown)',
+              border: viewMode === 'myprofile' ? '2px solid var(--color-gold-light)' : '2px solid var(--color-brown-dark)',
+              color: viewMode === 'myprofile' ? 'var(--color-brown-dark)' : 'var(--color-cream)',
+              borderRadius: 'var(--border-radius-md)',
+              cursor: 'pointer',
+              fontWeight: '600',
+              fontSize: '0.875rem',
+              minWidth: 'fit-content',
+              transition: 'all var(--transition-normal)',
+              boxShadow: viewMode === 'myprofile' ? 'var(--shadow-md)' : 'var(--shadow-sm)'
+            }}>
+              👤 Mon Profil
+            </button>
+            <button onClick={() => setViewMode('discover')} style={{
+              padding: 'var(--spacing-sm) var(--spacing-md)',
+              background: viewMode === 'discover' ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))' : 'var(--color-brown)',
+              border: viewMode === 'discover' ? '2px solid var(--color-gold-light)' : '2px solid var(--color-brown-dark)',
+              color: viewMode === 'discover' ? 'var(--color-brown-dark)' : 'var(--color-cream)',
+              borderRadius: 'var(--border-radius-md)',
+              cursor: 'pointer',
+              fontWeight: '600',
+              fontSize: '0.875rem',
+              minWidth: 'fit-content',
+              transition: 'all var(--transition-normal)',
+              boxShadow: viewMode === 'discover' ? 'var(--shadow-md)' : 'var(--shadow-sm)'
+            }}>
+              🔍 Découvrir
+            </button>
+            <button onClick={() => setViewMode('matches')} style={{
+              padding: 'var(--spacing-sm) var(--spacing-md)',
+              background: viewMode === 'matches' ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))' : 'var(--color-brown)',
+              border: viewMode === 'matches' ? '2px solid var(--color-gold-light)' : '2px solid var(--color-brown-dark)',
+              color: viewMode === 'matches' ? 'var(--color-brown-dark)' : 'var(--color-cream)',
+              borderRadius: 'var(--border-radius-md)',
+              cursor: 'pointer',
+              fontWeight: '600',
+              fontSize: '0.875rem',
+              minWidth: 'fit-content',
+              transition: 'all var(--transition-normal)',
+              boxShadow: viewMode === 'matches' ? 'var(--shadow-md)' : 'var(--shadow-sm)'
+            }}>
+              💕 Matches ({matchCount})
+            </button>
+            <button onClick={() => setViewMode('likes')} style={{
+              padding: 'var(--spacing-sm) var(--spacing-md)',
+              background: viewMode === 'likes' ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))' : 'var(--color-brown)',
+              border: viewMode === 'likes' ? '2px solid var(--color-gold-light)' : '2px solid var(--color-brown-dark)',
+              color: viewMode === 'likes' ? 'var(--color-brown-dark)' : 'var(--color-cream)',
+              borderRadius: 'var(--border-radius-md)',
+              cursor: 'pointer',
+              fontWeight: '600',
+              fontSize: '0.875rem',
+              minWidth: 'fit-content',
+              transition: 'all var(--transition-normal)',
+              boxShadow: viewMode === 'likes' ? 'var(--shadow-md)' : 'var(--shadow-sm)'
+            }}>
+              ❤️ Likes reçus ({likesCount})
+            </button>
+          </div>
+        );
+      })()}
+
+      {/* Vue Matches */}
+      {viewMode === 'matches' && currentUser && (() => {
+        const matches = JSON.parse(localStorage.getItem('jeutaime_matches') || '{}');
+        const userMatches = matches[currentUser.email] || [];
+
+        return (
+          <div style={{
+            padding: 'var(--spacing-lg)',
+            paddingBottom: '100px'
+          }}>
+            <h2 style={{
+              fontSize: '1.5rem',
+              color: 'var(--color-text-primary)',
+              marginBottom: 'var(--spacing-lg)',
+              textAlign: 'center',
+              fontWeight: '700'
+            }}>
+              💕 Mes Matches ({userMatches.length})
+            </h2>
+
+            {userMatches.length > 0 ? (
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 'var(--spacing-md)'
+              }}>
+                {userMatches.map((match, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      background: 'var(--color-cream)',
+                      borderRadius: 'var(--border-radius-lg)',
+                      padding: 'var(--spacing-md)',
+                      border: '2px solid var(--color-gold)',
+                      boxShadow: 'var(--shadow-md)'
+                    }}
+                  >
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: 'var(--spacing-sm)'
+                    }}>
+                      <div style={{
+                        fontSize: '1.1rem',
+                        fontWeight: '700',
+                        color: 'var(--color-text-primary)'
+                      }}>
+                        💕 {match.userName}
+                      </div>
+                      <div style={{
+                        fontSize: '0.75rem',
+                        color: 'var(--color-text-secondary)'
+                      }}>
+                        {new Date(match.date).toLocaleDateString('fr-FR')}
+                      </div>
+                    </div>
+
+                    <div style={{
+                      display: 'flex',
+                      gap: 'var(--spacing-md)',
+                      justifyContent: 'center'
+                    }}>
+                      <div style={{
+                        flex: 1,
+                        background: 'var(--color-beige-light)',
+                        padding: 'var(--spacing-sm)',
+                        borderRadius: 'var(--border-radius-md)',
+                        textAlign: 'center'
+                      }}>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--color-text-light)', marginBottom: '4px' }}>
+                          Ton score
+                        </div>
+                        <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--color-friendly)' }}>
+                          {match.userScore}/3
+                        </div>
+                      </div>
+                      <div style={{
+                        flex: 1,
+                        background: 'var(--color-beige-light)',
+                        padding: 'var(--spacing-sm)',
+                        borderRadius: 'var(--border-radius-md)',
+                        textAlign: 'center'
+                      }}>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--color-text-light)', marginBottom: '4px' }}>
+                          Son score
+                        </div>
+                        <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--color-romantic)' }}>
+                          {match.otherScore}/3
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{
+                textAlign: 'center',
+                padding: 'var(--spacing-xl)',
+                background: 'var(--color-cream)',
+                borderRadius: 'var(--border-radius-lg)',
+                border: '2px solid var(--color-tan)'
+              }}>
+                <div style={{ fontSize: '4rem', marginBottom: 'var(--spacing-md)' }}>💔</div>
+                <div style={{
+                  fontSize: '1.1rem',
+                  color: 'var(--color-text-primary)',
+                  marginBottom: 'var(--spacing-sm)',
+                  fontWeight: '600'
+                }}>
+                  Aucun match pour le moment
+                </div>
+                <div style={{
+                  fontSize: '0.9rem',
+                  color: 'var(--color-text-secondary)',
+                  fontStyle: 'italic'
+                }}>
+                  Envoie des sourires et réussis les mini-jeux pour matcher !
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })()}
+
+      {/* Vue Likes reçus */}
+      {viewMode === 'likes' && currentUser && (() => {
+        const smiles = JSON.parse(localStorage.getItem('jeutaime_smiles') || '{}');
+        const receivedSmiles = [];
+
+        // Parcourir tous les utilisateurs pour trouver ceux qui ont envoyé des smiles au currentUser
+        Object.keys(smiles).forEach(userId => {
+          const userData = smiles[userId];
+          if (userData.sentTo && userData.sentTo.includes(currentUser.email || currentUser.id)) {
+            // Trouver l'utilisateur qui a envoyé le smile
+            const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+            const sender = users.find(u => u.email === userId || u.id === userId);
+            if (sender) {
+              receivedSmiles.push({
+                from: sender.pseudo || sender.name || 'Anonyme',
+                avatar: sender.avatarOptions,
+                date: new Date() // On pourrait stocker la date réelle dans le futur
+              });
+            }
+          }
+        });
+
+        return (
+          <div style={{
+            padding: 'var(--spacing-lg)',
+            paddingBottom: '100px'
+          }}>
+            <h2 style={{
+              fontSize: '1.5rem',
+              color: 'var(--color-text-primary)',
+              marginBottom: 'var(--spacing-lg)',
+              textAlign: 'center',
+              fontWeight: '700'
+            }}>
+              ❤️ Likes reçus ({receivedSmiles.length})
+            </h2>
+
+            {receivedSmiles.length > 0 ? (
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
+                gap: 'var(--spacing-md)'
+              }}>
+                {receivedSmiles.map((smile, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      background: 'var(--color-cream)',
+                      borderRadius: 'var(--border-radius-lg)',
+                      padding: 'var(--spacing-md)',
+                      border: '2px solid var(--color-romantic)',
+                      boxShadow: 'var(--shadow-md)',
+                      textAlign: 'center',
+                      transition: 'transform 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
+                    onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                  >
+                    {/* Avatar */}
+                    <div style={{
+                      width: '80px',
+                      height: '80px',
+                      borderRadius: '50%',
+                      background: 'var(--color-beige-light)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: '3px solid var(--color-romantic)',
+                      margin: '0 auto var(--spacing-sm) auto',
+                      overflow: 'hidden'
+                    }}>
+                      {smile.avatar ? (
+                        <Avatar
+                          style={{ width: '80px', height: '80px' }}
+                          avatarStyle="Circle"
+                          {...smile.avatar}
+                        />
+                      ) : (
+                        <div style={{ fontSize: '2.5rem' }}>😊</div>
+                      )}
+                    </div>
+
+                    {/* Nom */}
+                    <div style={{
+                      fontSize: '0.9rem',
+                      fontWeight: '600',
+                      color: 'var(--color-text-primary)',
+                      marginBottom: 'var(--spacing-xs)'
+                    }}>
+                      {smile.from}
+                    </div>
+
+                    {/* Like badge */}
+                    <div style={{
+                      fontSize: '1.5rem',
+                      color: 'var(--color-romantic)'
+                    }}>
+                      ❤️
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{
+                textAlign: 'center',
+                padding: 'var(--spacing-xl)',
+                background: 'var(--color-cream)',
+                borderRadius: 'var(--border-radius-lg)',
+                border: '2px solid var(--color-tan)'
+              }}>
+                <div style={{ fontSize: '4rem', marginBottom: 'var(--spacing-md)' }}>💌</div>
+                <div style={{
+                  fontSize: '1.1rem',
+                  color: 'var(--color-text-primary)',
+                  marginBottom: 'var(--spacing-sm)',
+                  fontWeight: '600'
+                }}>
+                  Aucun like reçu pour le moment
+                </div>
+                <div style={{
+                  fontSize: '0.9rem',
+                  color: 'var(--color-text-secondary)',
+                  fontStyle: 'italic'
+                }}>
+                  Continue à être actif pour recevoir des likes !
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })()}
 
       {/* Vue Mon Profil */}
       {viewMode === 'myprofile' && currentUser && (() => {
