@@ -21,6 +21,49 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
   const [magicEffect, setMagicEffect] = useState(null);
   const [showAvatarEditor, setShowAvatarEditor] = useState(false);
 
+  // Nettoyer les données admin au montage du composant
+  useEffect(() => {
+    if (!currentUser) return;
+
+    // Nettoyer les matches
+    const matches = JSON.parse(localStorage.getItem('jeutaime_matches') || '{}');
+    if (matches[currentUser.email]) {
+      const cleanedMatches = matches[currentUser.email].filter(match => match.userId !== 0 && match.userId !== '0');
+      if (cleanedMatches.length !== matches[currentUser.email].length) {
+        matches[currentUser.email] = cleanedMatches;
+        localStorage.setItem('jeutaime_matches', JSON.stringify(matches));
+      }
+    }
+
+    // Nettoyer les smiles - supprimer l'admin des sentTo de tous les utilisateurs
+    const smiles = JSON.parse(localStorage.getItem('jeutaime_smiles') || '{}');
+    let smilesModified = false;
+
+    // Supprimer l'email de l'utilisateur actuel des sentTo de l'admin (si admin a envoyé des smiles)
+    Object.keys(smiles).forEach(userId => {
+      // Vérifier si c'est l'admin
+      const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+      const user = users.find(u => u.email === userId || u.id === userId);
+
+      if (user && (user.id === 0 || user.id === '0' || user.isAdmin)) {
+        // C'est l'admin, supprimer currentUser de ses sentTo
+        if (smiles[userId].sentTo) {
+          const originalLength = smiles[userId].sentTo.length;
+          smiles[userId].sentTo = smiles[userId].sentTo.filter(target =>
+            target !== currentUser.email && target !== currentUser.id
+          );
+          if (smiles[userId].sentTo.length !== originalLength) {
+            smilesModified = true;
+          }
+        }
+      }
+    });
+
+    if (smilesModified) {
+      localStorage.setItem('jeutaime_smiles', JSON.stringify(smiles));
+    }
+  }, [currentUser]);
+
   // Récupérer tous les utilisateurs sauf le currentUser
   const allProfiles = getAllUsers().filter(u => u.email !== currentUser?.email);
   const currentProfileData = allProfiles[currentProfile];
