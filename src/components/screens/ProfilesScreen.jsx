@@ -73,8 +73,15 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
     }
   }, [currentUser]);
 
-  // Récupérer tous les utilisateurs sauf le currentUser
-  const allProfiles = getAllUsers().filter(u => u.email !== currentUser?.email);
+  // Récupérer tous les utilisateurs sauf le currentUser ET l'admin
+  const allProfiles = getAllUsers().filter(u => {
+    // Exclure l'utilisateur actuel
+    if (u.email === currentUser?.email) return false;
+    // Exclure l'admin par ID, propriété isAdmin, ou nom
+    if (u.id === 0 || u.id === '0' || u.isAdmin) return false;
+    if (u.name && u.name.toLowerCase().includes('admin')) return false;
+    return true;
+  });
   const currentProfileData = allProfiles[currentProfile];
 
   // Calculer le nombre de lettres échangées avec ce profil
@@ -115,6 +122,13 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
   };
 
   const handleSmile = () => {
+    // Bloquer les smiles vers l'admin
+    if (currentProfileData.id === 0 || currentProfileData.id === '0' || currentProfileData.isAdmin ||
+        (currentProfileData.name && currentProfileData.name.toLowerCase().includes('admin'))) {
+      console.log('❌ Impossible d\'envoyer un smile à l\'admin');
+      return;
+    }
+
     const smiles = getSmiles();
     const userId = currentUser?.email || 'guest';
     const targetId = currentProfileData.id;
@@ -225,6 +239,15 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
   };
 
   const handleMatchSuccess = (matchedUser, userScore, otherScore) => {
+    // Bloquer les matches avec l'admin
+    if (matchedUser.id === 0 || matchedUser.id === '0' || matchedUser.isAdmin ||
+        (matchedUser.name && matchedUser.name.toLowerCase().includes('admin'))) {
+      console.log('❌ Impossible de matcher avec l\'admin');
+      setShowQuestionGame(false);
+      setMutualSmileUser(null);
+      return;
+    }
+
     // Save match to localStorage
     const matches = JSON.parse(localStorage.getItem('jeutaime_matches') || '{}');
     const userId = currentUser?.email || 'guest';
