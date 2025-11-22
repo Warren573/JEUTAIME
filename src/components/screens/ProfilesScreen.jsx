@@ -10,14 +10,16 @@ import MagicEffect from '../effects/MagicEffect';
 import { getReceivedGifts } from '../../utils/giftsSystem';
 import { getUserPhotoBook, STICKER_CATEGORIES } from '../../utils/photoBookSystem';
 import { getTitleFromPoints } from '../../config/gameConfig';
+import AvatarCreator from '../auth/AvatarCreator';
 
-export default function ProfilesScreen({ currentProfile, setCurrentProfile, adminMode, isAdminAuthenticated, currentUser }) {
+export default function ProfilesScreen({ currentProfile, setCurrentProfile, adminMode, isAdminAuthenticated, currentUser, setCurrentUser }) {
   const [viewMode, setViewMode] = useState('discover');
   const [selectedPhoto, setSelectedPhoto] = useState(-1); // -1 = afficher avatar, 0+ = afficher photo
   const [showQuestionGame, setShowQuestionGame] = useState(false);
   const [mutualSmileUser, setMutualSmileUser] = useState(null);
   const [showGiftSelector, setShowGiftSelector] = useState(false);
   const [magicEffect, setMagicEffect] = useState(null);
+  const [showAvatarEditor, setShowAvatarEditor] = useState(false);
 
   // Récupérer tous les utilisateurs sauf le currentUser
   const allProfiles = getAllUsers().filter(u => u.email !== currentUser?.email);
@@ -373,26 +375,59 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
                   paddingBottom: '140px'
                 }}>
                   <div style={{
+                    position: 'relative',
                     width: '200px',
-                    height: '200px',
-                    borderRadius: '50%',
-                    background: 'var(--color-cream)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    border: '4px solid var(--color-gold)',
-                    margin: '0 auto',
-                    overflow: 'hidden'
+                    height: '200px'
                   }}>
-                    {currentUser.avatarOptions ? (
-                      <Avatar
-                        style={{ width: '200px', height: '200px' }}
-                        avatarStyle="Circle"
-                        {...currentUser.avatarOptions}
-                      />
-                    ) : (
-                      <div style={{ fontSize: '4rem' }}>👤</div>
-                    )}
+                    <div style={{
+                      width: '200px',
+                      height: '200px',
+                      borderRadius: '50%',
+                      background: 'var(--color-cream)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: '4px solid var(--color-gold)',
+                      overflow: 'hidden'
+                    }}>
+                      {currentUser.avatarOptions ? (
+                        <Avatar
+                          style={{ width: '200px', height: '200px' }}
+                          avatarStyle="Circle"
+                          {...currentUser.avatarOptions}
+                        />
+                      ) : (
+                        <div style={{ fontSize: '4rem' }}>👤</div>
+                      )}
+                    </div>
+
+                    {/* Bouton Modifier Avatar */}
+                    <button
+                      onClick={() => setShowAvatarEditor(true)}
+                      style={{
+                        position: 'absolute',
+                        bottom: '0',
+                        right: '0',
+                        width: '50px',
+                        height: '50px',
+                        borderRadius: '50%',
+                        background: 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))',
+                        border: '3px solid var(--color-cream)',
+                        color: 'var(--color-brown-dark)',
+                        fontSize: '1.5rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: 'var(--shadow-lg)',
+                        transition: 'transform 0.2s'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+                      onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                      title="Modifier mon avatar"
+                    >
+                      ✏️
+                    </button>
                   </div>
                 </div>
 
@@ -1130,6 +1165,99 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
           gift={magicEffect}
           onComplete={() => setMagicEffect(null)}
         />
+      )}
+
+      {/* Avatar Editor Modal */}
+      {showAvatarEditor && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.9)',
+          zIndex: 9999,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: 'var(--spacing-md)',
+          overflowY: 'auto'
+        }}>
+          <div style={{
+            background: 'var(--color-cream)',
+            borderRadius: 'var(--border-radius-lg)',
+            padding: 'var(--spacing-lg)',
+            maxWidth: '600px',
+            width: '100%',
+            maxHeight: '90vh',
+            overflowY: 'auto',
+            position: 'relative'
+          }}>
+            {/* Bouton Fermer */}
+            <button
+              onClick={() => setShowAvatarEditor(false)}
+              style={{
+                position: 'absolute',
+                top: 'var(--spacing-md)',
+                right: 'var(--spacing-md)',
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                background: 'var(--color-brown)',
+                border: 'none',
+                color: 'white',
+                fontSize: '1.5rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: 'var(--shadow-md)',
+                transition: 'transform 0.2s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            >
+              ✕
+            </button>
+
+            {/* Titre */}
+            <h2 style={{
+              fontSize: '1.5rem',
+              color: 'var(--color-text-primary)',
+              marginBottom: 'var(--spacing-lg)',
+              textAlign: 'center',
+              fontWeight: '700'
+            }}>
+              ✏️ Modifier mon avatar
+            </h2>
+
+            {/* Avatar Creator */}
+            <AvatarCreator
+              gender={currentUser.gender === 'man' ? 'M' : currentUser.gender === 'woman' ? 'F' : 'M'}
+              onSave={(avatarDataUrl, avatarConfig) => {
+                // Mettre à jour l'utilisateur avec le nouvel avatar
+                const updatedUser = {
+                  ...currentUser,
+                  avatar: avatarDataUrl,
+                  avatarOptions: avatarConfig
+                };
+
+                // Sauvegarder dans localStorage
+                const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+                const userIndex = users.findIndex(u => u.email === currentUser.email);
+                if (userIndex !== -1) {
+                  users[userIndex] = updatedUser;
+                  localStorage.setItem('jeutaime_users', JSON.stringify(users));
+                }
+                localStorage.setItem('jeutaime_current_user', JSON.stringify(updatedUser));
+
+                // Mettre à jour l'état
+                setCurrentUser(updatedUser);
+                setShowAvatarEditor(false);
+              }}
+            />
+          </div>
+        </div>
       )}
     </div>
   );
