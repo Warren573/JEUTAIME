@@ -9,7 +9,7 @@ const PHOTOBOOK_KEY = 'jeutaime_photobooks';
  * Structure d'un photobook :
  * {
  *   userId: string,
- *   photos: Array<{ id, type: 'avatar'|'placeholder', avatarOptions?, url?, caption?, date }>,
+ *   photos: Array<{ id, type: 'avatar'|'uploaded', avatarOptions?, imageData?, filter?, caption?, date }>,
  *   stickers: Array<{ id, emoji, category, favorite, dateAdded }>,
  *   settings: { maxPhotos: 6, publicVisibility: true }
  * }
@@ -81,7 +81,8 @@ export function addPhoto(userEmail, photoData) {
     id: `photo_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
     type: photoData.type || 'avatar',
     avatarOptions: photoData.avatarOptions || null,
-    url: photoData.url || null,
+    imageData: photoData.imageData || null,
+    filter: photoData.filter || 'none',
     caption: photoData.caption || '',
     dateAdded: Date.now(),
     likes: 0
