@@ -343,197 +343,130 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
       {viewMode === 'myprofile' && currentUser && (() => {
         const myPhotoBook = getUserPhotoBook(currentUser.email);
         const myTitle = getTitleFromPoints(currentUser.points || 0);
+        const myAge = currentUser.birthDate ? new Date().getFullYear() - new Date(currentUser.birthDate).getFullYear() : null;
 
         return (
-          <div style={{
-            background: 'var(--color-cream)',
-            borderRadius: '0',
-            overflow: 'hidden',
-            marginBottom: '0',
-            border: 'none',
-            borderBottom: '4px solid var(--color-brown-light)',
-            boxShadow: 'none',
-            padding: 'var(--spacing-lg)'
-          }}>
-            {/* Header Mon Profil */}
+          <div>
+            {/* Carte profil style découverte */}
             <div style={{
-              textAlign: 'center',
+              background: 'var(--color-cream)',
+              borderRadius: '0',
+              overflow: 'hidden',
               marginBottom: 'var(--spacing-lg)',
-              padding: 'var(--spacing-md)',
-              background: 'var(--color-beige-light)',
-              borderRadius: 'var(--border-radius-lg)',
-              border: '2px solid var(--color-gold)'
+              border: 'none',
+              borderBottom: '4px solid var(--color-brown-light)',
+              boxShadow: 'none'
             }}>
-              <h2 style={{
-                fontSize: '1.5rem',
-                margin: '0 0 var(--spacing-xs) 0',
-                color: 'var(--color-text-primary)',
-                fontWeight: '700'
-              }}>
-                📸 Aperçu de mon profil
-              </h2>
-              <p style={{
-                fontSize: '0.85rem',
-                color: 'var(--color-text-secondary)',
-                margin: 0,
-                fontStyle: 'italic'
-              }}>
-                Voici comment les autres te voient
-              </p>
-            </div>
-
-            {/* Section Avatar & Infos */}
-            <div style={{
-              background: 'var(--color-beige-light)',
-              borderRadius: 'var(--border-radius-lg)',
-              padding: 'var(--spacing-lg)',
-              marginBottom: 'var(--spacing-lg)',
-              border: '2px solid var(--color-brown-light)'
-            }}>
-              {/* Avatar */}
-              <div style={{
-                width: '150px',
-                height: '150px',
-                borderRadius: '50%',
-                background: 'var(--color-cream)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: '4px solid var(--color-gold)',
-                margin: '0 auto var(--spacing-md) auto',
-                overflow: 'hidden'
-              }}>
-                {currentUser.avatarOptions ? (
-                  <Avatar
-                    style={{ width: '150px', height: '150px' }}
-                    avatarStyle="Circle"
-                    {...currentUser.avatarOptions}
-                  />
-                ) : (
-                  <div style={{ fontSize: '4rem' }}>👤</div>
-                )}
-              </div>
-
-              {/* Nom & Titre */}
-              <div style={{ textAlign: 'center', marginBottom: 'var(--spacing-md)' }}>
-                <h3 style={{
-                  fontSize: '1.5rem',
-                  margin: '0 0 var(--spacing-xs) 0',
-                  color: 'var(--color-text-primary)',
-                  fontWeight: '700'
-                }}>
-                  {currentUser.pseudo || currentUser.name || 'Utilisateur'}
-                </h3>
+              {/* Avatar ou Photo de profil */}
+              <div style={{ position: 'relative', height: '400px', background: 'var(--color-beige-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {/* Avatar principal */}
                 <div style={{
-                  fontSize: '0.9rem',
-                  color: 'var(--color-gold)',
-                  fontWeight: '600',
-                  marginBottom: 'var(--spacing-xs)'
-                }}>
-                  {myTitle.icon} {myTitle.name}
-                </div>
-                <div style={{
-                  fontSize: '0.85rem',
-                  color: 'var(--color-text-secondary)'
-                }}>
-                  ⭐ {currentUser.points || 0} points
-                </div>
-              </div>
-
-              {/* Bio */}
-              {currentUser.bio && (
-                <div style={{
-                  background: 'white',
-                  padding: 'var(--spacing-md)',
-                  borderRadius: 'var(--border-radius-md)',
-                  border: '2px solid var(--color-tan)',
-                  marginBottom: 'var(--spacing-md)'
+                  textAlign: 'center',
+                  position: 'relative',
+                  zIndex: 1,
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  paddingBottom: '140px'
                 }}>
                   <div style={{
-                    fontSize: '0.75rem',
-                    color: 'var(--color-text-secondary)',
-                    fontWeight: '600',
-                    textTransform: 'uppercase',
-                    marginBottom: 'var(--spacing-xs)'
+                    width: '200px',
+                    height: '200px',
+                    borderRadius: '50%',
+                    background: 'var(--color-cream)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: '4px solid var(--color-gold)',
+                    margin: '0 auto',
+                    overflow: 'hidden'
                   }}>
-                    📝 Ma bio
+                    {currentUser.avatarOptions ? (
+                      <Avatar
+                        style={{ width: '200px', height: '200px' }}
+                        avatarStyle="Circle"
+                        {...currentUser.avatarOptions}
+                      />
+                    ) : (
+                      <div style={{ fontSize: '4rem' }}>👤</div>
+                    )}
                   </div>
+                </div>
+
+                {/* Infos overlay */}
+                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(transparent, var(--color-brown-darker))', padding: '60px 20px 20px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                    <h2 style={{ fontSize: '28px', fontWeight: '700', margin: 0, color: 'var(--color-cream)' }}>
+                      {currentUser.pseudo || currentUser.name || 'Utilisateur'}{myAge ? `, ${myAge}` : ''}
+                    </h2>
+                    <div style={{ display: 'flex', gap: '5px' }}>
+                      {currentUser.badges && currentUser.badges.map(badgeId => (
+                        <div key={badgeId} title={profileBadges[badgeId]?.name || badgeId} style={{ fontSize: '18px' }}>
+                          {profileBadges[badgeId]?.emoji || '🏅'}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div style={{ fontSize: '14px', color: 'var(--color-cream)', marginBottom: '5px' }}>
+                    📍 {currentUser.city || 'Ville non renseignée'}
+                  </div>
+                  <div style={{ fontSize: '13px', color: 'var(--color-tan)' }}>
+                    {myTitle.icon} {myTitle.name} • {currentUser.points || 0} pts
+                  </div>
+                </div>
+              </div>
+
+              {/* Infos détaillées */}
+              <div style={{ padding: 'var(--spacing-lg)', background: 'var(--color-beige-light)' }}>
+                {/* Bio */}
+                <div style={{ marginBottom: 'var(--spacing-md)' }}>
                   <div style={{
                     fontSize: '0.9rem',
+                    lineHeight: '1.6',
                     color: 'var(--color-text-primary)',
-                    fontStyle: 'italic',
-                    lineHeight: '1.5'
+                    fontStyle: 'italic'
                   }}>
-                    {currentUser.bio}
+                    {currentUser.bio || 'Aucune bio pour le moment'}
                   </div>
                 </div>
-              )}
 
-              {/* Infos personnelles */}
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(2, 1fr)',
-                gap: 'var(--spacing-sm)',
-                marginBottom: 'var(--spacing-md)'
-              }}>
-                {currentUser.city && (
+                {/* Stats */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--spacing-sm)', marginBottom: 'var(--spacing-lg)' }}>
                   <div style={{
-                    background: 'white',
-                    padding: 'var(--spacing-sm)',
+                    background: 'var(--color-cream)',
                     borderRadius: 'var(--border-radius-md)',
-                    border: '2px solid var(--color-tan)',
-                    textAlign: 'center'
+                    padding: 'var(--spacing-sm)',
+                    textAlign: 'center',
+                    border: '2px solid var(--color-brown-light)'
                   }}>
-                    <div style={{ fontSize: '1.2rem', marginBottom: '2px' }}>📍</div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--color-text-light)' }}>Ville</div>
-                    <div style={{ fontSize: '0.85rem', color: 'var(--color-text-primary)', fontWeight: '600' }}>
-                      {currentUser.city}
-                    </div>
+                    <div style={{ fontSize: '1.5rem', marginBottom: 'var(--spacing-xs)' }}>📸</div>
+                    <div style={{ fontSize: '1rem', fontWeight: 'bold', color: 'var(--color-text-primary)' }}>{myPhotoBook.photos.length}</div>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--color-text-light)' }}>Photos</div>
                   </div>
-                )}
-                {currentUser.birthDate && (
                   <div style={{
-                    background: 'white',
-                    padding: 'var(--spacing-sm)',
+                    background: 'var(--color-cream)',
                     borderRadius: 'var(--border-radius-md)',
-                    border: '2px solid var(--color-tan)',
-                    textAlign: 'center'
+                    padding: 'var(--spacing-sm)',
+                    textAlign: 'center',
+                    border: '2px solid var(--color-brown-light)'
                   }}>
-                    <div style={{ fontSize: '1.2rem', marginBottom: '2px' }}>🎂</div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--color-text-light)' }}>Âge</div>
-                    <div style={{ fontSize: '0.85rem', color: 'var(--color-text-primary)', fontWeight: '600' }}>
-                      {new Date().getFullYear() - new Date(currentUser.birthDate).getFullYear()} ans
-                    </div>
+                    <div style={{ fontSize: '1.5rem', marginBottom: 'var(--spacing-xs)' }}>🏅</div>
+                    <div style={{ fontSize: '1rem', fontWeight: 'bold', color: 'var(--color-text-primary)' }}>{currentUser.badges?.length || 0}</div>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--color-text-light)' }}>Badges</div>
                   </div>
-                )}
-                {currentUser.gender && (
                   <div style={{
-                    background: 'white',
-                    padding: 'var(--spacing-sm)',
+                    background: 'var(--color-cream)',
                     borderRadius: 'var(--border-radius-md)',
-                    border: '2px solid var(--color-tan)',
-                    textAlign: 'center'
+                    padding: 'var(--spacing-sm)',
+                    textAlign: 'center',
+                    border: '2px solid var(--color-brown-light)'
                   }}>
-                    <div style={{ fontSize: '1.2rem', marginBottom: '2px' }}>
-                      {currentUser.gender === 'man' ? '👨' : currentUser.gender === 'woman' ? '👩' : '👤'}
-                    </div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--color-text-light)' }}>Genre</div>
-                    <div style={{ fontSize: '0.85rem', color: 'var(--color-text-primary)', fontWeight: '600' }}>
-                      {currentUser.gender === 'man' ? 'Homme' : currentUser.gender === 'woman' ? 'Femme' : 'Autre'}
-                    </div>
-                  </div>
-                )}
-                <div style={{
-                  background: 'white',
-                  padding: 'var(--spacing-sm)',
-                  borderRadius: 'var(--border-radius-md)',
-                  border: '2px solid var(--color-tan)',
-                  textAlign: 'center'
-                }}>
-                  <div style={{ fontSize: '1.2rem', marginBottom: '2px' }}>💰</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--color-text-light)' }}>Pièces</div>
-                  <div style={{ fontSize: '0.85rem', color: 'var(--color-text-primary)', fontWeight: '600' }}>
-                    {currentUser.coins || 0}
+                    <div style={{ fontSize: '1.5rem', marginBottom: 'var(--spacing-xs)' }}>💰</div>
+                    <div style={{ fontSize: '1rem', fontWeight: 'bold', color: 'var(--color-text-primary)' }}>{currentUser.coins || 0}</div>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--color-text-light)' }}>Pièces</div>
                   </div>
                 </div>
               </div>
@@ -541,11 +474,12 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
 
             {/* Book Photos */}
             <div style={{
-              background: 'var(--color-beige-light)',
+              background: 'var(--color-cream)',
               borderRadius: 'var(--border-radius-lg)',
               padding: 'var(--spacing-lg)',
               marginBottom: 'var(--spacing-lg)',
-              border: '2px solid var(--color-brown-light)'
+              border: '2px solid var(--color-brown-light)',
+              margin: '0 var(--spacing-md) var(--spacing-lg) var(--spacing-md)'
             }}>
               <h3 style={{
                 fontSize: '1.25rem',
@@ -561,7 +495,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
               {myPhotoBook.photos.length > 0 ? (
                 <div style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
                   gap: 'var(--spacing-sm)'
                 }}>
                   {myPhotoBook.photos.map((photo) => {
@@ -627,7 +561,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
                             background: 'rgba(0, 0, 0, 0.7)',
                             color: 'white',
                             padding: 'var(--spacing-xs)',
-                            fontSize: '0.7rem',
+                            fontSize: '0.65rem',
                             textAlign: 'center'
                           }}>
                             {photo.caption}
@@ -641,7 +575,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
                 <div style={{
                   textAlign: 'center',
                   padding: 'var(--spacing-xl)',
-                  background: 'white',
+                  background: 'var(--color-beige-light)',
                   borderRadius: 'var(--border-radius-md)',
                   border: '2px solid var(--color-tan)'
                 }}>
@@ -651,7 +585,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
                     color: 'var(--color-text-secondary)',
                     fontStyle: 'italic'
                   }}>
-                    Aucune photo dans ton book pour le moment
+                    Aucune photo dans ton book
                   </div>
                   <div style={{
                     fontSize: '0.8rem',
@@ -664,12 +598,13 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
               )}
             </div>
 
-            {/* Collection de Stickers */}
+            {/* Collection de Badges */}
             <div style={{
-              background: 'var(--color-beige-light)',
+              background: 'var(--color-cream)',
               borderRadius: 'var(--border-radius-lg)',
               padding: 'var(--spacing-lg)',
-              border: '2px solid var(--color-brown-light)'
+              border: '2px solid var(--color-brown-light)',
+              margin: '0 var(--spacing-md) var(--spacing-lg) var(--spacing-md)'
             }}>
               <h3 style={{
                 fontSize: '1.25rem',
@@ -679,56 +614,77 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
                 borderBottom: '2px solid var(--color-gold)',
                 paddingBottom: 'var(--spacing-xs)'
               }}>
-                ✨ Ma Collection de Stickers
+                🏅 Ma Collection de Badges
               </h3>
 
-              {myPhotoBook.stickers.length > 0 ? (
+              {currentUser.badges && currentUser.badges.length > 0 ? (
                 <div style={{
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  gap: 'var(--spacing-xs)',
-                  justifyContent: 'center'
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+                  gap: 'var(--spacing-sm)'
                 }}>
-                  {myPhotoBook.stickers.map((sticker) => (
-                    <div
-                      key={sticker.id}
-                      style={{
-                        fontSize: '2rem',
-                        padding: 'var(--spacing-xs)',
-                        background: sticker.favorite ? 'var(--color-gold)' : 'white',
-                        borderRadius: 'var(--border-radius-md)',
-                        border: sticker.favorite ? '3px solid var(--color-gold-dark)' : '2px solid var(--color-tan)',
-                        boxShadow: 'var(--shadow-sm)',
-                        position: 'relative'
-                      }}
-                      title={sticker.favorite ? '⭐ Favori' : ''}
-                    >
-                      {sticker.emoji}
-                    </div>
-                  ))}
+                  {currentUser.badges.map((badgeId) => {
+                    const badge = profileBadges[badgeId];
+                    if (!badge) return null;
+
+                    return (
+                      <div
+                        key={badgeId}
+                        style={{
+                          padding: 'var(--spacing-md)',
+                          background: 'var(--color-beige-light)',
+                          borderRadius: 'var(--border-radius-md)',
+                          border: '2px solid var(--color-gold)',
+                          boxShadow: 'var(--shadow-sm)',
+                          textAlign: 'center',
+                          transition: 'transform 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+                        onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                      >
+                        <div style={{ fontSize: '2.5rem', marginBottom: 'var(--spacing-xs)' }}>
+                          {badge.emoji}
+                        </div>
+                        <div style={{
+                          fontSize: '0.85rem',
+                          fontWeight: '600',
+                          color: 'var(--color-text-primary)',
+                          marginBottom: '2px'
+                        }}>
+                          {badge.name}
+                        </div>
+                        <div style={{
+                          fontSize: '0.7rem',
+                          color: 'var(--color-text-light)'
+                        }}>
+                          {badgeId}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               ) : (
                 <div style={{
                   textAlign: 'center',
                   padding: 'var(--spacing-xl)',
-                  background: 'white',
+                  background: 'var(--color-beige-light)',
                   borderRadius: 'var(--border-radius-md)',
                   border: '2px solid var(--color-tan)'
                 }}>
-                  <div style={{ fontSize: '3rem', marginBottom: 'var(--spacing-sm)' }}>✨</div>
+                  <div style={{ fontSize: '3rem', marginBottom: 'var(--spacing-sm)' }}>🏅</div>
                   <div style={{
                     fontSize: '0.9rem',
                     color: 'var(--color-text-secondary)',
                     fontStyle: 'italic'
                   }}>
-                    Aucun sticker dans ta collection
+                    Aucun badge pour le moment
                   </div>
                   <div style={{
                     fontSize: '0.8rem',
                     color: 'var(--color-text-light)',
                     marginTop: 'var(--spacing-xs)'
                   }}>
-                    Va dans "Book Photos" pour en ajouter !
+                    Gagne des badges en utilisant l'app !
                   </div>
                 </div>
               )}
