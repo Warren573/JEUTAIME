@@ -264,15 +264,15 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
                 marginBottom: 'var(--spacing-md)'
               }}>
                 <div style={{
-                  padding: '8px',
+                  padding: '15px',
                   background: 'white',
                   borderRadius: '50%',
-                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-                  border: '4px solid rgba(255, 255, 255, 0.5)'
+                  boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 8px rgba(255, 255, 255, 0.3)',
+                  border: '10px solid rgba(255, 255, 255, 0.9)'
                 }}>
                   <UserAvatar
                     user={currentUser}
-                    size={150}
+                    size={300}
                     emoji="😊"
                   />
                 </div>
@@ -432,39 +432,42 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
           {/* Sous-onglets du Profil */}
           <div style={{
             display: 'flex',
-            gap: 'var(--spacing-xs)',
+            gap: '8px',
             marginBottom: 'var(--spacing-lg)',
             overflowX: 'auto',
             overflowY: 'hidden',
-            paddingBottom: 'var(--spacing-xs)',
-            whiteSpace: 'nowrap',
+            paddingBottom: '10px',
             WebkitOverflowScrolling: 'touch',
-            scrollbarWidth: 'thin'
+            scrollbarWidth: 'thin',
+            width: '100%',
+            flexWrap: 'nowrap'
           }}>
             {[
-              { id: 'edit', label: '✏️ Éditer', icon: '✏️' },
-              { id: 'photos', label: '📷 Photos', icon: '📷' },
-              { id: 'stats', label: '📊 Statistiques', icon: '📊' },
-              { id: 'progression', label: '🎯 Progression', icon: '🎯' },
-              { id: 'achievements', label: '🏆 Badges', icon: '🏆' },
-              { id: 'activity', label: '📅 Activité', icon: '📅' }
+              { id: 'edit', label: '✏️ Éditer' },
+              { id: 'photos', label: '📷 Photos' },
+              { id: 'stats', label: '📊 Stats' },
+              { id: 'progression', label: '🎯 Progression' },
+              { id: 'achievements', label: '🏆 Badges' },
+              { id: 'activity', label: '📅 Activité' }
             ].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setProfileSubTab(tab.id)}
                 style={{
-                  padding: 'var(--spacing-sm) var(--spacing-md)',
+                  padding: '10px 16px',
                   background: profileSubTab === tab.id
                     ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))'
                     : 'var(--color-brown)',
                   border: profileSubTab === tab.id ? '2px solid var(--color-gold-light)' : '2px solid var(--color-brown-dark)',
                   color: profileSubTab === tab.id ? 'var(--color-brown-dark)' : 'var(--color-cream)',
-                  borderRadius: 'var(--border-radius-md)',
+                  borderRadius: '8px',
                   cursor: 'pointer',
                   fontWeight: '600',
-                  fontSize: '0.875rem',
+                  fontSize: '14px',
                   whiteSpace: 'nowrap',
-                  flexShrink: 0
+                  flexShrink: 0,
+                  flexGrow: 0,
+                  display: 'inline-block'
                 }}
               >
                 {tab.label}
