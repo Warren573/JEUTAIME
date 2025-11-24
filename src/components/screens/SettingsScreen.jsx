@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getReferralStats, copyReferralCode } from '../../utils/referralSystem';
 import { getTitleFromPoints } from '../../config/gameConfig';
 import UserAvatar from '../avatar/UserAvatar';
+import AvatarCreator from '../auth/AvatarCreator';
 
 export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogout, setScreen, setCurrentUser }) {
   const [settingsTab, setSettingsTab] = useState('profile');
@@ -9,6 +10,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
   const [referralStats, setReferralStats] = useState(null);
   const [copiedCode, setCopiedCode] = useState(false);
   const [showPublicPreview, setShowPublicPreview] = useState(false);
+  const [showAvatarCreator, setShowAvatarCreator] = useState(false);
 
   // Questions state for editing
   const [questions, setQuestions] = useState({
@@ -478,55 +480,97 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
           {/* Éditer le profil */}
           {profileSubTab === 'edit' && (
             <div>
-              {/* Avatar et Photo de Profil */}
+              {/* Créateur d'Avatar */}
               <div style={{
                 background: 'var(--color-cream)',
                 borderRadius: '15px',
                 padding: '20px',
                 marginBottom: '15px',
-                textAlign: 'center',
                 border: '3px solid var(--color-gold)'
               }}>
-                <h3 style={{ fontSize: '18px', margin: '0 0 20px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>
-                  📸 Photo de Profil
+                <h3 style={{ fontSize: '18px', margin: '0 0 20px 0', fontWeight: '600', color: 'var(--color-text-primary)', textAlign: 'center' }}>
+                  🎨 Créer ton Avatar
                 </h3>
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  marginBottom: '20px'
-                }}>
-                  <div style={{
-                    padding: '12px',
-                    background: 'linear-gradient(135deg, #667eea, #764ba2)',
-                    borderRadius: '50%',
-                    boxShadow: '0 15px 50px rgba(102, 126, 234, 0.4)',
-                    border: '6px solid white'
-                  }}>
-                    <UserAvatar
-                      user={currentUser}
-                      size={200}
-                      emoji="😊"
-                    />
+
+                {!showAvatarCreator ? (
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      marginBottom: '20px'
+                    }}>
+                      <div style={{
+                        padding: '12px',
+                        background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                        borderRadius: '50%',
+                        boxShadow: '0 15px 50px rgba(102, 126, 234, 0.4)',
+                        border: '6px solid white'
+                      }}>
+                        <UserAvatar
+                          user={currentUser}
+                          size={200}
+                          emoji="😊"
+                        />
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setShowAvatarCreator(true)}
+                      style={{
+                        padding: '12px 24px',
+                        background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                        border: 'none',
+                        color: 'white',
+                        borderRadius: '10px',
+                        cursor: 'pointer',
+                        fontWeight: '600',
+                        fontSize: '15px',
+                        boxShadow: '0 4px 15px rgba(102, 126, 234, 0.3)'
+                      }}
+                    >
+                      🎨 Personnaliser mon avatar
+                    </button>
+                    <p style={{ fontSize: '12px', color: '#888', marginTop: '10px', margin: '10px 0 0 0' }}>
+                      Cet avatar sera visible par tous les utilisateurs
+                    </p>
                   </div>
-                </div>
-                <button
-                  style={{
-                    padding: '12px 24px',
-                    background: 'linear-gradient(135deg, #667eea, #764ba2)',
-                    border: 'none',
-                    color: 'white',
-                    borderRadius: '10px',
-                    cursor: 'pointer',
-                    fontWeight: '600',
-                    fontSize: '15px',
-                    boxShadow: '0 4px 15px rgba(102, 126, 234, 0.3)'
-                  }}
-                >
-                  📷 Changer ma photo
-                </button>
-                <p style={{ fontSize: '12px', color: '#888', marginTop: '10px', margin: '10px 0 0 0' }}>
-                  Cette photo sera visible par tous les utilisateurs
-                </p>
+                ) : (
+                  <div>
+                    <AvatarCreator
+                      gender={currentUser?.genre === 'Homme' ? 'M' : currentUser?.genre === 'Femme' ? 'F' : 'M'}
+                      onSave={(avatarData) => {
+                        // Sauvegarder l'avatar
+                        const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+                        const userIndex = users.findIndex(u => u.email === currentUser.email);
+                        if (userIndex !== -1) {
+                          users[userIndex] = { ...users[userIndex], avatar: avatarData };
+                          localStorage.setItem('jeutaime_users', JSON.stringify(users));
+                          const updatedUser = { ...currentUser, avatar: avatarData };
+                          localStorage.setItem('jeutaime_current_user', JSON.stringify(updatedUser));
+                          setCurrentUser(updatedUser);
+                          setShowAvatarCreator(false);
+                          alert('✅ Avatar sauvegardé avec succès !');
+                        }
+                      }}
+                    />
+                    <button
+                      onClick={() => setShowAvatarCreator(false)}
+                      style={{
+                        width: '100%',
+                        padding: '12px',
+                        background: '#666',
+                        border: 'none',
+                        color: 'white',
+                        borderRadius: '10px',
+                        cursor: 'pointer',
+                        fontWeight: '600',
+                        fontSize: '14px',
+                        marginTop: '15px'
+                      }}
+                    >
+                      ❌ Annuler
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* Bio obligatoire */}
