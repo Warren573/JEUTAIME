@@ -257,22 +257,22 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
               textAlign: 'center',
               position: 'relative'
             }}>
-              {/* Avatar centré et grand */}
+              {/* Avatar centré */}
               <div style={{
                 display: 'flex',
                 justifyContent: 'center',
                 marginBottom: 'var(--spacing-md)'
               }}>
                 <div style={{
-                  padding: '15px',
+                  padding: '8px',
                   background: 'white',
                   borderRadius: '50%',
-                  boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 8px rgba(255, 255, 255, 0.3)',
-                  border: '10px solid rgba(255, 255, 255, 0.9)'
+                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
+                  border: '4px solid rgba(255, 255, 255, 0.8)'
                 }}>
                   <UserAvatar
                     user={currentUser}
-                    size={300}
+                    size={120}
                     emoji="😊"
                   />
                 </div>
@@ -478,6 +478,57 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
           {/* Éditer le profil */}
           {profileSubTab === 'edit' && (
             <div>
+              {/* Avatar et Photo de Profil */}
+              <div style={{
+                background: 'var(--color-cream)',
+                borderRadius: '15px',
+                padding: '20px',
+                marginBottom: '15px',
+                textAlign: 'center',
+                border: '3px solid var(--color-gold)'
+              }}>
+                <h3 style={{ fontSize: '18px', margin: '0 0 20px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>
+                  📸 Photo de Profil
+                </h3>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  marginBottom: '20px'
+                }}>
+                  <div style={{
+                    padding: '12px',
+                    background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                    borderRadius: '50%',
+                    boxShadow: '0 15px 50px rgba(102, 126, 234, 0.4)',
+                    border: '6px solid white'
+                  }}>
+                    <UserAvatar
+                      user={currentUser}
+                      size={200}
+                      emoji="😊"
+                    />
+                  </div>
+                </div>
+                <button
+                  style={{
+                    padding: '12px 24px',
+                    background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                    border: 'none',
+                    color: 'white',
+                    borderRadius: '10px',
+                    cursor: 'pointer',
+                    fontWeight: '600',
+                    fontSize: '15px',
+                    boxShadow: '0 4px 15px rgba(102, 126, 234, 0.3)'
+                  }}
+                >
+                  📷 Changer ma photo
+                </button>
+                <p style={{ fontSize: '12px', color: '#888', marginTop: '10px', margin: '10px 0 0 0' }}>
+                  Cette photo sera visible par tous les utilisateurs
+                </p>
+              </div>
+
               {/* Bio obligatoire */}
           <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid #E91E63' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
