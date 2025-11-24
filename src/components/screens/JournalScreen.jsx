@@ -49,13 +49,13 @@ export default function JournalScreen({ currentUser }) {
           fontSize: '2.5rem',
           textAlign: 'center',
           margin: '0 0 var(--spacing-xs) 0',
-          color: 'var(--color-text-primary)',
+          color: 'var(--color-brown-dark)',
           textTransform: 'uppercase',
           letterSpacing: '2px',
           borderBottom: '2px solid var(--color-text-primary)',
-          paddingBottom: 'var(--spacing-sm)'
+          paddingBottom: 'var(--spacing-xs)'
         }}>
-          JOURNAL
+          📰 Journal
         </h1>
         <p style={{
           textAlign: 'center',

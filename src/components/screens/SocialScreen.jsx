@@ -66,8 +66,8 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
       <div style={{
         background: 'var(--color-cream)',
         borderBottom: '4px double var(--color-brown-dark)',
-        padding: 'var(--spacing-md)',
-        marginBottom: 'var(--spacing-md)',
+        padding: 'var(--spacing-lg)',
+        marginBottom: 'var(--spacing-lg)',
         boxShadow: 'var(--shadow-md)'
       }}>
         <h1 style={{
