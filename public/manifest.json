@@ -1,0 +1,55 @@
+{
+  "name": "JeuTaime - Rencontres & Jeux",
+  "short_name": "JeuTaime",
+  "description": "Application de rencontres avec jeux, bars virtuels et lettres d'amour",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#667eea",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["social", "entertainment", "lifestyle"],
+  "screenshots": [
+    {
+      "src": "/screenshot1.png",
+      "sizes": "1080x1920",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Profils",
+      "short_name": "Profils",
+      "description": "Découvrir de nouveaux profils",
+      "url": "/?screen=profiles",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Bars",
+      "short_name": "Bars",
+      "description": "Rejoindre un bar virtuel",
+      "url": "/?screen=bars",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Jeux",
+      "short_name": "Jeux",
+      "description": "Jouer à des mini-jeux",
+      "url": "/?screen=home",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
