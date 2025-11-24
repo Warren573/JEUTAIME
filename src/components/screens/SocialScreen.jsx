@@ -72,7 +72,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
       }}>
         <h1 style={{
           fontFamily: 'var(--font-heading)',
-          fontSize: '1.8rem',
+          fontSize: '2.5rem',
           textAlign: 'center',
           margin: '0 0 var(--spacing-xs) 0',
           color: 'var(--color-brown-dark)',
