@@ -440,7 +440,7 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
             gap: 'var(--spacing-sm)'
           }}>
             <button
-              onClick={() => setScreen('myprofile')}
+              onClick={() => setScreen('settings')}
               className="btn-primary"
               style={{
                 padding: 'var(--spacing-md) var(--spacing-lg)',
