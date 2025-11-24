@@ -489,10 +489,10 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
                 border: '3px solid var(--color-gold)'
               }}>
                 <h3 style={{ fontSize: '18px', margin: '0 0 20px 0', fontWeight: '600', color: 'var(--color-text-primary)', textAlign: 'center' }}>
-                  🎨 Créer ton Avatar
+                  🎨 {currentUser?.avatar ? 'Modifier ton Avatar' : 'Créer ton Avatar'}
                 </h3>
 
-                {!showAvatarCreator ? (
+                {!showAvatarCreator && currentUser?.avatar ? (
                   <div style={{ textAlign: 'center' }}>
                     <div style={{
                       display: 'flex',
@@ -509,7 +509,6 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
                         <UserAvatar
                           user={currentUser}
                           size={200}
-                          emoji="😊"
                         />
                       </div>
                     </div>
@@ -527,10 +526,10 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
                         boxShadow: '0 4px 15px rgba(102, 126, 234, 0.3)'
                       }}
                     >
-                      🎨 Personnaliser mon avatar
+                      ✏️ Modifier mon avatar
                     </button>
                     <p style={{ fontSize: '12px', color: '#888', marginTop: '10px', margin: '10px 0 0 0' }}>
-                      Cet avatar sera visible par tous les utilisateurs
+                      Cet avatar est visible par tous les utilisateurs
                     </p>
                   </div>
                 ) : (
@@ -552,23 +551,25 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
                         }
                       }}
                     />
-                    <button
-                      onClick={() => setShowAvatarCreator(false)}
-                      style={{
-                        width: '100%',
-                        padding: '12px',
-                        background: '#666',
-                        border: 'none',
-                        color: 'white',
-                        borderRadius: '10px',
-                        cursor: 'pointer',
-                        fontWeight: '600',
-                        fontSize: '14px',
-                        marginTop: '15px'
-                      }}
-                    >
-                      ❌ Annuler
-                    </button>
+                    {currentUser?.avatar && (
+                      <button
+                        onClick={() => setShowAvatarCreator(false)}
+                        style={{
+                          width: '100%',
+                          padding: '12px',
+                          background: '#666',
+                          border: 'none',
+                          color: 'white',
+                          borderRadius: '10px',
+                          cursor: 'pointer',
+                          fontWeight: '600',
+                          fontSize: '14px',
+                          marginTop: '15px'
+                        }}
+                      >
+                        ❌ Annuler
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
