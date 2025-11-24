@@ -263,11 +263,19 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
                 justifyContent: 'center',
                 marginBottom: 'var(--spacing-md)'
               }}>
-                <UserAvatar
-                  user={currentUser}
-                  size={150}
-                  emoji="😊"
-                />
+                <div style={{
+                  padding: '8px',
+                  background: 'white',
+                  borderRadius: '50%',
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+                  border: '4px solid rgba(255, 255, 255, 0.5)'
+                }}>
+                  <UserAvatar
+                    user={currentUser}
+                    size={150}
+                    emoji="😊"
+                  />
+                </div>
               </div>
 
               {/* Infos utilisateur */}
@@ -427,7 +435,11 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
             gap: 'var(--spacing-xs)',
             marginBottom: 'var(--spacing-lg)',
             overflowX: 'auto',
-            paddingBottom: 'var(--spacing-xs)'
+            overflowY: 'hidden',
+            paddingBottom: 'var(--spacing-xs)',
+            whiteSpace: 'nowrap',
+            WebkitOverflowScrolling: 'touch',
+            scrollbarWidth: 'thin'
           }}>
             {[
               { id: 'edit', label: '✏️ Éditer', icon: '✏️' },
@@ -451,7 +463,8 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
                   cursor: 'pointer',
                   fontWeight: '600',
                   fontSize: '0.875rem',
-                  whiteSpace: 'nowrap'
+                  whiteSpace: 'nowrap',
+                  flexShrink: 0
                 }}
               >
                 {tab.label}
