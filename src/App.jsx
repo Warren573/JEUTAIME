@@ -256,7 +256,7 @@ function MainApp() {
       {screen === 'myprofile' && !gameScreen && !selectedBar && <MyProfileScreen currentUser={currentUser} setScreen={setScreen} setCurrentUser={setCurrentUser} />}
       {screen === 'letters' && !gameScreen && !selectedBar && <LettersScreen currentUser={currentUser} />}
       {screen === 'journal' && !gameScreen && !selectedBar && <JournalScreen {...appState} />}
-      {screen === 'settings' && !gameScreen && !selectedBar && <SettingsScreen {...appState} />}
+      {screen === 'settings' && !gameScreen && !selectedBar && <SettingsScreen {...appState} setCurrentUser={setCurrentUser} />}
 
       {gameScreen === 'pong' && <PongGame {...appState} currentUser={currentUser} />}
       {gameScreen === 'reactivity' && <WhackAMoleGame {...appState} currentUser={currentUser} />}
