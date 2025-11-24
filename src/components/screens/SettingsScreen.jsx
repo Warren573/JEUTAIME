@@ -240,66 +240,147 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
       {/* PROFIL */}
       {settingsTab === 'profile' && (
         <div>
-          {/* Carte Profil Principal */}
+          {/* Carte Profil Principal - Style Dating App */}
           <div style={{
             background: 'var(--color-cream)',
             borderRadius: 'var(--border-radius-lg)',
-            padding: 'var(--spacing-lg)',
+            padding: '0',
             marginBottom: 'var(--spacing-lg)',
             border: '3px solid var(--color-gold)',
-            boxShadow: 'var(--shadow-lg)'
+            boxShadow: 'var(--shadow-lg)',
+            overflow: 'hidden'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)', marginBottom: 'var(--spacing-md)' }}>
-              <UserAvatar
-                user={currentUser}
-                size={80}
-                emoji="😊"
-              />
-              <div style={{ flex: 1 }}>
-                <h2 style={{
-                  fontSize: '1.5rem',
-                  margin: '0 0 var(--spacing-xs) 0',
-                  color: 'var(--color-text-primary)',
-                  fontWeight: '700'
-                }}>
-                  {currentUser?.pseudo || currentUser?.name || 'Utilisateur'}
-                </h2>
+            {/* Header avec fond dégradé */}
+            <div style={{
+              background: 'linear-gradient(135deg, #667eea, #764ba2)',
+              padding: 'var(--spacing-xl)',
+              textAlign: 'center',
+              position: 'relative'
+            }}>
+              {/* Avatar centré et grand */}
+              <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                marginBottom: 'var(--spacing-md)'
+              }}>
+                <UserAvatar
+                  user={currentUser}
+                  size={150}
+                  emoji="😊"
+                />
+              </div>
+
+              {/* Infos utilisateur */}
+              <h2 style={{
+                fontSize: '2rem',
+                margin: '0 0 var(--spacing-xs) 0',
+                color: 'white',
+                fontWeight: '700',
+                textShadow: '0 2px 4px rgba(0,0,0,0.2)'
+              }}>
+                {currentUser?.pseudo || currentUser?.name || 'Utilisateur'}
+              </h2>
+
+              <div style={{
+                fontSize: '1.2rem',
+                color: 'rgba(255,255,255,0.95)',
+                fontWeight: '600',
+                marginBottom: 'var(--spacing-xs)'
+              }}>
+                {stats.title.emoji} {stats.title.title}
+              </div>
+
+              {stats.rank && (
                 <div style={{
                   fontSize: '1rem',
-                  color: 'var(--color-gold-dark)',
-                  fontWeight: '600',
-                  marginBottom: 'var(--spacing-xs)'
+                  color: 'rgba(255,255,255,0.9)',
+                  background: 'rgba(255,255,255,0.2)',
+                  display: 'inline-block',
+                  padding: 'var(--spacing-xs) var(--spacing-md)',
+                  borderRadius: 'var(--border-radius-xl)',
+                  backdropFilter: 'blur(10px)'
                 }}>
-                  {stats.title.emoji} {stats.title.title}
+                  {getMedalEmoji(stats.rank)} Classé #{stats.rank}
                 </div>
-                {stats.rank && (
-                  <div style={{
-                    fontSize: '0.9rem',
-                    color: 'var(--color-text-secondary)'
-                  }}>
-                    {getMedalEmoji(stats.rank)} Classé #{stats.rank}
-                  </div>
-                )}
+              )}
+            </div>
+
+            {/* Stats rapides */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '1px',
+              background: 'var(--color-tan)',
+              borderTop: '1px solid var(--color-tan)',
+              borderBottom: '1px solid var(--color-tan)'
+            }}>
+              <div style={{
+                background: 'var(--color-beige-light)',
+                padding: 'var(--spacing-md)',
+                textAlign: 'center'
+              }}>
+                <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: 'var(--color-gold-dark)' }}>
+                  {stats.points}
+                </div>
+                <div style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>Points</div>
+              </div>
+              <div style={{
+                background: 'var(--color-beige-light)',
+                padding: 'var(--spacing-md)',
+                textAlign: 'center'
+              }}>
+                <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: 'var(--color-romantic)' }}>
+                  {stats.matches}
+                </div>
+                <div style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>Matches</div>
+              </div>
+              <div style={{
+                background: 'var(--color-beige-light)',
+                padding: 'var(--spacing-md)',
+                textAlign: 'center'
+              }}>
+                <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: 'var(--color-friendly)' }}>
+                  {stats.likes_received}
+                </div>
+                <div style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>Likes reçus</div>
               </div>
             </div>
 
-            {/* Bouton aperçu public */}
-            <button
-              onClick={() => setShowPublicPreview(!showPublicPreview)}
-              style={{
-                width: '100%',
-                padding: 'var(--spacing-sm)',
-                background: 'linear-gradient(135deg, #667eea, #764ba2)',
-                border: 'none',
-                color: 'white',
-                borderRadius: 'var(--border-radius-md)',
-                cursor: 'pointer',
-                fontWeight: '600',
-                fontSize: '0.9rem'
-              }}
-            >
-              {showPublicPreview ? '❌ Fermer l\'aperçu' : '👁️ Voir mon profil public'}
-            </button>
+            {/* Boutons d'action */}
+            <div style={{ padding: 'var(--spacing-md)', display: 'flex', gap: 'var(--spacing-sm)' }}>
+              <button
+                onClick={() => setShowPublicPreview(!showPublicPreview)}
+                style={{
+                  flex: 1,
+                  padding: 'var(--spacing-sm)',
+                  background: showPublicPreview ? 'var(--color-brown)' : 'linear-gradient(135deg, #667eea, #764ba2)',
+                  border: 'none',
+                  color: 'white',
+                  borderRadius: 'var(--border-radius-md)',
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                  fontSize: '0.9rem'
+                }}
+              >
+                {showPublicPreview ? '❌ Fermer' : '👁️ Aperçu public'}
+              </button>
+              <button
+                onClick={() => setProfileSubTab('edit')}
+                style={{
+                  flex: 1,
+                  padding: 'var(--spacing-sm)',
+                  background: 'linear-gradient(135deg, #E91E63, #C2185B)',
+                  border: 'none',
+                  color: 'white',
+                  borderRadius: 'var(--border-radius-md)',
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                  fontSize: '0.9rem'
+                }}
+              >
+                ✏️ Modifier
+              </button>
+            </div>
           </div>
 
           {/* Aperçu Public */}
@@ -350,6 +431,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
           }}>
             {[
               { id: 'edit', label: '✏️ Éditer', icon: '✏️' },
+              { id: 'photos', label: '📷 Photos', icon: '📷' },
               { id: 'stats', label: '📊 Statistiques', icon: '📊' },
               { id: 'progression', label: '🎯 Progression', icon: '🎯' },
               { id: 'achievements', label: '🏆 Badges', icon: '🏆' },
@@ -573,6 +655,150 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
             style={{ width: '100%', padding: '15px', background: 'linear-gradient(135deg, #E91E63, #C2185B)', border: 'none', color: 'white', borderRadius: '12px', cursor: 'pointer', fontWeight: '700', fontSize: '16px', boxShadow: '0 4px 15px rgba(233, 30, 99, 0.3)' }}>
             💾 Enregistrer mon profil
           </button>
+            </div>
+          )}
+
+          {/* Sous-onglet Photos */}
+          {profileSubTab === 'photos' && (
+            <div style={{
+              background: 'var(--color-cream)',
+              borderRadius: 'var(--border-radius-lg)',
+              padding: 'var(--spacing-lg)',
+              marginBottom: 'var(--spacing-lg)',
+              border: '2px solid var(--color-brown)'
+            }}>
+              <h3 style={{ fontSize: '1.3rem', marginBottom: 'var(--spacing-md)', color: 'var(--color-text-primary)' }}>
+                📷 Mes Photos
+              </h3>
+              <p style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)', marginBottom: 'var(--spacing-lg)' }}>
+                Gérez votre book de photos. Les autres utilisateurs découvriront vos photos au fil de vos échanges.
+              </p>
+
+              {/* Photo principale / Avatar */}
+              <div style={{
+                background: 'var(--color-beige)',
+                borderRadius: 'var(--border-radius-md)',
+                padding: 'var(--spacing-lg)',
+                marginBottom: 'var(--spacing-md)',
+                textAlign: 'center',
+                border: '3px solid var(--color-gold)'
+              }}>
+                <h4 style={{ fontSize: '1.1rem', marginBottom: 'var(--spacing-md)', color: 'var(--color-text-primary)' }}>
+                  Photo de profil principale
+                </h4>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  marginBottom: 'var(--spacing-md)'
+                }}>
+                  <UserAvatar
+                    user={currentUser}
+                    size={120}
+                    emoji="😊"
+                  />
+                </div>
+                <button
+                  style={{
+                    padding: 'var(--spacing-sm) var(--spacing-lg)',
+                    background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                    border: 'none',
+                    color: 'white',
+                    borderRadius: 'var(--border-radius-md)',
+                    cursor: 'pointer',
+                    fontWeight: '600',
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  📸 Changer ma photo
+                </button>
+                <p style={{ fontSize: '0.8rem', color: 'var(--color-text-light)', marginTop: 'var(--spacing-sm)' }}>
+                  Cette photo sera visible dès le début
+                </p>
+              </div>
+
+              {/* Book de photos */}
+              <div style={{
+                background: 'var(--color-beige)',
+                borderRadius: 'var(--border-radius-md)',
+                padding: 'var(--spacing-lg)',
+                border: '2px solid var(--color-tan)'
+              }}>
+                <h4 style={{ fontSize: '1.1rem', marginBottom: 'var(--spacing-xs)', color: 'var(--color-text-primary)' }}>
+                  Mon Book Photos (0/6)
+                </h4>
+                <p style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', marginBottom: 'var(--spacing-md)' }}>
+                  Ces photos se débloquent progressivement après 10 lettres échangées
+                </p>
+
+                {/* Grille de photos */}
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(3, 1fr)',
+                  gap: 'var(--spacing-md)'
+                }}>
+                  {[1, 2, 3, 4, 5, 6].map((slot) => (
+                    <div
+                      key={slot}
+                      style={{
+                        aspectRatio: '3/4',
+                        background: 'var(--color-cream)',
+                        borderRadius: 'var(--border-radius-md)',
+                        border: '2px dashed var(--color-brown-light)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s',
+                        position: 'relative'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--color-gold)'}
+                      onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--color-brown-light)'}
+                    >
+                      <div style={{ fontSize: '2rem', marginBottom: 'var(--spacing-xs)' }}>📷</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--color-text-light)' }}>
+                        Photo {slot}
+                      </div>
+                      <div style={{
+                        position: 'absolute',
+                        top: 'var(--spacing-xs)',
+                        right: 'var(--spacing-xs)',
+                        background: 'var(--color-gold)',
+                        color: 'var(--color-brown-dark)',
+                        borderRadius: '50%',
+                        width: '20px',
+                        height: '20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '0.7rem',
+                        fontWeight: 'bold'
+                      }}>
+                        +
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Infos importantes */}
+                <div style={{
+                  marginTop: 'var(--spacing-lg)',
+                  padding: 'var(--spacing-md)',
+                  background: 'rgba(102, 126, 234, 0.1)',
+                  borderRadius: 'var(--border-radius-md)',
+                  border: '1px solid rgba(102, 126, 234, 0.3)'
+                }}>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--color-text-primary)', marginBottom: 'var(--spacing-xs)' }}>
+                    💡 <strong>Comment ça marche ?</strong>
+                  </div>
+                  <ul style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)', margin: 0, paddingLeft: '20px', lineHeight: '1.6' }}>
+                    <li>Ajoutez jusqu'à 6 photos dans votre book</li>
+                    <li>Les photos se débloquent après 10 lettres échangées avec un match</li>
+                    <li>Privilégiez des photos récentes et authentiques</li>
+                    <li>Évitez les photos de groupe où on ne vous reconnaît pas</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           )}
 
