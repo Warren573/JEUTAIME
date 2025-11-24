@@ -66,13 +66,13 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
       <div style={{
         background: 'var(--color-cream)',
         borderBottom: '4px double var(--color-brown-dark)',
-        padding: socialTab === null ? 'var(--spacing-md)' : 'var(--spacing-lg)',
-        marginBottom: socialTab === null ? 'var(--spacing-md)' : 'var(--spacing-lg)',
+        padding: 'var(--spacing-md)',
+        marginBottom: 'var(--spacing-md)',
         boxShadow: 'var(--shadow-md)'
       }}>
         <h1 style={{
           fontFamily: 'var(--font-heading)',
-          fontSize: socialTab === null ? '1.8rem' : '2.5rem',
+          fontSize: '1.8rem',
           textAlign: 'center',
           margin: '0 0 var(--spacing-xs) 0',
           color: 'var(--color-brown-dark)',
@@ -112,17 +112,17 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: 'var(--spacing-lg)'
+          padding: '16px'
         }}>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gridTemplateRows: '1fr 1fr',
-            gap: 'var(--spacing-md)',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gridTemplateRows: 'repeat(2, 1fr)',
+            gap: '16px',
             width: '100%',
-            maxWidth: '600px',
-            height: '70vh',
-            maxHeight: '450px'
+            maxWidth: '500px',
+            aspectRatio: '1',
+            maxHeight: 'calc(100vh - 200px)'
           }}>
             {['bars', 'ranking', 'games', 'adoption'].map((tab) => {
               const icons = {
@@ -142,30 +142,34 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                   key={tab}
                   onClick={() => setSocialTab(tab)}
                   style={{
-                    padding: 'var(--spacing-xl)',
+                    width: '100%',
+                    height: '100%',
+                    minHeight: '140px',
+                    padding: '20px',
                     background: 'linear-gradient(135deg, var(--color-brown), var(--color-brown-dark))',
                     border: '3px solid var(--color-gold)',
                     color: 'var(--color-cream)',
-                    borderRadius: 'var(--border-radius-xl)',
+                    borderRadius: '20px',
                     cursor: 'pointer',
                     fontWeight: '700',
-                    fontSize: '1.2rem',
-                    transition: 'all var(--transition-normal)',
-                    boxShadow: 'var(--shadow-lg)',
+                    fontSize: '1.1rem',
+                    transition: 'all 0.2s',
+                    boxShadow: '0 8px 16px rgba(58, 40, 24, 0.3)',
                     textAlign: 'center',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: 'var(--spacing-sm)'
+                    gap: '12px',
+                    touchAction: 'manipulation'
                   }}
                   onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
                   onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
                   onTouchStart={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
                   onTouchEnd={(e) => e.currentTarget.style.transform = 'scale(1)'}
                 >
-                  <div style={{ fontSize: '4rem' }}>{icons[tab]}</div>
-                  <div>{labels[tab]}</div>
+                  <div style={{ fontSize: 'clamp(3rem, 8vw, 4rem)' }}>{icons[tab]}</div>
+                  <div style={{ fontSize: 'clamp(0.9rem, 3vw, 1.1rem)' }}>{labels[tab]}</div>
                 </button>
               );
             })}
