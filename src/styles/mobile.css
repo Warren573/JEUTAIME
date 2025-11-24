@@ -1,0 +1,454 @@
+/* Optimisations spécifiques mobiles pour JeuTaime */
+
+/* ========================================
+   VARIABLES RESPONSIVE
+   ======================================== */
+:root {
+  --mobile-header-height: 60px;
+  --mobile-nav-height: 70px;
+  --mobile-safe-area-top: env(safe-area-inset-top, 0px);
+  --mobile-safe-area-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ========================================
+   RESET & BASE MOBILE
+   ======================================== */
+* {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-touch-callout: none;
+}
+
+body {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Désactiver le zoom sur les inputs (iOS) */
+input, textarea, select {
+  font-size: 16px !important;
+}
+
+/* ========================================
+   SAFE AREAS (iPhone X, notch, etc.)
+   ======================================== */
+@supports (padding-top: env(safe-area-inset-top)) {
+  body {
+    padding-top: var(--mobile-safe-area-top);
+    padding-bottom: var(--mobile-safe-area-bottom);
+  }
+}
+
+/* ========================================
+   RESPONSIVE BREAKPOINTS
+   ======================================== */
+
+/* Petits téléphones (< 375px) - iPhone SE, etc. */
+@media (max-width: 374px) {
+  :root {
+    font-size: 14px;
+  }
+
+  /* Réduire les espacements */
+  .card, .section {
+    padding: 12px !important;
+  }
+
+  /* Boutons plus petits */
+  button {
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+  }
+
+  /* Avatars plus petits */
+  [style*="size: 200"] {
+    transform: scale(0.7);
+  }
+}
+
+/* Téléphones standards (375px - 428px) - iPhone 12-15, Galaxy S */
+@media (min-width: 375px) and (max-width: 428px) {
+  :root {
+    font-size: 15px;
+  }
+
+  /* Navigation tactile optimisée */
+  nav button {
+    min-height: 48px;
+    min-width: 48px;
+  }
+}
+
+/* Grands téléphones (> 428px) - iPhone Pro Max, etc. */
+@media (min-width: 429px) and (max-width: 768px) {
+  :root {
+    font-size: 16px;
+  }
+
+  /* Meilleur usage de l'espace */
+  .grid-2 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* ========================================
+   ORIENTATION PORTRAIT/PAYSAGE
+   ======================================== */
+
+/* Portrait (mode normal) */
+@media (orientation: portrait) {
+  .full-screen-game {
+    height: calc(100vh - var(--mobile-nav-height));
+  }
+}
+
+/* Paysage (jeux en plein écran) */
+@media (orientation: landscape) {
+  .navigation {
+    display: none !important;
+  }
+
+  .full-screen-game {
+    height: 100vh;
+  }
+
+  /* Cacher les headers pour plus d'espace */
+  .game-header {
+    display: none !important;
+  }
+}
+
+/* ========================================
+   OPTIMISATIONS IOS
+   ======================================== */
+
+/* Détection iOS via media query */
+@supports (-webkit-touch-callout: none) {
+  /* Bounce scroll désactivé */
+  body {
+    overscroll-behavior-y: none;
+  }
+
+  /* Safe area pour iPhone X+ */
+  .navigation {
+    padding-bottom: calc(20px + var(--mobile-safe-area-bottom));
+  }
+
+  /* Inputs iOS */
+  input, textarea {
+    -webkit-appearance: none;
+    border-radius: 8px;
+  }
+
+  /* Boutons iOS */
+  button {
+    -webkit-appearance: none;
+    cursor: pointer;
+  }
+}
+
+/* ========================================
+   OPTIMISATIONS ANDROID
+   ======================================== */
+
+/* Désactiver le highlight bleu Android */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Scroll smooth Android */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ========================================
+   TOUCH & GESTURES
+   ======================================== */
+
+/* Zones de touch minimum 44x44px (Apple HIG) */
+button, a, input, [role="button"] {
+  min-height: 44px;
+  min-width: 44px;
+  touch-action: manipulation;
+}
+
+/* Feedback tactile */
+button:active, [role="button"]:active {
+  opacity: 0.7;
+  transform: scale(0.98);
+  transition: all 0.1s;
+}
+
+/* Désactiver le long press menu sur images */
+img {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ========================================
+   SCROLLING OPTIMISÉ
+   ======================================== */
+
+/* Momentum scrolling */
+.scrollable, [style*="overflow"] {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Masquer scrollbars sur mobile */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+}
+
+/* ========================================
+   PERFORMANCE MOBILE
+   ======================================== */
+
+/* Hardware acceleration pour animations */
+.animated, [style*="transform"], [style*="transition"] {
+  will-change: transform;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Optimiser les gradients */
+[style*="gradient"] {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* ========================================
+   TYPOGRAPHIE MOBILE
+   ======================================== */
+
+/* Titres responsive */
+h1 {
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+}
+
+h2 {
+  font-size: clamp(1.25rem, 4vw, 2rem);
+}
+
+h3 {
+  font-size: clamp(1rem, 3vw, 1.5rem);
+}
+
+/* Texte lisible sur mobile */
+p, span, div {
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+/* ========================================
+   IMAGES & MÉDIAS RESPONSIVE
+   ======================================== */
+
+img, video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Avatar responsive */
+[class*="avatar"] {
+  max-width: min(200px, 50vw);
+  height: auto;
+}
+
+/* ========================================
+   FORMS MOBILE
+   ======================================== */
+
+/* Inputs tactiles */
+input, textarea, select {
+  font-size: 16px; /* Évite le zoom iOS */
+  padding: 12px;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Labels plus grands */
+label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* ========================================
+   NAVIGATION MOBILE
+   ======================================== */
+
+/* Navigation fixe en bas */
+.navigation {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--mobile-nav-height);
+  background: #000;
+  border-top: 1px solid #333;
+  z-index: 1000;
+  padding-bottom: var(--mobile-safe-area-bottom);
+}
+
+/* Icônes navigation */
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  gap: 4px;
+}
+
+.nav-icon {
+  font-size: 24px;
+}
+
+.nav-label {
+  font-size: 10px;
+  font-weight: 500;
+}
+
+/* ========================================
+   CARDS & CONTAINERS MOBILE
+   ======================================== */
+
+/* Cards responsive */
+.card, [style*="borderRadius"] {
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+/* Grilles responsive */
+.grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+/* ========================================
+   MODALS & OVERLAYS MOBILE
+   ======================================== */
+
+/* Modal plein écran sur mobile */
+@media (max-width: 768px) {
+  .modal, [role="dialog"] {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+  }
+}
+
+/* ========================================
+   LOADING & FEEDBACK
+   ======================================== */
+
+/* Spinners visibles */
+.loading, .spinner {
+  min-height: 48px;
+  min-width: 48px;
+}
+
+/* Toasts/notifications mobile */
+.toast {
+  bottom: calc(var(--mobile-nav-height) + 20px);
+  left: 16px;
+  right: 16px;
+  max-width: calc(100% - 32px);
+}
+
+/* ========================================
+   ACCESSIBILITÉ MOBILE
+   ======================================== */
+
+/* Contraste minimum */
+@media (prefers-contrast: high) {
+  * {
+    border-width: 2px !important;
+  }
+}
+
+/* Mode sombre système */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #000;
+    --text-color: #fff;
+  }
+}
+
+/* Réduction des animations */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ========================================
+   UTILITAIRES MOBILE
+   ======================================== */
+
+/* Cacher sur mobile */
+.hide-mobile {
+  display: none !important;
+}
+
+/* Afficher uniquement sur mobile */
+.show-mobile {
+  display: block !important;
+}
+
+/* Pleine largeur mobile */
+.full-width-mobile {
+  width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Padding horizontal mobile */
+.px-mobile {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+/* ========================================
+   FIXES SPÉCIFIQUES APPAREIL
+   ======================================== */
+
+/* iPhone notch */
+@supports (padding: max(0px)) {
+  .header {
+    padding-top: max(20px, var(--mobile-safe-area-top));
+  }
+}
+
+/* Android status bar */
+@media (display-mode: standalone) {
+  .header {
+    margin-top: 24px;
+  }
+}
+
+/* iPad en mode app */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}

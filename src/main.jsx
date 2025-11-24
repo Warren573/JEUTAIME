@@ -2,6 +2,12 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './styles/index.css'
+import './styles/mobile.css'
+import { setupDeviceOptimizations, setupViewport } from './utils/deviceDetection'
+
+// Optimisations spécifiques à l'appareil
+setupDeviceOptimizations()
+setupViewport()
 
 // Enregistrer le Service Worker pour PWA
 if ('serviceWorker' in navigator) {
