@@ -29,6 +29,7 @@ import AdminLayout from './components/admin/AdminLayout';
 // Auth
 import AuthScreen from './components/auth/AuthScreen';
 import ProfileCreation from './components/auth/ProfileCreation';
+import LandingPage from './components/LandingPage';
 
 // Points system
 import { awardDailyLogin } from './utils/pointsSystem';
@@ -40,6 +41,8 @@ import { initializeDemoUsers } from './utils/demoUsers';
 import { bars } from './data/appData';
 
 function MainApp() {
+  const [showLanding, setShowLanding] = useState(true); // Landing page d'abord
+  const [tryMode, setTryMode] = useState(false); // Mode essai sans compte
   const [currentUser, setCurrentUser] = useState(null);
   const [authMode, setAuthMode] = useState(null); // null, 'signup-profile'
   const [signupEmail, setSignupEmail] = useState('');
@@ -70,6 +73,7 @@ function MainApp() {
       setCurrentUser(user);
       setUserCoins(user.coins || 100);
       setPremiumActive(user.premium || false);
+      setShowLanding(false); // Ne pas montrer la landing si déjà connecté
 
       // Award daily login points
       const awarded = awardDailyLogin(user.email);
@@ -215,6 +219,32 @@ function MainApp() {
     currentUser,
     onLogout: handleLogout
   };
+
+  // Show landing page first
+  if (showLanding && !currentUser) {
+    return (
+      <LandingPage
+        onTryApp={() => {
+          setShowLanding(false);
+          setTryMode(true);
+          // Créer un utilisateur temporaire pour le mode essai
+          const tempUser = {
+            email: 'guest@jeutaime.com',
+            name: 'Invité',
+            pseudo: 'Visiteur',
+            coins: 50,
+            points: 0,
+            premium: false,
+            isGuest: true
+          };
+          setCurrentUser(tempUser);
+        }}
+        onLogin={() => {
+          setShowLanding(false);
+        }}
+      />
+    );
+  }
 
   // Show auth screen if not logged in
   if (!currentUser && authMode !== 'signup-profile') {
