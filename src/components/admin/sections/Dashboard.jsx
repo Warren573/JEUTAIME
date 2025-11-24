@@ -1,6 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { setupCompleteTestEnvironment } from '../../../utils/generateBots';
 
 export default function Dashboard() {
+  const [isGeneratingBots, setIsGeneratingBots] = useState(false);
+  const [botResult, setBotResult] = useState(null);
+
+  const handleGenerateBots = () => {
+    setIsGeneratingBots(true);
+    setBotResult(null);
+
+    try {
+      const currentUser = JSON.parse(localStorage.getItem('jeutaime_current_user'));
+      const result = setupCompleteTestEnvironment(currentUser?.email);
+      setBotResult(result);
+      alert(`✅ ${result.botsCreated} bots créés avec succès!`);
+    } catch (error) {
+      console.error('Erreur lors de la génération des bots:', error);
+      alert('❌ Erreur lors de la génération des bots');
+    } finally {
+      setIsGeneratingBots(false);
+    }
+  };
+
   const stats = [
     { icon: '👥', label: 'Utilisateurs totaux', value: '12,847', change: '+12%', color: '#4CAF50' },
     { icon: '💰', label: 'Revenus du mois', value: '24,567€', change: '+8%', color: '#FFD700' },
@@ -51,6 +72,55 @@ export default function Dashboard() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Actions rapides */}
+      <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', border: '1px solid #333', marginBottom: '30px' }}>
+        <h2 style={{ fontSize: '18px', fontWeight: '700', margin: '0 0 15px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          ⚡ Actions rapides
+        </h2>
+        <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
+          <button
+            onClick={handleGenerateBots}
+            disabled={isGeneratingBots}
+            style={{
+              padding: '12px 24px',
+              background: isGeneratingBots ? '#333' : 'linear-gradient(135deg, #667eea, #764ba2)',
+              border: 'none',
+              color: 'white',
+              borderRadius: '10px',
+              cursor: isGeneratingBots ? 'not-allowed' : 'pointer',
+              fontWeight: '600',
+              fontSize: '14px',
+              boxShadow: '0 4px 15px rgba(102, 126, 234, 0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}
+          >
+            <span style={{ fontSize: '18px' }}>🤖</span>
+            {isGeneratingBots ? 'Génération en cours...' : 'Générer des bots de test'}
+          </button>
+          {botResult && (
+            <div style={{
+              padding: '12px 20px',
+              background: '#4CAF5022',
+              border: '2px solid #4CAF50',
+              borderRadius: '10px',
+              fontSize: '14px',
+              fontWeight: '600',
+              color: '#4CAF50',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              ✅ {botResult.botsCreated} bots créés avec succès !
+            </div>
+          )}
+        </div>
+        <p style={{ fontSize: '12px', color: '#888', marginTop: '10px', margin: '10px 0 0 0' }}>
+          Génère 18 utilisateurs bots avec profils complets, avatars, stats, et activités pour tester l'application
+        </p>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
