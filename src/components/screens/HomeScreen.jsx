@@ -440,6 +440,23 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
             gap: 'var(--spacing-sm)'
           }}>
             <button
+              onClick={() => setScreen('myprofile')}
+              className="btn-primary"
+              style={{
+                padding: 'var(--spacing-md) var(--spacing-lg)',
+                fontSize: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 'var(--spacing-sm)',
+                background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                border: '2px solid var(--color-gold)'
+              }}
+            >
+              <span style={{ fontSize: '1.5rem' }}>👤</span> Mon Profil Complet
+            </button>
+
+            <button
               onClick={() => setScreen('profiles')}
               className="btn-primary"
               style={{

@@ -12,6 +12,7 @@ import BarDetailScreen from './components/screens/BarDetailScreen';
 import RankingScreen from './components/screens/RankingScreen';
 import BarsScreen from './components/screens/BarsScreen';
 import ReferralScreen from './components/screens/ReferralScreen';
+import MyProfileScreen from './components/screens/MyProfileScreen';
 
 // Games
 import PongGame from './components/games/PongGame';
@@ -252,6 +253,7 @@ function MainApp() {
       {screen === 'social' && !gameScreen && !selectedBar && <SocialScreen {...appState} currentUser={currentUser} />}
       {screen === 'bars' && !gameScreen && !selectedBar && <BarsScreen setScreen={setScreen} setGameScreen={setGameScreen} setSelectedBar={setSelectedBar} currentUser={currentUser} />}
       {screen === 'referral' && !gameScreen && !selectedBar && <ReferralScreen currentUser={currentUser} />}
+      {screen === 'myprofile' && !gameScreen && !selectedBar && <MyProfileScreen currentUser={currentUser} setScreen={setScreen} setCurrentUser={setCurrentUser} />}
       {screen === 'letters' && !gameScreen && !selectedBar && <LettersScreen currentUser={currentUser} />}
       {screen === 'journal' && !gameScreen && !selectedBar && <JournalScreen {...appState} />}
       {screen === 'settings' && !gameScreen && !selectedBar && <SettingsScreen {...appState} />}
