@@ -346,7 +346,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              paddingBottom: '140px' // Espace pour les infos en bas
+              paddingBottom: '60px' // Espace pour les infos en bas
             }}>
               {/* AVATAR STYLISÉ AVATAAARS */}
               <div style={{
@@ -425,7 +425,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              paddingBottom: '140px' // Espace pour les infos en bas
+              paddingBottom: '60px' // Espace pour les infos en bas
             }}>
               {/* AVATAR STYLISÉ AVATAAARS */}
               <div style={{

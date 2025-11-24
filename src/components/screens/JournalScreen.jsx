@@ -127,13 +127,12 @@ export default function JournalScreen({ currentUser }) {
             }}>
               <h3 style={{
                 fontFamily: 'var(--font-heading)',
-                fontSize: '1rem',
+                fontSize: '0.9rem',
                 color: 'var(--color-text-primary)',
                 marginBottom: 'var(--spacing-sm)',
                 borderBottom: '1px solid var(--color-text-primary)',
                 paddingBottom: 'var(--spacing-xs)',
-                textTransform: 'uppercase',
-                fontSize: '0.9rem'
+                textTransform: 'uppercase'
               }}>
                 Tournoi de Scrabble
               </h3>
@@ -156,13 +155,12 @@ export default function JournalScreen({ currentUser }) {
             }}>
               <h3 style={{
                 fontFamily: 'var(--font-heading)',
-                fontSize: '1rem',
+                fontSize: '0.9rem',
                 color: 'var(--color-text-primary)',
                 marginBottom: 'var(--spacing-sm)',
                 borderBottom: '1px solid var(--color-text-primary)',
                 paddingBottom: 'var(--spacing-xs)',
-                textTransform: 'uppercase',
-                fontSize: '0.9rem'
+                textTransform: 'uppercase'
               }}>
                 {' '} Compliments
               </h3>
