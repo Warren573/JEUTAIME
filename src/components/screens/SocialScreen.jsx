@@ -57,10 +57,14 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
     <div style={{
       height: '100vh',
       overflowY: 'auto',
+      overflowX: 'hidden',
       paddingBottom: '80px',
       background: 'var(--color-beige-light)',
       display: 'flex',
-      flexDirection: 'column'
+      flexDirection: 'column',
+      width: '100%',
+      maxWidth: '100vw',
+      boxSizing: 'border-box'
     }}>
       {/* Logo Social harmonisé - Toujours visible */}
       <div style={{
@@ -68,7 +72,9 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
         borderBottom: '4px double var(--color-brown-dark)',
         padding: 'var(--spacing-lg)',
         marginBottom: 'var(--spacing-lg)',
-        boxShadow: 'var(--shadow-md)'
+        boxShadow: 'var(--shadow-md)',
+        width: '100%',
+        boxSizing: 'border-box'
       }}>
         <h1 style={{
           fontFamily: 'var(--font-heading)',
@@ -112,7 +118,9 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: '16px'
+          padding: '16px',
+          width: '100%',
+          boxSizing: 'border-box'
         }}>
           <div style={{
             display: 'grid',
@@ -122,7 +130,8 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
             width: '100%',
             maxWidth: '500px',
             aspectRatio: '1',
-            maxHeight: 'calc(100vh - 200px)'
+            maxHeight: 'calc(100vh - 200px)',
+            boxSizing: 'border-box'
           }}>
             {['bars', 'ranking', 'games', 'adoption'].map((tab) => {
               const icons = {
@@ -161,7 +170,8 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: '12px',
-                    touchAction: 'manipulation'
+                    touchAction: 'manipulation',
+                    boxSizing: 'border-box'
                   }}
                   onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
                   onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
@@ -179,7 +189,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
 
       {/* Bouton retour quand un onglet est sélectionné */}
       {socialTab !== null && (
-        <div style={{ padding: '0 var(--spacing-sm)', marginTop: 'var(--spacing-md)', marginBottom: 'var(--spacing-md)' }}>
+        <div style={{ padding: '0 var(--spacing-sm)', marginTop: 'var(--spacing-md)', marginBottom: 'var(--spacing-md)', width: '100%', boxSizing: 'border-box' }}>
           <button
             onClick={() => setSocialTab(null)}
             style={{
@@ -206,7 +216,9 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
       {socialTab === 'bars' && (
         <div style={{
           padding: '0 var(--spacing-sm)',
-          position: 'relative'
+          position: 'relative',
+          width: '100%',
+          boxSizing: 'border-box'
         }}>
           {/* Bouton vers liste complète des salons magiques */}
           <button
@@ -509,7 +521,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
       )}
 
       {socialTab === 'games' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', padding: '0 var(--spacing-sm)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', padding: '0 var(--spacing-sm)', width: '100%', boxSizing: 'border-box' }}>
           <div onClick={() => setGameScreen('reactivity')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
             <div style={{ fontSize: '36px', marginBottom: '8px' }}>⚡</div>
             <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Tape la Taupe</h4>
