@@ -162,7 +162,8 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
 
   return (
     <div style={{
-      height: '100vh',
+      width: '100%',
+      boxSizing: 'border-box',
       overflowY: 'auto',
       paddingBottom: '80px',
       background: 'var(--color-beige-light)'

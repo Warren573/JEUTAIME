@@ -41,10 +41,11 @@ export default function RankingScreen({ currentUser }) {
 
   return (
     <div style={{
-      height: '100vh',
       overflowY: 'auto',
-      paddingBottom: '80px',
-      background: 'var(--color-beige-light)'
+      paddingBottom: 'var(--spacing-md)',
+      background: 'var(--color-beige-light)',
+      width: '100%',
+      boxSizing: 'border-box'
     }}>
       {/* En-tête style Journal */}
       <div style={{
