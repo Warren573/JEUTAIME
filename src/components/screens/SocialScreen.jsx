@@ -264,7 +264,9 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
             background: 'linear-gradient(180deg, var(--color-gold-light), var(--color-gold))',
             padding: 'var(--spacing-md)',
             borderRadius: 'var(--border-radius-lg)',
-            boxShadow: 'var(--shadow-md)'
+            boxShadow: 'var(--shadow-md)',
+            width: '100%',
+            boxSizing: 'border-box'
           }}>
             <h2 style={{
               fontFamily: 'var(--font-heading)',
@@ -285,7 +287,9 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
             boxShadow: 'var(--shadow-xl)',
             border: '4px solid var(--color-brown)',
             position: 'relative',
-            backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(139, 111, 71, 0.05) 10px, rgba(139, 111, 71, 0.05) 20px)'
+            backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(139, 111, 71, 0.05) 10px, rgba(139, 111, 71, 0.05) 20px)',
+            width: '100%',
+            boxSizing: 'border-box'
           }}>
             {bars.map((bar, index) => {
               // Positionnement différent pour chaque bar (effet carte)

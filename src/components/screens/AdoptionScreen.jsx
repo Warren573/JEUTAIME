@@ -174,7 +174,9 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
         borderBottom: '4px double var(--color-brown-dark)',
         padding: 'var(--spacing-lg)',
         marginBottom: 'var(--spacing-lg)',
-        boxShadow: 'var(--shadow-md)'
+        boxShadow: 'var(--shadow-md)',
+        width: '100%',
+        boxSizing: 'border-box'
       }}>
         <h1 style={{
           fontFamily: 'var(--font-heading)',
