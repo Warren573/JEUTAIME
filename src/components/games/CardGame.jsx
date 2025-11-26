@@ -161,9 +161,9 @@ export default function CardGame({
         <p style={{ textAlign: 'center', fontSize: '16px', marginBottom: '10px', color: '#ccc' }}>{cardMessage}</p>
         <p style={{ textAlign: 'center', fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}>💰 Gains: {cardGains} pièces</p>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px', marginBottom: '20px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px', marginBottom: '20px', width: '100%', padding: '0 8px', boxSizing: 'border-box' }}>
           {cardSymbols.map((symbol, idx) => (
-            <button key={idx} onClick={() => revealCard(idx)} style={{ width: '60px', height: '80px', margin: '0 auto', background: cardRevealed[idx] ? 'white' : '#E91E63', border: 'none', borderRadius: '8px', fontSize: '28px', cursor: cardRevealed[idx] || cardGameOver ? 'default' : 'pointer', fontWeight: 'bold', opacity: cardRevealed[idx] || !cardGameOver ? 1 : 0.9 }}>
+            <button key={idx} onClick={() => revealCard(idx)} style={{ width: '100%', maxWidth: '60px', aspectRatio: '3/4', height: 'auto', margin: '0 auto', background: cardRevealed[idx] ? 'white' : '#E91E63', border: 'none', borderRadius: '8px', fontSize: '28px', cursor: cardRevealed[idx] || cardGameOver ? 'default' : 'pointer', fontWeight: 'bold', opacity: cardRevealed[idx] || !cardGameOver ? 1 : 0.9 }}>
               {cardRevealed[idx] ? symbol : '❓'}
             </button>
           ))}

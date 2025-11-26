@@ -378,7 +378,11 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
 
               {/* Message photo verrouillée - AU CENTRE */}
               <div style={{
-                marginTop: 'var(--spacing-md)',
+                position: 'fixed',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                zIndex: 9999,
                 padding: 'var(--spacing-sm) var(--spacing-md)',
                 background: 'rgba(255, 255, 255, 0.9)',
                 borderRadius: 'var(--border-radius-md)',
@@ -457,7 +461,11 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
 
               {/* Message photo spécifique verrouillée */}
               <div style={{
-                marginTop: 'var(--spacing-md)',
+                position: 'fixed',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                zIndex: 9999,
                 padding: 'var(--spacing-sm) var(--spacing-md)',
                 background: 'rgba(255, 255, 255, 0.9)',
                 borderRadius: 'var(--border-radius-md)',

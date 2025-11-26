@@ -70,7 +70,7 @@ export default function JournalScreen({ currentUser }) {
       </div>
 
       {/* Grille de sections style journal */}
-      <div style={{ padding: '0 var(--spacing-sm)' }}>
+      <div style={{ padding: '0 var(--spacing-sm)', width: '100%', boxSizing: 'border-box' }}>
         <div style={{
           display: 'grid',
           gridTemplateColumns: '1fr',
@@ -80,7 +80,9 @@ export default function JournalScreen({ currentUser }) {
           <div className="card" style={{
             background: 'var(--color-cream)',
             border: '2px solid var(--color-brown)',
-            padding: 'var(--spacing-md)'
+            padding: 'var(--spacing-md)',
+            width: '100%',
+            boxSizing: 'border-box'
           }}>
             <h2 style={{
               fontFamily: 'var(--font-heading)',
@@ -117,7 +119,9 @@ export default function JournalScreen({ currentUser }) {
           <div style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
-            gap: 'var(--spacing-md)'
+            gap: 'var(--spacing-md)',
+            width: '100%',
+            boxSizing: 'border-box'
           }}>
             {/* Tournoi de Scrabble */}
             <div className="card" style={{
@@ -181,7 +185,9 @@ export default function JournalScreen({ currentUser }) {
           <div className="card" style={{
             background: 'var(--color-cream)',
             border: '2px solid var(--color-brown)',
-            padding: 'var(--spacing-md)'
+            padding: 'var(--spacing-md)',
+            width: '100%',
+            boxSizing: 'border-box'
           }}>
             <h2 style={{
               fontFamily: 'var(--font-heading)',
@@ -217,7 +223,9 @@ export default function JournalScreen({ currentUser }) {
           <div className="card" style={{
             background: 'var(--color-cream)',
             border: '2px solid var(--color-brown)',
-            padding: 'var(--spacing-md)'
+            padding: 'var(--spacing-md)',
+            width: '100%',
+            boxSizing: 'border-box'
           }}>
             <h2 style={{
               fontFamily: 'var(--font-heading)',
@@ -281,7 +289,9 @@ export default function JournalScreen({ currentUser }) {
           <div className="card" style={{
             background: 'var(--color-cream)',
             border: '2px solid var(--color-brown)',
-            padding: 'var(--spacing-md)'
+            padding: 'var(--spacing-md)',
+            width: '100%',
+            boxSizing: 'border-box'
           }}>
             <h2 style={{
               fontFamily: 'var(--font-heading)',
