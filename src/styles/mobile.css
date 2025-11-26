@@ -568,13 +568,6 @@ label {
     box-sizing: border-box !important;
   }
 
-  /* Grilles qui débordent */
-  [style*="display: 'grid'"],
-  [style*="gridTemplateColumns"] {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-
   /* Boutons en grille */
   [style*="display: 'flex'"][style*="flexWrap"] {
     gap: 8px !important;
