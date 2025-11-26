@@ -189,7 +189,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
 
       {/* Bouton retour quand un onglet est sélectionné */}
       {socialTab !== null && (
-        <div style={{ padding: '0 var(--spacing-sm)', marginTop: 'var(--spacing-md)', marginBottom: 'var(--spacing-md)', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ padding: '0', marginTop: 'var(--spacing-md)', marginBottom: 'var(--spacing-md)', width: '100%', boxSizing: 'border-box' }}>
           <button
             onClick={() => setSocialTab(null)}
             style={{
@@ -215,7 +215,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
       {/* Section Bars - Carte stylisée selon BARS.png */}
       {socialTab === 'bars' && (
         <div style={{
-          padding: '0 var(--spacing-sm)',
+          padding: '0',
           position: 'relative',
           width: '100%',
           boxSizing: 'border-box'
