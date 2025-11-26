@@ -51,7 +51,9 @@ export default function RankingScreen({ currentUser }) {
       <div style={{
         background: 'var(--color-cream)',
         borderBottom: '4px double var(--color-brown-dark)',
-        padding: 'var(--spacing-lg)',
+        padding: '0',
+        paddingTop: 'var(--spacing-md)',
+        paddingBottom: 'var(--spacing-md)',
         marginBottom: 'var(--spacing-lg)',
         boxShadow: 'var(--shadow-md)',
         width: '100%',
