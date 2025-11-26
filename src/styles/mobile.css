@@ -561,14 +561,6 @@ label {
     box-sizing: border-box !important;
   }
 
-  /* Padding screens */
-  [style*="padding: '0 var(--spacing-sm)"],
-  [style*="padding: '30px'"],
-  [style*="paddingBottom: '80px'"] {
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-  }
-
   /* Headers */
   [style*="borderBottom"][style*="boxShadow"] {
     width: 100% !important;
