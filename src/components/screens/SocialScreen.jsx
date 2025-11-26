@@ -323,7 +323,9 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                       : 'var(--shadow-lg)',
                     transition: 'all var(--transition-normal)',
                     position: 'relative',
-                    transform: animatingBars[bar.id] ? 'scale(1.05)' : 'scale(1)'
+                    transform: animatingBars[bar.id] ? 'scale(1.05)' : 'scale(1)',
+                    width: '100%',
+                    boxSizing: 'border-box'
                   }}
                   onMouseEnter={(e) => {
                     if (!animatingBars[bar.id]) {
