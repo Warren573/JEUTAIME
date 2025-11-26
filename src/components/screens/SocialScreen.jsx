@@ -239,7 +239,8 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '10px'
+              gap: '10px',
+              boxSizing: 'border-box'
             }}
             onMouseDown={(e) => e.target.style.transform = 'scale(0.98)'}
             onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
