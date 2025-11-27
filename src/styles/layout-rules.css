@@ -1,0 +1,43 @@
+/* ═══════════════════════════════════════════════════════════
+   RÈGLES D'OR LAYOUT - NE JAMAIS OUBLIER
+   ═══════════════════════════════════════════════════════════
+
+   Ces classes garantissent qu'aucun élément ne déborde
+   sur mobile. À utiliser SYSTÉMATIQUEMENT.
+
+   ═══════════════════════════════════════════════════════════ */
+
+/* Container principal - À utiliser pour tout wrapper */
+.container {
+  padding: 0 var(--spacing-sm);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Container de grille - Pour tous les grids CSS */
+.grid-container {
+  display: grid;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 8px;
+}
+
+/* Carte responsive - Pour toutes les cartes/cards */
+.responsive-card {
+  width: 100%;
+  max-width: 300px;
+  box-sizing: border-box;
+}
+
+/* Bouton pleine largeur */
+.full-width-button {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Section complète */
+.full-section {
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
