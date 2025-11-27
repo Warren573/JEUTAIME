@@ -164,7 +164,7 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
     <div style={{
       height: '100vh',
       overflowY: 'auto',
-      paddingBottom: '80px',
+      paddingBottom: '100px',
       background: 'var(--color-beige-light)'
     }}>
       {/* En-tête */}
@@ -276,7 +276,7 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
         </button>
       </div>
 
-      <div style={{ padding: '0 var(--spacing-sm)' }}>
+      <div style={{ padding: '0 var(--spacing-sm)', width: '100%', boxSizing: 'border-box' }}>
         {/* MES ANIMAUX */}
         {adoptionTab === 'mypets' && (
           <>
@@ -601,7 +601,9 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
             <div style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-              gap: 'var(--spacing-md)'
+              gap: 'var(--spacing-md)',
+              width: '100%',
+              boxSizing: 'border-box'
             }}>
               {Object.values(PETS).filter(pet => !myPets.find(p => p.type === pet.id)).map((pet) => (
                 <div
@@ -775,7 +777,9 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
             <div style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-              gap: 'var(--spacing-md)'
+              gap: 'var(--spacing-md)',
+              width: '100%',
+              boxSizing: 'border-box'
             }}>
               {Object.values(PETS).map((pet) => (
                 <div

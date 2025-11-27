@@ -158,35 +158,36 @@ export default function CardGame({
         <p style={{ textAlign: 'center', fontSize: '16px', marginBottom: '10px', color: '#ccc' }}>{cardMessage}</p>
         <p style={{ textAlign: 'center', fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}>💰 Gains: {cardGains} pièces</p>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(5, 1fr)',
-          gap: '8px',
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(5, 1fr)', 
+          gap: '6px', 
           marginBottom: '20px',
           width: '100%',
-          padding: '0 8px',
+          padding: '0 4px',
           boxSizing: 'border-box'
         }}>
           {cardSymbols.map((symbol, idx) => (
-            <button
-              key={idx}
-              onClick={() => revealCard(idx)}
-              style={{
+            <button 
+              key={idx} 
+              onClick={() => revealCard(idx)} 
+              style={{ 
                 width: '100%',
-                maxWidth: '60px',
+                maxWidth: '50px',
                 aspectRatio: '3/4',
                 height: 'auto',
-                margin: '0 auto',
-                background: cardRevealed[idx] ? 'white' : '#E91E63',
-                border: 'none',
-                borderRadius: '8px',
-                fontSize: '28px',
-                cursor: cardRevealed[idx] || cardGameOver ? 'default' : 'pointer',
-                fontWeight: 'bold',
+                margin: '0 auto', 
+                background: cardRevealed[idx] ? 'white' : '#E91E63', 
+                border: 'none', 
+                borderRadius: '6px', 
+                fontSize: '20px', 
+                cursor: cardRevealed[idx] || cardGameOver ? 'default' : 'pointer', 
+                fontWeight: 'bold', 
                 opacity: cardRevealed[idx] || !cardGameOver ? 1 : 0.9,
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                padding: '2px'
               }}
             >
               {cardRevealed[idx] ? symbol : '❓'}

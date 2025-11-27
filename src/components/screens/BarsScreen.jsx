@@ -65,7 +65,7 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
     <div style={{
       height: '100vh',
       overflowY: 'auto',
-      paddingBottom: '80px',
+      paddingBottom: '100px',
       background: 'var(--color-beige-light)'
     }}>
       {/* En-tête */}

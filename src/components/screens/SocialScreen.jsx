@@ -9,14 +9,11 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
 
   const handleMagicAction = (bar, e) => {
     e.stopPropagation();
-
-    // Animation
     setAnimatingBars(prev => ({ ...prev, [bar.id]: true }));
     setTimeout(() => {
       setAnimatingBars(prev => ({ ...prev, [bar.id]: false }));
     }, 1500);
 
-    // Théâtre: transformation en crapaud + bisou
     if (bar.id === 4) {
       const currentState = magicStates[bar.id] || 'normal';
       if (currentState === 'normal') {
@@ -27,10 +24,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
         alert(bar.magicAction.message2);
       }
     } else {
-      // Autres salons
       alert(bar.magicAction.message);
-
-      // Île des pirates: ajouter des pièces
       if (bar.id === 3 && setUserCoins) {
         setUserCoins(prev => prev + 50);
       }
@@ -57,53 +51,55 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
     <div style={{
       height: '100vh',
       overflowY: 'auto',
-      paddingBottom: '80px',
+      paddingBottom: '100px',
       background: 'var(--color-beige-light)',
       display: 'flex',
       flexDirection: 'column'
     }}>
-      {/* Logo Social harmonisé - Toujours visible */}
-      <div style={{
-        background: 'var(--color-cream)',
-        borderBottom: '4px double var(--color-brown-dark)',
-        padding: socialTab === null ? 'var(--spacing-md)' : 'var(--spacing-lg)',
-        marginBottom: socialTab === null ? 'var(--spacing-md)' : 'var(--spacing-lg)',
-        boxShadow: 'var(--shadow-md)'
-      }}>
-        <h1 style={{
-          fontFamily: 'var(--font-heading)',
-          fontSize: socialTab === null ? '1.8rem' : '2.5rem',
-          textAlign: 'center',
-          margin: '0 0 var(--spacing-xs) 0',
-          color: 'var(--color-brown-dark)',
-          textTransform: 'uppercase',
-          letterSpacing: '2px',
-          borderBottom: '2px solid var(--color-text-primary)',
-          paddingBottom: 'var(--spacing-xs)'
+      {/* Logo Social - Affiché uniquement quand aucun onglet actif */}
+      {socialTab === null && (
+        <div style={{
+          background: 'var(--color-cream)',
+          borderBottom: '4px double var(--color-brown-dark)',
+          padding: 'var(--spacing-md)',
+          marginBottom: 'var(--spacing-md)',
+          boxShadow: 'var(--shadow-md)'
         }}>
-          👥 Social
-        </h1>
-        <p style={{
-          textAlign: 'center',
-          color: 'var(--color-text-secondary)',
-          fontSize: '0.95rem',
-          fontStyle: 'italic',
-          margin: 0
-        }}>
-          {socialTab === null ? 'Choisis une catégorie' : 'Rencontre et partage'}
-        </p>
-        {adminMode && isAdminAuthenticated && socialTab === 'bars' && (
-          <div style={{ textAlign: 'center', marginTop: 'var(--spacing-sm)' }}>
-            <button
-              onClick={handleAdminCreateBar}
-              className="btn-primary"
-              style={{ padding: 'var(--spacing-sm) var(--spacing-md)', fontSize: '0.875rem' }}
-            >
-              ➕ Nouveau Bar
-            </button>
-          </div>
-        )}
-      </div>
+          <h1 style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: '1.8rem',
+            textAlign: 'center',
+            margin: '0 0 var(--spacing-xs) 0',
+            color: 'var(--color-brown-dark)',
+            textTransform: 'uppercase',
+            letterSpacing: '2px',
+            borderBottom: '2px solid var(--color-text-primary)',
+            paddingBottom: 'var(--spacing-xs)'
+          }}>
+            👥 SOCIAL
+          </h1>
+          <p style={{
+            textAlign: 'center',
+            color: 'var(--color-text-secondary)',
+            fontSize: '0.95rem',
+            fontStyle: 'italic',
+            margin: 0
+          }}>
+            Choisis une catégorie
+          </p>
+          {adminMode && isAdminAuthenticated && socialTab === 'bars' && (
+            <div style={{ textAlign: 'center', marginTop: 'var(--spacing-sm)' }}>
+              <button
+                onClick={handleAdminCreateBar}
+                className="btn-primary"
+                style={{ padding: 'var(--spacing-sm) var(--spacing-md)', fontSize: '0.875rem' }}
+              >
+                ➕ Nouveau Bar
+              </button>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Onglets - Grille uniforme 2x2 - Affichés seulement si pas de tab actif */}
       {socialTab === null && (
@@ -198,12 +194,46 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
         </div>
       )}
 
-      {/* Section Bars - Carte stylisée selon BARS.png */}
+      {/* Section Bars */}
       {socialTab === 'bars' && (
         <div style={{
           padding: '0 var(--spacing-sm)',
-          position: 'relative'
+          position: 'relative',
+          width: '100%',
+          boxSizing: 'border-box'
         }}>
+          {/* Header Salons */}
+          <div style={{
+            background: 'var(--color-cream)',
+            borderBottom: '4px double var(--color-brown-dark)',
+            padding: 'var(--spacing-lg)',
+            marginBottom: 'var(--spacing-lg)',
+            boxShadow: 'var(--shadow-md)'
+          }}>
+            <h1 style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: '2.5rem',
+              textAlign: 'center',
+              margin: '0 0 var(--spacing-xs) 0',
+              color: 'var(--color-brown-dark)',
+              textTransform: 'uppercase',
+              letterSpacing: '2px',
+              borderBottom: '2px solid var(--color-gold)',
+              paddingBottom: 'var(--spacing-xs)'
+            }}>
+              ✨ SALONS
+            </h1>
+            <p style={{
+              textAlign: 'center',
+              color: 'var(--color-text-secondary)',
+              fontSize: '0.95rem',
+              fontStyle: 'italic',
+              margin: 'var(--spacing-sm) 0 0 0'
+            }}>
+              Écrivez des histoires ensemble • Une phrase chacun • Timer 24h
+            </p>
+          </div>
+
           {/* Bouton vers liste complète des salons magiques */}
           <button
             onClick={() => setScreen('bars')}
@@ -223,7 +253,8 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '10px'
+              gap: '10px',
+              boxSizing: 'border-box'
             }}
             onMouseDown={(e) => e.target.style.transform = 'scale(0.98)'}
             onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
@@ -260,7 +291,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
             </h2>
           </div>
 
-          {/* Grille des salons - Style carte illustrée */}
+          {/* Grille des salons */}
           <div style={{
             background: 'linear-gradient(180deg, var(--color-gold-light), var(--color-tan))',
             borderRadius: 'var(--border-radius-xl)',
@@ -271,7 +302,6 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
             backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(139, 111, 71, 0.05) 10px, rgba(139, 111, 71, 0.05) 20px)'
           }}>
             {bars.map((bar, index) => {
-              // Positionnement différent pour chaque bar (effet carte)
               const positions = [
                 { top: '10%', left: '15%' },
                 { top: '45%', right: '15%' },
@@ -311,14 +341,12 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                     }
                   }}
                 >
-                  {/* Ligne 1: Icône + Infos */}
                   <div style={{
                     display: 'flex',
                     alignItems: 'flex-start',
                     gap: 'var(--spacing-md)',
                     marginBottom: 'var(--spacing-md)'
                   }}>
-                    {/* Icône du bar */}
                     <div style={{
                       fontSize: '2.5rem',
                       filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))',
@@ -327,7 +355,6 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                       {bar.icon}
                     </div>
 
-                    {/* Infos du bar */}
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <h3 style={{
                         fontFamily: 'var(--font-heading)',
@@ -348,7 +375,6 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                         {bar.desc}
                       </p>
 
-                      {/* Action magique */}
                       {bar.magicAction && (
                         <button
                           onClick={(e) => handleMagicAction(bar, e)}
@@ -388,7 +414,6 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                         </button>
                       )}
 
-                      {/* Participants */}
                       <div style={{
                         display: 'flex',
                         gap: 'var(--spacing-xs)',
@@ -429,7 +454,6 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                     </div>
                   </div>
 
-                  {/* Ligne 2: Bouton Discuter */}
                   <button
                     className="btn-primary"
                     style={{
@@ -446,7 +470,6 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                     💬 Discuter
                   </button>
 
-                  {/* Admin Actions */}
                   {adminMode && isAdminAuthenticated && (
                     <div style={{
                       display: 'flex',
@@ -505,64 +528,79 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
       )}
 
       {socialTab === 'games' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', padding: '0 var(--spacing-sm)' }}>
-          <div onClick={() => setGameScreen('reactivity')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
-            <div style={{ fontSize: '36px', marginBottom: '8px' }}>⚡</div>
-            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Tape la Taupe</h4>
-            <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo</p>
-          </div>
-          <div onClick={() => setGameScreen('pong')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
-            <div style={{ fontSize: '36px', marginBottom: '8px' }}>🎮</div>
-            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Pong</h4>
-            <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>2 joueurs</p>
-          </div>
-          <div onClick={() => setGameScreen('brickbreaker')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
-            <div style={{ fontSize: '36px', marginBottom: '8px' }}>🧱</div>
-            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Casse Brique</h4>
-            <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo</p>
-          </div>
-          <div onClick={() => setGameScreen('morpion')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
-            <div style={{ fontSize: '36px', marginBottom: '8px' }}>⭕</div>
-            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Morpion</h4>
-            <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>2 joueurs</p>
-          </div>
-          <div onClick={() => setGameScreen('storytime')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer', gridColumn: '1 / -1' }}>
-            <div style={{ fontSize: '36px', marginBottom: '8px' }}>📖</div>
-            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Continue l'histoire</h4>
-            <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo, 2 joueurs ou multijoueurs</p>
-          </div>
-          <div onClick={() => setGameScreen('cards')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer', gridColumn: '1 / -1' }}>
-            <div style={{ fontSize: '36px', marginBottom: '8px' }}>🎴</div>
-            <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Jeu des Cartes</h4>
-            <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo - Gagne des pièces!</p>
-          </div>
-        </div>
-      )}
-
-      {socialTab === 'contest' && (
-        <div style={{ background: '#1a1a1a', borderRadius: '20px', padding: '25px' }}>
-          <div style={{ background: 'linear-gradient(135deg, #FFD700, #FFA500)', borderRadius: '12px', padding: '15px', marginBottom: '20px', textAlign: 'center', color: '#000', fontWeight: 'bold' }}>
-            📅 Semaine du 14-20 Octobre
+        <>
+          {/* Header Jeux */}
+          <div style={{
+            background: 'var(--color-cream)',
+            borderBottom: '4px double var(--color-brown-dark)',
+            padding: 'var(--spacing-lg)',
+            marginBottom: 'var(--spacing-lg)',
+            boxShadow: 'var(--shadow-md)'
+          }}>
+            <h1 style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: '2.5rem',
+              textAlign: 'center',
+              margin: '0 0 var(--spacing-xs) 0',
+              color: 'var(--color-brown-dark)',
+              textTransform: 'uppercase',
+              letterSpacing: '2px',
+              borderBottom: '2px solid var(--color-gold)',
+              paddingBottom: 'var(--spacing-xs)'
+            }}>
+              🎮 JEUX
+            </h1>
+            <p style={{
+              textAlign: 'center',
+              color: 'var(--color-text-secondary)',
+              fontSize: '0.95rem',
+              fontStyle: 'italic',
+              margin: 'var(--spacing-sm) 0 0 0'
+            }}>
+              Joue et gagne des pièces !
+            </p>
           </div>
 
-          <div style={{ background: '#0a0a0a', borderRadius: '15px', padding: '15px', marginBottom: '15px', border: '2px solid #E91E63', textAlign: 'center' }}>
-            <div style={{ fontSize: '32px', marginBottom: '10px' }}>👸</div>
-            <h3 style={{ fontSize: '16px', margin: '0 0 6px 0', fontWeight: '600' }}>⭐ La Plus Captivante</h3>
-            <p style={{ fontSize: '13px', color: '#888', margin: '0 0 12px 0' }}>Sophie Lauren • 1,247 votes 🔥</p>
-            <button style={{ width: '100%', padding: '10px', background: '#E91E63', border: 'none', color: '#fff', borderRadius: '10px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' }}>
-              💬 Découvrir
-            </button>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '12px',
+            padding: '0 var(--spacing-sm)',
+            width: '100%',
+            boxSizing: 'border-box'
+          }}>
+            <div onClick={() => setGameScreen('reactivity')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
+              <div style={{ fontSize: '36px', marginBottom: '8px' }}>⚡</div>
+              <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Tape la Taupe</h4>
+              <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo</p>
+            </div>
+            <div onClick={() => setGameScreen('pong')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
+              <div style={{ fontSize: '36px', marginBottom: '8px' }}>🎮</div>
+              <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Pong</h4>
+              <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>2 joueurs</p>
+            </div>
+            <div onClick={() => setGameScreen('brickbreaker')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
+              <div style={{ fontSize: '36px', marginBottom: '8px' }}>🧱</div>
+              <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Casse Brique</h4>
+              <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo</p>
+            </div>
+            <div onClick={() => setGameScreen('morpion')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
+              <div style={{ fontSize: '36px', marginBottom: '8px' }}>⭕</div>
+              <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Morpion</h4>
+              <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>2 joueurs</p>
+            </div>
+            <div onClick={() => setGameScreen('storytime')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer', gridColumn: '1 / -1' }}>
+              <div style={{ fontSize: '36px', marginBottom: '8px' }}>📖</div>
+              <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Continue l'histoire</h4>
+              <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo, 2 joueurs ou multijoueurs</p>
+            </div>
+            <div onClick={() => setGameScreen('cards')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer', gridColumn: '1 / -1' }}>
+              <div style={{ fontSize: '36px', marginBottom: '8px' }}>🎴</div>
+              <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Jeu des Cartes</h4>
+              <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo - Gagne des pièces!</p>
+            </div>
           </div>
-
-          <div style={{ background: '#0a0a0a', borderRadius: '15px', padding: '15px', border: '2px solid #2196F3', textAlign: 'center' }}>
-            <div style={{ fontSize: '32px', marginBottom: '10px' }}>🤴</div>
-            <h3 style={{ fontSize: '16px', margin: '0 0 6px 0', fontWeight: '600' }}>⭐ Le Plus Séduisant</h3>
-            <p style={{ fontSize: '13px', color: '#888', margin: '0 0 12px 0' }}>Thomas Architects • 987 votes 🔥</p>
-            <button style={{ width: '100%', padding: '10px', background: '#2196F3', border: 'none', color: '#fff', borderRadius: '10px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' }}>
-              💬 Découvrir
-            </button>
-          </div>
-        </div>
+        </>
       )}
     </div>
   );
