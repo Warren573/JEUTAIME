@@ -7,6 +7,7 @@ export const bars = [
     name: 'Piscine',
     desc: '2H/2F - Ambiance aquatique et détente',
     bgGradient: 'linear-gradient(180deg, #4FC3F7 0%, #0288D1 100%)',
+    backgroundImage: 'https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=800&q=80', // Piscine luxe
     magicAction: {
       name: 'Faire une bombe',
       emoji: '💦',
@@ -25,6 +26,7 @@ export const bars = [
     name: 'Café de Paris',
     desc: '2H/2F - Ambiance parisienne chic',
     bgGradient: 'linear-gradient(180deg, #D7CCC8 0%, #8D6E63 100%)',
+    backgroundImage: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&q=80', // Café parisien
     magicAction: {
       name: 'Offrir un café',
       emoji: '☕',
@@ -43,6 +45,7 @@ export const bars = [
     name: 'Île des pirates',
     desc: '2H/2F - Aventures maritimes',
     bgGradient: 'linear-gradient(180deg, #FFD54F 0%, #5D4037 100%)',
+    backgroundImage: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=80', // Plage tropicale/pirate
     magicAction: {
       name: 'Chercher un trésor',
       emoji: '💎',
@@ -61,6 +64,7 @@ export const bars = [
     name: 'Théâtre improvisé',
     desc: '2H/2F - Spectacles et fous rires',
     bgGradient: 'linear-gradient(180deg, #CE93D8 0%, #7B1FA2 100%)',
+    backgroundImage: 'https://images.unsplash.com/photo-1503095396549-807759245b35?w=800&q=80', // Scène théâtre
     magicAction: {
       name: 'Transformation magique',
       emoji: '🐸',
@@ -81,6 +85,7 @@ export const bars = [
     name: 'Bar à cocktails',
     desc: '2H/2F - Mixologie et saveurs exotiques',
     bgGradient: 'linear-gradient(180deg, #F48FB1 0%, #C2185B 100%)',
+    backgroundImage: 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&q=80', // Bar cocktails
     magicAction: {
       name: 'Servir un cocktail',
       emoji: '🍸',

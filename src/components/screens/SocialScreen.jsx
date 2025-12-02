@@ -404,7 +404,11 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                     cursor: 'pointer',
                     marginBottom: 'var(--spacing-md)',
                     padding: 'var(--spacing-md)',
-                    background: bar.bgGradient || 'var(--color-cream)',
+                    background: bar.backgroundImage
+                      ? `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url(${bar.backgroundImage})`
+                      : bar.bgGradient || 'var(--color-cream)',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
                     border: '3px solid rgba(255,255,255,0.5)',
                     borderRadius: 'var(--border-radius-lg)',
                     boxShadow: animatingBars[bar.id]
