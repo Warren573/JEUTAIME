@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { bars } from '../../data/appData';
+import React, { useState, useEffect } from 'react';
+import { bars as originalBars } from '../../data/appData';
 import RankingScreen from './RankingScreen';
 import AdoptionScreen from './AdoptionScreen';
 import MessageBottleModal from '../bottle/MessageBottleModal';
+import BarEditorModal from '../bar/BarEditorModal';
 import { getUnreadCount } from '../../utils/bottleSystem';
 import {
   proposeExchange,
@@ -12,13 +13,21 @@ import {
   getBarName,
   getTimeRemaining
 } from '../../utils/barExchangeSystem';
+import { applyBarCustomizations, saveBarCustomization } from '../../utils/barCustomization';
 
 export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, setSelectedBar, adminMode, isAdminAuthenticated, currentUser, userCoins, setUserCoins, setScreen, setCurrentUser }) {
   const [magicStates, setMagicStates] = useState({});
   const [animatingBars, setAnimatingBars] = useState({});
   const [showBottleModal, setShowBottleModal] = useState(false);
+  const [editingBar, setEditingBar] = useState(null); // Bar en cours d'édition
+  const [bars, setBars] = useState(applyBarCustomizations(originalBars)); // Bars avec personnalisations
   const unreadBottles = getUnreadCount(currentUser?.email);
   const [exchangeRefresh, setExchangeRefresh] = useState(0); // Pour forcer le refresh
+
+  // Recharger les bars avec personnalisations au montage
+  useEffect(() => {
+    setBars(applyBarCustomizations(originalBars));
+  }, []);
 
   const handleMagicAction = (bar, e) => {
     e.stopPropagation();
@@ -46,7 +55,23 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
 
   const handleAdminEditBar = (bar, e) => {
     e.stopPropagation();
-    alert(`Éditer bar: ${bar.name}`);
+    setEditingBar(bar);
+  };
+
+  const handleSaveBarCustomization = (updatedBar) => {
+    // Sauvegarder dans localStorage
+    saveBarCustomization(updatedBar.id, {
+      name: updatedBar.name,
+      desc: updatedBar.desc,
+      icon: updatedBar.icon,
+      backgroundImage: updatedBar.backgroundImage,
+      bgGradient: updatedBar.bgGradient
+    });
+
+    // Recharger les bars avec les nouvelles personnalisations
+    setBars(applyBarCustomizations(originalBars));
+    setEditingBar(null);
+    alert('✅ Salon modifié avec succès !');
   };
 
   const handleAdminDeleteBar = (bar, e) => {
@@ -795,6 +820,15 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
         <MessageBottleModal
           currentUser={currentUser}
           onClose={() => setShowBottleModal(false)}
+        />
+      )}
+
+      {/* Modal Éditeur de Salon (Admin) */}
+      {editingBar && (
+        <BarEditorModal
+          bar={editingBar}
+          onClose={() => setEditingBar(null)}
+          onSave={handleSaveBarCustomization}
         />
       )}
     </div>
