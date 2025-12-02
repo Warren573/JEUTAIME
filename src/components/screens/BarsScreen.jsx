@@ -237,6 +237,7 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
                 disabled={bar.currentMembers === bar.maxMembers}
                 style={{
                   padding: '10px 20px',
+                  minHeight: '48px',
                   background: bar.currentMembers === bar.maxMembers
                     ? '#666'
                     : (bar.buttonStyle || 'var(--color-gold)'),

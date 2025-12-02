@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { getReferralStats, copyReferralCode } from '../../utils/referralSystem';
+import AvatarEditorScreen from './AvatarEditorScreen';
 
-export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogout, setScreen }) {
+export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogout, setScreen, setCurrentUser }) {
   const [settingsTab, setSettingsTab] = useState('profile');
   const [referralStats, setReferralStats] = useState(null);
   const [copiedCode, setCopiedCode] = useState(false);
+  const [showAvatarEditor, setShowAvatarEditor] = useState(false);
 
   // Questions state for editing
   const [questions, setQuestions] = useState({
@@ -120,6 +122,32 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
       {/* PROFIL */}
       {settingsTab === 'profile' && (
         <div>
+          {/* Modifier l'avatar */}
+          <div style={{
+            background: 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))',
+            borderRadius: '15px',
+            padding: '20px',
+            marginBottom: '15px',
+            border: '3px solid var(--color-brown-dark)',
+            boxShadow: '0 6px 16px rgba(0,0,0,0.2)',
+            cursor: 'pointer'
+          }}
+          onClick={() => setShowAvatarEditor(true)}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+              <div style={{ fontSize: '3rem' }}>🎨</div>
+              <div style={{ flex: 1 }}>
+                <h3 style={{ fontSize: '1.3rem', margin: '0 0 5px 0', fontWeight: '700', color: 'var(--color-brown-dark)' }}>
+                  Modifier mon avatar
+                </h3>
+                <p style={{ fontSize: '0.9rem', margin: 0, color: 'var(--color-text-primary)' }}>
+                  Personnalise ton apparence avec l'éditeur d'avatar
+                </p>
+              </div>
+              <div style={{ fontSize: '2rem', color: 'var(--color-brown-dark)' }}>→</div>
+            </div>
+          </div>
+
           {/* Bio obligatoire */}
           <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid #E91E63' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
@@ -564,6 +592,26 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
         </div>
       )}
       </div>
+
+      {/* Éditeur d'avatar en plein écran */}
+      {showAvatarEditor && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'var(--color-beige-light)',
+          zIndex: 2000,
+          overflow: 'hidden'
+        }}>
+          <AvatarEditorScreen
+            currentUser={currentUser}
+            setCurrentUser={setCurrentUser}
+            onClose={() => setShowAvatarEditor(false)}
+          />
+        </div>
+      )}
     </div>
   );
 }

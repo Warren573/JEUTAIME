@@ -2,10 +2,23 @@ import React, { useState } from 'react';
 import { bars } from '../../data/appData';
 import RankingScreen from './RankingScreen';
 import AdoptionScreen from './AdoptionScreen';
+import MessageBottleModal from '../bottle/MessageBottleModal';
+import { getUnreadCount } from '../../utils/bottleSystem';
+import {
+  proposeExchange,
+  getActiveExchangeForBar,
+  getUserPendingExchange,
+  cancelPendingExchange,
+  getBarName,
+  getTimeRemaining
+} from '../../utils/barExchangeSystem';
 
 export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, setSelectedBar, adminMode, isAdminAuthenticated, currentUser, userCoins, setUserCoins, setScreen, setCurrentUser }) {
   const [magicStates, setMagicStates] = useState({});
   const [animatingBars, setAnimatingBars] = useState({});
+  const [showBottleModal, setShowBottleModal] = useState(false);
+  const unreadBottles = getUnreadCount(currentUser?.email);
+  const [exchangeRefresh, setExchangeRefresh] = useState(0); // Pour forcer le refresh
 
   const handleMagicAction = (bar, e) => {
     e.stopPropagation();
@@ -45,6 +58,40 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
 
   const handleAdminCreateBar = () => {
     alert('Créer un nouveau bar');
+  };
+
+  const handleExchange = (bar, e) => {
+    e.stopPropagation();
+
+    if (!currentUser) {
+      alert('Tu dois être connecté pour proposer un échange !');
+      return;
+    }
+
+    const result = proposeExchange(bar.id, currentUser.email);
+
+    if (!result.success) {
+      alert(result.error);
+      return;
+    }
+
+    if (result.matchedExchange) {
+      // Match trouvé !
+      const otherBar = getBarName(result.matchedExchange.barId);
+      alert(`🌀 ÉCHANGE MAGIQUE ! Tu es maintenant dans "${otherBar}" pour 24h ! Un membre de ce salon rejoint temporairement "${bar.name}" !`);
+      setExchangeRefresh(prev => prev + 1); // Forcer le refresh
+    } else {
+      // En attente
+      alert(`🌀 Demande d'échange enregistrée ! Si un autre salon propose un échange, tu seras automatiquement transféré pour 24h ! 🎭`);
+      setExchangeRefresh(prev => prev + 1);
+    }
+  };
+
+  const handleCancelExchange = (pendingExchange, e) => {
+    e.stopPropagation();
+    cancelPendingExchange(pendingExchange.id, currentUser.email);
+    alert('❌ Demande d\'échange annulée');
+    setExchangeRefresh(prev => prev + 1);
   };
 
   return (
@@ -87,6 +134,45 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
           }}>
             Choisis une catégorie
           </p>
+
+          {/* Bouteille à la mer */}
+          <div style={{ textAlign: 'center', marginTop: 'var(--spacing-md)' }}>
+            <button
+              onClick={() => setShowBottleModal(true)}
+              style={{
+                padding: '10px 20px',
+                background: 'linear-gradient(135deg, #4FC3F7, #0288D1)',
+                border: '2px solid #0277BD',
+                borderRadius: '12px',
+                color: 'white',
+                fontWeight: '700',
+                fontSize: '0.9rem',
+                cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(2,136,209,0.3)',
+                position: 'relative',
+                minHeight: '48px'
+              }}
+            >
+              🍾 Bouteille à la mer
+              {unreadBottles > 0 && (
+                <span style={{
+                  position: 'absolute',
+                  top: '-8px',
+                  right: '-8px',
+                  background: '#E91E63',
+                  color: 'white',
+                  borderRadius: '12px',
+                  padding: '4px 8px',
+                  fontSize: '0.7rem',
+                  fontWeight: 'bold',
+                  boxShadow: '0 2px 8px rgba(233,30,99,0.4)'
+                }}>
+                  {unreadBottles}
+                </span>
+              )}
+            </button>
+          </div>
+
           {adminMode && isAdminAuthenticated && socialTab === 'bars' && (
             <div style={{ textAlign: 'center', marginTop: 'var(--spacing-sm)' }}>
               <button
@@ -384,7 +470,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                             border: '3px solid rgba(255, 215, 0, 0.8)',
                             borderRadius: 'var(--border-radius-md)',
                             padding: 'var(--spacing-sm)',
-                            marginBottom: 'var(--spacing-sm)',
+                            marginBottom: 'var(--spacing-xs)',
                             display: 'flex',
                             alignItems: 'center',
                             gap: 'var(--spacing-sm)',
@@ -393,7 +479,8 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                             boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
                             fontWeight: '700',
                             fontSize: '0.9rem',
-                            color: '#000'
+                            color: '#000',
+                            minHeight: '48px'
                           }}
                           onMouseEnter={(e) => {
                             e.currentTarget.style.transform = 'scale(1.05)';
@@ -413,6 +500,102 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                           <span style={{ fontSize: '1.5rem' }}>✨</span>
                         </button>
                       )}
+
+                      {/* Bouton Échanger */}
+                      {(() => {
+                        const activeExchange = getActiveExchangeForBar(bar.id);
+                        const pendingExchange = getUserPendingExchange(currentUser?.email);
+
+                        if (activeExchange) {
+                          return (
+                            <div style={{
+                              width: '100%',
+                              background: 'rgba(76, 175, 80, 0.95)',
+                              border: '3px solid rgba(46, 125, 50, 0.8)',
+                              borderRadius: 'var(--border-radius-md)',
+                              padding: 'var(--spacing-sm)',
+                              marginBottom: 'var(--spacing-sm)',
+                              textAlign: 'center',
+                              color: 'white',
+                              fontWeight: '600',
+                              fontSize: '0.85rem'
+                            }}>
+                              🌀 Échange actif avec {getBarName(activeExchange.bar1Id === bar.id ? activeExchange.bar2Id : activeExchange.bar1Id)}
+                              <div style={{ fontSize: '0.75rem', marginTop: '4px', opacity: 0.9 }}>
+                                Temps restant : {getTimeRemaining(activeExchange)}
+                              </div>
+                            </div>
+                          );
+                        }
+
+                        if (pendingExchange && pendingExchange.barId === bar.id) {
+                          return (
+                            <button
+                              onClick={(e) => handleCancelExchange(pendingExchange, e)}
+                              style={{
+                                width: '100%',
+                                background: 'rgba(255, 152, 0, 0.95)',
+                                border: '3px solid rgba(230, 81, 0, 0.8)',
+                                borderRadius: 'var(--border-radius-md)',
+                                padding: 'var(--spacing-sm)',
+                                marginBottom: 'var(--spacing-sm)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 'var(--spacing-sm)',
+                                cursor: 'pointer',
+                                fontWeight: '700',
+                                fontSize: '0.85rem',
+                                color: 'white',
+                                minHeight: '48px'
+                              }}
+                            >
+                              <span style={{ fontSize: '1.5rem' }}>⏳</span>
+                              <div style={{ flex: 1, textAlign: 'left' }}>
+                                En attente d'un match...
+                              </div>
+                              <span style={{ fontSize: '1.2rem' }}>❌</span>
+                            </button>
+                          );
+                        }
+
+                        return (
+                          <button
+                            onClick={(e) => handleExchange(bar, e)}
+                            style={{
+                              width: '100%',
+                              background: 'rgba(156, 39, 176, 0.95)',
+                              border: '3px solid rgba(123, 31, 162, 0.8)',
+                              borderRadius: 'var(--border-radius-md)',
+                              padding: 'var(--spacing-sm)',
+                              marginBottom: 'var(--spacing-sm)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 'var(--spacing-sm)',
+                              cursor: 'pointer',
+                              transition: 'all 0.3s ease',
+                              boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                              fontWeight: '700',
+                              fontSize: '0.9rem',
+                              color: 'white',
+                              minHeight: '48px'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.transform = 'scale(1.05)';
+                              e.currentTarget.style.boxShadow = '0 6px 20px rgba(156,39,176,0.6)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.transform = 'scale(1)';
+                              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+                            }}
+                          >
+                            <span style={{ fontSize: '2rem' }}>🌀</span>
+                            <div style={{ flex: 1, textAlign: 'left' }}>
+                              Échanger de salon
+                            </div>
+                            <span style={{ fontSize: '1.5rem' }}>🎭</span>
+                          </button>
+                        );
+                      })()}
 
                       <div style={{
                         display: 'flex',
@@ -601,6 +784,14 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
             </div>
           </div>
         </>
+      )}
+
+      {/* Modal Bouteille à la mer */}
+      {showBottleModal && (
+        <MessageBottleModal
+          currentUser={currentUser}
+          onClose={() => setShowBottleModal(false)}
+        />
       )}
     </div>
   );
