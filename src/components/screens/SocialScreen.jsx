@@ -153,7 +153,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                 minHeight: '48px'
               }}
             >
-              🍾 Bouteille à la mer
+              📜 Bouteille à la mer
               {unreadBottles > 0 && (
                 <span style={{
                   position: 'absolute',

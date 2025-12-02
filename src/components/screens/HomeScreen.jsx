@@ -258,7 +258,7 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
           )}
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <div style={{ fontSize: '3.5rem', filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))' }}>
-              🍾
+              📜
             </div>
             <div style={{ flex: 1 }}>
               <h3 style={{

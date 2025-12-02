@@ -162,7 +162,7 @@ export function checkCooldown(userId) {
   if (todayBottles >= MAX_BOTTLES_PER_DAY) {
     return {
       canSend: false,
-      error: `Tu as atteint la limite de ${MAX_BOTTLES_PER_DAY} bouteilles par jour. Deviens Premium pour envoyer sans limite ! 🍾✨`
+      error: `Tu as atteint la limite de ${MAX_BOTTLES_PER_DAY} bouteilles par jour. Deviens Premium pour envoyer sans limite ! 📜✨`
     };
   }
 
