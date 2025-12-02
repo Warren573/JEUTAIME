@@ -3,10 +3,14 @@ import { receivedOfferings } from '../../data/appData';
 import { useAdmin } from '../../contexts/AdminContext';
 import { getTitleFromPoints } from '../../config/gameConfig';
 import UserAvatar from '../avatar/UserAvatar';
+import MessageBottleModal from '../bottle/MessageBottleModal';
+import { getUnreadCount } from '../../utils/bottleSystem';
 
 export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurrentProfile, setAdminMode, currentUser }) {
   const { adminLogin } = useAdmin();
   const [selectedOffering, setSelectedOffering] = useState(null);
+  const [showBottleModal, setShowBottleModal] = useState(false);
+  const unreadBottles = getUnreadCount(currentUser?.email);
 
   const handleAdminTest = () => {
     // Auto-login as admin
@@ -215,6 +219,72 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
               <div style={{ fontSize: '1.5rem', marginBottom: 'var(--spacing-xs)' }}>🍸</div>
               <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--color-text-primary)' }}>{joinedBars?.length || 0}</div>
               <div style={{ fontSize: '0.7rem', color: 'var(--color-text-light)' }}>Bars rejoints</div>
+            </div>
+          </div>
+        </div>
+
+        {/* BOUTEILLE À LA MER */}
+        <div
+          onClick={() => setShowBottleModal(true)}
+          style={{
+            background: 'linear-gradient(135deg, #4FC3F7, #0288D1)',
+            borderRadius: 'var(--border-radius-lg)',
+            padding: 'var(--spacing-lg)',
+            marginBottom: 'var(--spacing-lg)',
+            border: '3px solid #0277BD',
+            boxShadow: '0 8px 20px rgba(2,136,209,0.3)',
+            cursor: 'pointer',
+            transition: 'transform 0.2s',
+            position: 'relative'
+          }}
+          onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.98)'}
+          onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+        >
+          {unreadBottles > 0 && (
+            <div style={{
+              position: 'absolute',
+              top: '10px',
+              right: '10px',
+              background: '#E91E63',
+              color: 'white',
+              borderRadius: '20px',
+              padding: '6px 12px',
+              fontSize: '0.8rem',
+              fontWeight: 'bold',
+              boxShadow: '0 2px 8px rgba(233,30,99,0.4)'
+            }}>
+              {unreadBottles} nouveau{unreadBottles > 1 ? 'x' : ''}
+            </div>
+          )}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ fontSize: '3.5rem', filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))' }}>
+              🍾
+            </div>
+            <div style={{ flex: 1 }}>
+              <h3 style={{
+                color: 'white',
+                margin: '0 0 8px 0',
+                fontSize: '1.5rem',
+                fontWeight: '700',
+                textShadow: '0 2px 4px rgba(0,0,0,0.2)'
+              }}>
+                Bouteille à la mer
+              </h3>
+              <p style={{
+                color: 'rgba(255,255,255,0.95)',
+                margin: 0,
+                fontSize: '0.95rem',
+                lineHeight: '1.4'
+              }}>
+                Envoie un message anonyme à un utilisateur aléatoire 🌊
+              </p>
+            </div>
+            <div style={{
+              fontSize: '2rem',
+              color: 'white',
+              opacity: 0.8
+            }}>
+              →
             </div>
           </div>
         </div>
@@ -558,6 +628,14 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
         </div>
       </div>
       </div>
+
+      {/* Modal Bouteille à la mer */}
+      {showBottleModal && (
+        <MessageBottleModal
+          currentUser={currentUser}
+          onClose={() => setShowBottleModal(false)}
+        />
+      )}
     </div>
   );
 }
