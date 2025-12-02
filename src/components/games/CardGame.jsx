@@ -83,7 +83,7 @@ export default function CardGame({
     if (allRevealed) {
       setCardGameOver(true);
       setCardMessage('Toutes les cartes sont retournées! Partie terminée. 🎉');
-      saveGameRewards(newGains); // Sauvegarder les gains accumulés
+      saveGameRewards(newGains);
     }
   };
 
@@ -98,26 +98,21 @@ export default function CardGame({
     if (heartsLeft) {
       setCardMessage('Raté 😔 Il restait des cœurs! Tu perds tout.');
       setCardGains(0);
-      saveGameRewards(0); // Perte, 0 pièces
+      saveGameRewards(0);
     } else {
       const newGains = cardGains * 2;
       setCardGains(newGains);
       setCardMessage(`Bravo 🥳 Tu avais raison! Il n'y avait plus de cœurs! Tes gains sont doublés: ${newGains} pièces!`);
-      saveGameRewards(newGains); // Victoire avec gains doublés
+      saveGameRewards(newGains);
     }
     setCardGameOver(true);
   };
 
   const saveGameRewards = (finalGains) => {
     if (currentUser?.email && finalGains > 0) {
-      // Ajouter les pièces gagnées
       addCoinsToUser(currentUser.email, finalGains);
       setUserCoins(prev => prev + finalGains);
-
-      // Ajouter des points (1 point par pièce gagnée)
       addPointsToUser(currentUser.email, finalGains);
-
-      // Mettre à jour les stats de jeux
       const currentStats = currentUser.stats || { letters: 0, games: 0, bars: 0 };
       updateUserStats(currentUser.email, {
         games: currentStats.games + 1
@@ -137,7 +132,9 @@ export default function CardGame({
       overflowY: 'auto',
       paddingBottom: '100px',
       background: 'var(--color-beige-light)',
-      padding: 'var(--spacing-md)'
+      padding: 'var(--spacing-md)',
+      width: '100%',
+      boxSizing: 'border-box'
     }}>
       <button
         onClick={() => setGameScreen(null)}
@@ -157,13 +154,42 @@ export default function CardGame({
         ← Retour aux jeux
       </button>
       <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600', color: 'var(--color-brown-dark)' }}>🎴 Jeu des Cartes</h2>
-      <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px' }}>
+      <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', width: '100%', boxSizing: 'border-box' }}>
         <p style={{ textAlign: 'center', fontSize: '16px', marginBottom: '10px', color: '#ccc' }}>{cardMessage}</p>
         <p style={{ textAlign: 'center', fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}>💰 Gains: {cardGains} pièces</p>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px', marginBottom: '20px' }}>
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(5, 1fr)', 
+          gap: '6px', 
+          marginBottom: '20px',
+          width: '100%',
+          padding: '0 4px',
+          boxSizing: 'border-box'
+        }}>
           {cardSymbols.map((symbol, idx) => (
-            <button key={idx} onClick={() => revealCard(idx)} style={{ width: '60px', height: '80px', margin: '0 auto', background: cardRevealed[idx] ? 'white' : '#E91E63', border: 'none', borderRadius: '8px', fontSize: '28px', cursor: cardRevealed[idx] || cardGameOver ? 'default' : 'pointer', fontWeight: 'bold', opacity: cardRevealed[idx] || !cardGameOver ? 1 : 0.9 }}>
+            <button 
+              key={idx} 
+              onClick={() => revealCard(idx)} 
+              style={{ 
+                width: '100%',
+                maxWidth: '50px',
+                aspectRatio: '3/4',
+                height: 'auto',
+                margin: '0 auto', 
+                background: cardRevealed[idx] ? 'white' : '#E91E63', 
+                border: 'none', 
+                borderRadius: '6px', 
+                fontSize: '20px', 
+                cursor: cardRevealed[idx] || cardGameOver ? 'default' : 'pointer', 
+                fontWeight: 'bold', 
+                opacity: cardRevealed[idx] || !cardGameOver ? 1 : 0.9,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '2px'
+              }}
+            >
               {cardRevealed[idx] ? symbol : '❓'}
             </button>
           ))}

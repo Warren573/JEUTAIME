@@ -4,40 +4,40 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
   const bars = [
     {
       id: 'romantic',
-      name: 'Bar Romantique',
+      name: 'Salon Romantique',
       emoji: '🌹',
       description: 'Écrivez ensemble des histoires d\'amour touchantes',
       currentMembers: 2,
       maxMembers: 4,
       gradient: 'linear-gradient(135deg, #FF6B9D, #C2185B)',
       textColor: 'white',
-      action: () => setSelectedBar({ type: 'romantic', name: 'Bar Romantique', emoji: '🌹' })
+      action: () => setSelectedBar({ type: 'romantic', name: 'Salon Romantique', emoji: '🌹' })
     },
     {
       id: 'humorous',
-      name: 'Bar Humoristique',
+      name: 'Salon Humoristique',
       emoji: '😄',
       description: 'Créez des histoires drôles et absurdes à plusieurs',
       currentMembers: 3,
       maxMembers: 4,
       gradient: 'linear-gradient(135deg, #FFD54F, #FFA000)',
       textColor: '#1a1a1a',
-      action: () => setSelectedBar({ type: 'humorous', name: 'Bar Humoristique', emoji: '😄' })
+      action: () => setSelectedBar({ type: 'humorous', name: 'Salon Humoristique', emoji: '😄' })
     },
     {
       id: 'adventure',
-      name: 'Bar Aventure',
+      name: 'Salon Aventure',
       emoji: '🗺️',
       description: 'Partez en quête d\'aventures épiques ensemble',
       currentMembers: 1,
       maxMembers: 4,
       gradient: 'linear-gradient(135deg, #4CAF50, #2E7D32)',
       textColor: 'white',
-      action: () => setSelectedBar({ type: 'adventure', name: 'Bar Aventure', emoji: '🗺️' })
+      action: () => setSelectedBar({ type: 'adventure', name: 'Salon Aventure', emoji: '🗺️' })
     },
     {
       id: 'mystery',
-      name: 'Bar Mystère',
+      name: 'Salon Mystère',
       emoji: '🔮',
       description: 'Tissez des récits mystérieux et envoûtants',
       currentMembers: 4,
@@ -45,11 +45,11 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
       gradient: 'linear-gradient(135deg, #7B1FA2, #4A148C)',
       textColor: '#FFD700',
       border: '2px solid rgba(255, 215, 0, 0.3)',
-      action: () => setSelectedBar({ type: 'mystery', name: 'Bar Mystère', emoji: '🔮' })
+      action: () => setSelectedBar({ type: 'mystery', name: 'Salon Mystère', emoji: '🔮' })
     },
     {
       id: 'weekly',
-      name: 'Bar Hebdomadaire',
+      name: 'Salon Hebdomadaire',
       emoji: '📅',
       description: 'Groupe exclusif renouvelé chaque semaine',
       badge: 'NOUVEAU',
@@ -57,7 +57,7 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
       maxMembers: 4,
       gradient: 'linear-gradient(135deg, #5C6BC0, #3949AB)',
       textColor: 'white',
-      action: () => setSelectedBar({ type: 'weekly', name: 'Bar Hebdomadaire', emoji: '📅' })
+      action: () => setSelectedBar({ type: 'weekly', name: 'Salon Hebdomadaire', emoji: '📅' })
     }
   ];
 
@@ -65,7 +65,7 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
     <div style={{
       height: '100vh',
       overflowY: 'auto',
-      paddingBottom: '80px',
+      paddingBottom: '100px',
       background: 'var(--color-beige-light)'
     }}>
       {/* En-tête */}
@@ -87,7 +87,7 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
           borderBottom: '2px solid var(--color-gold)',
           paddingBottom: 'var(--spacing-xs)'
         }}>
-          🍸 Les Bars
+          🍸 Les Salons
         </h1>
         <p style={{
           textAlign: 'center',
@@ -100,8 +100,12 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
         </p>
       </div>
 
-      {/* Bouton créer son bar (Premium) */}
-      <div style={{ padding: '0 var(--spacing-sm)' }}>
+      {/* Bouton créer son salon (Premium) */}
+      <div style={{
+        padding: '0 var(--spacing-sm)',
+        width: '100%',
+        boxSizing: 'border-box'
+      }}>
         {currentUser?.isPremium && (
           <div
             style={{
@@ -112,9 +116,11 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
               boxShadow: '0 4px 12px rgba(255, 215, 0, 0.4)',
               border: '2px solid #FFD700',
               cursor: 'pointer',
-              transition: 'transform 0.2s'
+              transition: 'transform 0.2s',
+              width: '100%',
+              boxSizing: 'border-box'
             }}
-            onClick={() => alert('🎨 Interface de création de bar en développement !')}
+            onClick={() => alert('🎨 Interface de création de salon en développement !')}
             onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.98)'}
             onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
           >
@@ -127,7 +133,7 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
                   fontSize: '1.3rem',
                   fontWeight: '700'
                 }}>
-                  👑 Créer mon bar Premium
+                  👑 Créer mon salon Premium
                 </h3>
                 <p style={{
                   color: 'rgba(0,0,0,0.7)',
@@ -152,7 +158,7 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
               padding: 'var(--spacing-md)',
               marginBottom: 'var(--spacing-xs)',
               boxShadow: 'none',
-              maxWidth: '100%',
+              width: '100%',
               boxSizing: 'border-box',
               borderBottom: '1px solid rgba(0,0,0,0.1)'
             }}

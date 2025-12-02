@@ -43,7 +43,7 @@ export default function RankingScreen({ currentUser }) {
     <div style={{
       height: '100vh',
       overflowY: 'auto',
-      paddingBottom: '80px',
+      paddingBottom: '100px',
       background: 'var(--color-beige-light)'
     }}>
       {/* En-tête style Journal */}
@@ -65,7 +65,7 @@ export default function RankingScreen({ currentUser }) {
           borderBottom: '2px solid var(--color-gold)',
           paddingBottom: 'var(--spacing-xs)'
         }}>
-          🏆 Classement
+          🏆 CLASSEMENT
         </h1>
         <p style={{
           textAlign: 'center',
@@ -78,7 +78,7 @@ export default function RankingScreen({ currentUser }) {
         </p>
       </div>
 
-      <div style={{ padding: '0 var(--spacing-lg)' }}>
+      <div style={{ padding: '0 var(--spacing-lg)', width: '100%', boxSizing: 'border-box' }}>
         {/* Header avec stats personnelles */}
         <div style={{
           background: 'var(--color-cream)',
@@ -209,7 +209,9 @@ export default function RankingScreen({ currentUser }) {
         padding: '20px',
         boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
         maxWidth: '900px',
-        margin: '0 auto'
+        margin: '0 auto',
+        width: '100%',
+        boxSizing: 'border-box'
       }}>
         <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '20px', color: '#333' }}>
           Classement Général
@@ -300,7 +302,9 @@ export default function RankingScreen({ currentUser }) {
         borderRadius: '15px',
         padding: '20px',
         maxWidth: '900px',
-        margin: '25px auto 0 auto'
+        margin: '25px auto 0 auto',
+        width: '100%',
+        boxSizing: 'border-box'
       }}>
         <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '15px', color: '#333' }}>
           💡 Comment gagner des points ?
