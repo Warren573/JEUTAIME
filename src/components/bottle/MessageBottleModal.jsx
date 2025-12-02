@@ -45,7 +45,7 @@ export default function MessageBottleModal({ currentUser, onClose }) {
     const result = sendBottle(currentUser.email, message.trim(), messageType, isPremium);
 
     if (result.success) {
-      alert('🍾 Bouteille envoyée ! Un utilisateur aléatoire la recevra...');
+      alert('📜 Bouteille envoyée ! Un utilisateur aléatoire la recevra...');
       setMessage('');
       setTab('sent'); // Basculer vers les messages envoyés
     } else {
@@ -159,7 +159,7 @@ export default function MessageBottleModal({ currentUser, onClose }) {
             fontSize: '1.8rem',
             textAlign: 'center'
           }}>
-            🍾 Bouteille à la mer
+            📜 Bouteille à la mer
           </h2>
           <p style={{
             margin: 0,
@@ -179,7 +179,7 @@ export default function MessageBottleModal({ currentUser, onClose }) {
           background: 'var(--color-beige-light)'
         }}>
           {[
-            { id: 'send', label: '📝 Envoyer', icon: '🍾' },
+            { id: 'send', label: '📝 Envoyer', icon: '📜' },
             { id: 'received', label: '📬 Reçues', count: receivedBottles.filter(b => !b.read).length },
             { id: 'sent', label: '📤 Envoyées' }
           ].map((t) => (
@@ -238,7 +238,7 @@ export default function MessageBottleModal({ currentUser, onClose }) {
                   textAlign: 'center'
                 }}>
                   <p style={{ margin: 0, fontSize: '0.9rem', fontWeight: '600' }}>
-                    🍾 {todayCount}/3 bouteilles envoyées aujourd'hui
+                    📜 {todayCount}/3 bouteilles envoyées aujourd'hui
                   </p>
                   {todayCount >= 3 && (
                     <p style={{ margin: '8px 0 0 0', fontSize: '0.85rem', color: 'var(--color-text-secondary)' }}>
@@ -334,7 +334,7 @@ export default function MessageBottleModal({ currentUser, onClose }) {
                   boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
                 }}
               >
-                {sending ? '📤 Envoi en cours...' : '🍾 Lancer la bouteille !'}
+                {sending ? '📤 Envoi en cours...' : '📜 Lancer la bouteille !'}
               </button>
 
               {!cooldownStatus.canSend && (
@@ -423,7 +423,7 @@ export default function MessageBottleModal({ currentUser, onClose }) {
             <div>
               {sentBottles.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '40px 20px' }}>
-                  <div style={{ fontSize: '4rem', marginBottom: '16px' }}>🍾</div>
+                  <div style={{ fontSize: '4rem', marginBottom: '16px' }}>📜</div>
                   <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem' }}>
                     Tu n'as encore envoyé aucune bouteille...
                   </p>
