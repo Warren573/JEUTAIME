@@ -60,7 +60,7 @@ export default function BookIndex({ user, isOwnBook = true, onClose }) {
         <h2 style={{
           margin: 0,
           color: 'white',
-          fontSize: clamp(18, 4, 24) + 'px'
+          fontSize: 'clamp(1.2rem, 4vw, 1.8rem)'
         }}>
           📖 Book de {user?.name || 'Utilisateur'}
         </h2>
@@ -183,8 +183,4 @@ export default function BookIndex({ user, isOwnBook = true, onClose }) {
       </div>
     </div>
   );
-}
-
-function clamp(min, vw, max) {
-  return Math.min(max, Math.max(min, window.innerWidth * vw / 100));
 }
