@@ -34,7 +34,7 @@ export function proposeExchange(barId, userId) {
   const pending = getPendingExchanges();
   const now = Date.now();
 
-  // Vérifier si l'utilisateur a déjà proposé un échange pour ce bar
+  // Vérifier si l'utilisateur a déjà proposé un échange pour ce salon
   const existing = pending.find(ex => ex.barId === barId && ex.userId === userId);
   if (existing) {
     return {
@@ -171,7 +171,7 @@ export function checkExchangeCooldown(barId) {
   const active = getActiveExchanges();
   const now = Date.now();
 
-  // Chercher un échange récent pour ce bar
+  // Chercher un échange récent pour ce salon
   const allExchanges = JSON.parse(localStorage.getItem(ACTIVE_EXCHANGES_KEY) || '[]');
   const recentExchanges = allExchanges.filter(ex =>
     (ex.bar1Id === barId || ex.bar2Id === barId) &&

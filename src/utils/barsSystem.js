@@ -42,7 +42,7 @@ export function loadBarState(barId) {
  * Ajouter une phrase à l'histoire et récompenser l'utilisateur
  */
 export function addStoryParagraph(barId, userEmail, username, text) {
-  // Charger l'état du bar
+  // Charger l'état du salon
   const barState = loadBarState(barId) || {
     story: [],
     currentTurnIndex: 0,
@@ -69,7 +69,7 @@ export function addStoryParagraph(barId, userEmail, username, text) {
     awardPoints(userEmail, 'SENTENCE_ADDED');
     addCoinsToUser(userEmail, REWARDS.SENTENCE_ADDED.coins);
 
-    // Mettre à jour les stats (incrémenter participation aux bars)
+    // Mettre à jour les stats (incrémenter participation aux salons)
     const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
     const user = users.find(u => u.email === userEmail);
     if (user) {
@@ -120,7 +120,7 @@ export function completeStory(barId, story) {
     addCoinsToUser(userEmail, REWARDS.STORY_COMPLETED.coins);
   });
 
-  // Réinitialiser l'histoire du bar
+  // Réinitialiser l'histoire du salon
   const barState = loadBarState(barId);
   if (barState) {
     barState.story = [];

@@ -9,7 +9,7 @@ export default function GiftSelector({ currentUser, receiverId, onClose, onGiftS
   const allGifts = getAllGifts();
   const allSpells = getAllSpells();
 
-  // Mapper le nom du bar à son thème
+  // Mapper le nom du salon à son thème
   const getThemeFromBarName = (barName) => {
     if (!barName) return 'all';
     if (barName.toLowerCase().includes('romantique')) return 'romantic';
@@ -22,7 +22,7 @@ export default function GiftSelector({ currentUser, receiverId, onClose, onGiftS
 
   const currentTheme = getThemeFromBarName(barTheme);
 
-  // Filtrer automatiquement selon le thème du bar
+  // Filtrer automatiquement selon le thème du salon
   // Toujours inclure les items "all" + les items du thème spécifique
   const gifts = currentTheme === 'all'
     ? allGifts

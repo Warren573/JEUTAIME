@@ -37,7 +37,7 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
     return barState?.story || [];
   });
 
-  // Transformer les participants du bar en membres avec avatars + ajouter l'utilisateur
+  // Transformer les participants du salon en membres avec avatars + ajouter l'utilisateur
   const [members, setMembers] = useState(() => {
     const salonMembers = salon?.participants?.map((p, index) => ({
       id: index + 1,
@@ -266,7 +266,7 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
       paddingBottom: '80px',
       background: 'var(--color-beige-light)'
     }}>
-      {/* En-tête du bar */}
+      {/* En-tête du salon */}
       <div style={{
         background: salon?.gradient || 'linear-gradient(135deg, #667eea, #764ba2)',
         padding: 'var(--spacing-lg)',
@@ -314,7 +314,7 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
           {salon?.emoji} {salon?.name}
         </h1>
 
-        {/* Membres du bar */}
+        {/* Membres du salon */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
