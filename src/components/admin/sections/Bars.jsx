@@ -5,16 +5,16 @@ export default function Bars() {
   const [newBar, setNewBar] = useState({ name: '', desc: '', icon: '', theme: '' });
 
   const bars = [
-    { id: 1, icon: '🌹', name: 'Bar Romantique', desc: 'Ambiance tamisée', participants: 45, messages: 1234, active: true, created: '01/10/2024' },
-    { id: 2, icon: '😄', name: 'Bar Humoristique', desc: 'Rires garantis', participants: 38, messages: 892, active: true, created: '01/10/2024' },
-    { id: 3, icon: '🏴‍☠️', name: 'Bar Pirates', desc: 'Aventures maritimes', participants: 29, messages: 567, active: true, created: '01/10/2024' },
-    { id: 4, icon: '📅', name: 'Bar Hebdomadaire', desc: 'Renouvelé chaque lundi', participants: 52, messages: 1456, active: true, created: '15/10/2024' },
-    { id: 5, icon: '👑', name: 'Bar Caché', desc: '3 énigmes pour accéder', participants: 15, messages: 234, active: true, created: '10/10/2024' },
-    { id: 6, icon: '🎄', name: 'Bar Saisonnier', desc: 'Spécial Noël', participants: 8, messages: 45, active: false, created: '20/12/2023' }
+    { id: 1, icon: '🌹', name: 'Salon Romantique', desc: 'Ambiance tamisée', participants: 45, messages: 1234, active: true, created: '01/10/2024' },
+    { id: 2, icon: '😄', name: 'Salon Humoristique', desc: 'Rires garantis', participants: 38, messages: 892, active: true, created: '01/10/2024' },
+    { id: 3, icon: '🏴‍☠️', name: 'Salon Pirates', desc: 'Aventures maritimes', participants: 29, messages: 567, active: true, created: '01/10/2024' },
+    { id: 4, icon: '📅', name: 'Salon Hebdomadaire', desc: 'Renouvelé chaque lundi', participants: 52, messages: 1456, active: true, created: '15/10/2024' },
+    { id: 5, icon: '👑', name: 'Salon Caché', desc: '3 énigmes pour accéder', participants: 15, messages: 234, active: true, created: '10/10/2024' },
+    { id: 6, icon: '🎄', name: 'Salon Saisonnier', desc: 'Spécial Noël', participants: 8, messages: 45, active: false, created: '20/12/2023' }
   ];
 
   const handleCreateBar = () => {
-    console.log('Créer bar:', newBar);
+    console.log('Créer salon:', newBar);
     setShowCreateModal(false);
     setNewBar({ name: '', desc: '', icon: '', theme: '' });
   };
@@ -24,21 +24,21 @@ export default function Bars() {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
         <div>
-          <h1 style={{ fontSize: '32px', fontWeight: '700', margin: '0 0 8px 0' }}>Gestion des Bars</h1>
+          <h1 style={{ fontSize: '32px', fontWeight: '700', margin: '0 0 8px 0' }}>Gestion des Salons</h1>
           <p style={{ color: '#888', fontSize: '14px', margin: 0 }}>Créer et gérer les salons thématiques</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
           style={{ padding: '12px 24px', background: 'linear-gradient(135deg, #667eea, #764ba2)', border: 'none', borderRadius: '10px', color: 'white', fontSize: '14px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}
         >
-          ➕ Nouveau Bar
+          ➕ Nouveau Salon
         </button>
       </div>
 
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '15px', marginBottom: '25px' }}>
         <div style={{ background: '#1a1a1a', borderRadius: '12px', padding: '15px', border: '1px solid #333' }}>
-          <div style={{ fontSize: '11px', color: '#888', marginBottom: '4px' }}>Total bars</div>
+          <div style={{ fontSize: '11px', color: '#888', marginBottom: '4px' }}>Total salons</div>
           <div style={{ fontSize: '24px', fontWeight: '700', color: '#E91E63' }}>{bars.length}</div>
         </div>
         <div style={{ background: '#1a1a1a', borderRadius: '12px', padding: '15px', border: '1px solid #333' }}>
@@ -119,17 +119,17 @@ export default function Bars() {
       {showCreateModal && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '20px' }}>
           <div style={{ background: '#1a1a1a', borderRadius: '20px', padding: '30px', width: '100%', maxWidth: '500px', border: '1px solid #333' }}>
-            <h2 style={{ fontSize: '24px', fontWeight: '700', margin: '0 0 20px 0' }}>Créer un nouveau Bar</h2>
+            <h2 style={{ fontSize: '24px', fontWeight: '700', margin: '0 0 20px 0' }}>Créer un nouveau Salon</h2>
 
             <div style={{ marginBottom: '15px' }}>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: '#ccc' }}>
-                Nom du bar
+                Nom du salon
               </label>
               <input
                 type="text"
                 value={newBar.name}
                 onChange={(e) => setNewBar({ ...newBar, name: e.target.value })}
-                placeholder="Ex: Bar Musical"
+                placeholder="Ex: Salon Musical"
                 style={{ width: '100%', padding: '12px', background: '#0a0a0a', border: '1px solid #333', borderRadius: '10px', color: 'white', fontSize: '14px' }}
               />
             </div>

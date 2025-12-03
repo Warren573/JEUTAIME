@@ -13,7 +13,7 @@ import {
   completeStory
 } from '../../utils/barsSystem';
 
-export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
+export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }) {
   const [barTab, setBarTab] = useState('discuss');
   const messagesEndRef = useRef(null);
 
@@ -25,21 +25,21 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
 
   // Chat discussion - Charger depuis localStorage
   const [messages, setMessages] = useState(() => {
-    const barId = bar?.type || bar?.id || 'unknown';
-    return loadBarMessages(barId);
+    const salonId = salon?.type || salon?.id || 'unknown';
+    return loadBarMessages(salonId);
   });
   const [messageInput, setMessageInput] = useState('');
 
   // Système "Continuer l'histoire" - Charger depuis localStorage
   const [story, setStory] = useState(() => {
-    const barId = bar?.type || bar?.id || 'unknown';
-    const barState = loadBarState(barId);
+    const salonId = salon?.type || salon?.id || 'unknown';
+    const barState = loadBarState(salonId);
     return barState?.story || [];
   });
 
-  // Transformer les participants du bar en membres avec avatars + ajouter l'utilisateur
+  // Transformer les participants du salon en membres avec avatars + ajouter l'utilisateur
   const [members, setMembers] = useState(() => {
-    const barMembers = bar?.participants?.map((p, index) => ({
+    const salonMembers = salon?.participants?.map((p, index) => ({
       id: index + 1,
       name: p.name,
       gender: p.gender,
@@ -52,9 +52,9 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
 
     // Ajouter l'utilisateur actuel
     const allMembers = [
-      ...barMembers,
+      ...salonMembers,
       {
-        id: barMembers.length + 1,
+        id: salonMembers.length + 1,
         name: currentUser?.name || 'Vous',
         gender: currentUser?.gender || 'M',
         avatarOptions: currentUser?.avatarData || generateAvatarOptions(currentUser?.name || 'Vous', currentUser?.gender || 'M'),
@@ -67,8 +67,8 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
   });
 
   const [currentTurnIndex, setCurrentTurnIndex] = useState(() => {
-    const barId = bar?.type || bar?.id || 'unknown';
-    const barState = loadBarState(barId);
+    const salonId = salon?.type || salon?.id || 'unknown';
+    const barState = loadBarState(salonId);
     return barState?.currentTurnIndex || 0;
   });
   const [newSentence, setNewSentence] = useState('');
@@ -88,7 +88,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
   const sendMessage = () => {
     if (!messageInput.trim()) return;
 
-    const barId = bar?.type || bar?.id || 'unknown';
+    const salonId = salon?.type || salon?.id || 'unknown';
     const newMessage = saveBarMessage(
       barId,
       currentUser?.email || 'guest',
@@ -121,7 +121,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
 
     // Expulsion automatique après 2 tours sautés
     if (updatedMembers[currentTurnIndex].skippedTurns >= 2) {
-      alert(`❌ ${updatedMembers[currentTurnIndex].name} a été expulsé(e) du bar (2 tours sautés)`);
+      alert(`❌ ${updatedMembers[currentTurnIndex].name} a été expulsé(e) du salon (2 tours sautés)`);
       updatedMembers.splice(currentTurnIndex, 1);
       setMembers(updatedMembers);
     }
@@ -136,7 +136,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
       return;
     }
 
-    const barId = bar?.type || bar?.id || 'unknown';
+    const salonId = salon?.type || salon?.id || 'unknown';
 
     // Ajouter la phrase avec récompenses automatiques
     const newStoryEntry = addStoryParagraph(
@@ -168,7 +168,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
     // Passer au joueur suivant
     const nextTurnIndex = (currentTurnIndex + 1) % members.length;
     setCurrentTurnIndex(nextTurnIndex);
-    updateBarTurn(barId, nextTurnIndex, members);
+    updateBarTurn(salonId, nextTurnIndex, members);
   };
 
   const handleSaveToJournal = () => {
@@ -177,7 +177,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
       return;
     }
 
-    const barId = bar?.type || bar?.id || 'unknown';
+    const salonId = salon?.type || salon?.id || 'unknown';
 
     // Compléter l'histoire et récompenser les participants
     completeStory(barId, story);
@@ -195,7 +195,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
     if (reason && reason.trim().length > 10) {
       const updatedMembers = members.filter(m => m.id !== memberId);
       setMembers(updatedMembers);
-      alert(`✅ ${member.name} a été expulsé(e) du bar.\nRaison: ${reason}`);
+      alert(`✅ ${member.name} a été expulsé(e) du salon.\nRaison: ${reason}`);
     } else if (reason) {
       alert('⚠️ La raison doit faire au moins 10 caractères.');
     }
@@ -242,7 +242,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
     }, 3000);
 
     // Ajouter un message système dans le chat et sauvegarder
-    const barId = bar?.type || bar?.id || 'unknown';
+    const salonId = salon?.type || salon?.id || 'unknown';
     const giftMessage = saveBarMessage(
       barId,
       'system',
@@ -266,16 +266,16 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
       paddingBottom: '80px',
       background: 'var(--color-beige-light)'
     }}>
-      {/* En-tête du bar */}
+      {/* En-tête du salon */}
       <div style={{
-        background: bar?.gradient || 'linear-gradient(135deg, #667eea, #764ba2)',
+        background: salon?.gradient || 'linear-gradient(135deg, #667eea, #764ba2)',
         padding: 'var(--spacing-lg)',
         boxShadow: 'var(--shadow-md)',
         borderBottom: '4px solid rgba(0,0,0,0.2)'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px' }}>
           <button
-            onClick={() => setSelectedBar(null)}
+            onClick={() => setSelectedSalon(null)}
             style={{
               background: 'rgba(255,255,255,0.2)',
               border: 'none',
@@ -311,10 +311,10 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
           margin: '0 0 12px 0',
           fontWeight: '700'
         }}>
-          {bar?.emoji} {bar?.name}
+          {salon?.emoji} {salon?.name}
         </h1>
 
-        {/* Membres du bar */}
+        {/* Membres du salon */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
@@ -686,7 +686,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
                     👤 Expulser un membre
                   </button>
                   <button
-                    onClick={() => alert('🔒 Fermeture/Réouverture du bar en développement')}
+                    onClick={() => alert('🔒 Fermeture/Réouverture du salon en développement')}
                     style={{
                       padding: '8px 14px',
                       background: '#000',
@@ -698,7 +698,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
                       fontSize: '0.85rem'
                     }}
                   >
-                    🔒 Fermer le bar
+                    🔒 Fermer le salon
                   </button>
                 </div>
               </div>

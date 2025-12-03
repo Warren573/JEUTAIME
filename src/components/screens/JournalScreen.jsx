@@ -6,7 +6,7 @@ export default function JournalScreen({ currentUser }) {
   const activities = [
     { text: 'Dix nouveaux contenus ajoutés', icon: '📝' },
     { text: 'Cinq couples formés', icon: '💑' },
-    { text: 'Nouveau bar "Aventuriers" ouvert', icon: '🍸' }
+    { text: 'Nouveau salon "Aventuriers" ouvert', icon: '🍸' }
   ];
 
   const tournament = [

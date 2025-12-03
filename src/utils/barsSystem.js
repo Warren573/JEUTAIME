@@ -1,5 +1,5 @@
 /**
- * Système de gestion des bars - Histoires collaboratives
+ * Système de gestion des salons - Histoires collaboratives
  * Architecture extensible pour faciliter les ajouts futurs
  */
 
@@ -19,7 +19,7 @@ const REWARDS = {
 };
 
 /**
- * Sauvegarder l'état d'un bar
+ * Sauvegarder l'état d'un salon
  */
 export function saveBarState(barId, state) {
   const bars = JSON.parse(localStorage.getItem('jeutaime_bars_state') || '{}');
@@ -31,7 +31,7 @@ export function saveBarState(barId, state) {
 }
 
 /**
- * Charger l'état d'un bar
+ * Charger l'état d'un salon
  */
 export function loadBarState(barId) {
   const bars = JSON.parse(localStorage.getItem('jeutaime_bars_state') || '{}');
@@ -42,7 +42,7 @@ export function loadBarState(barId) {
  * Ajouter une phrase à l'histoire et récompenser l'utilisateur
  */
 export function addStoryParagraph(barId, userEmail, username, text) {
-  // Charger l'état du bar
+  // Charger l'état du salon
   const barState = loadBarState(barId) || {
     story: [],
     currentTurnIndex: 0,
@@ -69,7 +69,7 @@ export function addStoryParagraph(barId, userEmail, username, text) {
     awardPoints(userEmail, 'SENTENCE_ADDED');
     addCoinsToUser(userEmail, REWARDS.SENTENCE_ADDED.coins);
 
-    // Mettre à jour les stats (incrémenter participation aux bars)
+    // Mettre à jour les stats (incrémenter participation aux salons)
     const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
     const user = users.find(u => u.email === userEmail);
     if (user) {
@@ -120,7 +120,7 @@ export function completeStory(barId, story) {
     addCoinsToUser(userEmail, REWARDS.STORY_COMPLETED.coins);
   });
 
-  // Réinitialiser l'histoire du bar
+  // Réinitialiser l'histoire du salon
   const barState = loadBarState(barId);
   if (barState) {
     barState.story = [];
@@ -149,7 +149,7 @@ export function getUserStories(userEmail) {
 }
 
 /**
- * Sauvegarder un message de chat dans un bar
+ * Sauvegarder un message de chat dans un salon
  */
 export function saveBarMessage(barId, userEmail, username, text, isSystem = false, giftData = null) {
   const messages = JSON.parse(localStorage.getItem(`jeutaime_bar_${barId}_messages`) || '[]');
@@ -177,14 +177,14 @@ export function saveBarMessage(barId, userEmail, username, text, isSystem = fals
 }
 
 /**
- * Charger les messages d'un bar
+ * Charger les messages d'un salon
  */
 export function loadBarMessages(barId) {
   return JSON.parse(localStorage.getItem(`jeutaime_bar_${barId}_messages`) || '[]');
 }
 
 /**
- * Mettre à jour le tour actuel dans un bar
+ * Mettre à jour le tour actuel dans un salon
  */
 export function updateBarTurn(barId, currentTurnIndex, members) {
   const barState = loadBarState(barId) || { story: [] };
@@ -194,7 +194,7 @@ export function updateBarTurn(barId, currentTurnIndex, members) {
 }
 
 /**
- * Obtenir les statistiques d'un utilisateur dans les bars
+ * Obtenir les statistiques d'un utilisateur dans les salons
  */
 export function getUserBarStats(userEmail) {
   const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
