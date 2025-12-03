@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navigation from './components/Navigation';
 import HomeScreen from './components/screens/HomeScreen';
 import EspacePersoScreen from './components/screens/EspacePersoScreen';
+import EspacePersoScreenSimple from './components/screens/EspacePersoScreenSimple';
 import ProfilesScreen from './components/screens/ProfilesScreen';
 import SocialScreen from './components/screens/SocialScreen';
 import LettersScreen from './components/screens/LettersScreen';
@@ -248,7 +249,7 @@ function MainApp() {
       fontFamily: '-apple-system, sans-serif',
       overflow: 'hidden'
     }}>
-      {screen === 'home' && !gameScreen && !selectedSalon && <HomeScreen {...appState} />}
+      {screen === 'home' && !gameScreen && !selectedSalon && <EspacePersoScreenSimple {...appState} />}
       {screen === 'profiles' && !gameScreen && !selectedSalon && <ProfilesScreen {...appState} />}
       {screen === 'social' && !gameScreen && !selectedSalon && <SocialScreen {...appState} currentUser={currentUser} />}
       {screen === 'bars' && !gameScreen && !selectedSalon && <BarsScreen setScreen={setScreen} setGameScreen={setGameScreen} setSelectedSalon={setSelectedSalon} currentUser={currentUser} />}
