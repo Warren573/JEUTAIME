@@ -130,7 +130,7 @@ export function getActiveExchanges() {
 }
 
 /**
- * Obtenir l'échange actif pour un bar donné
+ * Obtenir l'échange actif pour un salon donné
  * @param {number} barId - ID du salon
  * @returns {Object|null} Échange actif ou null
  */
@@ -163,7 +163,7 @@ export function cancelPendingExchange(exchangeId, userId) {
 }
 
 /**
- * Vérifier le cooldown d'échange pour un bar
+ * Vérifier le cooldown d'échange pour un salon
  * @param {number} barId - ID du salon
  * @returns {Object} { canExchange, error }
  */
@@ -213,7 +213,7 @@ export function getTimeRemaining(exchange) {
 }
 
 /**
- * Obtenir le nom d'un bar par son ID
+ * Obtenir le nom d'un salon par son ID
  * @param {number} barId - ID du salon
  * @returns {string} Nom du salon
  */
