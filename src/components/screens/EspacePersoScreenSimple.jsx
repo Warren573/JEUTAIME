@@ -21,7 +21,7 @@ export default function EspacePersoScreenSimple({
     }}>
       {/* Header Identité */}
       <div style={{
-        background: 'linear-gradient(135deg, #667eea, #764ba2)',
+        background: 'linear-gradient(135deg, #4FC3F7, #0288D1)',
         padding: '30px 20px',
         borderBottom: '4px solid rgba(255,255,255,0.1)'
       }}>
@@ -116,7 +116,7 @@ export default function EspacePersoScreenSimple({
           borderRadius: '16px',
           padding: '30px',
           textAlign: 'center',
-          border: '2px solid #667eea'
+          border: '2px solid #4FC3F7'
         }}>
           <div style={{ fontSize: '3rem', marginBottom: '15px' }}>🚧</div>
           <h2 style={{
@@ -149,7 +149,7 @@ export default function EspacePersoScreenSimple({
               onClick={() => setScreen('profiles')}
               style={{
                 padding: '12px 24px',
-                background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                background: 'linear-gradient(135deg, #4FC3F7, #0288D1)',
                 border: 'none',
                 color: 'white',
                 borderRadius: '10px',
@@ -185,7 +185,7 @@ export default function EspacePersoScreenSimple({
           padding: '25px'
         }}>
           <h3 style={{
-            color: '#667eea',
+            color: '#4FC3F7',
             fontSize: '1.3rem',
             marginBottom: '20px'
           }}>
