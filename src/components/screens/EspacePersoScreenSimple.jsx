@@ -35,13 +35,14 @@ export default function EspacePersoScreenSimple({
       height: '100vh',
       overflowY: 'auto',
       paddingBottom: '80px',
-      background: 'linear-gradient(180deg, #1a1a1a 0%, #000 100%)'
+      background: 'var(--color-beige-light)'
     }}>
       {/* Header Identité */}
       <div style={{
-        background: 'linear-gradient(135deg, #4FC3F7, #0288D1)',
+        background: 'var(--color-cream)',
         padding: '30px 20px',
-        borderBottom: '4px solid rgba(255,255,255,0.1)'
+        borderBottom: '4px double var(--color-brown-dark)',
+        boxShadow: 'var(--shadow-md)'
       }}>
         <div style={{
           display: 'flex',
@@ -54,8 +55,8 @@ export default function EspacePersoScreenSimple({
             height: '100px',
             borderRadius: '50%',
             overflow: 'hidden',
-            border: '4px solid white',
-            boxShadow: '0 8px 20px rgba(0,0,0,0.3)',
+            border: '4px solid var(--color-gold)',
+            boxShadow: 'var(--shadow-lg)',
             flexShrink: 0,
             background: 'white'
           }}>
@@ -68,7 +69,7 @@ export default function EspacePersoScreenSimple({
           <div style={{ flex: 1 }}>
             <h1 style={{
               margin: '0 0 8px 0',
-              color: 'white',
+              color: 'var(--color-text-primary)',
               fontSize: '1.8rem',
               fontWeight: '700'
             }}>
@@ -77,7 +78,7 @@ export default function EspacePersoScreenSimple({
             </h1>
             <p style={{
               margin: '0 0 12px 0',
-              color: 'rgba(255,255,255,0.9)',
+              color: 'var(--color-text-secondary)',
               fontSize: '0.95rem',
               fontStyle: 'italic',
               lineHeight: '1.4'
@@ -90,20 +91,24 @@ export default function EspacePersoScreenSimple({
               flexWrap: 'wrap'
             }}>
               <div style={{
-                background: 'rgba(0,0,0,0.3)',
+                background: 'var(--color-gold)',
+                color: 'var(--color-brown-dark)',
                 padding: '6px 12px',
                 borderRadius: '20px',
                 fontSize: '0.9rem',
-                fontWeight: '700'
+                fontWeight: '700',
+                boxShadow: 'var(--shadow-sm)'
               }}>
                 💰 {currentUser?.coins || 0}
               </div>
               <div style={{
-                background: 'rgba(0,0,0,0.3)',
+                background: 'var(--color-gold)',
+                color: 'var(--color-brown-dark)',
                 padding: '6px 12px',
                 borderRadius: '20px',
                 fontSize: '0.9rem',
-                fontWeight: '700'
+                fontWeight: '700',
+                boxShadow: 'var(--shadow-sm)'
               }}>
                 ⭐ {currentUser?.points || 0}
               </div>
@@ -146,22 +151,27 @@ export default function EspacePersoScreenSimple({
 function BookPersonnelSection() {
   return (
     <div style={{
-      background: '#2a2a2a',
-      borderRadius: '16px',
+      background: 'var(--color-cream)',
+      borderRadius: 'var(--border-radius-lg)',
       padding: '25px',
-      border: '2px solid #4FC3F7'
+      border: '3px solid var(--color-gold)',
+      boxShadow: 'var(--shadow-md)'
     }}>
       <h3 style={{
         fontSize: '1.5rem',
         marginBottom: '15px',
-        color: '#4FC3F7'
+        color: 'var(--color-text-primary)',
+        fontFamily: 'var(--font-heading)',
+        borderBottom: '2px solid var(--color-gold)',
+        paddingBottom: 'var(--spacing-xs)'
       }}>
         📖 Mon Book Personnel
       </h3>
       <p style={{
-        color: '#aaa',
+        color: 'var(--color-text-secondary)',
         marginBottom: '20px',
-        fontSize: '0.95rem'
+        fontSize: '0.95rem',
+        fontStyle: 'italic'
       }}>
         Ton espace perso style Skyblog moderne
       </p>
@@ -175,13 +185,14 @@ function BookPersonnelSection() {
           <div
             key={page}
             style={{
-              background: '#1a1a1a',
+              background: 'var(--color-beige-light)',
               padding: '12px',
-              borderRadius: '8px',
+              borderRadius: 'var(--border-radius-md)',
               fontSize: '0.85rem',
               textAlign: 'center',
-              color: 'white',
-              border: '1px solid #444'
+              color: 'var(--color-text-primary)',
+              border: '2px solid var(--color-brown-light)',
+              boxShadow: 'var(--shadow-sm)'
             }}
           >
             {page}
@@ -192,13 +203,15 @@ function BookPersonnelSection() {
         style={{
           width: '100%',
           padding: '12px',
-          background: 'linear-gradient(135deg, #4FC3F7, #0288D1)',
-          border: 'none',
-          color: 'white',
+          background: 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))',
+          border: '2px solid var(--color-gold-dark)',
+          color: 'var(--color-cream)',
           borderRadius: '10px',
           cursor: 'pointer',
           fontWeight: '600',
-          fontSize: '0.95rem'
+          fontSize: '0.95rem',
+          boxShadow: 'var(--shadow-sm)',
+          transition: 'all var(--transition-normal)'
         }}
         onClick={() => alert('📖 Book complet - À venir !')}
       >
@@ -214,14 +227,19 @@ function OffrandesRecuesSection({ currentUser }) {
 
   return (
     <div style={{
-      background: '#2a2a2a',
-      borderRadius: '16px',
-      padding: '25px'
+      background: 'var(--color-cream)',
+      borderRadius: 'var(--border-radius-lg)',
+      padding: '25px',
+      border: '2px solid var(--color-tan)',
+      boxShadow: 'var(--shadow-md)'
     }}>
       <h3 style={{
         fontSize: '1.5rem',
         marginBottom: '15px',
-        color: '#4FC3F7'
+        color: 'var(--color-text-primary)',
+        fontFamily: 'var(--font-heading)',
+        borderBottom: '2px solid var(--color-romantic)',
+        paddingBottom: 'var(--spacing-xs)'
       }}>
         🎁 Tes Offrandes Reçues
       </h3>
@@ -241,7 +259,7 @@ function OffrandesRecuesSection({ currentUser }) {
         <div style={{
           textAlign: 'center',
           padding: '30px',
-          color: '#888',
+          color: 'var(--color-text-light)',
           fontStyle: 'italic'
         }}>
           <p style={{ fontSize: '2.5rem', margin: '0 0 10px 0' }}>🎁</p>
@@ -258,29 +276,35 @@ function InventaireMagiqueSection({ currentUser }) {
 
   return (
     <div style={{
-      background: '#2a2a2a',
-      borderRadius: '16px',
-      padding: '25px'
+      background: 'var(--color-cream)',
+      borderRadius: 'var(--border-radius-lg)',
+      padding: '25px',
+      border: '2px solid var(--color-tan)',
+      boxShadow: 'var(--shadow-md)'
     }}>
       <h3 style={{
         fontSize: '1.5rem',
         marginBottom: '15px',
-        color: '#4FC3F7'
+        color: 'var(--color-text-primary)',
+        fontFamily: 'var(--font-heading)',
+        borderBottom: '2px solid var(--color-humorous)',
+        paddingBottom: 'var(--spacing-xs)'
       }}>
         🔮 Mon Inventaire Magique
       </h3>
 
       <div style={{
-        background: 'linear-gradient(135deg, #FFD700, #FFA500)',
+        background: 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))',
         padding: '12px 20px',
         borderRadius: '12px',
         marginBottom: '20px',
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        boxShadow: 'var(--shadow-sm)'
       }}>
-        <span style={{ color: '#000', fontWeight: '700' }}>💰 Tes pièces</span>
-        <span style={{ color: '#000', fontWeight: '900', fontSize: '1.3rem' }}>
+        <span style={{ color: 'var(--color-brown-dark)', fontWeight: '700' }}>💰 Tes pièces</span>
+        <span style={{ color: 'var(--color-brown-dark)', fontWeight: '900', fontSize: '1.3rem' }}>
           {userCoins}
         </span>
       </div>
@@ -290,26 +314,28 @@ function InventaireMagiqueSection({ currentUser }) {
         gap: '10px'
       }}>
         <div style={{
-          background: '#1a1a1a',
+          background: 'var(--color-beige-light)',
           padding: '12px',
           borderRadius: '10px',
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center'
+          alignItems: 'center',
+          border: '2px solid var(--color-brown-light)'
         }}>
-          <span style={{ color: 'white' }}>✨ Magies disponibles</span>
-          <span style={{ color: '#4FC3F7', fontWeight: '700' }}>{allMagic.length}</span>
+          <span style={{ color: 'var(--color-text-primary)' }}>✨ Magies disponibles</span>
+          <span style={{ color: 'var(--color-romantic)', fontWeight: '700' }}>{allMagic.length}</span>
         </div>
         <div style={{
-          background: '#1a1a1a',
+          background: 'var(--color-beige-light)',
           padding: '12px',
           borderRadius: '10px',
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center'
+          alignItems: 'center',
+          border: '2px solid var(--color-brown-light)'
         }}>
-          <span style={{ color: 'white' }}>🎁 Cadeaux à offrir</span>
-          <span style={{ color: '#4FC3F7', fontWeight: '700' }}>{allGifts.length}</span>
+          <span style={{ color: 'var(--color-text-primary)' }}>🎁 Cadeaux à offrir</span>
+          <span style={{ color: 'var(--color-romantic)', fontWeight: '700' }}>{allGifts.length}</span>
         </div>
       </div>
 
@@ -318,13 +344,15 @@ function InventaireMagiqueSection({ currentUser }) {
           width: '100%',
           marginTop: '15px',
           padding: '12px',
-          background: 'linear-gradient(135deg, #FFD700, #FFA500)',
-          border: 'none',
-          color: '#000',
+          background: 'linear-gradient(135deg, var(--color-humorous-light), var(--color-humorous))',
+          border: '2px solid var(--color-humorous)',
+          color: 'var(--color-brown-dark)',
           borderRadius: '10px',
           cursor: 'pointer',
           fontWeight: '700',
-          fontSize: '0.95rem'
+          fontSize: '0.95rem',
+          boxShadow: 'var(--shadow-sm)',
+          transition: 'all var(--transition-normal)'
         }}
         onClick={() => alert('🔮 Inventaire complet - Utilise Magie & Offrandes dans les salons !')}
       >
@@ -338,14 +366,19 @@ function InventaireMagiqueSection({ currentUser }) {
 function MesSalonsSection({ activeSalons, setScreen, setSelectedSalon }) {
   return (
     <div style={{
-      background: '#2a2a2a',
-      borderRadius: '16px',
-      padding: '25px'
+      background: 'var(--color-cream)',
+      borderRadius: 'var(--border-radius-lg)',
+      padding: '25px',
+      border: '2px solid var(--color-tan)',
+      boxShadow: 'var(--shadow-md)'
     }}>
       <h3 style={{
         fontSize: '1.5rem',
         marginBottom: '15px',
-        color: '#4FC3F7'
+        color: 'var(--color-text-primary)',
+        fontFamily: 'var(--font-heading)',
+        borderBottom: '2px solid var(--color-friendly)',
+        paddingBottom: 'var(--spacing-xs)'
       }}>
         💬 Mes Salons Actifs
       </h3>
@@ -360,19 +393,22 @@ function MesSalonsSection({ activeSalons, setScreen, setSelectedSalon }) {
                 setScreen('bars');
               }}
               style={{
-                background: salon.gradient || '#1a1a1a',
+                background: salon.gradient || 'var(--color-beige)',
                 padding: '15px',
                 borderRadius: '12px',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '12px'
+                gap: '12px',
+                border: '2px solid var(--color-brown-light)',
+                boxShadow: 'var(--shadow-sm)',
+                transition: 'all var(--transition-normal)'
               }}
             >
               <div style={{ fontSize: '2rem' }}>{salon.emoji}</div>
               <div style={{ flex: 1 }}>
-                <h4 style={{ margin: 0, color: 'white' }}>{salon.name}</h4>
-                <p style={{ margin: 0, color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem' }}>
+                <h4 style={{ margin: 0, color: 'var(--color-text-primary)' }}>{salon.name}</h4>
+                <p style={{ margin: 0, color: 'var(--color-text-light)', fontSize: '0.85rem' }}>
                   {salon.participants?.length || 0} membres
                 </p>
               </div>
@@ -380,7 +416,7 @@ function MesSalonsSection({ activeSalons, setScreen, setSelectedSalon }) {
           ))}
         </div>
       ) : (
-        <p style={{ color: '#888', textAlign: 'center', padding: '20px', fontStyle: 'italic' }}>
+        <p style={{ color: 'var(--color-text-light)', textAlign: 'center', padding: '20px', fontStyle: 'italic' }}>
           Tu n'as rejoint aucun salon
         </p>
       )}
@@ -390,13 +426,15 @@ function MesSalonsSection({ activeSalons, setScreen, setSelectedSalon }) {
         style={{
           width: '100%',
           padding: '12px',
-          background: 'linear-gradient(135deg, #4FC3F7, #0288D1)',
-          border: 'none',
-          color: 'white',
+          background: 'linear-gradient(135deg, var(--color-friendly-light), var(--color-friendly))',
+          border: '2px solid var(--color-friendly)',
+          color: 'var(--color-cream)',
           borderRadius: '10px',
           cursor: 'pointer',
           fontWeight: '600',
-          fontSize: '0.95rem'
+          fontSize: '0.95rem',
+          boxShadow: 'var(--shadow-sm)',
+          transition: 'all var(--transition-normal)'
         }}
       >
         🔍 Explorer les Salons
@@ -409,14 +447,19 @@ function MesSalonsSection({ activeSalons, setScreen, setSelectedSalon }) {
 function StatsSocialesSection({ currentUser }) {
   return (
     <div style={{
-      background: '#2a2a2a',
-      borderRadius: '16px',
-      padding: '25px'
+      background: 'var(--color-cream)',
+      borderRadius: 'var(--border-radius-lg)',
+      padding: '25px',
+      border: '2px solid var(--color-tan)',
+      boxShadow: 'var(--shadow-md)'
     }}>
       <h3 style={{
         fontSize: '1.5rem',
         marginBottom: '20px',
-        color: '#4FC3F7'
+        color: 'var(--color-text-primary)',
+        fontFamily: 'var(--font-heading)',
+        borderBottom: '2px solid var(--color-gold)',
+        paddingBottom: 'var(--spacing-xs)'
       }}>
         📊 Tes Stats Sociales
       </h3>
@@ -439,21 +482,23 @@ function StatsSocialesSection({ currentUser }) {
 function StatCard({ icon, label, value, isEmoji = false }) {
   return (
     <div style={{
-      background: '#1a1a1a',
+      background: 'var(--color-beige-light)',
       padding: '15px',
       borderRadius: '12px',
-      textAlign: 'center'
+      textAlign: 'center',
+      border: '2px solid var(--color-brown-light)',
+      boxShadow: 'var(--shadow-sm)'
     }}>
       <div style={{ fontSize: '2rem', marginBottom: '8px' }}>{icon}</div>
       <div style={{
-        color: '#4FC3F7',
+        color: 'var(--color-romantic)',
         fontWeight: '900',
         fontSize: isEmoji ? '1.5rem' : '1.8rem',
         marginBottom: '5px'
       }}>
         {value}
       </div>
-      <div style={{ color: '#888', fontSize: '0.8rem' }}>{label}</div>
+      <div style={{ color: 'var(--color-text-light)', fontSize: '0.8rem' }}>{label}</div>
     </div>
   );
 }
