@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { bars } from '../../data/appData';
+import { salons } from '../../data/appData';
 import RankingScreen from './RankingScreen';
 import AdoptionScreen from './AdoptionScreen';
 import MessageBottleModal from '../bottle/MessageBottleModal';
@@ -13,54 +13,54 @@ import {
   getTimeRemaining
 } from '../../utils/barExchangeSystem';
 
-export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, setSelectedBar, adminMode, isAdminAuthenticated, currentUser, userCoins, setUserCoins, setScreen, setCurrentUser }) {
+export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, setSelectedSalon, adminMode, isAdminAuthenticated, currentUser, userCoins, setUserCoins, setScreen, setCurrentUser }) {
   const [magicStates, setMagicStates] = useState({});
-  const [animatingBars, setAnimatingBars] = useState({});
+  const [animatingSalons, setAnimatingSalons] = useState({});
   const [showBottleModal, setShowBottleModal] = useState(false);
   const unreadBottles = getUnreadCount(currentUser?.email);
   const [exchangeRefresh, setExchangeRefresh] = useState(0); // Pour forcer le refresh
 
-  const handleMagicAction = (bar, e) => {
+  const handleMagicAction = (salon, e) => {
     e.stopPropagation();
-    setAnimatingBars(prev => ({ ...prev, [bar.id]: true }));
+    setAnimatingSalons(prev => ({ ...prev, [salon.id]: true }));
     setTimeout(() => {
-      setAnimatingBars(prev => ({ ...prev, [bar.id]: false }));
+      setAnimatingSalons(prev => ({ ...prev, [salon.id]: false }));
     }, 1500);
 
-    if (bar.id === 4) {
-      const currentState = magicStates[bar.id] || 'normal';
+    if (salon.id === 4) {
+      const currentState = magicStates[salon.id] || 'normal';
       if (currentState === 'normal') {
-        setMagicStates(prev => ({ ...prev, [bar.id]: 'frog' }));
-        alert(bar.magicAction.message);
+        setMagicStates(prev => ({ ...prev, [salon.id]: 'frog' }));
+        alert(salon.magicAction.message);
       } else {
-        setMagicStates(prev => ({ ...prev, [bar.id]: 'normal' }));
-        alert(bar.magicAction.message2);
+        setMagicStates(prev => ({ ...prev, [salon.id]: 'normal' }));
+        alert(salon.magicAction.message2);
       }
     } else {
-      alert(bar.magicAction.message);
-      if (bar.id === 3 && setUserCoins) {
+      alert(salon.magicAction.message);
+      if (salon.id === 3 && setUserCoins) {
         setUserCoins(prev => prev + 50);
       }
     }
   };
 
-  const handleAdminEditBar = (bar, e) => {
+  const handleAdminEditSalon = (salon, e) => {
     e.stopPropagation();
-    alert(`Éditer bar: ${bar.name}`);
+    alert(`Éditer salon: ${salon.name}`);
   };
 
-  const handleAdminDeleteBar = (bar, e) => {
+  const handleAdminDeleteSalon = (salon, e) => {
     e.stopPropagation();
-    if (confirm(`Supprimer le bar "${bar.name}" ?`)) {
-      alert(`Bar supprimé`);
+    if (confirm(`Supprimer le salon "${salon.name}" ?`)) {
+      alert(`Salon supprimé`);
     }
   };
 
-  const handleAdminCreateBar = () => {
-    alert('Créer un nouveau bar');
+  const handleAdminCreateSalon = () => {
+    alert('Créer un nouveau salon');
   };
 
-  const handleExchange = (bar, e) => {
+  const handleExchange = (salon, e) => {
     e.stopPropagation();
 
     if (!currentUser) {
@@ -68,7 +68,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
       return;
     }
 
-    const result = proposeExchange(bar.id, currentUser.email);
+    const result = proposeExchange(salon.id, currentUser.email);
 
     if (!result.success) {
       alert(result.error);
@@ -77,8 +77,8 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
 
     if (result.matchedExchange) {
       // Match trouvé !
-      const otherBar = getBarName(result.matchedExchange.barId);
-      alert(`🌀 ÉCHANGE MAGIQUE ! Tu es maintenant dans "${otherBar}" pour 24h ! Un membre de ce salon rejoint temporairement "${bar.name}" !`);
+      const otherSalon = getBarName(result.matchedExchange.barId);
+      alert(`🌀 ÉCHANGE MAGIQUE ! Tu es maintenant dans "${otherSalon}" pour 24h ! Un membre de ce salon rejoint temporairement "${salon.name}" !`);
       setExchangeRefresh(prev => prev + 1); // Forcer le refresh
     } else {
       // En attente
@@ -176,7 +176,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
           {adminMode && isAdminAuthenticated && socialTab === 'bars' && (
             <div style={{ textAlign: 'center', marginTop: 'var(--spacing-sm)' }}>
               <button
-                onClick={handleAdminCreateBar}
+                onClick={handleAdminCreateSalon}
                 className="btn-primary"
                 style={{ padding: 'var(--spacing-sm) var(--spacing-md)', fontSize: '0.875rem' }}
               >
@@ -387,7 +387,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
             position: 'relative',
             backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(139, 111, 71, 0.05) 10px, rgba(139, 111, 71, 0.05) 20px)'
           }}>
-            {bars.map((bar, index) => {
+            {salons.map((salon, index) => {
               const positions = [
                 { top: '10%', left: '15%' },
                 { top: '45%', right: '15%' },
@@ -397,31 +397,31 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
 
               return (
                 <div
-                  key={bar.id}
-                  onClick={() => setSelectedBar(bar.id)}
+                  key={salon.id}
+                  onClick={() => setSelectedSalon(salon.id)}
                   className="card"
                   style={{
                     cursor: 'pointer',
                     marginBottom: 'var(--spacing-md)',
                     padding: 'var(--spacing-md)',
-                    background: bar.bgGradient || 'var(--color-cream)',
+                    background: salon.bgGradient || 'var(--color-cream)',
                     border: '3px solid rgba(255,255,255,0.5)',
                     borderRadius: 'var(--border-radius-lg)',
-                    boxShadow: animatingBars[bar.id]
+                    boxShadow: animatingSalons[salon.id]
                       ? '0 0 30px rgba(255,215,0,0.8), 0 0 60px rgba(255,215,0,0.4)'
                       : 'var(--shadow-lg)',
                     transition: 'all var(--transition-normal)',
                     position: 'relative',
-                    transform: animatingBars[bar.id] ? 'scale(1.05)' : 'scale(1)'
+                    transform: animatingSalons[salon.id] ? 'scale(1.05)' : 'scale(1)'
                   }}
                   onMouseEnter={(e) => {
-                    if (!animatingBars[bar.id]) {
+                    if (!animatingSalons[salon.id]) {
                       e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)';
                       e.currentTarget.style.boxShadow = '0 12px 24px rgba(0,0,0,0.3)';
                     }
                   }}
                   onMouseLeave={(e) => {
-                    if (!animatingBars[bar.id]) {
+                    if (!animatingSalons[salon.id]) {
                       e.currentTarget.style.transform = 'translateY(0) scale(1)';
                       e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
                     }
@@ -438,7 +438,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                       filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))',
                       flexShrink: 0
                     }}>
-                      {bar.icon}
+                      {salon.icon}
                     </div>
 
                     <div style={{ flex: 1, minWidth: 0 }}>
@@ -450,7 +450,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                         fontWeight: '700',
                         textShadow: '2px 2px 4px rgba(0,0,0,0.5)'
                       }}>
-                        {bar.name}
+                        {salon.name}
                       </h3>
                       <p style={{
                         color: 'rgba(255,255,255,0.9)',
@@ -458,12 +458,12 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                         margin: '0 0 var(--spacing-sm) 0',
                         textShadow: '1px 1px 2px rgba(0,0,0,0.5)'
                       }}>
-                        {bar.desc}
+                        {salon.desc}
                       </p>
 
-                      {bar.magicAction && (
+                      {salon.magicAction && (
                         <button
-                          onClick={(e) => handleMagicAction(bar, e)}
+                          onClick={(e) => handleMagicAction(salon, e)}
                           style={{
                             width: '100%',
                             background: 'rgba(255, 255, 255, 0.95)',
@@ -492,10 +492,10 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                           }}
                         >
                           <span style={{ fontSize: '2rem' }}>
-                            {magicStates[bar.id] === 'frog' ? bar.magicAction.secondEmoji : bar.magicAction.emoji}
+                            {magicStates[salon.id] === 'frog' ? salon.magicAction.secondEmoji : salon.magicAction.emoji}
                           </span>
                           <div style={{ flex: 1, textAlign: 'left' }}>
-                            {magicStates[bar.id] === 'frog' ? 'Donner un bisou 💋' : bar.magicAction.name}
+                            {magicStates[salon.id] === 'frog' ? 'Donner un bisou 💋' : salon.magicAction.name}
                           </div>
                           <span style={{ fontSize: '1.5rem' }}>✨</span>
                         </button>
@@ -503,7 +503,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
 
                       {/* Bouton Échanger */}
                       {(() => {
-                        const activeExchange = getActiveExchangeForBar(bar.id);
+                        const activeExchange = getActiveExchangeForBar(salon.id);
                         const pendingExchange = getUserPendingExchange(currentUser?.email);
 
                         if (activeExchange) {
@@ -520,7 +520,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                               fontWeight: '600',
                               fontSize: '0.85rem'
                             }}>
-                              🌀 Échange actif avec {getBarName(activeExchange.bar1Id === bar.id ? activeExchange.bar2Id : activeExchange.bar1Id)}
+                              🌀 Échange actif avec {getBarName(activeExchange.bar1Id === salon.id ? activeExchange.bar2Id : activeExchange.bar1Id)}
                               <div style={{ fontSize: '0.75rem', marginTop: '4px', opacity: 0.9 }}>
                                 Temps restant : {getTimeRemaining(activeExchange)}
                               </div>
@@ -528,7 +528,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                           );
                         }
 
-                        if (pendingExchange && pendingExchange.barId === bar.id) {
+                        if (pendingExchange && pendingExchange.barId === salon.id) {
                           return (
                             <button
                               onClick={(e) => handleCancelExchange(pendingExchange, e)}
@@ -560,7 +560,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
 
                         return (
                           <button
-                            onClick={(e) => handleExchange(bar, e)}
+                            onClick={(e) => handleExchange(salon, e)}
                             style={{
                               width: '100%',
                               background: 'rgba(156, 39, 176, 0.95)',
@@ -603,7 +603,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                         alignItems: 'center',
                         flexWrap: 'wrap'
                       }}>
-                        {bar.participants.slice(0, 5).map((p, idx) => (
+                        {salon.participants.slice(0, 5).map((p, idx) => (
                           <div
                             key={idx}
                             style={{
@@ -624,13 +624,13 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                             {p.gender === 'F' ? '👩' : '👨'}
                           </div>
                         ))}
-                        {bar.participants.length > 5 && (
+                        {salon.participants.length > 5 && (
                           <div style={{
                             fontSize: '0.875rem',
                             color: 'var(--color-text-light)',
                             fontWeight: '600'
                           }}>
-                            +{bar.participants.length - 5}
+                            +{salon.participants.length - 5}
                           </div>
                         )}
                       </div>
@@ -647,7 +647,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                     }}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setSelectedBar(bar.id);
+                      setSelectedSalon(salon.id);
                     }}
                   >
                     💬 Discuter
@@ -662,7 +662,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                       borderTop: '2px solid var(--color-tan)'
                     }}>
                       <button
-                        onClick={(e) => handleAdminEditBar(bar, e)}
+                        onClick={(e) => handleAdminEditSalon(salon, e)}
                         style={{
                           flex: 1,
                           padding: 'var(--spacing-xs) var(--spacing-sm)',
@@ -678,7 +678,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                         ✏️ Éditer
                       </button>
                       <button
-                        onClick={(e) => handleAdminDeleteBar(bar, e)}
+                        onClick={(e) => handleAdminDeleteSalon(salon, e)}
                         style={{
                           flex: 1,
                           padding: 'var(--spacing-xs) var(--spacing-sm)',

@@ -1,6 +1,6 @@
 // Données statiques de l'application
 
-export const bars = [
+export const salons = [
   {
     id: 1,
     icon: '🏊',
