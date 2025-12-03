@@ -19,7 +19,7 @@ export default function EspacePersoScreen({
   const avatarOptions = currentUser?.avatarData || generateAvatarOptions(currentUser?.name, currentUser?.gender);
 
   // Salons actifs de l'utilisateur
-  const activeSalons = salons.filter(s => joinedSalons.includes(s.id));
+  const activeSalons = (salons || []).filter(s => joinedSalons.includes(s.id));
 
   return (
     <div style={{
