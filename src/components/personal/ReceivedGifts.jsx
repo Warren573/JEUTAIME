@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { getReceivedGifts } from '../../utils/giftsSystem';
+import { getGiftById } from '../../config/giftsConfig';
 
 export default function ReceivedGifts({ currentUser }) {
   const [receivedGifts, setReceivedGifts] = useState([]);
@@ -10,8 +12,43 @@ export default function ReceivedGifts({ currentUser }) {
   }, [currentUser]);
 
   const loadReceivedGifts = () => {
-    const gifts = getReceivedGiftsFromStorage(currentUser?.email);
-    setReceivedGifts(gifts);
+    if (!currentUser?.email) {
+      setReceivedGifts([]);
+      return;
+    }
+
+    // Récupérer les cadeaux depuis giftsSystem
+    const rawGifts = getReceivedGifts(currentUser.email);
+
+    // Transformer en format d'affichage avec détails du cadeau
+    const enrichedGifts = rawGifts.map(gift => {
+      const giftDetails = getGiftById(gift.giftId);
+      return {
+        id: gift.giftId,
+        icon: gift.giftEmoji || giftDetails?.emoji || '🎁',
+        name: gift.giftName || giftDetails?.name || 'Cadeau',
+        description: giftDetails?.description || '',
+        from: gift.from || 'Anonyme',
+        message: gift.message,
+        timestamp: gift.timestamp,
+        isLegendary: giftDetails?.isLegendary || false,
+        isPremium: giftDetails?.isPremium || false,
+        count: 1
+      };
+    });
+
+    // Grouper les cadeaux identiques
+    const grouped = {};
+    enrichedGifts.forEach(gift => {
+      const key = `${gift.id}_${gift.from}`;
+      if (grouped[key]) {
+        grouped[key].count++;
+      } else {
+        grouped[key] = { ...gift };
+      }
+    });
+
+    setReceivedGifts(Object.values(grouped));
   };
 
   const stats = {
@@ -303,25 +340,19 @@ function GiftModal({ gift, onClose }) {
   );
 }
 
-// Helper functions
-function getReceivedGiftsFromStorage(userEmail) {
-  if (!userEmail) return [];
-  const key = `jeutaime_received_gifts_${userEmail}`;
-  const data = localStorage.getItem(key);
-  return data ? JSON.parse(data) : [];
-}
-
+// Helper function
 function getMostFrequentGift(gifts) {
   if (!gifts || gifts.length === 0) return null;
 
   const counts = {};
   gifts.forEach(gift => {
-    counts[gift.id] = (counts[gift.id] || 0) + 1;
+    const key = gift.id || gift.icon;
+    counts[key] = (counts[key] || 0) + (gift.count || 1);
   });
 
   const mostFrequent = Object.keys(counts).reduce((a, b) =>
     counts[a] > counts[b] ? a : b
   );
 
-  return gifts.find(g => g.id === mostFrequent);
+  return gifts.find(g => (g.id || g.icon) === mostFrequent);
 }

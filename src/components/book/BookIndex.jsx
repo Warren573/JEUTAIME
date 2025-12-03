@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import BookPage1 from './BookPage1';
 import BookPage2 from './BookPage2';
 import BookPage3 from './BookPage3';
 import BookPage4 from './BookPage4';
 import BookPage5 from './BookPage5';
 import BookPrivate from './BookPrivate';
+import { incrementBookViews } from '../personal/SocialStats';
 
 export default function BookIndex({ user, isOwnBook = true, onClose }) {
   const [currentPage, setCurrentPage] = useState(0);
+
+  // Tracker la visite du Book (sauf si c'est le propre Book)
+  useEffect(() => {
+    if (!isOwnBook && user?.email) {
+      incrementBookViews(user.email);
+    }
+  }, [user?.email, isOwnBook]);
 
   const pages = [
     { component: BookPage1, title: '📖 Moi en vrai', locked: false },
