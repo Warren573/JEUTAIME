@@ -180,7 +180,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                 className="btn-primary"
                 style={{ padding: 'var(--spacing-sm) var(--spacing-md)', fontSize: '0.875rem' }}
               >
-                ➕ Nouveau Bar
+                ➕ Nouveau Salon
               </button>
             </div>
           )}

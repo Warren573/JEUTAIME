@@ -13,7 +13,7 @@ export default function Dashboard() {
     { time: 'Il y a 5 min', user: 'MaxCoeur', action: 'A acheté Premium', type: 'payment', icon: '💳' },
     { time: 'Il y a 8 min', user: 'LoveSeeker', action: 'A gagné 150 pièces (HeroLove Quest)', type: 'game', icon: '🎮' },
     { time: 'Il y a 12 min', user: 'Emma_Lyon', action: 'A signalé un message', type: 'report', icon: '⚠️' },
-    { time: 'Il y a 15 min', user: 'Thomas_92', action: 'A rejoint le Bar Romantique', type: 'bar', icon: '🍸' }
+    { time: 'Il y a 15 min', user: 'Thomas_92', action: 'A rejoint le Salon Romantique', type: 'bar', icon: '🍸' }
   ];
 
   const topGames = [

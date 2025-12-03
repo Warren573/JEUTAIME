@@ -121,7 +121,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
 
     // Expulsion automatique après 2 tours sautés
     if (updatedMembers[currentTurnIndex].skippedTurns >= 2) {
-      alert(`❌ ${updatedMembers[currentTurnIndex].name} a été expulsé(e) du bar (2 tours sautés)`);
+      alert(`❌ ${updatedMembers[currentTurnIndex].name} a été expulsé(e) du salon (2 tours sautés)`);
       updatedMembers.splice(currentTurnIndex, 1);
       setMembers(updatedMembers);
     }
@@ -195,7 +195,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
     if (reason && reason.trim().length > 10) {
       const updatedMembers = members.filter(m => m.id !== memberId);
       setMembers(updatedMembers);
-      alert(`✅ ${member.name} a été expulsé(e) du bar.\nRaison: ${reason}`);
+      alert(`✅ ${member.name} a été expulsé(e) du salon.\nRaison: ${reason}`);
     } else if (reason) {
       alert('⚠️ La raison doit faire au moins 10 caractères.');
     }
@@ -686,7 +686,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
                     👤 Expulser un membre
                   </button>
                   <button
-                    onClick={() => alert('🔒 Fermeture/Réouverture du bar en développement')}
+                    onClick={() => alert('🔒 Fermeture/Réouverture du salon en développement')}
                     style={{
                       padding: '8px 14px',
                       background: '#000',
@@ -698,7 +698,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
                       fontSize: '0.85rem'
                     }}
                   >
-                    🔒 Fermer le bar
+                    🔒 Fermer le salon
                   </button>
                 </div>
               </div>

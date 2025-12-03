@@ -385,7 +385,7 @@ export default function Settings() {
 
               <div style={{ marginBottom: '25px' }}>
                 <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: '#ccc' }}>
-                  Participants max par bar
+                  Participants max par salon
                 </label>
                 <input
                   type="number"

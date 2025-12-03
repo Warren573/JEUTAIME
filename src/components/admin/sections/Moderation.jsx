@@ -76,7 +76,7 @@ export default function Moderation() {
       reportedUser: 'AnnoyingDude',
       reportedBy: 'Julie_Nice',
       reason: 'Harcèlement verbal',
-      content: 'Insultes dans le Bar Romantique',
+      content: 'Insultes dans le Salon Romantique',
       status: 'investigating',
       severity: 'medium',
       timestamp: '2024-10-25 08:50',

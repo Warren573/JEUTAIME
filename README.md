@@ -7,7 +7,7 @@ Bienvenue sur **JeuTaime**, une application de rencontres innovante qui met l'ac
 ### 📱 Fonctionnalités de base
 - **Profils approfondis** : Découvrez les personnes en profondeur avant de voir leurs photos
 - **Système de lettres** : Échangez des messages authentiques
-- **Bars thématiques** : Rejoignez des salons de discussion avec différentes ambiances
+- **Salons thématiques** : Rejoignez des salons de discussion avec différentes ambiances
 - **Journal communautaire** : Suivez l'actualité de la communauté
 - **Système de pièces** : Gagnez et dépensez des pièces virtuelles
 
@@ -22,12 +22,12 @@ Bienvenue sur **JeuTaime**, une application de rencontres innovante qui met l'ac
 
 ### ✨ Fonctionnalités sociales
 - **Offrandes magiques** : Envoyez des cadeaux virtuels (roses, philtres, bouquets, etc.)
-- **5 Bars thématiques** :
-  - 🌹 Bar Romantique
-  - 😄 Bar Humoristique
-  - 🏴‍☠️ Bar Pirates
-  - 📅 Bar Hebdomadaire
-  - 👑 Bar Caché
+- **5 Salons thématiques** :
+  - 🌹 Salon Romantique
+  - 😄 Salon Humoristique
+  - 🏴‍☠️ Salon Pirates
+  - 📅 Salon Hebdomadaire
+  - 👑 Salon Caché
 - **Adoption de compagnons** : Adoptez des animaux virtuels
 - **Concours hebdomadaires** : Participez aux élections de popularité
 
@@ -36,7 +36,7 @@ Bienvenue sur **JeuTaime**, une application de rencontres innovante qui met l'ac
 - 10 conversations privées simultanées
 - Photos débloquées instantanément
 - Badge Premium visible
-- Priorité dans les Bars
+- Priorité dans les Salons
 
 ## 🚀 Installation
 
@@ -123,7 +123,7 @@ JEUTAIME/
 L'application dispose de 6 sections principales accessibles via la barre de navigation :
 - 🏠 **Accueil** : Vue d'ensemble et démarrage rapide
 - 👤 **Profils** : Découverte de profils
-- 👥 **Social** : Bars, jeux, adoption, concours
+- 👥 **Social** : Salons, jeux, adoption, concours
 - 💌 **Lettres** : Messages et offrandes
 - 📰 **Journal** : Actualités de la communauté
 - ⚙️ **Paramètres** : Configuration du profil
