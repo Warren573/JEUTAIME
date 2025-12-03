@@ -1,8 +1,10 @@
 import React from 'react';
+import { getReceivedGifts, getSentGifts } from '../../utils/giftsSystem';
+import { loadBarState } from '../../utils/barsSystem';
 
 export default function SocialStats({ currentUser }) {
-  // Calculer les statistiques depuis localStorage ou utiliser des valeurs par défaut
-  const stats = getUserStats(currentUser?.email);
+  // Calculer les statistiques depuis les vraies données
+  const stats = calculateRealStats(currentUser);
 
   return (
     <div style={{
@@ -207,9 +209,9 @@ function StatCard({ icon, label, value, subtitle, color }) {
   );
 }
 
-// Helper functions
-function getUserStats(userEmail) {
-  if (!userEmail) {
+// Helper functions pour calculer les vraies stats
+function calculateRealStats(currentUser) {
+  if (!currentUser?.email) {
     return {
       interactions: 0,
       bookViews: 0,
@@ -223,26 +225,91 @@ function getUserStats(userEmail) {
     };
   }
 
-  // Récupérer les stats depuis localStorage
-  const key = `jeutaime_stats_${userEmail}`;
-  const savedStats = localStorage.getItem(key);
+  const userEmail = currentUser.email;
 
-  if (savedStats) {
-    return JSON.parse(savedStats);
+  // Calculer les cadeaux envoyés et reçus
+  const sentGifts = getSentGifts(userEmail);
+  const receivedGifts = getReceivedGifts(userEmail);
+
+  // Calculer les interactions dans les salons
+  const barsState = JSON.parse(localStorage.getItem('jeutaime_bars_state') || '{}');
+  let barInteractions = 0;
+  Object.values(barsState).forEach(bar => {
+    if (bar.story) {
+      barInteractions += bar.story.filter(p => p.userEmail === userEmail).length;
+    }
+  });
+
+  // Calculer les salons rejoints
+  const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+  const user = users.find(u => u.email === userEmail) || currentUser;
+  const joinedSalons = user.joinedSalons || [];
+
+  // Récupérer les stats personnalisées sauvegardées
+  const customStats = JSON.parse(localStorage.getItem(`jeutaime_custom_stats_${userEmail}`) || '{}');
+
+  // Calculer le daily streak
+  const dailyStreak = calculateDailyStreak(userEmail);
+
+  // Calculer les interactions totales (salons + cadeaux envoyés)
+  const totalInteractions = barInteractions + sentGifts.length;
+
+  // Calculer le niveau social basé sur l'activité
+  const socialLevel = Math.floor((totalInteractions + receivedGifts.length) / 10) + 1;
+
+  // Calculer le taux d'interactions positives (basé sur les cadeaux reçus vs envoyés)
+  const positiveRate = sentGifts.length > 0
+    ? Math.min(100, Math.round((receivedGifts.length / sentGifts.length) * 100))
+    : receivedGifts.length > 0 ? 100 : 75;
+
+  return {
+    interactions: totalInteractions,
+    bookViews: customStats.bookViews || 0,
+    goodVibes: receivedGifts.length,
+    salonsJoined: joinedSalons.length,
+    giftsSent: sentGifts.length,
+    giftsReceived: receivedGifts.length,
+    dailyStreak: dailyStreak,
+    positiveRate: positiveRate,
+    socialLevel: Math.min(socialLevel, 10)
+  };
+}
+
+function calculateDailyStreak(userEmail) {
+  const key = `jeutaime_daily_streak_${userEmail}`;
+  const streakData = JSON.parse(localStorage.getItem(key) || '{"streak": 1, "lastVisit": null}');
+
+  const today = new Date().toDateString();
+  const lastVisit = streakData.lastVisit;
+
+  if (!lastVisit) {
+    // Première visite
+    streakData.streak = 1;
+    streakData.lastVisit = today;
+    localStorage.setItem(key, JSON.stringify(streakData));
+    return 1;
   }
 
-  // Stats par défaut
-  return {
-    interactions: Math.floor(Math.random() * 50) + 10,
-    bookViews: Math.floor(Math.random() * 20) + 5,
-    goodVibes: Math.floor(Math.random() * 30) + 8,
-    salonsJoined: Math.floor(Math.random() * 5) + 1,
-    giftsSent: Math.floor(Math.random() * 15) + 3,
-    giftsReceived: Math.floor(Math.random() * 20) + 5,
-    dailyStreak: Math.floor(Math.random() * 7) + 1,
-    positiveRate: Math.floor(Math.random() * 30) + 70,
-    socialLevel: Math.floor(Math.random() * 5) + 1
-  };
+  const lastVisitDate = new Date(lastVisit);
+  const todayDate = new Date(today);
+  const diffDays = Math.floor((todayDate - lastVisitDate) / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) {
+    // Même jour
+    return streakData.streak;
+  } else if (diffDays === 1) {
+    // Jour consécutif
+    streakData.streak += 1;
+    streakData.lastVisit = today;
+    localStorage.setItem(key, JSON.stringify(streakData));
+    return streakData.streak;
+  } else {
+    // Streak cassé
+    streakData.streak = 1;
+    streakData.lastVisit = today;
+    localStorage.setItem(key, JSON.stringify(streakData));
+    return 1;
+  }
 }
 
 function getLevelEmoji(level) {
@@ -261,13 +328,12 @@ function getLevelTitle(level) {
   return 'Débutant·e Prometteur·se';
 }
 
-// Export helper pour mettre à jour les stats
-export function updateUserStats(userEmail, updates) {
+// Export helper pour incrémenter les visites de Book
+export function incrementBookViews(userEmail) {
   if (!userEmail) return;
 
-  const key = `jeutaime_stats_${userEmail}`;
-  const currentStats = getUserStats(userEmail);
-  const newStats = { ...currentStats, ...updates };
-
-  localStorage.setItem(key, JSON.stringify(newStats));
+  const key = `jeutaime_custom_stats_${userEmail}`;
+  const stats = JSON.parse(localStorage.getItem(key) || '{}');
+  stats.bookViews = (stats.bookViews || 0) + 1;
+  localStorage.setItem(key, JSON.stringify(stats));
 }

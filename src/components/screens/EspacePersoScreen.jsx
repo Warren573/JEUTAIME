@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Avatar from 'avataaars';
 import { generateAvatarOptions } from '../../utils/avatarGenerator';
 import BookIndex from '../book/BookIndex';
+import BookEditor from '../book/BookEditor';
 import ReceivedGifts from '../personal/ReceivedGifts';
 import SocialStats from '../personal/SocialStats';
 import MagicInventory from '../magic/MagicInventory';
@@ -14,6 +15,7 @@ export default function EspacePersoScreen({
   joinedSalons = []
 }) {
   const [showBook, setShowBook] = useState(false);
+  const [showEditor, setShowEditor] = useState(false);
   const [activeSection, setActiveSection] = useState('overview');
 
   const avatarOptions = currentUser?.avatarData || generateAvatarOptions(currentUser?.name, currentUser?.gender);
@@ -101,7 +103,7 @@ export default function EspacePersoScreen({
             📖 Voir mon Book
           </ActionButton>
           <ActionButton
-            onClick={() => alert('✏️ Éditeur de Book - À venir !')}
+            onClick={() => setShowEditor(true)}
             gradient="linear-gradient(135deg, #4CAF50, #45a049)"
           >
             ✏️ Éditer
@@ -324,6 +326,18 @@ export default function EspacePersoScreen({
           user={currentUser}
           isOwnBook={true}
           onClose={() => setShowBook(false)}
+        />
+      )}
+
+      {/* Modal de l'éditeur */}
+      {showEditor && (
+        <BookEditor
+          user={currentUser}
+          onClose={() => setShowEditor(false)}
+          onSave={() => {
+            // Rafraîchir l'affichage si nécessaire
+            setShowEditor(false);
+          }}
         />
       )}
     </div>
