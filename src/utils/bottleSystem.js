@@ -18,7 +18,7 @@ export function getAllBottles() {
  * Envoyer un message bouteille
  * @param {string} senderId - Email de l'expéditeur
  * @param {string} message - Message à envoyer
- * @param {string} type - Type: 'thought', 'question', 'compliment', 'chat'
+ * @param {string} type - Type: 'thought', 'question', 'goodvibes', 'chat'
  * @param {boolean} isPremium - Si l'utilisateur est premium
  * @returns {Object} { success, error, bottle }
  */
@@ -250,10 +250,10 @@ export const BOTTLE_TYPES = {
     label: 'Une question',
     placeholder: 'Pose une question existentielle, philosophique...'
   },
-  compliment: {
+  goodvibes: {
     icon: '💝',
-    label: 'Un compliment',
-    placeholder: 'Envoie un compliment anonyme...'
+    label: 'Good vibes',
+    placeholder: 'Envoie des good vibes anonymes...'
   },
   chat: {
     icon: '💬',

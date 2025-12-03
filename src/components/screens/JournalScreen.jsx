@@ -13,14 +13,14 @@ export default function JournalScreen({ currentUser }) {
     { name: 'Les inscriptions continuent', status: '⏰' }
   ];
 
-  const compliments = [
+  const goodVibes = [
     { from: 'Marie', to: 'Pierre', text: 'Merci pour tes jolies phrases', icon: '💬' },
     { from: 'Julien', to: 'Emma', text: 'Tu es géniale', icon: '❤️' }
   ];
 
   const giftsOfDay = [
-    { who: 'Émilie', what: 'reçoit 5 compliments récemment', icon: '🎁' },
-    { who: 'Marie', what: 'reçoit 3 compliments', icon: '🎁' }
+    { who: 'Émilie', what: 'reçoit 5 good vibes récemment', icon: '🎁' },
+    { who: 'Marie', what: 'reçoit 3 good vibes', icon: '🎁' }
   ];
 
   const topProfiles = [
@@ -113,7 +113,7 @@ export default function JournalScreen({ currentUser }) {
             ))}
           </div>
 
-          {/* Section Tournoi + Compliments côte à côte */}
+          {/* Section Tournoi + Good vibes côte à côte */}
           <div style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
@@ -148,7 +148,7 @@ export default function JournalScreen({ currentUser }) {
               ))}
             </div>
 
-            {/* Compliments */}
+            {/* Good vibes */}
             <div className="card" style={{
               background: 'var(--color-beige)',
               border: '2px solid var(--color-brown-light)',
@@ -164,9 +164,9 @@ export default function JournalScreen({ currentUser }) {
                 textTransform: 'uppercase',
                 fontSize: '0.9rem'
               }}>
-                {' '} Compliments
+                {' '} Good vibes
               </h3>
-              {compliments.slice(0, 2).map((comp, idx) => (
+              {goodVibes.slice(0, 2).map((comp, idx) => (
                 <div key={idx} style={{
                   fontSize: '0.85rem',
                   color: 'var(--color-text-secondary)',
