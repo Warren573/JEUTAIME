@@ -312,7 +312,7 @@ function getReceivedGiftsFromStorage(userEmail) {
 }
 
 function getMostFrequentGift(gifts) {
-  if (gifts.length === 0) return null;
+  if (!gifts || gifts.length === 0) return null;
 
   const counts = {};
   gifts.forEach(gift => {
