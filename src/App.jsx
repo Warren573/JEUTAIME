@@ -248,7 +248,7 @@ function MainApp() {
       fontFamily: '-apple-system, sans-serif',
       overflow: 'hidden'
     }}>
-      {screen === 'home' && !gameScreen && !selectedSalon && <EspacePersoScreen {...appState} />}
+      {screen === 'home' && !gameScreen && !selectedSalon && <HomeScreen {...appState} />}
       {screen === 'profiles' && !gameScreen && !selectedSalon && <ProfilesScreen {...appState} />}
       {screen === 'social' && !gameScreen && !selectedSalon && <SocialScreen {...appState} currentUser={currentUser} />}
       {screen === 'bars' && !gameScreen && !selectedSalon && <BarsScreen setScreen={setScreen} setGameScreen={setGameScreen} setSelectedSalon={setSelectedSalon} currentUser={currentUser} />}
