@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Navigation from './components/Navigation';
 import HomeScreen from './components/screens/HomeScreen';
+import EspacePersoScreen from './components/screens/EspacePersoScreen';
 import ProfilesScreen from './components/screens/ProfilesScreen';
 import SocialScreen from './components/screens/SocialScreen';
 import LettersScreen from './components/screens/LettersScreen';
@@ -176,7 +177,7 @@ function MainApp() {
   ]);
 
   const navItems = [
-    { icon: '🏠', label: 'Accueil', id: 'home' },
+    { icon: '⭐', label: 'Espace Perso', id: 'home' },
     { icon: '👤', label: 'Profils', id: 'profiles' },
     { icon: '👥', label: 'Social', id: 'social' },
     { icon: '💌', label: 'Lettres', id: 'letters' },
@@ -247,7 +248,7 @@ function MainApp() {
       fontFamily: '-apple-system, sans-serif',
       overflow: 'hidden'
     }}>
-      {screen === 'home' && !gameScreen && !selectedSalon && <HomeScreen {...appState} />}
+      {screen === 'home' && !gameScreen && !selectedSalon && <EspacePersoScreen {...appState} />}
       {screen === 'profiles' && !gameScreen && !selectedSalon && <ProfilesScreen {...appState} />}
       {screen === 'social' && !gameScreen && !selectedSalon && <SocialScreen {...appState} currentUser={currentUser} />}
       {screen === 'bars' && !gameScreen && !selectedSalon && <BarsScreen setScreen={setScreen} setGameScreen={setGameScreen} setSelectedSalon={setSelectedSalon} currentUser={currentUser} />}
