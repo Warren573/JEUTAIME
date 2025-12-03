@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import GiftSelector from '../gifts/GiftSelector';
 import MagicEffect from '../effects/MagicEffect';
+import MagicGiftsPanel from '../MagicGiftsPanel';
 import Avatar from 'avataaars';
 import { generateAvatarOptions } from '../../utils/avatarGenerator';
 import {
@@ -12,6 +13,7 @@ import {
   updateBarTurn,
   completeStory
 } from '../../utils/barsSystem';
+import { sendMagicToSalon, sendGiftToUser, canAfford, deductCoins } from '../../utils/magic';
 
 export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }) {
   const [barTab, setBarTab] = useState('discuss');
@@ -22,6 +24,9 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
   const [selectedMember, setSelectedMember] = useState(null);
   const [magicEffect, setMagicEffect] = useState(null);
   const [giftReceiverEffect, setGiftReceiverEffect] = useState(null); // ID du membre qui reçoit un cadeau
+
+  // Système Magie & Offrandes
+  const [showMagicGiftsPanel, setShowMagicGiftsPanel] = useState(false);
 
   // Chat discussion - Charger depuis localStorage
   const [messages, setMessages] = useState(() => {
@@ -257,6 +262,65 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
     // Fermer le sélecteur
     setShowGiftSelector(false);
     setSelectedMember(null);
+  };
+
+  // Handlers pour le système Magie & Offrandes
+  const handleUseMagic = (magic) => {
+    const salonId = salon?.type || salon?.id || 'unknown';
+    const userId = currentUser?.id || currentUser?.email || 'user';
+
+    // Envoyer la magie (placeholder)
+    if (magic.type === 'salon') {
+      sendMagicToSalon(magic.id, userId, salonId);
+    } else {
+      console.log('✨ Magie individuelle utilisée:', magic.name);
+    }
+
+    // Ajouter un message système dans le chat
+    const magicMessage = saveBarMessage(
+      salonId,
+      'system',
+      'Système',
+      `✨ ${currentUser?.name || 'Quelqu\'un'} a utilisé ${magic.icon} ${magic.name} !`,
+      true,
+      { type: 'magic', magicData: magic }
+    );
+
+    setMessages([...messages, magicMessage]);
+
+    // TODO: Déduire les pièces de l'utilisateur (nécessite state management global)
+    alert(`✨ ${magic.name} activé ! (-${magic.cost} pièces)`);
+  };
+
+  const handleSendGift = (gift, recipient) => {
+    const salonId = salon?.type || salon?.id || 'unknown';
+    const userId = currentUser?.id || currentUser?.email || 'user';
+
+    // Envoyer le cadeau (placeholder)
+    sendGiftToUser(gift.id, userId, recipient.id, salonId);
+
+    // Afficher l'effet sur l'avatar du destinataire
+    setGiftReceiverEffect(recipient?.id);
+
+    // Retirer l'effet après 3 secondes
+    setTimeout(() => {
+      setGiftReceiverEffect(null);
+    }, 3000);
+
+    // Ajouter un message système dans le chat
+    const giftMessage = saveBarMessage(
+      salonId,
+      'system',
+      'Système',
+      `🎁 ${currentUser?.name || 'Quelqu\'un'} a envoyé ${gift.icon} ${gift.name} à ${recipient?.name} !`,
+      true,
+      { type: 'gift', giftData: gift }
+    );
+
+    setMessages([...messages, giftMessage]);
+
+    // TODO: Déduire les pièces de l'utilisateur (nécessite state management global)
+    alert(`🎁 ${gift.name} envoyé à ${recipient.name} ! (-${gift.cost} pièces)`);
   };
 
   return (
@@ -509,6 +573,40 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
             }}
           >
             📖 Continuer l'histoire
+          </button>
+        </div>
+
+        {/* Bouton Magie & Offrandes */}
+        <div style={{ marginTop: '12px' }}>
+          <button
+            onClick={() => setShowMagicGiftsPanel(true)}
+            style={{
+              width: '100%',
+              padding: '12px',
+              background: 'linear-gradient(135deg, #FFD700, #FFA500)',
+              border: 'none',
+              color: '#000',
+              borderRadius: '12px',
+              cursor: 'pointer',
+              fontWeight: '700',
+              fontSize: '0.95rem',
+              boxShadow: '0 4px 12px rgba(255,215,0,0.4)',
+              transition: 'all 0.2s',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.transform = 'scale(1.02)';
+              e.target.style.boxShadow = '0 6px 16px rgba(255,215,0,0.6)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = 'scale(1)';
+              e.target.style.boxShadow = '0 4px 12px rgba(255,215,0,0.4)';
+            }}
+          >
+            ✨ Magie & Offrandes
           </button>
         </div>
       </div>
@@ -927,6 +1025,17 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
         <MagicEffect
           gift={magicEffect}
           onComplete={() => setMagicEffect(null)}
+        />
+      )}
+
+      {/* Panneau Magie & Offrandes */}
+      {showMagicGiftsPanel && (
+        <MagicGiftsPanel
+          onClose={() => setShowMagicGiftsPanel(false)}
+          currentUser={currentUser}
+          salonMembers={members.filter(m => !m.isPatron)} // Exclure l'utilisateur actuel
+          onUseMagic={handleUseMagic}
+          onSendGift={handleSendGift}
         />
       )}
     </div>
