@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Avatar from 'avataaars';
 import { generateAvatarOptions } from '../../utils/avatarGenerator';
 import { allMagic, allGifts } from '../../data/magicGifts';
@@ -125,7 +125,7 @@ export default function EspacePersoScreenSimple({
         gap: '20px'
       }}>
         {/* 1. Book Personnel */}
-        <BookPersonnelSection />
+        <BookPersonnelSection currentUser={currentUser} />
 
         {/* 2. Offrandes Reçues */}
         <OffrandesRecuesSection currentUser={currentUser} />
@@ -148,7 +148,63 @@ export default function EspacePersoScreenSimple({
 }
 
 // 1. BOOK PERSONNEL
-function BookPersonnelSection() {
+function BookPersonnelSection({ currentUser }) {
+  const [bookData, setBookData] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+
+  useEffect(() => {
+    if (currentUser?.email) {
+      // Charger les données du book depuis localStorage
+      const key = `jeutaime_book_${currentUser.email}`;
+      const savedBook = localStorage.getItem(key);
+
+      if (savedBook) {
+        setBookData(JSON.parse(savedBook));
+      } else {
+        // Données par défaut
+        const defaultBook = {
+          about: currentUser.bio || 'Écris quelque chose sur toi...',
+          age: currentUser.age || '',
+          city: '',
+          job: '',
+          music: '',
+          movies: '',
+          videos: [],
+          photos: [],
+          notes: '',
+          moodboard: { quotes: [], emojis: [], tags: [] },
+          private: { passions: '', thoughts: '', dreams: '', fears: '', secrets: '' }
+        };
+        setBookData(defaultBook);
+        localStorage.setItem(key, JSON.stringify(defaultBook));
+      }
+    }
+  }, [currentUser?.email]);
+
+  const handleSaveBook = (newData) => {
+    if (currentUser?.email) {
+      const key = `jeutaime_book_${currentUser.email}`;
+      localStorage.setItem(key, JSON.stringify(newData));
+      setBookData(newData);
+    }
+  };
+
+  const getPageStatus = (pageName) => {
+    if (!bookData) return '○';
+
+    if (pageName.includes('Moi en vrai')) {
+      return bookData.about && bookData.about !== 'Écris quelque chose sur toi...' ? '●' : '○';
+    }
+    if (pageName.includes('Vidéos')) return bookData.videos?.length > 0 ? '●' : '○';
+    if (pageName.includes('Album')) return bookData.photos?.length > 0 ? '●' : '○';
+    if (pageName.includes('Notes')) return bookData.notes ? '●' : '○';
+    if (pageName.includes('Moodboard')) return bookData.moodboard?.quotes?.length > 0 ? '●' : '○';
+    if (pageName.includes('Ultra-Privé')) return bookData.private?.passions ? '●' : '○';
+    return '○';
+  };
+
+  const pages = ['📖 Moi en vrai', '🎥 Vidéos', '📸 Album', '✍️ Notes', '🎨 Moodboard', '🔒 Ultra-Privé'];
+
   return (
     <div style={{
       background: 'var(--color-cream)',
@@ -181,7 +237,7 @@ function BookPersonnelSection() {
         gap: '10px',
         marginBottom: '20px'
       }}>
-        {['📖 Moi en vrai', '🎥 Vidéos', '📸 Album', '✍️ Notes', '🎨 Moodboard', '🔒 Ultra-Privé'].map((page) => (
+        {pages.map((page) => (
           <div
             key={page}
             style={{
@@ -192,9 +248,19 @@ function BookPersonnelSection() {
               textAlign: 'center',
               color: 'var(--color-text-primary)',
               border: '2px solid var(--color-brown-light)',
-              boxShadow: 'var(--shadow-sm)'
+              boxShadow: 'var(--shadow-sm)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px'
             }}
           >
+            <span style={{
+              fontSize: '0.7rem',
+              color: getPageStatus(page) === '●' ? 'var(--color-gold)' : 'var(--color-text-light)'
+            }}>
+              {getPageStatus(page)}
+            </span>
             {page}
           </div>
         ))}
@@ -213,9 +279,9 @@ function BookPersonnelSection() {
           boxShadow: 'var(--shadow-sm)',
           transition: 'all var(--transition-normal)'
         }}
-        onClick={() => alert('📖 Book complet - À venir !')}
+        onClick={() => alert('📖 Book complet avec édition - À venir dans la prochaine version !\n\n💾 Les données sont déjà sauvegardées dans localStorage.')}
       >
-        📖 Voir mon Book complet
+        ✏️ Éditer mon Book
       </button>
     </div>
   );
@@ -223,7 +289,20 @@ function BookPersonnelSection() {
 
 // 2. OFFRANDES REÇUES
 function OffrandesRecuesSection({ currentUser }) {
-  const receivedGifts = []; // TODO: charger depuis localStorage
+  const [receivedGifts, setReceivedGifts] = useState([]);
+
+  useEffect(() => {
+    // Charger les cadeaux reçus depuis localStorage
+    if (currentUser?.email) {
+      const key = `jeutaime_received_gifts_${currentUser.email}`;
+      const data = localStorage.getItem(key);
+      const gifts = data ? JSON.parse(data) : [];
+      setReceivedGifts(gifts);
+    }
+  }, [currentUser?.email]);
+
+  const rareCount = receivedGifts.filter(g => g.isLegendary || g.isPremium).length;
+  const lastReceived = receivedGifts.length > 0 ? receivedGifts[receivedGifts.length - 1] : null;
 
   return (
     <div style={{
@@ -251,11 +330,40 @@ function OffrandesRecuesSection({ currentUser }) {
         marginBottom: '15px'
       }}>
         <StatCard icon="📦" label="Total" value={receivedGifts.length} />
-        <StatCard icon="✨" label="Rares" value={0} />
-        <StatCard icon="🔥" label="Dernier" value="🎁" isEmoji />
+        <StatCard icon="✨" label="Rares" value={rareCount} />
+        <StatCard icon="🔥" label="Dernier" value={lastReceived?.icon || '🎁'} isEmoji />
       </div>
 
-      {receivedGifts.length === 0 && (
+      {receivedGifts.length > 0 ? (
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))',
+          gap: '10px',
+          marginTop: '15px'
+        }}>
+          {receivedGifts.slice(-12).reverse().map((gift, idx) => (
+            <div
+              key={idx}
+              title={gift.name}
+              style={{
+                background: 'var(--color-beige-light)',
+                padding: '12px',
+                borderRadius: '10px',
+                textAlign: 'center',
+                fontSize: '2rem',
+                border: gift.isLegendary || gift.isPremium ? '2px solid var(--color-gold)' : '2px solid var(--color-brown-light)',
+                boxShadow: 'var(--shadow-sm)',
+                cursor: 'pointer',
+                transition: 'transform 0.2s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            >
+              {gift.icon}
+            </div>
+          ))}
+        </div>
+      ) : (
         <div style={{
           textAlign: 'center',
           padding: '30px',
@@ -445,6 +553,45 @@ function MesSalonsSection({ activeSalons, setScreen, setSelectedSalon }) {
 
 // 5. STATS SOCIALES
 function StatsSocialesSection({ currentUser }) {
+  const [stats, setStats] = useState(null);
+
+  useEffect(() => {
+    if (currentUser?.email) {
+      // Charger les stats depuis localStorage
+      const key = `jeutaime_stats_${currentUser.email}`;
+      const savedStats = localStorage.getItem(key);
+
+      if (savedStats) {
+        setStats(JSON.parse(savedStats));
+      } else {
+        // Calculer les stats réelles
+        const giftsKey = `jeutaime_received_gifts_${currentUser.email}`;
+        const giftsData = localStorage.getItem(giftsKey);
+        const receivedGifts = giftsData ? JSON.parse(giftsData) : [];
+
+        const calculatedStats = {
+          interactions: Math.floor(Math.random() * 30) + 10, // TODO: calculer depuis les lettres
+          bookViews: Math.floor(Math.random() * 15) + 5, // TODO: implémenter tracking
+          goodVibes: Math.floor(Math.random() * 20) + 8, // TODO: calculer depuis bouteille
+          giftsReceived: receivedGifts.length,
+          giftsSent: 0, // TODO: implémenter tracking
+          salonsJoined: 0, // Sera passé via props
+          dailyStreak: 1,
+          positiveRate: 95,
+          socialLevel: 1
+        };
+
+        setStats(calculatedStats);
+        // Sauvegarder les stats initiales
+        localStorage.setItem(key, JSON.stringify(calculatedStats));
+      }
+    }
+  }, [currentUser?.email]);
+
+  if (!stats) {
+    return null; // Loading
+  }
+
   return (
     <div style={{
       background: 'var(--color-cream)',
@@ -469,10 +616,46 @@ function StatsSocialesSection({ currentUser }) {
         gridTemplateColumns: 'repeat(2, 1fr)',
         gap: '15px'
       }}>
-        <StatCard icon="💬" label="Interactions" value={Math.floor(Math.random() * 30) + 10} />
-        <StatCard icon="📖" label="Visites Book" value={Math.floor(Math.random() * 15) + 5} />
-        <StatCard icon="✨" label="Good Vibes" value={Math.floor(Math.random() * 20) + 8} />
-        <StatCard icon="🎁" label="Offrandes" value={Math.floor(Math.random() * 10) + 3} />
+        <StatCard icon="💬" label="Interactions" value={stats.interactions} />
+        <StatCard icon="📖" label="Visites Book" value={stats.bookViews} />
+        <StatCard icon="✨" label="Good Vibes" value={stats.goodVibes} />
+        <StatCard icon="🎁" label="Offrandes" value={stats.giftsReceived} />
+      </div>
+
+      {/* Barre de progression */}
+      <div style={{
+        marginTop: '20px',
+        padding: '15px',
+        background: 'var(--color-beige-light)',
+        borderRadius: '10px',
+        border: '2px solid var(--color-brown-light)'
+      }}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          marginBottom: '8px',
+          color: 'var(--color-text-primary)',
+          fontSize: '0.9rem',
+          fontWeight: '600'
+        }}>
+          <span>Niveau social</span>
+          <span>Niveau {stats.socialLevel}</span>
+        </div>
+        <div style={{
+          width: '100%',
+          height: '8px',
+          background: 'var(--color-beige)',
+          borderRadius: '10px',
+          overflow: 'hidden'
+        }}>
+          <div style={{
+            width: `${(stats.socialLevel / 10) * 100}%`,
+            height: '100%',
+            background: 'linear-gradient(90deg, var(--color-gold-light), var(--color-gold))',
+            borderRadius: '10px',
+            transition: 'width 0.5s'
+          }} />
+        </div>
       </div>
     </div>
   );
