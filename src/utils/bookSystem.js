@@ -8,7 +8,7 @@ const STORAGE_KEY_PREFIX = 'jeutaime_book_';
  * Structure par défaut du Book
  */
 export const DEFAULT_BOOK_DATA = {
-  // Page 1 - Moi en vrai
+  // Infos de base
   bio: 'Ma phrase d\'ambiance style Skyblog ✨',
   age: '25 ans',
   city: 'Paris',
@@ -16,14 +16,47 @@ export const DEFAULT_BOOK_DATA = {
   music: 'Indé / Électro',
   movie: 'À compléter',
   food: 'Pizza 🍕',
+
+  // À propos
   about: 'Passionné·e par la vie, les rencontres et les moments authentiques. ' +
          'Toujours partant·e pour une discussion deep à 3h du matin ou une aventure improvisée. ' +
          'J\'adore les gens qui assument leur bizarrerie ✨',
+  mood: '😊 De bonne humeur',
+  status: '💭 En ligne',
 
   // Photos
   photos: [],
 
-  // Page 6 - Ultra-Privé
+  // Style & Perso
+  backgroundColor: '#1a1a1a',
+  textColor: '#ffffff',
+  accentColor: '#667eea',
+  coverImage: '',
+  song: '', // Musique d'ambiance (YouTube embed)
+
+  // Extras style Skyblog
+  favorites: {
+    books: '',
+    series: '',
+    hobbies: '',
+    quote: '"Sois toi-même, tous les autres sont déjà pris." - Oscar Wilde'
+  },
+
+  topFriends: [], // Liste de noms/usernames
+  gifs: [], // URLs de GIFs animés
+  stickers: [], // Emojis/stickers favoris
+
+  // Quiz/Questions
+  quiz: {
+    q1: { question: 'Plutôt chat ou chien ?', answer: '🐱 Team chat !' },
+    q2: { question: 'Ton guilty pleasure ?', answer: 'Les reality TV 📺' },
+    q3: { question: 'Superpouvoirs si tu pouvais ?', answer: 'Téléportation 🌍' }
+  },
+
+  // Compteurs
+  visitors: 0,
+
+  // Page Ultra-Privé
   privateContent: ''
 };
 
