@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Avatar from 'avataaars';
 import { generateAvatarOptions } from '../../utils/avatarGenerator';
 import { allMagic, allGifts } from '../../data/magicGifts';
+import BookEditor from '../book/BookEditor';
 
 export default function EspacePersoScreenSimple({
   currentUser,
@@ -279,10 +280,19 @@ function BookPersonnelSection({ currentUser }) {
           boxShadow: 'var(--shadow-sm)',
           transition: 'all var(--transition-normal)'
         }}
-        onClick={() => alert('📖 Book complet avec édition - À venir dans la prochaine version !\n\n💾 Les données sont déjà sauvegardées dans localStorage.')}
+        onClick={() => setShowEditModal(true)}
       >
         ✏️ Éditer mon Book
       </button>
+
+      {/* Modal de l'éditeur */}
+      {showEditModal && (
+        <BookEditor
+          user={currentUser}
+          onClose={() => setShowEditModal(false)}
+          onSave={() => setShowEditModal(false)}
+        />
+      )}
     </div>
   );
 }
