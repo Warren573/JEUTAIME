@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import GiftSelector from '../gifts/GiftSelector';
 import MagicEffect from '../effects/MagicEffect';
+import MagicGiftsPanel from '../MagicGiftsPanel';
 import Avatar from 'avataaars';
 import { generateAvatarOptions } from '../../utils/avatarGenerator';
 import {
@@ -12,8 +13,9 @@ import {
   updateBarTurn,
   completeStory
 } from '../../utils/barsSystem';
+import { sendMagicToSalon, sendGiftToUser, canAfford, deductCoins } from '../../utils/magic';
 
-export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
+export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }) {
   const [barTab, setBarTab] = useState('discuss');
   const messagesEndRef = useRef(null);
 
@@ -23,23 +25,26 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
   const [magicEffect, setMagicEffect] = useState(null);
   const [giftReceiverEffect, setGiftReceiverEffect] = useState(null); // ID du membre qui reçoit un cadeau
 
+  // Système Magie & Offrandes
+  const [showMagicGiftsPanel, setShowMagicGiftsPanel] = useState(false);
+
   // Chat discussion - Charger depuis localStorage
   const [messages, setMessages] = useState(() => {
-    const barId = bar?.type || bar?.id || 'unknown';
-    return loadBarMessages(barId);
+    const salonId = salon?.type || salon?.id || 'unknown';
+    return loadBarMessages(salonId);
   });
   const [messageInput, setMessageInput] = useState('');
 
   // Système "Continuer l'histoire" - Charger depuis localStorage
   const [story, setStory] = useState(() => {
-    const barId = bar?.type || bar?.id || 'unknown';
-    const barState = loadBarState(barId);
+    const salonId = salon?.type || salon?.id || 'unknown';
+    const barState = loadBarState(salonId);
     return barState?.story || [];
   });
 
-  // Transformer les participants du bar en membres avec avatars + ajouter l'utilisateur
+  // Transformer les participants du salon en membres avec avatars + ajouter l'utilisateur
   const [members, setMembers] = useState(() => {
-    const barMembers = bar?.participants?.map((p, index) => ({
+    const salonMembers = salon?.participants?.map((p, index) => ({
       id: index + 1,
       name: p.name,
       gender: p.gender,
@@ -52,9 +57,9 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
 
     // Ajouter l'utilisateur actuel
     const allMembers = [
-      ...barMembers,
+      ...salonMembers,
       {
-        id: barMembers.length + 1,
+        id: salonMembers.length + 1,
         name: currentUser?.name || 'Vous',
         gender: currentUser?.gender || 'M',
         avatarOptions: currentUser?.avatarData || generateAvatarOptions(currentUser?.name || 'Vous', currentUser?.gender || 'M'),
@@ -67,8 +72,8 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
   });
 
   const [currentTurnIndex, setCurrentTurnIndex] = useState(() => {
-    const barId = bar?.type || bar?.id || 'unknown';
-    const barState = loadBarState(barId);
+    const salonId = salon?.type || salon?.id || 'unknown';
+    const barState = loadBarState(salonId);
     return barState?.currentTurnIndex || 0;
   });
   const [newSentence, setNewSentence] = useState('');
@@ -88,7 +93,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
   const sendMessage = () => {
     if (!messageInput.trim()) return;
 
-    const barId = bar?.type || bar?.id || 'unknown';
+    const salonId = salon?.type || salon?.id || 'unknown';
     const newMessage = saveBarMessage(
       barId,
       currentUser?.email || 'guest',
@@ -121,7 +126,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
 
     // Expulsion automatique après 2 tours sautés
     if (updatedMembers[currentTurnIndex].skippedTurns >= 2) {
-      alert(`❌ ${updatedMembers[currentTurnIndex].name} a été expulsé(e) du bar (2 tours sautés)`);
+      alert(`❌ ${updatedMembers[currentTurnIndex].name} a été expulsé(e) du salon (2 tours sautés)`);
       updatedMembers.splice(currentTurnIndex, 1);
       setMembers(updatedMembers);
     }
@@ -136,7 +141,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
       return;
     }
 
-    const barId = bar?.type || bar?.id || 'unknown';
+    const salonId = salon?.type || salon?.id || 'unknown';
 
     // Ajouter la phrase avec récompenses automatiques
     const newStoryEntry = addStoryParagraph(
@@ -168,7 +173,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
     // Passer au joueur suivant
     const nextTurnIndex = (currentTurnIndex + 1) % members.length;
     setCurrentTurnIndex(nextTurnIndex);
-    updateBarTurn(barId, nextTurnIndex, members);
+    updateBarTurn(salonId, nextTurnIndex, members);
   };
 
   const handleSaveToJournal = () => {
@@ -177,7 +182,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
       return;
     }
 
-    const barId = bar?.type || bar?.id || 'unknown';
+    const salonId = salon?.type || salon?.id || 'unknown';
 
     // Compléter l'histoire et récompenser les participants
     completeStory(barId, story);
@@ -195,7 +200,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
     if (reason && reason.trim().length > 10) {
       const updatedMembers = members.filter(m => m.id !== memberId);
       setMembers(updatedMembers);
-      alert(`✅ ${member.name} a été expulsé(e) du bar.\nRaison: ${reason}`);
+      alert(`✅ ${member.name} a été expulsé(e) du salon.\nRaison: ${reason}`);
     } else if (reason) {
       alert('⚠️ La raison doit faire au moins 10 caractères.');
     }
@@ -242,7 +247,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
     }, 3000);
 
     // Ajouter un message système dans le chat et sauvegarder
-    const barId = bar?.type || bar?.id || 'unknown';
+    const salonId = salon?.type || salon?.id || 'unknown';
     const giftMessage = saveBarMessage(
       barId,
       'system',
@@ -259,6 +264,65 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
     setSelectedMember(null);
   };
 
+  // Handlers pour le système Magie & Offrandes
+  const handleUseMagic = (magic) => {
+    const salonId = salon?.type || salon?.id || 'unknown';
+    const userId = currentUser?.id || currentUser?.email || 'user';
+
+    // Envoyer la magie (placeholder)
+    if (magic.type === 'salon') {
+      sendMagicToSalon(magic.id, userId, salonId);
+    } else {
+      console.log('✨ Magie individuelle utilisée:', magic.name);
+    }
+
+    // Ajouter un message système dans le chat
+    const magicMessage = saveBarMessage(
+      salonId,
+      'system',
+      'Système',
+      `✨ ${currentUser?.name || 'Quelqu\'un'} a utilisé ${magic.icon} ${magic.name} !`,
+      true,
+      { type: 'magic', magicData: magic }
+    );
+
+    setMessages([...messages, magicMessage]);
+
+    // TODO: Déduire les pièces de l'utilisateur (nécessite state management global)
+    alert(`✨ ${magic.name} activé ! (-${magic.cost} pièces)`);
+  };
+
+  const handleSendGift = (gift, recipient) => {
+    const salonId = salon?.type || salon?.id || 'unknown';
+    const userId = currentUser?.id || currentUser?.email || 'user';
+
+    // Envoyer le cadeau (placeholder)
+    sendGiftToUser(gift.id, userId, recipient.id, salonId);
+
+    // Afficher l'effet sur l'avatar du destinataire
+    setGiftReceiverEffect(recipient?.id);
+
+    // Retirer l'effet après 3 secondes
+    setTimeout(() => {
+      setGiftReceiverEffect(null);
+    }, 3000);
+
+    // Ajouter un message système dans le chat
+    const giftMessage = saveBarMessage(
+      salonId,
+      'system',
+      'Système',
+      `🎁 ${currentUser?.name || 'Quelqu\'un'} a envoyé ${gift.icon} ${gift.name} à ${recipient?.name} !`,
+      true,
+      { type: 'gift', giftData: gift }
+    );
+
+    setMessages([...messages, giftMessage]);
+
+    // TODO: Déduire les pièces de l'utilisateur (nécessite state management global)
+    alert(`🎁 ${gift.name} envoyé à ${recipient.name} ! (-${gift.cost} pièces)`);
+  };
+
   return (
     <div style={{
       height: '100vh',
@@ -266,16 +330,16 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
       paddingBottom: '80px',
       background: 'var(--color-beige-light)'
     }}>
-      {/* En-tête du bar */}
+      {/* En-tête du salon */}
       <div style={{
-        background: bar?.gradient || 'linear-gradient(135deg, #667eea, #764ba2)',
+        background: salon?.gradient || 'linear-gradient(135deg, #667eea, #764ba2)',
         padding: 'var(--spacing-lg)',
         boxShadow: 'var(--shadow-md)',
         borderBottom: '4px solid rgba(0,0,0,0.2)'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px' }}>
           <button
-            onClick={() => setSelectedBar(null)}
+            onClick={() => setSelectedSalon(null)}
             style={{
               background: 'rgba(255,255,255,0.2)',
               border: 'none',
@@ -311,10 +375,10 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
           margin: '0 0 12px 0',
           fontWeight: '700'
         }}>
-          {bar?.emoji} {bar?.name}
+          {salon?.emoji} {salon?.name}
         </h1>
 
-        {/* Membres du bar */}
+        {/* Membres du salon */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
@@ -511,6 +575,40 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
             📖 Continuer l'histoire
           </button>
         </div>
+
+        {/* Bouton Magie & Offrandes */}
+        <div style={{ marginTop: '12px' }}>
+          <button
+            onClick={() => setShowMagicGiftsPanel(true)}
+            style={{
+              width: '100%',
+              padding: '12px',
+              background: 'linear-gradient(135deg, #FFD700, #FFA500)',
+              border: 'none',
+              color: '#000',
+              borderRadius: '12px',
+              cursor: 'pointer',
+              fontWeight: '700',
+              fontSize: '0.95rem',
+              boxShadow: '0 4px 12px rgba(255,215,0,0.4)',
+              transition: 'all 0.2s',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.transform = 'scale(1.02)';
+              e.target.style.boxShadow = '0 6px 16px rgba(255,215,0,0.6)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = 'scale(1)';
+              e.target.style.boxShadow = '0 4px 12px rgba(255,215,0,0.4)';
+            }}
+          >
+            ✨ Magie & Offrandes
+          </button>
+        </div>
       </div>
 
       {/* ONGLET DISCUSSION */}
@@ -686,7 +784,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
                     👤 Expulser un membre
                   </button>
                   <button
-                    onClick={() => alert('🔒 Fermeture/Réouverture du bar en développement')}
+                    onClick={() => alert('🔒 Fermeture/Réouverture du salon en développement')}
                     style={{
                       padding: '8px 14px',
                       background: '#000',
@@ -698,7 +796,7 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
                       fontSize: '0.85rem'
                     }}
                   >
-                    🔒 Fermer le bar
+                    🔒 Fermer le salon
                   </button>
                 </div>
               </div>
@@ -927,6 +1025,17 @@ export default function BarDetailScreen({ bar, currentUser, setSelectedBar }) {
         <MagicEffect
           gift={magicEffect}
           onComplete={() => setMagicEffect(null)}
+        />
+      )}
+
+      {/* Panneau Magie & Offrandes */}
+      {showMagicGiftsPanel && (
+        <MagicGiftsPanel
+          onClose={() => setShowMagicGiftsPanel(false)}
+          currentUser={currentUser}
+          salonMembers={members.filter(m => !m.isPatron)} // Exclure l'utilisateur actuel
+          onUseMagic={handleUseMagic}
+          onSendGift={handleSendGift}
         />
       )}
     </div>

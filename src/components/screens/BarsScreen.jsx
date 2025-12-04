@@ -1,7 +1,7 @@
 import React from 'react';
 
-export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, currentUser }) {
-  const bars = [
+export default function BarsScreen({ setScreen, setGameScreen, setSelectedSalon, currentUser }) {
+  const salons = [
     {
       id: 'romantic',
       name: 'Salon Romantique',
@@ -11,7 +11,7 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
       maxMembers: 4,
       gradient: 'linear-gradient(135deg, #FF6B9D, #C2185B)',
       textColor: 'white',
-      action: () => setSelectedBar({ type: 'romantic', name: 'Salon Romantique', emoji: '🌹' })
+      action: () => setSelectedSalon({ type: 'romantic', name: 'Salon Romantique', emoji: '🌹' })
     },
     {
       id: 'humorous',
@@ -22,7 +22,7 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
       maxMembers: 4,
       gradient: 'linear-gradient(135deg, #FFD54F, #FFA000)',
       textColor: '#1a1a1a',
-      action: () => setSelectedBar({ type: 'humorous', name: 'Salon Humoristique', emoji: '😄' })
+      action: () => setSelectedSalon({ type: 'humorous', name: 'Salon Humoristique', emoji: '😄' })
     },
     {
       id: 'adventure',
@@ -33,7 +33,7 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
       maxMembers: 4,
       gradient: 'linear-gradient(135deg, #4CAF50, #2E7D32)',
       textColor: 'white',
-      action: () => setSelectedBar({ type: 'adventure', name: 'Salon Aventure', emoji: '🗺️' })
+      action: () => setSelectedSalon({ type: 'adventure', name: 'Salon Aventure', emoji: '🗺️' })
     },
     {
       id: 'mystery',
@@ -45,7 +45,7 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
       gradient: 'linear-gradient(135deg, #7B1FA2, #4A148C)',
       textColor: '#FFD700',
       border: '2px solid rgba(255, 215, 0, 0.3)',
-      action: () => setSelectedBar({ type: 'mystery', name: 'Salon Mystère', emoji: '🔮' })
+      action: () => setSelectedSalon({ type: 'mystery', name: 'Salon Mystère', emoji: '🔮' })
     },
     {
       id: 'weekly',
@@ -57,7 +57,7 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
       maxMembers: 4,
       gradient: 'linear-gradient(135deg, #5C6BC0, #3949AB)',
       textColor: 'white',
-      action: () => setSelectedBar({ type: 'weekly', name: 'Salon Hebdomadaire', emoji: '📅' })
+      action: () => setSelectedSalon({ type: 'weekly', name: 'Salon Hebdomadaire', emoji: '📅' })
     }
   ];
 
@@ -148,12 +148,12 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
           </div>
         )}
 
-        {bars.map((bar) => (
+        {salons.map((salon) => (
           <div
-            key={bar.id}
+            key={salon.id}
             style={{
-              background: bar.gradient,
-              border: bar.border || 'none',
+              background: salon.gradient,
+              border: salon.border || 'none',
               borderRadius: '0',
               padding: 'var(--spacing-md)',
               marginBottom: 'var(--spacing-xs)',
@@ -171,12 +171,12 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
               marginBottom: '10px'
             }}>
               <h3 style={{
-                color: bar.textColor,
+                color: salon.textColor,
                 margin: 0,
                 fontSize: '1.4rem',
                 fontWeight: '700'
               }}>
-                {bar.emoji} {bar.name}
+                {salon.emoji} {salon.name}
               </h3>
               {bar.badge && (
                 <span style={{
@@ -187,7 +187,7 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
                   fontSize: '0.7rem',
                   fontWeight: 'bold'
                 }}>
-                  {bar.badge}
+                  {salon.badge}
                 </span>
               )}
             </div>
@@ -199,7 +199,7 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
               fontSize: '0.95rem',
               lineHeight: '1.4'
             }}>
-              {bar.description}
+              {salon.description}
             </p>
 
             {/* Footer avec membres et bouton */}
@@ -213,13 +213,13 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span style={{
-                  color: bar.textColor,
+                  color: salon.textColor,
                   fontSize: '0.9rem',
                   fontWeight: '600'
                 }}>
-                  👥 {bar.currentMembers}/{bar.maxMembers}
+                  👥 {salon.currentMembers}/{salon.maxMembers}
                 </span>
-                {bar.currentMembers === bar.maxMembers && (
+                {salon.currentMembers === salon.maxMembers && (
                   <span style={{
                     background: '#E91E63',
                     color: 'white',
@@ -234,34 +234,34 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedBar, c
               </div>
               <button
                 onClick={bar.action}
-                disabled={bar.currentMembers === bar.maxMembers}
+                disabled={salon.currentMembers === salon.maxMembers}
                 style={{
                   padding: '10px 20px',
                   minHeight: '48px',
-                  background: bar.currentMembers === bar.maxMembers
+                  background: salon.currentMembers === salon.maxMembers
                     ? '#666'
-                    : (bar.buttonStyle || 'var(--color-gold)'),
+                    : (salon.buttonStyle || 'var(--color-gold)'),
                   border: 'none',
                   borderRadius: '10px',
-                  color: bar.currentMembers === bar.maxMembers
+                  color: salon.currentMembers === salon.maxMembers
                     ? '#aaa'
-                    : (bar.buttonStyle ? '#fff' : 'var(--color-brown-dark)'),
+                    : (salon.buttonStyle ? '#fff' : 'var(--color-brown-dark)'),
                   fontWeight: '700',
                   fontSize: '0.9rem',
-                  cursor: bar.currentMembers === bar.maxMembers ? 'not-allowed' : 'pointer',
+                  cursor: salon.currentMembers === salon.maxMembers ? 'not-allowed' : 'pointer',
                   boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
                   transition: 'transform 0.2s',
                   whiteSpace: 'nowrap',
-                  opacity: bar.currentMembers === bar.maxMembers ? 0.5 : 1
+                  opacity: salon.currentMembers === salon.maxMembers ? 0.5 : 1
                 }}
                 onMouseDown={(e) => {
-                  if (bar.currentMembers !== bar.maxMembers) {
+                  if (salon.currentMembers !== salon.maxMembers) {
                     e.target.style.transform = 'scale(0.95)';
                   }
                 }}
                 onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
               >
-                {bar.currentMembers === bar.maxMembers ? 'Complet' : 'Rejoindre'}
+                {salon.currentMembers === salon.maxMembers ? 'Complet' : 'Rejoindre'}
               </button>
             </div>
           </div>

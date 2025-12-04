@@ -34,7 +34,7 @@ export function proposeExchange(barId, userId) {
   const pending = getPendingExchanges();
   const now = Date.now();
 
-  // Vérifier si l'utilisateur a déjà proposé un échange pour ce bar
+  // Vérifier si l'utilisateur a déjà proposé un échange pour ce salon
   const existing = pending.find(ex => ex.barId === barId && ex.userId === userId);
   if (existing) {
     return {
@@ -130,7 +130,7 @@ export function getActiveExchanges() {
 }
 
 /**
- * Obtenir l'échange actif pour un bar donné
+ * Obtenir l'échange actif pour un salon donné
  * @param {number} barId - ID du salon
  * @returns {Object|null} Échange actif ou null
  */
@@ -163,7 +163,7 @@ export function cancelPendingExchange(exchangeId, userId) {
 }
 
 /**
- * Vérifier le cooldown d'échange pour un bar
+ * Vérifier le cooldown d'échange pour un salon
  * @param {number} barId - ID du salon
  * @returns {Object} { canExchange, error }
  */
@@ -171,7 +171,7 @@ export function checkExchangeCooldown(barId) {
   const active = getActiveExchanges();
   const now = Date.now();
 
-  // Chercher un échange récent pour ce bar
+  // Chercher un échange récent pour ce salon
   const allExchanges = JSON.parse(localStorage.getItem(ACTIVE_EXCHANGES_KEY) || '[]');
   const recentExchanges = allExchanges.filter(ex =>
     (ex.bar1Id === barId || ex.bar2Id === barId) &&
@@ -213,7 +213,7 @@ export function getTimeRemaining(exchange) {
 }
 
 /**
- * Obtenir le nom d'un bar par son ID
+ * Obtenir le nom d'un salon par son ID
  * @param {number} barId - ID du salon
  * @returns {string} Nom du salon
  */
@@ -223,7 +223,7 @@ export function getBarName(barId) {
     2: 'Café de Paris ☕',
     3: 'Île des pirates 🏴‍☠️',
     4: 'Théâtre improvisé 🎭',
-    5: 'Bar à cocktails 🍸'
+    5: 'Salon à cocktails 🍸'
   };
   return barNames[barId] || `Salon #${barId}`;
 }

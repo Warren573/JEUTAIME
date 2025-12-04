@@ -21,7 +21,7 @@ export default function MemoriesScreen({ currentUser }) {
       locked: false,
       date: 'Il y a 1 semaine',
       content: 'Le début d\'une belle histoire...',
-      fullContent: 'Cette première conversation au Bar Romantique restera gravée dans ma mémoire. Les mots coulaient naturellement, comme si nous nous connaissions depuis toujours.'
+      fullContent: 'Cette première conversation au Salon Romantique restera gravée dans ma mémoire. Les mots coulaient naturellement, comme si nous nous connaissions depuis toujours.'
     },
     {
       id: 3,

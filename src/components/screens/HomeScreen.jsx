@@ -6,7 +6,7 @@ import UserAvatar from '../avatar/UserAvatar';
 import MessageBottleModal from '../bottle/MessageBottleModal';
 import { getUnreadCount } from '../../utils/bottleSystem';
 
-export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurrentProfile, setAdminMode, currentUser }) {
+export default function HomeScreen({ setScreen, myLetters, joinedSalons, setCurrentProfile, setAdminMode, currentUser }) {
   const { adminLogin } = useAdmin();
   const [selectedOffering, setSelectedOffering] = useState(null);
   const [showBottleModal, setShowBottleModal] = useState(false);
@@ -217,8 +217,8 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
               border: '2px solid var(--color-brown-light)'
             }}>
               <div style={{ fontSize: '1.5rem', marginBottom: 'var(--spacing-xs)' }}>🍸</div>
-              <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--color-text-primary)' }}>{joinedBars?.length || 0}</div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--color-text-light)' }}>Bars rejoints</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--color-text-primary)' }}>{joinedSalons?.length || 0}</div>
+              <div style={{ fontSize: '0.7rem', color: 'var(--color-text-light)' }}>Salons rejoints</div>
             </div>
           </div>
         </div>
@@ -330,9 +330,9 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
             <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
               <div style={{ fontSize: '1.5rem', flexShrink: 0 }}>🍸</div>
               <div>
-                <strong style={{ color: 'var(--color-text-primary)' }}>Bars :</strong>{' '}
+                <strong style={{ color: 'var(--color-text-primary)' }}>Salons :</strong>{' '}
                 <span style={{ color: 'var(--color-text-secondary)' }}>
-                  Rejoins des bars thématiques pour discuter et jouer avec d'autres membres.
+                  Rejoins des salons thématiques pour discuter et jouer avec d'autres membres.
                 </span>
               </div>
             </div>
@@ -536,7 +536,7 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
                 gap: 'var(--spacing-sm)'
               }}
             >
-              <span style={{ fontSize: '1.5rem' }}>🍸</span> Explorer les Bars
+              <span style={{ fontSize: '1.5rem' }}>🍸</span> Explorer les Salons
             </button>
 
             <button
@@ -620,9 +620,9 @@ export default function HomeScreen({ setScreen, myLetters, joinedBars, setCurren
             </div>
             <div>
               <div style={{ fontWeight: '700', fontSize: '1.5rem', color: 'var(--color-friendly)' }}>
-                {joinedBars.length}
+                {joinedSalons.length}
               </div>
-              <div>Bars</div>
+              <div>Salons</div>
             </div>
           </div>
         </div>

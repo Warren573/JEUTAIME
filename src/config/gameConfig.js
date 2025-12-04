@@ -105,7 +105,7 @@ export const POINTS_ACTIONS = {
   GAME_LOST: -10,
   REFERRAL_SPONSOR: 100,
   REFERRAL_REFERRED: 50,
-  SENTENCE_ADDED: 5,      // Ajouter une phrase à l'histoire dans un bar
+  SENTENCE_ADDED: 5,      // Ajouter une phrase à l'histoire dans un salon
   STORY_COMPLETED: 50,    // Bonus quand l'histoire est complétée (15+ phrases)
   PET_CARE: 2,            // Nourrir, nettoyer ou faire dormir un animal
   PET_PLAY: 3,            // Jouer avec un animal

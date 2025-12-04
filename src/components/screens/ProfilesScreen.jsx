@@ -607,7 +607,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
             }}>
               <div style={{ fontSize: '1.5rem', marginBottom: 'var(--spacing-xs)' }}>🍸</div>
               <div style={{ fontSize: '1rem', fontWeight: 'bold', color: 'var(--color-text-primary)' }}>{currentProfileData.stats.bars}</div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--color-text-light)' }}>Bars</div>
+              <div style={{ fontSize: '0.7rem', color: 'var(--color-text-light)' }}>Salons</div>
             </div>
           </div>
 

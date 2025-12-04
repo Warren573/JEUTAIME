@@ -493,7 +493,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
               <li>10 conversations privées simultanées</li>
               <li>Photos débloquées instantanément</li>
               <li>Badge Premium visible</li>
-              <li>Priorité dans les Bars</li>
+              <li>Priorité dans les Salons</li>
             </ul>
             <button style={{ width: '100%', padding: '12px', background: '#000', border: 'none', color: '#FFD700', borderRadius: '10px', cursor: 'pointer', fontWeight: '700', fontSize: '14px' }}>✨ Activer Premium</button>
           </div>

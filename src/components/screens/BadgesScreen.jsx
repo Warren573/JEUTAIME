@@ -11,9 +11,9 @@ export default function BadgesScreen({ currentUser }) {
       id: 1,
       icon: '❤️',
       name: 'Cœur tendre',
-      description: 'Objectif : tu reçois 5 compliments anonymes',
+      description: 'Objectif : tu reçois 5 good vibes anonymes',
       unlocked: userPoints >= 100,
-      requirement: '5 compliments',
+      requirement: '5 good vibes',
       color: 'var(--color-romantic)'
     },
     {

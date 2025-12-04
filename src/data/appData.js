@@ -1,6 +1,6 @@
 // Données statiques de l'application
 
-export const bars = [
+export const salons = [
   {
     id: 1,
     icon: '🏊',
@@ -78,7 +78,7 @@ export const bars = [
   {
     id: 5,
     icon: '🍸',
-    name: 'Bar à cocktails',
+    name: 'Salon à cocktails',
     desc: '2H/2F - Mixologie et saveurs exotiques',
     bgGradient: 'linear-gradient(180deg, #F48FB1 0%, #C2185B 100%)',
     magicAction: {
