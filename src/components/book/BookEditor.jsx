@@ -62,12 +62,14 @@ export default function BookEditor({ user, onClose, onSave }) {
         <div style={tabsContainerStyle}>
           <TabButton active={activeTab === 'infos'} onClick={() => setActiveTab('infos')} icon="📖" label="Infos" />
           <TabButton active={activeTab === 'about'} onClick={() => setActiveTab('about')} icon="✨" label="À propos" />
+          <TabButton active={activeTab === 'photos'} onClick={() => setActiveTab('photos')} icon="📸" label="Photos" />
           <TabButton active={activeTab === 'private'} onClick={() => setActiveTab('private')} icon="🔒" label="Privé" />
         </div>
 
         <div style={contentStyle}>
           {activeTab === 'infos' && <InfosTab bookData={bookData} onChange={handleChange} />}
           {activeTab === 'about' && <AboutTab bookData={bookData} onChange={handleChange} />}
+          {activeTab === 'photos' && <PhotosTab bookData={bookData} onChange={handleChange} setBookData={setBookData} setHasChanges={setHasChanges} />}
           {activeTab === 'private' && <PrivateTab bookData={bookData} onChange={handleChange} />}
         </div>
 
@@ -113,6 +115,131 @@ function AboutTab({ bookData, onChange }) {
         placeholder="Écris sur toi..."
         style={{ ...inputStyle, minHeight: '200px', resize: 'vertical', fontFamily: 'inherit' }}
       />
+    </div>
+  );
+}
+
+function PhotosTab({ bookData, setBookData, setHasChanges }) {
+  const [newPhotoUrl, setNewPhotoUrl] = React.useState('');
+
+  const photos = bookData.photos || [];
+
+  const handleAddPhoto = () => {
+    if (newPhotoUrl.trim()) {
+      setBookData(prev => ({
+        ...prev,
+        photos: [...(prev.photos || []), newPhotoUrl.trim()]
+      }));
+      setHasChanges(true);
+      setNewPhotoUrl('');
+    }
+  };
+
+  const handleRemovePhoto = (index) => {
+    setBookData(prev => ({
+      ...prev,
+      photos: prev.photos.filter((_, i) => i !== index)
+    }));
+    setHasChanges(true);
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+      <div>
+        <label style={labelStyle}>📸 Ajouter une photo (URL)</label>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <input
+            type="text"
+            value={newPhotoUrl}
+            onChange={(e) => setNewPhotoUrl(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleAddPhoto()}
+            placeholder="https://exemple.com/photo.jpg"
+            style={{ ...inputStyle, flex: 1 }}
+          />
+          <button
+            onClick={handleAddPhoto}
+            style={{
+              padding: '12px 20px',
+              background: 'linear-gradient(135deg, #667eea, #764ba2)',
+              border: 'none',
+              color: 'white',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontWeight: '600',
+              whiteSpace: 'nowrap'
+            }}
+          >
+            ➕ Ajouter
+          </button>
+        </div>
+      </div>
+
+      {photos.length > 0 ? (
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
+          gap: '15px',
+          marginTop: '10px'
+        }}>
+          {photos.map((url, index) => (
+            <div key={index} style={{ position: 'relative', borderRadius: '8px', overflow: 'hidden' }}>
+              <img
+                src={url}
+                alt={`Photo ${index + 1}`}
+                style={{
+                  width: '100%',
+                  height: '150px',
+                  objectFit: 'cover',
+                  display: 'block'
+                }}
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'flex';
+                }}
+              />
+              <div style={{
+                display: 'none',
+                width: '100%',
+                height: '150px',
+                background: '#2a2a2a',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#666',
+                fontSize: '0.85rem'
+              }}>
+                ❌ Image non disponible
+              </div>
+              <button
+                onClick={() => handleRemovePhoto(index)}
+                style={{
+                  position: 'absolute',
+                  top: '5px',
+                  right: '5px',
+                  background: 'rgba(0,0,0,0.7)',
+                  border: 'none',
+                  color: 'white',
+                  width: '28px',
+                  height: '28px',
+                  borderRadius: '50%',
+                  cursor: 'pointer',
+                  fontSize: '1rem'
+                }}
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div style={{
+          textAlign: 'center',
+          padding: '40px',
+          color: '#666',
+          fontSize: '0.95rem'
+        }}>
+          📸 Aucune photo pour le moment. Ajoute l'URL d'une image !
+        </div>
+      )}
     </div>
   );
 }

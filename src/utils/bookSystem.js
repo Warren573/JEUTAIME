@@ -20,6 +20,9 @@ export const DEFAULT_BOOK_DATA = {
          'Toujours partant·e pour une discussion deep à 3h du matin ou une aventure improvisée. ' +
          'J\'adore les gens qui assument leur bizarrerie ✨',
 
+  // Photos
+  photos: [],
+
   // Page 6 - Ultra-Privé
   privateContent: ''
 };
