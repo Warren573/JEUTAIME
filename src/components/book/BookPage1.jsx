@@ -1,30 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { loadBookData } from '../../utils/bookSystem';
+import React from 'react';
 
 export default function BookPage1({ user, isOwnBook }) {
-  const [bookData, setBookData] = useState(null);
-
-  useEffect(() => {
-    if (user?.email) {
-      const data = loadBookData(user.email);
-      setBookData(data);
-    }
-  }, [user?.email]);
-
-  if (!bookData) {
-    return (
-      <div style={{
-        background: '#2a2a2a',
-        borderRadius: '16px',
-        padding: '30px',
-        color: 'white',
-        textAlign: 'center'
-      }}>
-        <p>Chargement...</p>
-      </div>
-    );
-  }
-
   return (
     <div style={{
       background: '#2a2a2a',
@@ -54,7 +30,7 @@ export default function BookPage1({ user, isOwnBook }) {
           margin: 0,
           color: '#ddd'
         }}>
-          "{bookData.bio}"
+          "{user?.bio || 'Ma phrase d\'ambiance à personnaliser...'}"
         </p>
       </div>
 
@@ -63,12 +39,12 @@ export default function BookPage1({ user, isOwnBook }) {
         display: 'grid',
         gap: '15px'
       }}>
-        <InfoCard label="🎂 Âge" value={bookData.age} />
-        <InfoCard label="📍 Ville" value={bookData.city} />
-        <InfoCard label="💼 Activité" value={bookData.job} />
-        <InfoCard label="🎵 Musique préférée" value={bookData.music} />
-        <InfoCard label="🎬 Film préféré" value={bookData.movie} />
-        <InfoCard label="🍕 Plat favori" value={bookData.food} />
+        <InfoCard label="🎂 Âge" value={user?.age || '25 ans'} />
+        <InfoCard label="📍 Ville" value={user?.city || 'Paris'} />
+        <InfoCard label="💼 Activité" value={user?.job || 'Étudiant·e'} />
+        <InfoCard label="🎵 Musique préférée" value={user?.music || 'Indé / Électro'} />
+        <InfoCard label="🎬 Film préféré" value={user?.movie || 'À compléter'} />
+        <InfoCard label="🍕 Plat favori" value={user?.food || 'Pizza 🍕'} />
       </div>
 
       {/* Section "À propos de moi" */}
@@ -89,22 +65,30 @@ export default function BookPage1({ user, isOwnBook }) {
           lineHeight: '1.7',
           color: '#ccc'
         }}>
-          {bookData.about}
+          {user?.about ||
+            'Passionné·e par la vie, les rencontres et les moments authentiques. ' +
+            'Toujours partant·e pour une discussion deep à 3h du matin ou une aventure improvisée. ' +
+            'J\'adore les gens qui assument leur bizarrerie ✨'}
         </p>
       </div>
 
       {isOwnBook && (
-        <div style={{
-          marginTop: '25px',
-          padding: '15px',
-          background: 'linear-gradient(135deg, #667eea20, #764ba220)',
-          borderRadius: '12px',
-          textAlign: 'center',
-          color: '#888',
-          fontSize: '0.9rem'
-        }}>
-          💡 Utilise le bouton "✏️ Éditer" en haut de l'Espace Perso pour modifier tes infos
-        </div>
+        <button
+          style={{
+            marginTop: '25px',
+            padding: '12px 24px',
+            background: 'linear-gradient(135deg, #667eea, #764ba2)',
+            border: 'none',
+            color: 'white',
+            borderRadius: '12px',
+            cursor: 'pointer',
+            fontWeight: '600',
+            width: '100%'
+          }}
+          onClick={() => alert('✏️ Éditeur de profil - À venir !')}
+        >
+          ✏️ Modifier mes informations
+        </button>
       )}
     </div>
   );

@@ -1,34 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { loadBookData } from '../../utils/bookSystem';
+import React from 'react';
 
 export default function BookPrivate({ user, isOwnBook }) {
-  const [bookData, setBookData] = useState(null);
-
-  useEffect(() => {
-    if (user?.email) {
-      const data = loadBookData(user.email);
-      setBookData(data);
-    }
-  }, [user?.email]);
-
-  if (!bookData) {
-    return (
-      <div style={{
-        background: '#2a2a2a',
-        borderRadius: '16px',
-        padding: '30px',
-        color: 'white',
-        textAlign: 'center'
-      }}>
-        <p>Chargement...</p>
-      </div>
-    );
-  }
-
-  const privateContent = bookData.privateContent ||
-    'Ce que peu de gens savent sur moi : j\'adore les conversations profondes à 3h du matin, ' +
-    'quand tout le monde dort et que les masques tombent. ✨\n\n' +
-    'Mes passions secrètes, mes rêves, mes peurs... Tout ce qui fait de moi qui je suis vraiment.';
+  const privateContent = user?.privateContent || {
+    secretPassions: ['Écriture nocturne 📝', 'Philosophie 🤔', 'Astrologie ✨'],
+    deepThoughts: 'Ce que peu de gens savent sur moi : j\'adore les conversations profondes à 3h du matin, quand tout le monde dort et que les masques tombent.',
+    dreams: 'Voyager en van aménagé pendant 6 mois',
+    fears: 'La routine qui endort les rêves',
+    secrets: '3 secrets que seuls mes proches connaissent'
+  };
 
   return (
     <div style={{
@@ -58,37 +37,134 @@ export default function BookPrivate({ user, isOwnBook }) {
         </div>
       </div>
 
-      {/* Contenu privé */}
+      {/* Passions secrètes */}
       <div style={{
         background: '#1a1a1a',
         borderRadius: '12px',
-        padding: '25px',
+        padding: '20px',
         marginBottom: '20px',
-        borderLeft: '4px solid #667eea'
+        borderLeft: '4px solid #FFD700'
       }}>
+        <h4 style={{ color: '#FFD700', marginBottom: '15px', fontSize: '1.1rem' }}>
+          ✨ Mes passions secrètes
+        </h4>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          {privateContent.secretPassions.map((passion, index) => (
+            <div
+              key={index}
+              style={{
+                background: '#2a2a2a',
+                padding: '12px',
+                borderRadius: '8px',
+                fontSize: '0.95rem'
+              }}
+            >
+              {passion}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Pensées profondes */}
+      <div style={{
+        background: '#1a1a1a',
+        borderRadius: '12px',
+        padding: '20px',
+        marginBottom: '20px',
+        borderLeft: '4px solid #764ba2'
+      }}>
+        <h4 style={{ color: '#764ba2', marginBottom: '15px', fontSize: '1.1rem' }}>
+          💭 Pensées profondes
+        </h4>
         <p style={{
           margin: 0,
           color: '#ddd',
-          lineHeight: '1.8',
-          fontSize: '1rem',
-          whiteSpace: 'pre-wrap'
+          lineHeight: '1.7',
+          fontStyle: 'italic'
         }}>
-          {privateContent}
+          "{privateContent.deepThoughts}"
+        </p>
+      </div>
+
+      {/* Rêves & Objectifs */}
+      <div style={{
+        background: '#1a1a1a',
+        borderRadius: '12px',
+        padding: '20px',
+        marginBottom: '20px',
+        borderLeft: '4px solid #4ECDC4'
+      }}>
+        <h4 style={{ color: '#4ECDC4', marginBottom: '15px', fontSize: '1.1rem' }}>
+          🌟 Mon rêve secret
+        </h4>
+        <p style={{
+          margin: 0,
+          color: '#ddd',
+          fontSize: '1rem'
+        }}>
+          {privateContent.dreams}
+        </p>
+      </div>
+
+      {/* Peurs */}
+      <div style={{
+        background: '#1a1a1a',
+        borderRadius: '12px',
+        padding: '20px',
+        marginBottom: '20px',
+        borderLeft: '4px solid #FF6B6B'
+      }}>
+        <h4 style={{ color: '#FF6B6B', marginBottom: '15px', fontSize: '1.1rem' }}>
+          😰 Ce qui me fait peur
+        </h4>
+        <p style={{
+          margin: 0,
+          color: '#ddd',
+          fontSize: '1rem'
+        }}>
+          {privateContent.fears}
+        </p>
+      </div>
+
+      {/* Secrets */}
+      <div style={{
+        background: 'linear-gradient(135deg, #667eea20, #764ba220)',
+        borderRadius: '12px',
+        padding: '20px',
+        border: '2px solid #667eea'
+      }}>
+        <h4 style={{ color: '#667eea', marginBottom: '15px', fontSize: '1.1rem' }}>
+          🤫 Mes secrets
+        </h4>
+        <p style={{
+          margin: 0,
+          color: '#ddd',
+          fontSize: '0.95rem',
+          textAlign: 'center',
+          fontStyle: 'italic'
+        }}>
+          {privateContent.secrets}
         </p>
       </div>
 
       {isOwnBook && (
-        <div style={{
-          marginTop: '25px',
-          padding: '15px',
-          background: 'linear-gradient(135deg, #667eea20, #764ba220)',
-          borderRadius: '12px',
-          textAlign: 'center',
-          color: '#888',
-          fontSize: '0.9rem'
-        }}>
-          💡 Utilise le bouton "✏️ Éditer" en haut de l'Espace Perso pour modifier cette section
-        </div>
+        <button
+          style={{
+            marginTop: '25px',
+            padding: '15px',
+            background: 'linear-gradient(135deg, #667eea, #764ba2)',
+            border: 'none',
+            color: 'white',
+            borderRadius: '12px',
+            cursor: 'pointer',
+            fontWeight: '600',
+            width: '100%',
+            fontSize: '1rem'
+          }}
+          onClick={() => alert('🔒 Modifier section privée - À venir !')}
+        >
+          ✏️ Modifier ma section privée
+        </button>
       )}
 
       {!isOwnBook && (

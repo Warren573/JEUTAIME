@@ -334,10 +334,7 @@ export default function EspacePersoScreen({
         <BookEditor
           user={currentUser}
           onClose={() => setShowEditor(false)}
-          onSave={() => {
-            // Rafraîchir l'affichage si nécessaire
-            setShowEditor(false);
-          }}
+          onSave={() => setShowEditor(false)}
         />
       )}
     </div>
