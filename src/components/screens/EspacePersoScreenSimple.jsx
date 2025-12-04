@@ -125,7 +125,7 @@ export default function EspacePersoScreenSimple({
         gap: '20px'
       }}>
         {/* 1. Book Personnel */}
-        <BookPersonnelSection currentUser={currentUser} />
+        <BookPersonnelSection currentUser={currentUser} setScreen={setScreen} />
 
         {/* 2. Offrandes Reçues */}
         <OffrandesRecuesSection currentUser={currentUser} />
@@ -148,9 +148,8 @@ export default function EspacePersoScreenSimple({
 }
 
 // 1. BOOK PERSONNEL
-function BookPersonnelSection({ currentUser }) {
+function BookPersonnelSection({ currentUser, setScreen }) {
   const [bookData, setBookData] = useState(null);
-  const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
     if (currentUser?.email) {
@@ -265,24 +264,44 @@ function BookPersonnelSection({ currentUser }) {
           </div>
         ))}
       </div>
-      <button
-        style={{
-          width: '100%',
-          padding: '12px',
-          background: 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))',
-          border: '2px solid var(--color-gold-dark)',
-          color: 'var(--color-cream)',
-          borderRadius: '10px',
-          cursor: 'pointer',
-          fontWeight: '600',
-          fontSize: '0.95rem',
-          boxShadow: 'var(--shadow-sm)',
-          transition: 'all var(--transition-normal)'
-        }}
-        onClick={() => alert('📖 Book complet avec édition - À venir dans la prochaine version !\n\n💾 Les données sont déjà sauvegardées dans localStorage.')}
-      >
-        ✏️ Éditer mon Book
-      </button>
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <button
+          style={{
+            flex: 1,
+            padding: '12px',
+            background: 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))',
+            border: '2px solid var(--color-gold-dark)',
+            color: 'var(--color-cream)',
+            borderRadius: '10px',
+            cursor: 'pointer',
+            fontWeight: '600',
+            fontSize: '0.95rem',
+            boxShadow: 'var(--shadow-sm)',
+            transition: 'all var(--transition-normal)'
+          }}
+          onClick={() => setScreen('book-view')}
+        >
+          📖 Voir mon Book
+        </button>
+        <button
+          style={{
+            flex: 1,
+            padding: '12px',
+            background: 'linear-gradient(135deg, #4CAF50, #45a049)',
+            border: '2px solid #45a049',
+            color: 'white',
+            borderRadius: '10px',
+            cursor: 'pointer',
+            fontWeight: '600',
+            fontSize: '0.95rem',
+            boxShadow: 'var(--shadow-sm)',
+            transition: 'all var(--transition-normal)'
+          }}
+          onClick={() => setScreen('book-edit')}
+        >
+          ✏️ Éditer
+        </button>
+      </div>
     </div>
   );
 }
