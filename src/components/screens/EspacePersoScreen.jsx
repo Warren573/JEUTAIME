@@ -6,7 +6,7 @@ import BookEditor from '../book/BookEditor';
 import ReceivedGifts from '../personal/ReceivedGifts';
 import SocialStats from '../personal/SocialStats';
 import MagicInventory from '../magic/MagicInventory';
-import { bars as salons } from '../../data/appData';
+import { salons } from '../../data/appData';
 
 export default function EspacePersoScreen({
   currentUser,

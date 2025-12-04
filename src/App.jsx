@@ -39,7 +39,7 @@ import { awardDailyLogin } from './utils/pointsSystem';
 import { initializeDemoUsers } from './utils/demoUsers';
 
 // Data
-import { bars as salons } from './data/appData';
+import { salons } from './data/appData';
 
 function MainApp() {
   const [currentUser, setCurrentUser] = useState(null);
