@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Navigation from './components/Navigation';
 import HomeScreen from './components/screens/HomeScreen';
+import EspacePersoScreen from './components/screens/EspacePersoScreen';
+import EspacePersoScreenSimple from './components/screens/EspacePersoScreenSimple';
 import ProfilesScreen from './components/screens/ProfilesScreen';
 import SocialScreen from './components/screens/SocialScreen';
 import LettersScreen from './components/screens/LettersScreen';
@@ -37,7 +39,7 @@ import { awardDailyLogin } from './utils/pointsSystem';
 import { initializeDemoUsers } from './utils/demoUsers';
 
 // Data
-import { bars } from './data/appData';
+import { bars as salons } from './data/appData';
 
 function MainApp() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -48,12 +50,12 @@ function MainApp() {
   const [screen, setScreen] = useState('home');
   const [socialTab, setSocialTab] = useState(null);
   const [gameScreen, setGameScreen] = useState(null);
-  const [selectedBar, setSelectedBar] = useState(null);
+  const [selectedSalon, setSelectedSalon] = useState(null);
   const [barTab, setBarTab] = useState('discuss');
   const [userCoins, setUserCoins] = useState(0);
   const [currentProfile, setCurrentProfile] = useState(0);
   const [premiumActive, setPremiumActive] = useState(false);
-  const [joinedBars, setJoinedBars] = useState([1]);
+  const [joinedSalons, setJoinedSalons] = useState([1]);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
   const [adminMode, setAdminMode] = useState(false);
 
@@ -92,10 +94,10 @@ function MainApp() {
     }
   }, [currentUser]);
 
-  // Reset selectedBar when screen changes (to allow navigation)
+  // Reset selectedSalon when screen changes (to allow navigation)
   useEffect(() => {
-    if (selectedBar && screen !== 'bars') {
-      setSelectedBar(null);
+    if (selectedSalon && screen !== 'bars') {
+      setSelectedSalon(null);
     }
   }, [screen]);
 
@@ -176,7 +178,7 @@ function MainApp() {
   ]);
 
   const navItems = [
-    { icon: '🏠', label: 'Accueil', id: 'home' },
+    { icon: '⭐', label: 'Espace Perso', id: 'home' },
     { icon: '👤', label: 'Profils', id: 'profiles' },
     { icon: '👥', label: 'Social', id: 'social' },
     { icon: '💌', label: 'Lettres', id: 'letters' },
@@ -188,13 +190,13 @@ function MainApp() {
     screen, setScreen,
     socialTab, setSocialTab,
     gameScreen, setGameScreen,
-    selectedBar, setSelectedBar,
+    selectedSalon, setSelectedSalon,
     barTab, setBarTab,
     userCoins, setUserCoins,
     setCurrentUser,
     currentProfile, setCurrentProfile,
     premiumActive, setPremiumActive,
-    joinedBars, setJoinedBars,
+    joinedSalons, setJoinedSalons,
     reactivityScore, setReactivityScore,
     reactivityReady, setReactivityReady,
     brickScore, setBrickScore,
@@ -247,14 +249,14 @@ function MainApp() {
       fontFamily: '-apple-system, sans-serif',
       overflow: 'hidden'
     }}>
-      {screen === 'home' && !gameScreen && !selectedBar && <HomeScreen {...appState} />}
-      {screen === 'profiles' && !gameScreen && !selectedBar && <ProfilesScreen {...appState} />}
-      {screen === 'social' && !gameScreen && !selectedBar && <SocialScreen {...appState} currentUser={currentUser} />}
-      {screen === 'bars' && !gameScreen && !selectedBar && <BarsScreen setScreen={setScreen} setGameScreen={setGameScreen} setSelectedBar={setSelectedBar} currentUser={currentUser} />}
-      {screen === 'referral' && !gameScreen && !selectedBar && <ReferralScreen currentUser={currentUser} />}
-      {screen === 'letters' && !gameScreen && !selectedBar && <LettersScreen currentUser={currentUser} />}
-      {screen === 'journal' && !gameScreen && !selectedBar && <JournalScreen {...appState} />}
-      {screen === 'settings' && !gameScreen && !selectedBar && <SettingsScreen {...appState} />}
+      {screen === 'home' && !gameScreen && !selectedSalon && <EspacePersoScreenSimple {...appState} />}
+      {screen === 'profiles' && !gameScreen && !selectedSalon && <ProfilesScreen {...appState} />}
+      {screen === 'social' && !gameScreen && !selectedSalon && <SocialScreen {...appState} currentUser={currentUser} />}
+      {screen === 'bars' && !gameScreen && !selectedSalon && <BarsScreen setScreen={setScreen} setGameScreen={setGameScreen} setSelectedSalon={setSelectedSalon} currentUser={currentUser} />}
+      {screen === 'referral' && !gameScreen && !selectedSalon && <ReferralScreen currentUser={currentUser} />}
+      {screen === 'letters' && !gameScreen && !selectedSalon && <LettersScreen currentUser={currentUser} />}
+      {screen === 'journal' && !gameScreen && !selectedSalon && <JournalScreen {...appState} />}
+      {screen === 'settings' && !gameScreen && !selectedSalon && <SettingsScreen {...appState} />}
 
       {gameScreen === 'pong' && <PongGame {...appState} currentUser={currentUser} />}
       {gameScreen === 'reactivity' && <WhackAMoleGame {...appState} currentUser={currentUser} />}
@@ -263,7 +265,7 @@ function MainApp() {
       {gameScreen === 'cards' && <CardGame {...appState} currentUser={currentUser} />}
       {gameScreen === 'storytime' && <StoryTimeGame {...appState} currentUser={currentUser} />}
 
-      {selectedBar && <BarDetailScreen {...appState} bar={bars.find(b => b.id === selectedBar)} />}
+      {selectedSalon && <BarDetailScreen {...appState} salon={salons.find(s => s.id === selectedSalon)} />}
 
       <Navigation navItems={navItems} screen={screen} setScreen={setScreen} />
 
