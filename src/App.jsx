@@ -14,6 +14,8 @@ import BarDetailScreen from './components/screens/BarDetailScreen';
 import RankingScreen from './components/screens/RankingScreen';
 import BarsScreen from './components/screens/BarsScreen';
 import ReferralScreen from './components/screens/ReferralScreen';
+import BookEditorScreen from './components/screens/BookEditorScreen';
+import BookViewScreen from './components/screens/BookViewScreen';
 
 // Games
 import PongGame from './components/games/PongGame';
@@ -257,6 +259,8 @@ function MainApp() {
       {screen === 'letters' && !gameScreen && !selectedSalon && <LettersScreen currentUser={currentUser} />}
       {screen === 'journal' && !gameScreen && !selectedSalon && <JournalScreen {...appState} />}
       {screen === 'settings' && !gameScreen && !selectedSalon && <SettingsScreen {...appState} />}
+      {screen === 'book-editor' && !gameScreen && !selectedSalon && <BookEditorScreen currentUser={currentUser} setScreen={setScreen} />}
+      {screen === 'book-view' && !gameScreen && !selectedSalon && <BookViewScreen currentUser={currentUser} setScreen={setScreen} />}
 
       {gameScreen === 'pong' && <PongGame {...appState} currentUser={currentUser} />}
       {gameScreen === 'reactivity' && <WhackAMoleGame {...appState} currentUser={currentUser} />}

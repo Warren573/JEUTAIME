@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Avatar from 'avataaars';
 import { generateAvatarOptions } from '../../utils/avatarGenerator';
 import { allMagic, allGifts } from '../../data/magicGifts';
-import BookEditor from '../book/BookEditor';
 
 export default function EspacePersoScreenSimple({
   currentUser,
@@ -126,7 +125,7 @@ export default function EspacePersoScreenSimple({
         gap: '20px'
       }}>
         {/* 1. Book Personnel */}
-        <BookPersonnelSection currentUser={currentUser} />
+        <BookPersonnelSection currentUser={currentUser} setScreen={setScreen} />
 
         {/* 2. Offrandes Reçues */}
         <OffrandesRecuesSection currentUser={currentUser} />
@@ -149,9 +148,8 @@ export default function EspacePersoScreenSimple({
 }
 
 // 1. BOOK PERSONNEL
-function BookPersonnelSection({ currentUser }) {
+function BookPersonnelSection({ currentUser, setScreen }) {
   const [bookData, setBookData] = useState(null);
-  const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
     if (currentUser?.email) {
@@ -280,19 +278,10 @@ function BookPersonnelSection({ currentUser }) {
           boxShadow: 'var(--shadow-sm)',
           transition: 'all var(--transition-normal)'
         }}
-        onClick={() => setShowEditModal(true)}
+        onClick={() => setScreen('book-editor')}
       >
         ✏️ Éditer mon Book
       </button>
-
-      {/* Modal de l'éditeur */}
-      {showEditModal && (
-        <BookEditor
-          user={currentUser}
-          onClose={() => setShowEditModal(false)}
-          onSave={() => setShowEditModal(false)}
-        />
-      )}
     </div>
   );
 }
