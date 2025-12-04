@@ -235,13 +235,15 @@ function PhotosTab({ bookData, setBookData, setHasChanges }) {
             onClick={handleAddPhoto}
             style={{
               padding: '12px 20px',
-              background: 'linear-gradient(135deg, #667eea, #764ba2)',
-              border: 'none',
-              color: 'white',
-              borderRadius: '8px',
+              background: 'linear-gradient(135deg, var(--color-gold-light), var(--color-gold-dark))',
+              border: '2px solid var(--color-gold-dark)',
+              color: 'var(--color-brown-dark)',
+              borderRadius: 'var(--border-radius-md)',
               cursor: 'pointer',
               fontWeight: '600',
-              whiteSpace: 'nowrap'
+              whiteSpace: 'nowrap',
+              boxShadow: 'var(--shadow-sm)',
+              transition: 'all var(--transition-normal)'
             }}
           >
             ➕ Ajouter
@@ -276,10 +278,10 @@ function PhotosTab({ bookData, setBookData, setHasChanges }) {
                 display: 'none',
                 width: '100%',
                 height: '150px',
-                background: '#2a2a2a',
+                background: 'var(--color-beige)',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#666',
+                color: 'var(--color-text-light)',
                 fontSize: '0.85rem'
               }}>
                 ❌ Image non disponible
@@ -465,16 +467,16 @@ function ExtrasTab({ bookData, setBookData, setHasChanges }) {
             placeholder="Nom ou @pseudo"
             style={{ ...inputStyle, flex: 1 }}
           />
-          <button onClick={handleAddFriend} style={{ padding: '12px 20px', background: 'linear-gradient(135deg, #667eea, #764ba2)', border: 'none', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}>
+          <button onClick={handleAddFriend} style={{ padding: '12px 20px', background: 'linear-gradient(135deg, var(--color-gold-light), var(--color-gold-dark))', border: '2px solid var(--color-gold-dark)', color: 'var(--color-brown-dark)', borderRadius: 'var(--border-radius-md)', cursor: 'pointer', fontWeight: '600', boxShadow: 'var(--shadow-sm)', transition: 'all var(--transition-normal)' }}>
             ➕
           </button>
         </div>
         {topFriends.length > 0 && (
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             {topFriends.map((friend, index) => (
-              <div key={index} style={{ background: '#2a2a2a', padding: '8px 12px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div key={index} style={{ background: 'var(--color-tan)', padding: '8px 12px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '8px', border: '2px solid var(--color-brown-light)', boxShadow: 'var(--shadow-sm)' }}>
                 <span>{friend}</span>
-                <button onClick={() => handleRemoveFriend(index)} style={{ background: 'transparent', border: 'none', color: '#ff4444', cursor: 'pointer', fontSize: '1rem' }}>✕</button>
+                <button onClick={() => handleRemoveFriend(index)} style={{ background: 'transparent', border: 'none', color: 'var(--color-error)', cursor: 'pointer', fontSize: '1rem' }}>✕</button>
               </div>
             ))}
           </div>
@@ -493,7 +495,7 @@ function ExtrasTab({ bookData, setBookData, setHasChanges }) {
             placeholder="URL du GIF"
             style={{ ...inputStyle, flex: 1 }}
           />
-          <button onClick={handleAddGif} style={{ padding: '12px 20px', background: 'linear-gradient(135deg, #667eea, #764ba2)', border: 'none', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}>
+          <button onClick={handleAddGif} style={{ padding: '12px 20px', background: 'linear-gradient(135deg, var(--color-gold-light), var(--color-gold-dark))', border: '2px solid var(--color-gold-dark)', color: 'var(--color-brown-dark)', borderRadius: 'var(--border-radius-md)', cursor: 'pointer', fontWeight: '600', boxShadow: 'var(--shadow-sm)', transition: 'all var(--transition-normal)' }}>
             ➕
           </button>
         </div>
@@ -513,7 +515,7 @@ function ExtrasTab({ bookData, setBookData, setHasChanges }) {
       <div>
         <label style={labelStyle}>❓ Mon Quiz Perso</label>
         {['q1', 'q2', 'q3'].map((qNum, idx) => (
-          <div key={qNum} style={{ marginBottom: '15px', padding: '15px', background: '#2a2a2a', borderRadius: '8px' }}>
+          <div key={qNum} style={{ marginBottom: '15px', padding: '15px', background: 'var(--color-beige-light)', borderRadius: 'var(--border-radius-md)', border: '2px solid var(--color-tan)', boxShadow: 'var(--shadow-sm)' }}>
             <input
               type="text"
               value={quiz[qNum]?.question || ''}
@@ -564,16 +566,19 @@ function TabButton({ active, onClick, icon, label }) {
       onClick={onClick}
       style={{
         padding: '10px 20px',
-        background: active ? 'linear-gradient(135deg, #667eea, #764ba2)' : '#2a2a2a',
-        border: active ? '2px solid #667eea' : '2px solid transparent',
-        color: 'white',
-        borderRadius: '10px',
+        background: active ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))' : 'var(--color-tan)',
+        border: active ? '2px solid var(--color-gold-dark)' : '2px solid var(--color-brown-light)',
+        color: active ? 'var(--color-brown-dark)' : 'var(--color-text-primary)',
+        borderRadius: 'var(--border-radius-md)',
         cursor: 'pointer',
         fontWeight: '600',
         fontSize: '0.9rem',
         display: 'flex',
         alignItems: 'center',
-        gap: '8px'
+        gap: '8px',
+        transition: 'all var(--transition-normal)',
+        boxShadow: active ? 'var(--shadow-md)' : 'var(--shadow-sm)',
+        whiteSpace: 'nowrap'
       }}
     >
       <span>{icon}</span>
@@ -584,66 +589,81 @@ function TabButton({ active, onClick, icon, label }) {
 
 const overlayStyle = {
   position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-  background: 'rgba(0,0,0,0.9)', display: 'flex', alignItems: 'center',
+  background: 'rgba(58, 40, 24, 0.95)', display: 'flex', alignItems: 'center',
   justifyContent: 'center', zIndex: 10000, padding: '20px'
 };
 
 const modalStyle = {
-  background: '#1a1a1a', borderRadius: '16px', maxWidth: '700px',
+  background: 'var(--color-cream)', borderRadius: 'var(--border-radius-lg)', maxWidth: '750px',
   width: '100%', maxHeight: '90vh', display: 'flex', flexDirection: 'column',
-  border: '2px solid #667eea'
+  border: '3px solid var(--color-tan)', boxShadow: 'var(--shadow-xl)'
 };
 
 const headerStyle = {
-  background: 'linear-gradient(135deg, #667eea, #764ba2)', padding: '20px',
-  borderRadius: '14px 14px 0 0', display: 'flex', justifyContent: 'space-between',
-  alignItems: 'center'
+  background: 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))',
+  padding: '20px',
+  borderRadius: 'var(--border-radius-md) var(--border-radius-md) 0 0',
+  display: 'flex', justifyContent: 'space-between',
+  alignItems: 'center',
+  borderBottom: '2px solid var(--color-tan)'
 };
 
 const closeButtonStyle = {
-  background: 'rgba(255,255,255,0.2)', border: 'none', color: 'white',
+  background: 'var(--color-brown)', border: 'none', color: 'var(--color-cream)',
   width: '36px', height: '36px', borderRadius: '50%', cursor: 'pointer',
-  fontSize: '1.5rem'
+  fontSize: '1.5rem', transition: 'all var(--transition-normal)',
+  boxShadow: 'var(--shadow-sm)'
 };
 
 const tabsContainerStyle = {
-  display: 'flex', gap: '10px', padding: '15px', background: '#2a2a2a',
-  borderBottom: '1px solid #333'
+  display: 'flex', gap: '8px', padding: '15px', background: 'var(--color-beige)',
+  borderBottom: '2px solid var(--color-tan)', overflowX: 'auto'
 };
 
 const contentStyle = {
-  flex: 1, overflowY: 'auto', padding: '25px'
+  flex: 1, overflowY: 'auto', padding: '25px', background: 'var(--color-cream)'
 };
 
 const actionsStyle = {
-  padding: '20px', borderTop: '1px solid #333', display: 'flex',
-  gap: '10px', alignItems: 'center', justifyContent: 'flex-end'
+  padding: '20px', borderTop: '2px solid var(--color-tan)', display: 'flex',
+  gap: '10px', alignItems: 'center', justifyContent: 'flex-end',
+  background: 'var(--color-beige-light)'
 };
 
 const labelStyle = {
-  display: 'block', color: '#aaa', fontSize: '0.9rem',
-  marginBottom: '8px', fontWeight: '600'
+  display: 'block', color: 'var(--color-text-secondary)', fontSize: '0.9rem',
+  marginBottom: '8px', fontWeight: '600', fontFamily: 'var(--font-heading)'
 };
 
 const inputStyle = {
-  width: '100%', padding: '12px', background: '#2a2a2a',
-  border: '2px solid #444', borderRadius: '8px', color: 'white',
-  fontSize: '0.95rem', outline: 'none'
+  width: '100%', padding: '12px', background: 'var(--color-beige-light)',
+  border: '2px solid var(--color-tan)', borderRadius: 'var(--border-radius-md)',
+  color: 'var(--color-text-primary)',
+  fontSize: '0.95rem', outline: 'none', transition: 'all var(--transition-normal)'
 };
 
 const previewButtonStyle = {
-  padding: '12px 24px', background: 'linear-gradient(135deg, #667eea, #764ba2)',
-  border: 'none', color: 'white', borderRadius: '10px', cursor: 'pointer',
-  fontWeight: '600'
+  padding: '12px 24px',
+  background: 'linear-gradient(135deg, var(--color-romantic-light), var(--color-romantic))',
+  border: '2px solid var(--color-romantic)', color: 'var(--color-cream)',
+  borderRadius: 'var(--border-radius-md)', cursor: 'pointer',
+  fontWeight: '600', transition: 'all var(--transition-normal)',
+  boxShadow: 'var(--shadow-sm)'
 };
 
 const cancelButtonStyle = {
-  padding: '12px 24px', background: '#2a2a2a', border: '2px solid #444',
-  color: 'white', borderRadius: '10px', cursor: 'pointer', fontWeight: '600'
+  padding: '12px 24px', background: 'var(--color-tan)',
+  border: '2px solid var(--color-brown-light)',
+  color: 'var(--color-text-primary)', borderRadius: 'var(--border-radius-md)',
+  cursor: 'pointer', fontWeight: '600',
+  transition: 'all var(--transition-normal)', boxShadow: 'var(--shadow-sm)'
 };
 
 const saveButtonStyle = {
-  padding: '12px 24px', background: 'linear-gradient(135deg, #4CAF50, #45a049)',
-  border: 'none', color: 'white', borderRadius: '10px', cursor: 'pointer',
-  fontWeight: '600'
+  padding: '12px 24px',
+  background: 'linear-gradient(135deg, var(--color-gold-light), var(--color-gold-dark))',
+  border: '2px solid var(--color-gold-dark)', color: 'var(--color-brown-dark)',
+  borderRadius: 'var(--border-radius-md)', cursor: 'pointer',
+  fontWeight: '600', transition: 'all var(--transition-normal)',
+  boxShadow: 'var(--shadow-sm)'
 };

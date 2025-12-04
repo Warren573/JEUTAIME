@@ -35,7 +35,7 @@ export default function BookPreview({ bookData, onClose }) {
           )}
 
           {/* Header avec bio */}
-          <div style={{ textAlign: 'center', marginBottom: '30px', padding: '20px', background: 'rgba(0,0,0,0.3)', borderRadius: '12px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '30px', padding: '20px', background: 'var(--color-beige)', border: '2px solid var(--color-tan)', boxShadow: 'var(--shadow-sm)', borderRadius: '12px' }}>
             <p style={{ fontSize: '1.2rem', fontStyle: 'italic', margin: '0 0 15px 0', color: accentColor }}>"{bio}"</p>
             {mood && <p style={{ margin: '5px 0', fontSize: '0.95rem' }}>{mood}</p>}
             {status && <p style={{ margin: '5px 0', fontSize: '0.95rem', opacity: 0.8 }}>{status}</p>}
@@ -67,7 +67,7 @@ export default function BookPreview({ bookData, onClose }) {
 
           {/* Citation */}
           {favorites.quote && (
-            <div style={{ padding: '20px', background: 'rgba(0,0,0,0.3)', borderRadius: '12px', margin: '20px 0', borderLeft: `4px solid ${accentColor}` }}>
+            <div style={{ padding: '20px', background: 'var(--color-beige)', border: '2px solid var(--color-tan)', boxShadow: 'var(--shadow-sm)', borderRadius: '12px', margin: '20px 0', borderLeft: `4px solid ${accentColor}` }}>
               <p style={{ fontSize: '1.1rem', fontStyle: 'italic', margin: 0 }}>{favorites.quote}</p>
             </div>
           )}
@@ -123,7 +123,7 @@ export default function BookPreview({ bookData, onClose }) {
                 const q = quiz[qNum];
                 if (!q?.question) return null;
                 return (
-                  <div key={qNum} style={{ marginBottom: '15px', padding: '15px', background: 'rgba(0,0,0,0.3)', borderRadius: '8px' }}>
+                  <div key={qNum} style={{ marginBottom: '15px', padding: '15px', background: 'var(--color-beige)', border: '2px solid var(--color-tan)', boxShadow: 'var(--shadow-sm)', borderRadius: '8px' }}>
                     <p style={{ fontWeight: '600', margin: '0 0 8px 0' }}>{q.question}</p>
                     <details style={{ cursor: 'pointer' }}>
                       <summary style={{ color: accentColor, fontWeight: '600' }}>Voir la réponse</summary>
@@ -182,9 +182,9 @@ function InfoGrid({ children }) {
 function InfoItem({ label, value }) {
   if (!value) return null;
   return (
-    <div style={{ padding: '10px', background: 'rgba(0,0,0,0.3)', borderRadius: '8px' }}>
-      <p style={{ fontSize: '0.85rem', opacity: 0.7, margin: '0 0 4px 0' }}>{label}</p>
-      <p style={{ fontSize: '1rem', fontWeight: '600', margin: 0 }}>{value}</p>
+    <div style={{ padding: '12px', background: 'var(--color-beige)', borderRadius: 'var(--border-radius-md)', border: '2px solid var(--color-tan)', boxShadow: 'var(--shadow-sm)' }}>
+      <p style={{ fontSize: '0.85rem', color: 'var(--color-text-light)', margin: '0 0 4px 0', fontWeight: '600' }}>{label}</p>
+      <p style={{ fontSize: '1rem', fontWeight: '600', margin: 0, color: 'var(--color-text-primary)' }}>{value}</p>
     </div>
   );
 }
@@ -204,7 +204,7 @@ const overlayStyle = {
   left: 0,
   right: 0,
   bottom: 0,
-  background: 'rgba(0,0,0,0.95)',
+  background: 'rgba(58, 40, 24, 0.97)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -214,32 +214,36 @@ const overlayStyle = {
 
 const previewContainerStyle = {
   width: '100%',
-  maxWidth: '800px',
+  maxWidth: '850px',
   maxHeight: '90vh',
   display: 'flex',
   flexDirection: 'column',
-  borderRadius: '16px',
+  borderRadius: 'var(--border-radius-lg)',
   overflow: 'hidden',
-  boxShadow: '0 10px 40px rgba(0,0,0,0.5)'
+  boxShadow: 'var(--shadow-xl)',
+  border: '3px solid var(--color-gold)'
 };
 
 const headerStyle = {
-  background: 'linear-gradient(135deg, #667eea, #764ba2)',
+  background: 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))',
   padding: '20px',
   display: 'flex',
   justifyContent: 'space-between',
-  alignItems: 'center'
+  alignItems: 'center',
+  borderBottom: '2px solid var(--color-tan)'
 };
 
 const closeButtonStyle = {
-  background: 'rgba(255,255,255,0.2)',
+  background: 'var(--color-brown)',
   border: 'none',
-  color: 'white',
+  color: 'var(--color-cream)',
   width: '36px',
   height: '36px',
   borderRadius: '50%',
   cursor: 'pointer',
-  fontSize: '1.5rem'
+  fontSize: '1.5rem',
+  boxShadow: 'var(--shadow-sm)',
+  transition: 'all var(--transition-normal)'
 };
 
 const contentStyle = {
