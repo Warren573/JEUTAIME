@@ -223,7 +223,7 @@ export function getBarName(barId) {
     2: 'Café de Paris ☕',
     3: 'Île des pirates 🏴‍☠️',
     4: 'Théâtre improvisé 🎭',
-    5: 'Salon à cocktails 🍸'
+    5: 'Bar à cocktails 🍸'
   };
   return barNames[barId] || `Salon #${barId}`;
 }
