@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import Avatar from 'avataaars';
 import { generateAvatarOptions } from '../../utils/avatarGenerator';
-import BookIndex from '../book/BookIndex';
-import BookEditor from '../book/BookEditor';
 import ReceivedGifts from '../personal/ReceivedGifts';
 import SocialStats from '../personal/SocialStats';
 import MagicInventory from '../magic/MagicInventory';
@@ -14,8 +12,6 @@ export default function EspacePersoScreen({
   setSelectedSalon,
   joinedSalons = []
 }) {
-  const [showBook, setShowBook] = useState(false);
-  const [showEditor, setShowEditor] = useState(false);
   const [activeSection, setActiveSection] = useState('overview');
 
   const avatarOptions = currentUser?.avatarData || generateAvatarOptions(currentUser?.name, currentUser?.gender);
@@ -96,14 +92,14 @@ export default function EspacePersoScreen({
           flexWrap: 'wrap'
         }}>
           <ActionButton
-            onClick={() => setShowBook(true)}
+            onClick={() => setScreen('book-view')}
             gradient="linear-gradient(135deg, #FFD700, #FFA500)"
             textColor="#000"
           >
             📖 Voir mon Book
           </ActionButton>
           <ActionButton
-            onClick={() => setShowEditor(true)}
+            onClick={() => setScreen('book-edit')}
             gradient="linear-gradient(135deg, #4CAF50, #45a049)"
           >
             ✏️ Éditer
@@ -135,7 +131,7 @@ export default function EspacePersoScreen({
           cursor: 'pointer',
           transition: 'all 0.2s'
         }}
-        onClick={() => setShowBook(true)}
+        onClick={() => setScreen('book-view')}
         onMouseEnter={(e) => {
           e.currentTarget.style.transform = 'translateY(-4px)';
           e.currentTarget.style.boxShadow = '0 12px 30px rgba(102, 126, 234, 0.3)';
@@ -319,24 +315,6 @@ export default function EspacePersoScreen({
           </div>
         </div>
       </div>
-
-      {/* Modal du Book */}
-      {showBook && (
-        <BookIndex
-          user={currentUser}
-          isOwnBook={true}
-          onClose={() => setShowBook(false)}
-        />
-      )}
-
-      {/* Modal de l'éditeur */}
-      {showEditor && (
-        <BookEditor
-          user={currentUser}
-          onClose={() => setShowEditor(false)}
-          onSave={() => setShowEditor(false)}
-        />
-      )}
     </div>
   );
 }
