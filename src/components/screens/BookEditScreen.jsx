@@ -45,33 +45,44 @@ export default function BookEditScreen({ user, setScreen }) {
       <div style={{
         width: '100%',
         minHeight: '100vh',
-        background: '#000',
+        background: 'var(--color-beige-light)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
       }}>
-        <p style={{ color: 'white', textAlign: 'center' }}>Chargement...</p>
+        <p style={{ color: 'var(--color-text-primary)', textAlign: 'center' }}>Chargement...</p>
       </div>
     );
   }
+
+  const tabs = [
+    { id: 'infos', icon: '📖', label: 'Infos' },
+    { id: 'about', icon: '✨', label: 'À propos' },
+    { id: 'videos', icon: '🎥', label: 'Vidéos' },
+    { id: 'photos', icon: '📸', label: 'Photos' },
+    { id: 'notes', icon: '✍️', label: 'Notes' },
+    { id: 'moodboard', icon: '🎨', label: 'Moodboard' },
+    { id: 'private', icon: '🔒', label: 'Privé' }
+  ];
 
   return (
     <div style={{
       width: '100%',
       minHeight: '100vh',
-      background: '#000',
+      background: 'var(--color-beige-light)',
       display: 'flex',
       flexDirection: 'column',
       paddingBottom: '80px'
     }}>
       {/* Header */}
       <div style={{
-        background: 'linear-gradient(135deg, #667eea, #764ba2)',
+        background: 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))',
         padding: '15px',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        borderBottom: '2px solid rgba(255,255,255,0.1)',
+        borderBottom: '3px double var(--color-brown-dark)',
+        boxShadow: 'var(--shadow-md)',
         position: 'sticky',
         top: 0,
         zIndex: 100,
@@ -82,10 +93,11 @@ export default function BookEditScreen({ user, setScreen }) {
         </button>
         <h2 style={{
           margin: 0,
-          color: 'white',
+          color: 'var(--color-brown-dark)',
           fontSize: 'clamp(1rem, 4vw, 1.5rem)',
           textAlign: 'center',
-          flex: 1
+          flex: 1,
+          fontWeight: '700'
         }}>
           ✏️ Éditer mon Book
         </h2>
@@ -100,33 +112,24 @@ export default function BookEditScreen({ user, setScreen }) {
         overflowX: 'auto',
         padding: '12px 10px',
         gap: '8px',
-        background: '#2a2a2a',
-        borderBottom: '1px solid #333',
+        background: 'var(--color-cream)',
+        borderBottom: '2px solid var(--color-brown-light)',
         position: 'sticky',
         top: '60px',
         zIndex: 99,
         WebkitOverflowScrolling: 'touch',
         scrollbarWidth: 'thin',
-        scrollbarColor: '#667eea #2a2a2a'
+        scrollbarColor: 'var(--color-gold) var(--color-cream)'
       }}>
-        <TabButton
-          active={activeTab === 'infos'}
-          onClick={() => setActiveTab('infos')}
-          icon="📖"
-          label="Infos"
-        />
-        <TabButton
-          active={activeTab === 'about'}
-          onClick={() => setActiveTab('about')}
-          icon="✨"
-          label="À propos"
-        />
-        <TabButton
-          active={activeTab === 'private'}
-          onClick={() => setActiveTab('private')}
-          icon="🔒"
-          label="Privé"
-        />
+        {tabs.map((tab) => (
+          <TabButton
+            key={tab.id}
+            active={activeTab === tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            icon={tab.icon}
+            label={tab.label}
+          />
+        ))}
       </div>
 
       {/* Content - Avec scroll si nécessaire */}
@@ -145,33 +148,38 @@ export default function BookEditScreen({ user, setScreen }) {
             width: 8px;
           }
           div::-webkit-scrollbar-track {
-            background: #1a1a1a;
+            background: var(--color-beige-light);
           }
           div::-webkit-scrollbar-thumb {
-            background: #667eea;
+            background: var(--color-gold);
             border-radius: 4px;
           }
         `}</style>
 
         {activeTab === 'infos' && <InfosTab bookData={bookData} onChange={handleChange} />}
         {activeTab === 'about' && <AboutTab bookData={bookData} onChange={handleChange} />}
+        {activeTab === 'videos' && <VideosTab bookData={bookData} onChange={handleChange} />}
+        {activeTab === 'photos' && <PhotosTab bookData={bookData} onChange={handleChange} />}
+        {activeTab === 'notes' && <NotesTab bookData={bookData} onChange={handleChange} />}
+        {activeTab === 'moodboard' && <MoodboardTab bookData={bookData} onChange={handleChange} />}
         {activeTab === 'private' && <PrivateTab bookData={bookData} onChange={handleChange} />}
       </div>
 
       {/* Actions footer - Sticky en bas */}
       <div style={{
         padding: '15px',
-        borderTop: '1px solid #333',
-        background: '#1a1a1a',
+        borderTop: '2px solid var(--color-brown-light)',
+        background: 'var(--color-cream)',
         display: 'flex',
         gap: '10px',
         alignItems: 'center',
         justifyContent: 'space-between',
         position: 'sticky',
-        bottom: '60px'
+        bottom: '60px',
+        boxShadow: '0 -4px 10px rgba(0,0,0,0.1)'
       }}>
         {hasChanges && (
-          <span style={{ color: '#FFA500', fontSize: '0.85rem', flex: 1 }}>
+          <span style={{ color: 'var(--color-romantic)', fontSize: '0.85rem', flex: 1, fontWeight: '600' }}>
             ⚠️ Non sauvegardé
           </span>
         )}
@@ -186,7 +194,8 @@ export default function BookEditScreen({ user, setScreen }) {
   );
 }
 
-// Tabs Components
+// ===== TABS COMPONENTS =====
+
 function InfosTab({ bookData, onChange }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
@@ -219,6 +228,86 @@ function AboutTab({ bookData, onChange }) {
   );
 }
 
+function VideosTab({ bookData, onChange }) {
+  return (
+    <div>
+      <label style={labelStyle}>🎥 Gérer mes vidéos</label>
+      <div style={{
+        background: 'var(--color-cream)',
+        padding: '30px',
+        borderRadius: '12px',
+        textAlign: 'center',
+        border: '2px dashed var(--color-gold)'
+      }}>
+        <div style={{ fontSize: '3rem', marginBottom: '15px' }}>🎥</div>
+        <p style={{ color: 'var(--color-text-secondary)', marginBottom: '15px' }}>
+          Fonctionnalité d'ajout de vidéos à venir
+        </p>
+        <p style={{ color: 'var(--color-text-light)', fontSize: '0.85rem' }}>
+          Tu pourras bientôt ajouter des liens YouTube, Vimeo, etc.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function PhotosTab({ bookData, onChange }) {
+  return (
+    <div>
+      <label style={labelStyle}>📸 Gérer mon album photo</label>
+      <div style={{
+        background: 'var(--color-cream)',
+        padding: '30px',
+        borderRadius: '12px',
+        textAlign: 'center',
+        border: '2px dashed var(--color-gold)'
+      }}>
+        <div style={{ fontSize: '3rem', marginBottom: '15px' }}>📸</div>
+        <p style={{ color: 'var(--color-text-secondary)', marginBottom: '15px' }}>
+          Upload de photos à venir
+        </p>
+        <p style={{ color: 'var(--color-text-light)', fontSize: '0.85rem' }}>
+          Tu pourras bientôt télécharger tes meilleures photos
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function NotesTab({ bookData, onChange }) {
+  return (
+    <div>
+      <label style={labelStyle}>✍️ Mes notes & pensées</label>
+      <textarea
+        value={bookData.notes || ''}
+        onChange={(e) => onChange('notes', e.target.value)}
+        placeholder="Écris tes pensées, citations préférées, réflexions..."
+        style={{ ...inputStyle, minHeight: '300px', resize: 'vertical', fontFamily: 'inherit' }}
+      />
+      <p style={{ color: 'var(--color-text-light)', fontSize: '0.85rem', marginTop: '10px', fontStyle: 'italic' }}>
+        💡 Partage tes réflexions, citations favorites, mood du moment...
+      </p>
+    </div>
+  );
+}
+
+function MoodboardTab({ bookData, onChange }) {
+  return (
+    <div>
+      <label style={labelStyle}>🎨 Mon moodboard / style</label>
+      <textarea
+        value={bookData.moodboard || ''}
+        onChange={(e) => onChange('moodboard', e.target.value)}
+        placeholder="Tags qui te définissent : Créatif, Authentique, Fun, Deep, Aventurier..."
+        style={{ ...inputStyle, minHeight: '200px', resize: 'vertical', fontFamily: 'inherit' }}
+      />
+      <p style={{ color: 'var(--color-text-light)', fontSize: '0.85rem', marginTop: '10px', fontStyle: 'italic' }}>
+        🎭 Décris ton style, ton univers, tes vibes...
+      </p>
+    </div>
+  );
+}
+
 function PrivateTab({ bookData, onChange }) {
   return (
     <div>
@@ -229,9 +318,22 @@ function PrivateTab({ bookData, onChange }) {
         placeholder="Contenu visible seulement pour toi et ceux qui ont débloqué..."
         style={{ ...inputStyle, minHeight: '300px', resize: 'vertical', fontFamily: 'inherit' }}
       />
+      <div style={{
+        marginTop: '15px',
+        padding: '15px',
+        background: 'var(--color-cream)',
+        borderRadius: '8px',
+        border: '2px solid var(--color-romantic)'
+      }}>
+        <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.85rem', margin: 0 }}>
+          🔒 <strong>Confidentialité :</strong> Ce contenu n'est visible que par toi et les personnes qui ont débloqué ton Book (après 10 lettres échangées ou via Premium).
+        </p>
+      </div>
     </div>
   );
 }
+
+// ===== HELPER COMPONENTS =====
 
 function InputField({ label, value, onChange }) {
   return (
@@ -248,9 +350,11 @@ function TabButton({ active, onClick, icon, label }) {
       onClick={onClick}
       style={{
         padding: '8px 14px',
-        background: active ? 'linear-gradient(135deg, #667eea, #764ba2)' : '#1a1a1a',
-        border: active ? '2px solid #667eea' : '2px solid transparent',
-        color: 'white',
+        background: active
+          ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))'
+          : 'var(--color-beige)',
+        border: active ? '2px solid var(--color-gold-dark)' : '2px solid var(--color-brown-light)',
+        color: active ? 'var(--color-brown-dark)' : 'var(--color-text-primary)',
         borderRadius: '8px',
         cursor: 'pointer',
         fontWeight: '600',
@@ -260,7 +364,8 @@ function TabButton({ active, onClick, icon, label }) {
         gap: '6px',
         whiteSpace: 'nowrap',
         flexShrink: 0,
-        transition: 'all 0.2s'
+        transition: 'all 0.2s',
+        boxShadow: active ? 'var(--shadow-sm)' : 'none'
       }}
     >
       <span>{icon}</span>
@@ -269,11 +374,12 @@ function TabButton({ active, onClick, icon, label }) {
   );
 }
 
-// Styles
+// ===== STYLES =====
+
 const headerButtonStyle = {
-  background: 'rgba(255,255,255,0.2)',
-  border: 'none',
-  color: 'white',
+  background: 'rgba(74, 55, 40, 0.3)',
+  border: '2px solid var(--color-brown-dark)',
+  color: 'var(--color-brown-dark)',
   padding: '8px 16px',
   borderRadius: '8px',
   cursor: 'pointer',
@@ -282,8 +388,8 @@ const headerButtonStyle = {
 };
 
 const saveHeaderButtonStyle = {
-  background: 'rgba(76, 175, 80, 0.3)',
-  border: '2px solid #4CAF50',
+  background: 'var(--color-success)',
+  border: '2px solid var(--color-brown-dark)',
   color: 'white',
   padding: '8px 12px',
   borderRadius: '8px',
@@ -294,7 +400,7 @@ const saveHeaderButtonStyle = {
 
 const labelStyle = {
   display: 'block',
-  color: '#aaa',
+  color: 'var(--color-text-secondary)',
   fontSize: '0.85rem',
   marginBottom: '8px',
   fontWeight: '600'
@@ -303,20 +409,21 @@ const labelStyle = {
 const inputStyle = {
   width: '100%',
   padding: '12px',
-  background: '#2a2a2a',
-  border: '2px solid #444',
+  background: 'var(--color-cream)',
+  border: '2px solid var(--color-brown-light)',
   borderRadius: '8px',
-  color: 'white',
+  color: 'var(--color-text-primary)',
   fontSize: '0.9rem',
   outline: 'none',
-  boxSizing: 'border-box'
+  boxSizing: 'border-box',
+  transition: 'border-color 0.2s'
 };
 
 const cancelButtonStyle = {
   padding: '10px 20px',
-  background: '#2a2a2a',
-  border: '2px solid #444',
-  color: 'white',
+  background: 'var(--color-beige)',
+  border: '2px solid var(--color-brown-light)',
+  color: 'var(--color-text-primary)',
   borderRadius: '8px',
   cursor: 'pointer',
   fontWeight: '600',
@@ -325,11 +432,12 @@ const cancelButtonStyle = {
 
 const saveButtonStyle = {
   padding: '10px 20px',
-  background: 'linear-gradient(135deg, #4CAF50, #45a049)',
+  background: 'linear-gradient(135deg, var(--color-success), var(--color-friendly))',
   border: 'none',
   color: 'white',
   borderRadius: '8px',
   cursor: 'pointer',
   fontWeight: '600',
-  fontSize: '0.9rem'
+  fontSize: '0.9rem',
+  boxShadow: 'var(--shadow-sm)'
 };
