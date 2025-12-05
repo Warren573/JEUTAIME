@@ -347,8 +347,6 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
                 <option value="">Sélectionnez...</option>
                 <option value="Femmes">Femmes</option>
                 <option value="Hommes">Hommes</option>
-                <option value="Tout le monde">Tout le monde</option>
-                <option value="Non-binaires">Non-binaires</option>
               </select>
             </div>
 
@@ -362,10 +360,9 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
               >
                 <option value="">Sélectionnez...</option>
                 <option value="Relation sérieuse">Relation sérieuse</option>
-                <option value="Relation décontractée">Relation décontractée</option>
-                <option value="Amitié">Amitié</option>
-                <option value="Voir ce qui se passe">Voir ce qui se passe</option>
-                <option value="Mariage">Mariage</option>
+                <option value="Du Fun">Du Fun</option>
+                <option value="Amitiés">Amitiés</option>
+                <option value="Advienne que pourra">Advienne que pourra</option>
               </select>
             </div>
 
@@ -378,11 +375,12 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
                 style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
               >
                 <option value="">Sélectionnez...</option>
-                <option value="Pas d'enfants">Pas d'enfants</option>
+                <option value="Je n'ai pas d'enfant">Je n'ai pas d'enfant</option>
                 <option value="J'ai des enfants">J'ai des enfants</option>
                 <option value="J'en veux un jour">J'en veux un jour</option>
+                <option value="J'en ai mais pas assez">J'en ai mais pas assez</option>
                 <option value="Je n'en veux pas">Je n'en veux pas</option>
-                <option value="Peut-être">Peut-être</option>
+                <option value="Rien n'est certain">Rien n'est certain</option>
               </select>
             </div>
           </div>
