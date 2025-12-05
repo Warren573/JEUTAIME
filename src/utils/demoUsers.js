@@ -4,11 +4,18 @@ import { enrichedProfiles } from '../data/appData';
 /**
  * Initialise les profils démo comme de vrais utilisateurs dans localStorage
  * Ces profils ont un badge 'bot' pour les identifier
+ * Met à jour les profils existants avec les nouvelles données
  */
 export function initializeDemoUsers() {
-  const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+  // SUPPRESSION TOTALE ET BRUTALE DE TOUT
+  console.log('💣 SUPPRESSION TOTALE du localStorage des profils démo...');
+  localStorage.removeItem('jeutaime_users');
+  localStorage.removeItem('jeutaime_demo_version');
 
-  // Vérifier si les profils démo existent déjà
+  console.log('🔧 CRÉATION FORCÉE des profils démo avec préférences de rencontre...');
+
+  const freshUsers = [];
+
   const demoEmails = [
     'admin@jeutaime.com',
     'sophie@demo.jeutaime.com',
@@ -16,23 +23,12 @@ export function initializeDemoUsers() {
     'chloe@demo.jeutaime.com'
   ];
 
-  const existingDemoUsers = users.filter(u => demoEmails.includes(u.email));
-
-  // Si tous les profils démo existent déjà, ne rien faire
-  if (existingDemoUsers.length === demoEmails.length) {
-    return;
-  }
-
-  // Créer les profils démo comme vrais users
+  // Créer les nouveaux profils démo
   const demoUsers = enrichedProfiles.map((profile, index) => {
     const email = demoEmails[index];
 
-    // Vérifier si ce profil existe déjà
-    const existing = users.find(u => u.email === email);
-    if (existing) return null;
-
-    // Créer le profil démo avec tous les champs requis
-    return {
+    // Créer/Mettre à jour le profil démo avec tous les champs requis
+    const demoProfile = {
       // Infos de base (comme ProfileCreation)
       email: email,
       password: 'demo123', // Mot de passe par défaut pour les bots
@@ -40,7 +36,9 @@ export function initializeDemoUsers() {
       pseudo: profile.name,
       age: profile.age,
       city: profile.city,
-      gender: index === 0 ? 'M' : 'F', // Admin = M, autres = F
+      postalCode: index === 0 ? '75001' : index === 1 ? '75008' : index === 2 ? '75011' : '75017',
+      birthDate: index === 0 ? '1990-05-15' : index === 1 ? '1995-08-22' : index === 2 ? '1993-03-10' : '1992-11-05',
+      gender: index === 0 ? 'Homme' : 'Femme',
 
       // Avatar et photos
       avatar: profile.avatar,
@@ -50,6 +48,23 @@ export function initializeDemoUsers() {
       bio: profile.bio,
       interests: profile.interests?.split(', ') || [],
       job: profile.job || '',
+
+      // Description physique humoristique
+      physicalDescription: index === 0 ? 'athletique' :
+                          index === 1 ? 'moyenne' :
+                          index === 2 ? 'formes-genereuses' :
+                          'muscle',
+
+      // Préférences de rencontre
+      interestedIn: index === 0 ? 'Femmes' : index === 1 ? 'Hommes' : index === 2 ? 'Hommes' : 'Femmes',
+      lookingFor: index === 0 ? 'Relation sérieuse' :
+                  index === 1 ? 'Advienne que pourra' :
+                  index === 2 ? 'Amitiés' :
+                  'Du Fun',
+      children: index === 0 ? 'Je n\'ai pas d\'enfant' :
+                index === 1 ? 'J\'en veux un jour' :
+                index === 2 ? 'Je n\'en veux pas' :
+                'Rien n\'est certain',
 
       // Questions (générer des réponses par défaut)
       question1: {
@@ -75,12 +90,12 @@ export function initializeDemoUsers() {
       },
 
       // Système de jeu
-      id: 1000 + index, // IDs fixes pour les bots
+      id: 1000 + index,
       createdAt: new Date().toISOString(),
-      coins: profile.id === 0 ? 999999 : 500, // Admin a beaucoup de pièces
+      coins: profile.id === 0 ? 999999 : 500,
       points: profile.stats.letters * 10 + profile.stats.games * 5 + profile.stats.bars * 15,
       premium: profile.badges.includes('premium'),
-      badges: [...profile.badges, 'bot'], // Ajouter le badge 'bot'
+      badges: [...profile.badges, 'bot'],
       stats: profile.stats,
 
       // Compatibilité et distance
@@ -92,14 +107,25 @@ export function initializeDemoUsers() {
       isAdmin: profile.isAdmin || false,
       isBot: true // Marquer comme bot
     };
-  }).filter(u => u !== null); // Filtrer les profils déjà existants
+
+    return demoProfile;
+  });
 
   // Ajouter les nouveaux profils démo
-  if (demoUsers.length > 0) {
-    const updatedUsers = [...users, ...demoUsers];
-    localStorage.setItem('jeutaime_users', JSON.stringify(updatedUsers));
-    console.log(`✅ ${demoUsers.length} profil(s) démo initialisé(s)`);
-  }
+  const allUsers = [...freshUsers, ...demoUsers];
+  localStorage.setItem('jeutaime_users', JSON.stringify(allUsers));
+
+  console.log(`✅ ${demoUsers.length} profil(s) démo CRÉÉS avec succès !`);
+
+  // VÉRIFIER CE QUI A ÉTÉ SAUVEGARDÉ
+  demoUsers.forEach(demo => {
+    console.log(`✨ ${demo.name}:`, {
+      interestedIn: demo.interestedIn,
+      lookingFor: demo.lookingFor,
+      children: demo.children,
+      physicalDescription: demo.physicalDescription
+    });
+  });
 }
 
 /**

@@ -30,7 +30,7 @@ export default function Games() {
     {
       id: 2,
       icon: '🔨',
-      name: 'Tape la Taupe',
+      name: 'Tape Taupe',
       desc: 'Réflexes et rapidité',
       plays: 12456,
       avgCoins: 38,

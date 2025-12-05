@@ -123,7 +123,7 @@ export default function WhackAMoleGame({ setGameScreen, moleBestScore, setMoleBe
       >
         ← Retour aux jeux
       </button>
-      <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600', color: 'var(--color-brown-dark)' }}>⚡ Tape la Taupe</h2>
+      <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600', color: 'var(--color-brown-dark)' }}>⚡ Tape Taupe</h2>
 
       <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', textAlign: 'center' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', marginBottom: '20px', maxWidth: '300px', margin: '0 auto 20px' }}>
@@ -143,7 +143,6 @@ export default function WhackAMoleGame({ setGameScreen, moleBestScore, setMoleBe
                 transition: 'all 0.1s ease'
               }}
             >
-              {localActiveMoles.includes(index) ? '😊' : ''}
             </button>
           ))}
         </div>
