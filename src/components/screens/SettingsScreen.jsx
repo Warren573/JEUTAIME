@@ -16,11 +16,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
     city: currentUser?.city || '',
     birthDate: currentUser?.birthDate || '',
     gender: currentUser?.gender || '',
-    job: currentUser?.job || '',
-    music: currentUser?.music || '',
-    movie: currentUser?.movie || '',
-    food: currentUser?.food || '',
-    about: currentUser?.about || ''
+    physicalDescription: currentUser?.physicalDescription || ''
   });
 
   // Questions state for editing
@@ -275,77 +271,58 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
             </div>
           </div>
 
-          {/* Préférences et goûts */}
-          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid #667eea' }}>
+          {/* Description physique */}
+          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid #FF6B9D' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
-              <div style={{ fontSize: '24px' }}>🎨</div>
-              <h3 style={{ fontSize: '16px', margin: 0, fontWeight: '600', color: '#667eea' }}>Préférences & Goûts</h3>
-            </div>
-            <p style={{ fontSize: '13px', color: '#888', marginBottom: '15px' }}>Ces infos apparaîtront dans ton Book</p>
-
-            <div style={{ marginBottom: '12px' }}>
-              <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px', fontWeight: '600' }}>💼 Activité / Métier</label>
-              <input
-                type="text"
-                value={profileData.job}
-                onChange={(e) => setProfileData({ ...profileData, job: e.target.value })}
-                placeholder="Ex: Étudiant·e, Développeur·se, etc."
-                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
-              />
-            </div>
-
-            <div style={{ marginBottom: '12px' }}>
-              <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px', fontWeight: '600' }}>🎵 Musique préférée</label>
-              <input
-                type="text"
-                value={profileData.music}
-                onChange={(e) => setProfileData({ ...profileData, music: e.target.value })}
-                placeholder="Ex: Indé / Électro, Jazz, Hip-hop..."
-                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
-              />
-            </div>
-
-            <div style={{ marginBottom: '12px' }}>
-              <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px', fontWeight: '600' }}>🎬 Film préféré</label>
-              <input
-                type="text"
-                value={profileData.movie}
-                onChange={(e) => setProfileData({ ...profileData, movie: e.target.value })}
-                placeholder="Ex: Inception, La La Land..."
-                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
-              />
-            </div>
-
-            <div style={{ marginBottom: '12px' }}>
-              <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px', fontWeight: '600' }}>🍕 Plat favori</label>
-              <input
-                type="text"
-                value={profileData.food}
-                onChange={(e) => setProfileData({ ...profileData, food: e.target.value })}
-                placeholder="Ex: Pizza, Sushi, Ramen..."
-                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
-              />
-            </div>
-          </div>
-
-          {/* À propos de moi */}
-          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid #FFA500' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
-              <div style={{ fontSize: '24px' }}>💭</div>
-              <h3 style={{ fontSize: '16px', margin: 0, fontWeight: '600', color: '#FFA500' }}>À propos de moi (Optionnel)</h3>
+              <div style={{ fontSize: '24px' }}>😄</div>
+              <h3 style={{ fontSize: '16px', margin: 0, fontWeight: '600', color: '#FF6B9D' }}>Description physique (avec humour)</h3>
             </div>
             <p style={{ fontSize: '13px', color: '#888', marginBottom: '15px' }}>
-              Raconte-toi de manière plus détaillée, tes passions, ce qui te rend unique...
+              Comment te décrirais-tu physiquement ? Choisis l'option qui te correspond le mieux !
             </p>
-            <textarea
-              value={profileData.about}
-              onChange={(e) => setProfileData({ ...profileData, about: e.target.value })}
-              placeholder="Passionné·e par la vie, les rencontres et les moments authentiques. Toujours partant·e pour une discussion deep à 3h du matin ou une aventure improvisée..."
-              maxLength={1000}
-              style={{ width: '100%', padding: '12px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit' }}
-            />
-            <div style={{ fontSize: '12px', color: '#888', marginTop: '8px' }}>
-              {profileData.about.length} / 1000 caractères
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
+              {[
+                { value: 'filiforme', label: 'Filiforme', emoji: '🍝', desc: 'comme un spaghetti' },
+                { value: 'ras-motte', label: 'Ras motte', emoji: '🐭', desc: 'petite taille' },
+                { value: 'grande-gigue', label: 'Grande gigue', emoji: '🦒', desc: 'très grand•e' },
+                { value: 'beaute-interieure', label: 'Grande beauté intérieure', emoji: '✨', desc: 'ce qui compte vraiment' },
+                { value: 'athletique', label: 'Athlétique', emoji: '🏃', desc: 'toujours en mouvement' },
+                { value: 'formes-genereuses', label: 'En formes généreuses', emoji: '🍑', desc: 'que de courbes !' },
+                { value: 'moyenne', label: 'Moyenne', emoji: '⚖️', desc: 'le juste milieu parfait' },
+                { value: 'muscle', label: 'Musclé•e', emoji: '💪', desc: 'ça se voit sous le t-shirt' }
+              ].map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => setProfileData({ ...profileData, physicalDescription: option.value })}
+                  style={{
+                    padding: '15px',
+                    background: profileData.physicalDescription === option.value
+                      ? 'linear-gradient(135deg, #FF6B9D, #C2185B)'
+                      : 'var(--color-beige)',
+                    border: profileData.physicalDescription === option.value
+                      ? '2px solid #FF6B9D'
+                      : '2px solid var(--color-brown-light)',
+                    borderRadius: '10px',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    textAlign: 'center',
+                    color: profileData.physicalDescription === option.value
+                      ? 'white'
+                      : 'var(--color-text-primary)'
+                  }}
+                >
+                  <div style={{ fontSize: '24px', marginBottom: '5px' }}>{option.emoji}</div>
+                  <div style={{ fontSize: '14px', fontWeight: '600', marginBottom: '3px' }}>{option.label}</div>
+                  <div style={{
+                    fontSize: '11px',
+                    fontStyle: 'italic',
+                    opacity: profileData.physicalDescription === option.value ? 0.9 : 0.7
+                  }}>
+                    {option.desc}
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
 
