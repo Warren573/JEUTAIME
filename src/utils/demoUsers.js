@@ -60,15 +60,15 @@ export function initializeDemoUsers() {
                           'muscle',
 
       // Préférences de rencontre
-      interestedIn: index === 0 ? 'Femmes' : index === 1 ? 'Hommes' : index === 2 ? 'Tout le monde' : 'Hommes',
+      interestedIn: index === 0 ? 'Femmes' : index === 1 ? 'Hommes' : index === 2 ? 'Hommes' : 'Femmes',
       lookingFor: index === 0 ? 'Relation sérieuse' :
-                  index === 1 ? 'Voir ce qui se passe' :
-                  index === 2 ? 'Amitié' :
-                  'Relation sérieuse',
-      children: index === 0 ? 'Pas d\'enfants' :
+                  index === 1 ? 'Advienne que pourra' :
+                  index === 2 ? 'Amitiés' :
+                  'Du Fun',
+      children: index === 0 ? 'Je n\'ai pas d\'enfant' :
                 index === 1 ? 'J\'en veux un jour' :
                 index === 2 ? 'Je n\'en veux pas' :
-                'Peut-être',
+                'Rien n\'est certain',
 
       // Questions (générer des réponses par défaut)
       question1: {
