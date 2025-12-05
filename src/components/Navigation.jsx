@@ -59,9 +59,15 @@ export default function Navigation({ navItems, screen, setScreen }) {
             }}
           >
             <div style={{
-              fontSize: '21px',
+              fontSize: '22px',
               filter: isActive ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' : 'none',
-              transition: 'all var(--transition-normal)'
+              transition: 'all var(--transition-normal)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '28px',
+              height: '28px',
+              lineHeight: '1'
             }}>
               {nav.icon}
             </div>

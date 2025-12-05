@@ -32,10 +32,13 @@ export default function EspacePersoScreenSimple({
 
   return (
     <div style={{
-      height: '100vh',
+      minHeight: '100vh',
+      maxHeight: '100vh',
       overflowY: 'auto',
       paddingBottom: '80px',
-      background: 'var(--color-beige-light)'
+      background: 'var(--color-beige-light)',
+      display: 'flex',
+      flexDirection: 'column'
     }}>
       {/* Header Identité */}
       <div style={{
