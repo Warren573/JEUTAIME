@@ -564,6 +564,69 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
             </div>
           </div>
 
+          {/* Description Physique */}
+          {currentProfileData.physicalDescription && (
+            <div style={{
+              background: 'var(--color-cream)',
+              borderRadius: 'var(--border-radius-md)',
+              padding: 'var(--spacing-md)',
+              marginBottom: 'var(--spacing-md)',
+              border: '2px solid #FF6B9D'
+            }}>
+              <div style={{
+                fontSize: '0.75rem',
+                color: '#FF6B9D',
+                marginBottom: 'var(--spacing-xs)',
+                fontWeight: '600',
+                textTransform: 'uppercase'
+              }}>😄 Description Physique</div>
+              <div style={{ fontSize: '0.9rem', color: 'var(--color-text-primary)', fontStyle: 'italic' }}>
+                {currentProfileData.physicalDescription === 'filiforme' && '🍝 Filiforme (comme un spaghetti)'}
+                {currentProfileData.physicalDescription === 'ras-motte' && '🐭 Ras motte (petite taille)'}
+                {currentProfileData.physicalDescription === 'grande-gigue' && '🦒 Grande gigue (très grand•e)'}
+                {currentProfileData.physicalDescription === 'beaute-interieure' && '✨ Grande beauté intérieure (ce qui compte vraiment)'}
+                {currentProfileData.physicalDescription === 'athletique' && '🏃 Athlétique (toujours en mouvement)'}
+                {currentProfileData.physicalDescription === 'formes-genereuses' && '🍑 En formes généreuses (que de courbes !)'}
+                {currentProfileData.physicalDescription === 'moyenne' && '⚖️ Moyenne (le juste milieu parfait)'}
+                {currentProfileData.physicalDescription === 'muscle' && '💪 Musclé•e (ça se voit sous le t-shirt)'}
+              </div>
+            </div>
+          )}
+
+          {/* Préférences de Rencontre */}
+          {(currentProfileData.interestedIn || currentProfileData.lookingFor || currentProfileData.children) && (
+            <div style={{
+              background: 'var(--color-cream)',
+              borderRadius: 'var(--border-radius-md)',
+              padding: 'var(--spacing-md)',
+              marginBottom: 'var(--spacing-md)',
+              border: '2px solid #9C27B0'
+            }}>
+              <div style={{
+                fontSize: '0.75rem',
+                color: '#9C27B0',
+                marginBottom: 'var(--spacing-xs)',
+                fontWeight: '600',
+                textTransform: 'uppercase'
+              }}>💕 Préférences de Rencontre</div>
+              {currentProfileData.interestedIn && (
+                <div style={{ fontSize: '0.9rem', color: 'var(--color-text-primary)', marginBottom: 'var(--spacing-xs)' }}>
+                  💑 Intéressé•e par : <strong>{currentProfileData.interestedIn}</strong>
+                </div>
+              )}
+              {currentProfileData.lookingFor && (
+                <div style={{ fontSize: '0.9rem', color: 'var(--color-text-primary)', marginBottom: 'var(--spacing-xs)' }}>
+                  🔍 Recherche : <strong>{currentProfileData.lookingFor}</strong>
+                </div>
+              )}
+              {currentProfileData.children && (
+                <div style={{ fontSize: '0.9rem', color: 'var(--color-text-primary)' }}>
+                  👶 Enfants : <strong>{currentProfileData.children}</strong>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Intérêts */}
           <div style={{ marginBottom: 'var(--spacing-md)' }}>
             <div style={{

@@ -16,7 +16,10 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
     city: currentUser?.city || '',
     birthDate: currentUser?.birthDate || '',
     gender: currentUser?.gender || '',
-    physicalDescription: currentUser?.physicalDescription || ''
+    physicalDescription: currentUser?.physicalDescription || '',
+    interestedIn: currentUser?.interestedIn || '',
+    lookingFor: currentUser?.lookingFor || '',
+    children: currentUser?.children || ''
   });
 
   // Questions state for editing
@@ -323,6 +326,64 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
                   </div>
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* Préférences de Rencontre */}
+          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid #9C27B0' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
+              <div style={{ fontSize: '24px' }}>💕</div>
+              <h3 style={{ fontSize: '16px', margin: 0, fontWeight: '600', color: '#9C27B0' }}>Préférences de Rencontre</h3>
+            </div>
+
+            <div style={{ marginBottom: '12px' }}>
+              <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px', fontWeight: '600' }}>💑 Intéressé•e par</label>
+              <p style={{ fontSize: '11px', color: '#aaa', marginBottom: '8px', fontStyle: 'italic' }}>Qui cherchez-vous ?</p>
+              <select
+                value={profileData.interestedIn}
+                onChange={(e) => setProfileData({ ...profileData, interestedIn: e.target.value })}
+                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
+              >
+                <option value="">Sélectionnez...</option>
+                <option value="Femmes">Femmes</option>
+                <option value="Hommes">Hommes</option>
+                <option value="Tout le monde">Tout le monde</option>
+                <option value="Non-binaires">Non-binaires</option>
+              </select>
+            </div>
+
+            <div style={{ marginBottom: '12px' }}>
+              <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px', fontWeight: '600' }}>🔍 Recherche</label>
+              <p style={{ fontSize: '11px', color: '#aaa', marginBottom: '8px', fontStyle: 'italic' }}>Que recherchez-vous ?</p>
+              <select
+                value={profileData.lookingFor}
+                onChange={(e) => setProfileData({ ...profileData, lookingFor: e.target.value })}
+                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
+              >
+                <option value="">Sélectionnez...</option>
+                <option value="Relation sérieuse">Relation sérieuse</option>
+                <option value="Relation décontractée">Relation décontractée</option>
+                <option value="Amitié">Amitié</option>
+                <option value="Voir ce qui se passe">Voir ce qui se passe</option>
+                <option value="Mariage">Mariage</option>
+              </select>
+            </div>
+
+            <div style={{ marginBottom: '12px' }}>
+              <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px', fontWeight: '600' }}>👶 Enfants</label>
+              <p style={{ fontSize: '11px', color: '#aaa', marginBottom: '8px', fontStyle: 'italic' }}>Votre situation</p>
+              <select
+                value={profileData.children}
+                onChange={(e) => setProfileData({ ...profileData, children: e.target.value })}
+                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
+              >
+                <option value="">Sélectionnez...</option>
+                <option value="Pas d'enfants">Pas d'enfants</option>
+                <option value="J'ai des enfants">J'ai des enfants</option>
+                <option value="J'en veux un jour">J'en veux un jour</option>
+                <option value="Je n'en veux pas">Je n'en veux pas</option>
+                <option value="Peut-être">Peut-être</option>
+              </select>
             </div>
           </div>
 

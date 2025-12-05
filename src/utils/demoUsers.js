@@ -40,7 +40,9 @@ export function initializeDemoUsers() {
       pseudo: profile.name,
       age: profile.age,
       city: profile.city,
-      gender: index === 0 ? 'M' : 'F', // Admin = M, autres = F
+      postalCode: index === 0 ? '75001' : index === 1 ? '75008' : index === 2 ? '75011' : '75017',
+      birthDate: index === 0 ? '1990-05-15' : index === 1 ? '1995-08-22' : index === 2 ? '1993-03-10' : '1992-11-05',
+      gender: index === 0 ? 'Homme' : 'Femme',
 
       // Avatar et photos
       avatar: profile.avatar,
@@ -50,6 +52,23 @@ export function initializeDemoUsers() {
       bio: profile.bio,
       interests: profile.interests?.split(', ') || [],
       job: profile.job || '',
+
+      // Description physique humoristique
+      physicalDescription: index === 0 ? 'athletique' :
+                          index === 1 ? 'moyenne' :
+                          index === 2 ? 'formes-genereuses' :
+                          'muscle',
+
+      // Préférences de rencontre
+      interestedIn: index === 0 ? 'Femmes' : index === 1 ? 'Hommes' : index === 2 ? 'Tout le monde' : 'Hommes',
+      lookingFor: index === 0 ? 'Relation sérieuse' :
+                  index === 1 ? 'Voir ce qui se passe' :
+                  index === 2 ? 'Amitié' :
+                  'Relation sérieuse',
+      children: index === 0 ? 'Pas d\'enfants' :
+                index === 1 ? 'J\'en veux un jour' :
+                index === 2 ? 'Je n\'en veux pas' :
+                'Peut-être',
 
       // Questions (générer des réponses par défaut)
       question1: {

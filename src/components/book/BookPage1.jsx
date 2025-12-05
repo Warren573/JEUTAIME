@@ -39,38 +39,80 @@ export default function BookPage1({ user, isOwnBook }) {
         display: 'grid',
         gap: '15px'
       }}>
-        <InfoCard label="🎂 Âge" value={user?.age || '25 ans'} />
+        <InfoCard label="🎂 Âge" value={`${user?.age || '25'} ans`} />
         <InfoCard label="📍 Ville" value={user?.city || 'Paris'} />
-        <InfoCard label="💼 Activité" value={user?.job || 'Étudiant·e'} />
-        <InfoCard label="🎵 Musique préférée" value={user?.music || 'Indé / Électro'} />
-        <InfoCard label="🎬 Film préféré" value={user?.movie || 'À compléter'} />
-        <InfoCard label="🍕 Plat favori" value={user?.food || 'Pizza 🍕'} />
+        <InfoCard label="⚧ Genre" value={user?.gender || 'Non renseigné'} />
       </div>
 
-      {/* Section "À propos de moi" */}
-      <div style={{
-        marginTop: '30px',
-        background: '#1a1a1a',
-        padding: '20px',
-        borderRadius: '12px'
-      }}>
-        <h3 style={{
-          fontSize: '1.3rem',
-          marginBottom: '15px',
-          color: '#FFA500'
+      {/* Description Physique */}
+      {user?.physicalDescription && (
+        <div style={{
+          marginTop: '25px',
+          background: 'linear-gradient(135deg, #FF6B9D20, #C2185B20)',
+          padding: '20px',
+          borderRadius: '12px',
+          borderLeft: '4px solid #FF6B9D'
         }}>
-          ✨ À propos de moi
-        </h3>
-        <p style={{
-          lineHeight: '1.7',
-          color: '#ccc'
+          <h3 style={{
+            fontSize: '1.2rem',
+            marginBottom: '12px',
+            color: '#FF6B9D'
+          }}>
+            😄 Description Physique
+          </h3>
+          <p style={{
+            fontSize: '1.05rem',
+            color: '#ddd',
+            fontStyle: 'italic',
+            margin: 0
+          }}>
+            {user.physicalDescription === 'filiforme' && '🍝 Filiforme (comme un spaghetti)'}
+            {user.physicalDescription === 'ras-motte' && '🐭 Ras motte (petite taille)'}
+            {user.physicalDescription === 'grande-gigue' && '🦒 Grande gigue (très grand•e)'}
+            {user.physicalDescription === 'beaute-interieure' && '✨ Grande beauté intérieure (ce qui compte vraiment)'}
+            {user.physicalDescription === 'athletique' && '🏃 Athlétique (toujours en mouvement)'}
+            {user.physicalDescription === 'formes-genereuses' && '🍑 En formes généreuses (que de courbes !)'}
+            {user.physicalDescription === 'moyenne' && '⚖️ Moyenne (le juste milieu parfait)'}
+            {user.physicalDescription === 'muscle' && '💪 Musclé•e (ça se voit sous le t-shirt)'}
+          </p>
+        </div>
+      )}
+
+      {/* Préférences de Rencontre */}
+      {(user?.interestedIn || user?.lookingFor || user?.children) && (
+        <div style={{
+          marginTop: '25px',
+          background: 'linear-gradient(135deg, #9C27B020, #7B1FA220)',
+          padding: '20px',
+          borderRadius: '12px',
+          borderLeft: '4px solid #9C27B0'
         }}>
-          {user?.about ||
-            'Passionné·e par la vie, les rencontres et les moments authentiques. ' +
-            'Toujours partant·e pour une discussion deep à 3h du matin ou une aventure improvisée. ' +
-            'J\'adore les gens qui assument leur bizarrerie ✨'}
-        </p>
-      </div>
+          <h3 style={{
+            fontSize: '1.2rem',
+            marginBottom: '15px',
+            color: '#9C27B0'
+          }}>
+            💕 Préférences de Rencontre
+          </h3>
+          <div style={{ display: 'grid', gap: '10px' }}>
+            {user?.interestedIn && (
+              <div style={{ color: '#ddd' }}>
+                <strong style={{ color: '#aaa' }}>💑 Intéressé•e par :</strong> {user.interestedIn}
+              </div>
+            )}
+            {user?.lookingFor && (
+              <div style={{ color: '#ddd' }}>
+                <strong style={{ color: '#aaa' }}>🔍 Recherche :</strong> {user.lookingFor}
+              </div>
+            )}
+            {user?.children && (
+              <div style={{ color: '#ddd' }}>
+                <strong style={{ color: '#aaa' }}>👶 Enfants :</strong> {user.children}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {isOwnBook && (
         <button
