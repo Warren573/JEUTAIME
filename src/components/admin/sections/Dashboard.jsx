@@ -18,7 +18,7 @@ export default function Dashboard() {
 
   const topGames = [
     { name: 'HeroLove Quest', plays: 15234, avgCoins: 45, color: '#E91E63' },
-    { name: 'Tape la Taupe', plays: 12456, avgCoins: 38, color: '#FFD700' },
+    { name: 'Tape Taupe', plays: 12456, avgCoins: 38, color: '#FFD700' },
     { name: 'Pong', plays: 9876, avgCoins: 25, color: '#4CAF50' },
     { name: 'Jeu des Cartes', plays: 8234, avgCoins: 52, color: '#9C27B0' },
     { name: 'Morpion', plays: 5432, avgCoins: 18, color: '#2196F3' }
