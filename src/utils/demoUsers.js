@@ -7,18 +7,8 @@ import { enrichedProfiles } from '../data/appData';
  * Met à jour les profils existants avec les nouvelles données
  */
 export function initializeDemoUsers() {
-  const DEMO_VERSION = 6; // Incrémenter pour forcer la mise à jour
-  const currentVersion = parseInt(localStorage.getItem('jeutaime_demo_version') || '0');
-
-  console.log(`🔄 Vérification des profils démo - Version actuelle: ${currentVersion}, Version requise: ${DEMO_VERSION}`);
-
-  // Si la version n'a pas changé, ne rien faire
-  if (currentVersion >= DEMO_VERSION) {
-    console.log('⏭️ Profils démo à jour, aucune mise à jour nécessaire');
-    return;
-  }
-
-  console.log('🔧 Mise à jour des profils démo en cours...');
+  // FORCER LA MISE À JOUR À CHAQUE FOIS (pour debug)
+  console.log('🔧 FORÇAGE de la mise à jour des profils démo...');
 
   const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
 
@@ -134,8 +124,7 @@ export function initializeDemoUsers() {
   });
 
   localStorage.setItem('jeutaime_users', JSON.stringify(users));
-  localStorage.setItem('jeutaime_demo_version', DEMO_VERSION.toString());
-  console.log(`✅ ${demoUsers.length} profil(s) démo initialisé(s)/mis à jour (version ${DEMO_VERSION})`);
+  console.log(`✅ ${demoUsers.length} profil(s) démo FORCÉS à jour !`);
 }
 
 /**
