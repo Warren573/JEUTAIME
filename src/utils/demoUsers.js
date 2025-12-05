@@ -7,6 +7,9 @@ import { enrichedProfiles } from '../data/appData';
  * Met à jour les profils existants avec les nouvelles données
  */
 export function initializeDemoUsers() {
+  const DEMO_VERSION = 3; // Incrémenter pour forcer la mise à jour
+  const currentVersion = parseInt(localStorage.getItem('jeutaime_demo_version') || '0');
+
   const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
 
   // Vérifier si les profils démo existent déjà
@@ -16,6 +19,14 @@ export function initializeDemoUsers() {
     'emma@demo.jeutaime.com',
     'chloe@demo.jeutaime.com'
   ];
+
+  // Si la version est à jour et tous les profils existent, ne rien faire
+  if (currentVersion >= DEMO_VERSION) {
+    const existingDemoUsers = users.filter(u => demoEmails.includes(u.email));
+    if (existingDemoUsers.length === demoEmails.length) {
+      return;
+    }
+  }
 
   // Créer/Mettre à jour les profils démo comme vrais users
   const demoUsers = enrichedProfiles.map((profile, index) => {
@@ -121,7 +132,8 @@ export function initializeDemoUsers() {
   });
 
   localStorage.setItem('jeutaime_users', JSON.stringify(users));
-  console.log(`✅ ${demoUsers.length} profil(s) démo initialisé(s)/mis à jour`);
+  localStorage.setItem('jeutaime_demo_version', DEMO_VERSION.toString());
+  console.log(`✅ ${demoUsers.length} profil(s) démo initialisé(s)/mis à jour (version ${DEMO_VERSION})`);
 }
 
 /**
