@@ -7,23 +7,21 @@ import { enrichedProfiles } from '../data/appData';
  * Met à jour les profils existants avec les nouvelles données
  */
 export function initializeDemoUsers() {
-  // NETTOYAGE COMPLET - Supprimer tous les anciens profils démo
-  console.log('🧹 NETTOYAGE complet des profils démo...');
-  const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+  // SUPPRESSION TOTALE ET BRUTALE DE TOUT
+  console.log('💣 SUPPRESSION TOTALE du localStorage des profils démo...');
+  localStorage.removeItem('jeutaime_users');
+  localStorage.removeItem('jeutaime_demo_version');
+
+  console.log('🔧 CRÉATION FORCÉE des profils démo avec préférences de rencontre...');
+
+  const freshUsers = [];
+
   const demoEmails = [
     'admin@jeutaime.com',
     'sophie@demo.jeutaime.com',
     'emma@demo.jeutaime.com',
     'chloe@demo.jeutaime.com'
   ];
-
-  // SUPPRIMER tous les profils démo existants
-  const cleanedUsers = users.filter(u => !demoEmails.includes(u.email) && !u.isBot);
-  localStorage.setItem('jeutaime_users', JSON.stringify(cleanedUsers));
-
-  console.log('🔧 CRÉATION des nouveaux profils démo avec les préférences de rencontre...');
-
-  const freshUsers = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
 
   // Créer les nouveaux profils démo
   const demoUsers = enrichedProfiles.map((profile, index) => {
