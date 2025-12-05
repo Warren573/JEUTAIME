@@ -63,10 +63,13 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedSalon,
 
   return (
     <div style={{
-      height: '100vh',
+      minHeight: '100vh',
+      maxHeight: '100vh',
       overflowY: 'auto',
       paddingBottom: '100px',
-      background: 'var(--color-beige-light)'
+      background: 'var(--color-beige-light)',
+      display: 'flex',
+      flexDirection: 'column'
     }}>
       {/* En-tête */}
       <div style={{

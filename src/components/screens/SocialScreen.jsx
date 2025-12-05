@@ -96,7 +96,8 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
 
   return (
     <div style={{
-      height: '100vh',
+      minHeight: '100vh',
+      maxHeight: '100vh',
       overflowY: 'auto',
       paddingBottom: '100px',
       background: 'var(--color-beige-light)',
