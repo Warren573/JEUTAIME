@@ -116,15 +116,33 @@ export function initializeDemoUsers() {
     const existingIndex = users.findIndex(u => u.email === demoUser.email);
     if (existingIndex !== -1) {
       // Mettre à jour le profil existant
+      console.log(`📝 Mise à jour du profil: ${demoUser.name}`, {
+        interestedIn: demoUser.interestedIn,
+        lookingFor: demoUser.lookingFor,
+        children: demoUser.children
+      });
       users[existingIndex] = { ...users[existingIndex], ...demoUser };
     } else {
       // Ajouter un nouveau profil
+      console.log(`➕ Ajout du profil: ${demoUser.name}`);
       users.push(demoUser);
     }
   });
 
   localStorage.setItem('jeutaime_users', JSON.stringify(users));
   console.log(`✅ ${demoUsers.length} profil(s) démo FORCÉS à jour !`);
+
+  // VÉRIFIER CE QUI A ÉTÉ SAUVEGARDÉ
+  const saved = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+  const firstDemo = saved.find(u => u.isBot);
+  if (firstDemo) {
+    console.log('🔍 Vérification du premier profil démo sauvegardé:', {
+      name: firstDemo.name,
+      interestedIn: firstDemo.interestedIn,
+      lookingFor: firstDemo.lookingFor,
+      children: firstDemo.children
+    });
+  }
 }
 
 /**
