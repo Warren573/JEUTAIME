@@ -7,12 +7,9 @@ import { enrichedProfiles } from '../data/appData';
  * Met à jour les profils existants avec les nouvelles données
  */
 export function initializeDemoUsers() {
-  // FORCER LA MISE À JOUR À CHAQUE FOIS (pour debug)
-  console.log('🔧 FORÇAGE de la mise à jour des profils démo...');
-
+  // NETTOYAGE COMPLET - Supprimer tous les anciens profils démo
+  console.log('🧹 NETTOYAGE complet des profils démo...');
   const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
-
-  // Vérifier si les profils démo existent déjà
   const demoEmails = [
     'admin@jeutaime.com',
     'sophie@demo.jeutaime.com',
@@ -20,12 +17,17 @@ export function initializeDemoUsers() {
     'chloe@demo.jeutaime.com'
   ];
 
-  // Créer/Mettre à jour les profils démo comme vrais users
+  // SUPPRIMER tous les profils démo existants
+  const cleanedUsers = users.filter(u => !demoEmails.includes(u.email) && !u.isBot);
+  localStorage.setItem('jeutaime_users', JSON.stringify(cleanedUsers));
+
+  console.log('🔧 CRÉATION des nouveaux profils démo avec les préférences de rencontre...');
+
+  const freshUsers = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+
+  // Créer les nouveaux profils démo
   const demoUsers = enrichedProfiles.map((profile, index) => {
     const email = demoEmails[index];
-
-    // Vérifier si ce profil existe déjà
-    const existing = users.find(u => u.email === email);
 
     // Créer/Mettre à jour le profil démo avec tous les champs requis
     const demoProfile = {
@@ -90,13 +92,13 @@ export function initializeDemoUsers() {
       },
 
       // Système de jeu
-      id: existing?.id || 1000 + index, // Garder l'ID existant ou en créer un
-      createdAt: existing?.createdAt || new Date().toISOString(),
-      coins: existing?.coins || (profile.id === 0 ? 999999 : 500),
-      points: existing?.points || (profile.stats.letters * 10 + profile.stats.games * 5 + profile.stats.bars * 15),
+      id: 1000 + index,
+      createdAt: new Date().toISOString(),
+      coins: profile.id === 0 ? 999999 : 500,
+      points: profile.stats.letters * 10 + profile.stats.games * 5 + profile.stats.bars * 15,
       premium: profile.badges.includes('premium'),
-      badges: existing?.badges || [...profile.badges, 'bot'],
-      stats: existing?.stats || profile.stats,
+      badges: [...profile.badges, 'bot'],
+      stats: profile.stats,
 
       // Compatibilité et distance
       compatibility: profile.compatibility,
@@ -111,38 +113,21 @@ export function initializeDemoUsers() {
     return demoProfile;
   });
 
-  // Remplacer ou ajouter les profils démo
-  demoUsers.forEach(demoUser => {
-    const existingIndex = users.findIndex(u => u.email === demoUser.email);
-    if (existingIndex !== -1) {
-      // Mettre à jour le profil existant
-      console.log(`📝 Mise à jour du profil: ${demoUser.name}`, {
-        interestedIn: demoUser.interestedIn,
-        lookingFor: demoUser.lookingFor,
-        children: demoUser.children
-      });
-      users[existingIndex] = { ...users[existingIndex], ...demoUser };
-    } else {
-      // Ajouter un nouveau profil
-      console.log(`➕ Ajout du profil: ${demoUser.name}`);
-      users.push(demoUser);
-    }
-  });
+  // Ajouter les nouveaux profils démo
+  const allUsers = [...freshUsers, ...demoUsers];
+  localStorage.setItem('jeutaime_users', JSON.stringify(allUsers));
 
-  localStorage.setItem('jeutaime_users', JSON.stringify(users));
-  console.log(`✅ ${demoUsers.length} profil(s) démo FORCÉS à jour !`);
+  console.log(`✅ ${demoUsers.length} profil(s) démo CRÉÉS avec succès !`);
 
   // VÉRIFIER CE QUI A ÉTÉ SAUVEGARDÉ
-  const saved = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
-  const firstDemo = saved.find(u => u.isBot);
-  if (firstDemo) {
-    console.log('🔍 Vérification du premier profil démo sauvegardé:', {
-      name: firstDemo.name,
-      interestedIn: firstDemo.interestedIn,
-      lookingFor: firstDemo.lookingFor,
-      children: firstDemo.children
+  demoUsers.forEach(demo => {
+    console.log(`✨ ${demo.name}:`, {
+      interestedIn: demo.interestedIn,
+      lookingFor: demo.lookingFor,
+      children: demo.children,
+      physicalDescription: demo.physicalDescription
     });
-  }
+  });
 }
 
 /**
