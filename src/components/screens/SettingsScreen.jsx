@@ -8,12 +8,48 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
   const [copiedCode, setCopiedCode] = useState(false);
   const [showAvatarEditor, setShowAvatarEditor] = useState(false);
 
+  // Profile state for editing
+  const [profileData, setProfileData] = useState({
+    name: currentUser?.name || '',
+    bio: currentUser?.bio || '',
+    postalCode: currentUser?.postalCode || '',
+    city: currentUser?.city || '',
+    birthDate: currentUser?.birthDate || '',
+    gender: currentUser?.gender || '',
+    job: currentUser?.job || '',
+    music: currentUser?.music || '',
+    movie: currentUser?.movie || '',
+    food: currentUser?.food || '',
+    about: currentUser?.about || ''
+  });
+
   // Questions state for editing
   const [questions, setQuestions] = useState({
     question1: currentUser?.question1 || { text: '', answerA: '', answerB: '', answerC: '', correctAnswer: '' },
     question2: currentUser?.question2 || { text: '', answerA: '', answerB: '', answerC: '', correctAnswer: '' },
     question3: currentUser?.question3 || { text: '', answerA: '', answerB: '', answerC: '', correctAnswer: '' }
   });
+
+  const handleSaveProfile = () => {
+    // Validate bio length
+    if (profileData.bio.length < 50) {
+      alert('⚠️ La bio doit contenir au moins 50 caractères !');
+      return;
+    }
+
+    // Save profile to localStorage
+    const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+    const userIndex = users.findIndex(u => u.email === currentUser.email);
+
+    if (userIndex !== -1) {
+      const updatedUser = { ...users[userIndex], ...profileData };
+      users[userIndex] = updatedUser;
+      localStorage.setItem('jeutaime_users', JSON.stringify(users));
+      localStorage.setItem('jeutaime_current_user', JSON.stringify(updatedUser));
+      setCurrentUser(updatedUser);
+      alert('✅ Ton profil a été mis à jour !');
+    }
+  };
 
   const handleSaveQuestions = () => {
     // Save questions to localStorage
@@ -154,42 +190,162 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
           {/* Bio obligatoire */}
           <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid #E91E63' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
-              <div style={{ fontSize: '24px' }}>❓</div>
+              <div style={{ fontSize: '24px' }}>✨</div>
               <h3 style={{ fontSize: '16px', margin: 0, fontWeight: '600', color: '#E91E63' }}>Bio (Obligatoire - Min 50 caractères)</h3>
             </div>
             <textarea
+              value={profileData.bio}
+              onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
               placeholder="Décrivez-vous de manière authentique. C'est la première chose que les autres verront..."
-              style={{ width: '100%', padding: '12px', background: 'var(--color-beige)', border: '1px solid #E91E63', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', minHeight: '100px', resize: 'vertical', fontFamily: 'inherit' }}>
-            </textarea>
-            <div style={{ fontSize: '12px', color: '#888', marginTop: '8px' }}>0 / 500 caractères <span style={{ color: '#E91E63' }}>(minimum 50)</span></div>
+              maxLength={500}
+              style={{ width: '100%', padding: '12px', background: 'var(--color-beige)', border: `1px solid ${profileData.bio.length >= 50 ? '#4CAF50' : '#E91E63'}`, borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', minHeight: '100px', resize: 'vertical', fontFamily: 'inherit' }}
+            />
+            <div style={{ fontSize: '12px', color: profileData.bio.length >= 50 ? '#4CAF50' : '#888', marginTop: '8px' }}>
+              {profileData.bio.length} / 500 caractères
+              <span style={{ color: profileData.bio.length >= 50 ? '#4CAF50' : '#E91E63', fontWeight: '600' }}>
+                {profileData.bio.length >= 50 ? ' ✓' : ` (minimum 50)`}
+              </span>
+            </div>
           </div>
 
           {/* Informations Personnelles */}
-          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px' }}>
-            <h3 style={{ fontSize: '16px', margin: '0 0 15px 0', fontWeight: '600' }}>Informations Personnelles</h3>
-
-            <div style={{ marginBottom: '12px' }}>
-              <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px' }}>Code Postal</label>
-              <input type="text" placeholder="75001" style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }} />
+          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid var(--color-gold)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
+              <div style={{ fontSize: '24px' }}>👤</div>
+              <h3 style={{ fontSize: '16px', margin: 0, fontWeight: '600', color: 'var(--color-gold-dark)' }}>Informations Personnelles</h3>
             </div>
 
             <div style={{ marginBottom: '12px' }}>
-              <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px' }}>Ville</label>
-              <input type="text" placeholder="Paris" style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }} />
+              <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px', fontWeight: '600' }}>📛 Nom / Prénom</label>
+              <input
+                type="text"
+                value={profileData.name}
+                onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
+                placeholder="Ex: Sophie Martin"
+                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
+              />
             </div>
 
             <div style={{ marginBottom: '12px' }}>
-              <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px' }}>Date de naissance</label>
-              <input type="date" style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }} />
+              <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px', fontWeight: '600' }}>📮 Code Postal</label>
+              <input
+                type="text"
+                value={profileData.postalCode}
+                onChange={(e) => setProfileData({ ...profileData, postalCode: e.target.value })}
+                placeholder="75001"
+                maxLength={5}
+                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
+              />
             </div>
 
             <div style={{ marginBottom: '12px' }}>
-              <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px' }}>Genre</label>
-              <select style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}>
-                <option>Sélectionnez votre genre</option>
-                <option>Homme</option>
-                <option>Femme</option>
+              <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px', fontWeight: '600' }}>📍 Ville</label>
+              <input
+                type="text"
+                value={profileData.city}
+                onChange={(e) => setProfileData({ ...profileData, city: e.target.value })}
+                placeholder="Paris"
+                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '12px' }}>
+              <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px', fontWeight: '600' }}>🎂 Date de naissance</label>
+              <input
+                type="date"
+                value={profileData.birthDate}
+                onChange={(e) => setProfileData({ ...profileData, birthDate: e.target.value })}
+                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '12px' }}>
+              <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px', fontWeight: '600' }}>⚧ Genre</label>
+              <select
+                value={profileData.gender}
+                onChange={(e) => setProfileData({ ...profileData, gender: e.target.value })}
+                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
+              >
+                <option value="">Sélectionnez votre genre</option>
+                <option value="Homme">Homme</option>
+                <option value="Femme">Femme</option>
+                <option value="Non-binaire">Non-binaire</option>
+                <option value="Autre">Autre</option>
               </select>
+            </div>
+          </div>
+
+          {/* Préférences et goûts */}
+          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid #667eea' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
+              <div style={{ fontSize: '24px' }}>🎨</div>
+              <h3 style={{ fontSize: '16px', margin: 0, fontWeight: '600', color: '#667eea' }}>Préférences & Goûts</h3>
+            </div>
+            <p style={{ fontSize: '13px', color: '#888', marginBottom: '15px' }}>Ces infos apparaîtront dans ton Book</p>
+
+            <div style={{ marginBottom: '12px' }}>
+              <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px', fontWeight: '600' }}>💼 Activité / Métier</label>
+              <input
+                type="text"
+                value={profileData.job}
+                onChange={(e) => setProfileData({ ...profileData, job: e.target.value })}
+                placeholder="Ex: Étudiant·e, Développeur·se, etc."
+                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '12px' }}>
+              <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px', fontWeight: '600' }}>🎵 Musique préférée</label>
+              <input
+                type="text"
+                value={profileData.music}
+                onChange={(e) => setProfileData({ ...profileData, music: e.target.value })}
+                placeholder="Ex: Indé / Électro, Jazz, Hip-hop..."
+                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '12px' }}>
+              <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px', fontWeight: '600' }}>🎬 Film préféré</label>
+              <input
+                type="text"
+                value={profileData.movie}
+                onChange={(e) => setProfileData({ ...profileData, movie: e.target.value })}
+                placeholder="Ex: Inception, La La Land..."
+                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '12px' }}>
+              <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px', fontWeight: '600' }}>🍕 Plat favori</label>
+              <input
+                type="text"
+                value={profileData.food}
+                onChange={(e) => setProfileData({ ...profileData, food: e.target.value })}
+                placeholder="Ex: Pizza, Sushi, Ramen..."
+                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
+              />
+            </div>
+          </div>
+
+          {/* À propos de moi */}
+          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid #FFA500' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
+              <div style={{ fontSize: '24px' }}>💭</div>
+              <h3 style={{ fontSize: '16px', margin: 0, fontWeight: '600', color: '#FFA500' }}>À propos de moi (Optionnel)</h3>
+            </div>
+            <p style={{ fontSize: '13px', color: '#888', marginBottom: '15px' }}>
+              Raconte-toi de manière plus détaillée, tes passions, ce qui te rend unique...
+            </p>
+            <textarea
+              value={profileData.about}
+              onChange={(e) => setProfileData({ ...profileData, about: e.target.value })}
+              placeholder="Passionné·e par la vie, les rencontres et les moments authentiques. Toujours partant·e pour une discussion deep à 3h du matin ou une aventure improvisée..."
+              maxLength={1000}
+              style={{ width: '100%', padding: '12px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', minHeight: '120px', resize: 'vertical', fontFamily: 'inherit' }}
+            />
+            <div style={{ fontSize: '12px', color: '#888', marginTop: '8px' }}>
+              {profileData.about.length} / 1000 caractères
             </div>
           </div>
 
@@ -339,7 +495,12 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
           </div>
 
           {/* Bouton Enregistrer */}
-          <button style={{ width: '100%', padding: '15px', background: 'linear-gradient(135deg, #E91E63, #C2185B)', border: 'none', color: 'white', borderRadius: '12px', cursor: 'pointer', fontWeight: '700', fontSize: '16px', boxShadow: '0 4px 15px rgba(233, 30, 99, 0.3)' }}>
+          <button
+            onClick={handleSaveProfile}
+            style={{ width: '100%', padding: '15px', background: 'linear-gradient(135deg, #4CAF50, #45a049)', border: 'none', color: 'white', borderRadius: '12px', cursor: 'pointer', fontWeight: '700', fontSize: '16px', boxShadow: '0 4px 15px rgba(76, 175, 80, 0.3)', transition: 'transform 0.2s' }}
+            onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.98)'}
+            onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+          >
             💾 Enregistrer mon profil
           </button>
         </div>
