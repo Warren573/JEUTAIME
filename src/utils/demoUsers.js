@@ -4,6 +4,7 @@ import { enrichedProfiles } from '../data/appData';
 /**
  * Initialise les profils démo comme de vrais utilisateurs dans localStorage
  * Ces profils ont un badge 'bot' pour les identifier
+ * Met à jour les profils existants avec les nouvelles données
  */
 export function initializeDemoUsers() {
   const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
@@ -16,23 +17,15 @@ export function initializeDemoUsers() {
     'chloe@demo.jeutaime.com'
   ];
 
-  const existingDemoUsers = users.filter(u => demoEmails.includes(u.email));
-
-  // Si tous les profils démo existent déjà, ne rien faire
-  if (existingDemoUsers.length === demoEmails.length) {
-    return;
-  }
-
-  // Créer les profils démo comme vrais users
+  // Créer/Mettre à jour les profils démo comme vrais users
   const demoUsers = enrichedProfiles.map((profile, index) => {
     const email = demoEmails[index];
 
     // Vérifier si ce profil existe déjà
     const existing = users.find(u => u.email === email);
-    if (existing) return null;
 
-    // Créer le profil démo avec tous les champs requis
-    return {
+    // Créer/Mettre à jour le profil démo avec tous les champs requis
+    const demoProfile = {
       // Infos de base (comme ProfileCreation)
       email: email,
       password: 'demo123', // Mot de passe par défaut pour les bots
@@ -94,13 +87,13 @@ export function initializeDemoUsers() {
       },
 
       // Système de jeu
-      id: 1000 + index, // IDs fixes pour les bots
-      createdAt: new Date().toISOString(),
-      coins: profile.id === 0 ? 999999 : 500, // Admin a beaucoup de pièces
-      points: profile.stats.letters * 10 + profile.stats.games * 5 + profile.stats.bars * 15,
+      id: existing?.id || 1000 + index, // Garder l'ID existant ou en créer un
+      createdAt: existing?.createdAt || new Date().toISOString(),
+      coins: existing?.coins || (profile.id === 0 ? 999999 : 500),
+      points: existing?.points || (profile.stats.letters * 10 + profile.stats.games * 5 + profile.stats.bars * 15),
       premium: profile.badges.includes('premium'),
-      badges: [...profile.badges, 'bot'], // Ajouter le badge 'bot'
-      stats: profile.stats,
+      badges: existing?.badges || [...profile.badges, 'bot'],
+      stats: existing?.stats || profile.stats,
 
       // Compatibilité et distance
       compatibility: profile.compatibility,
@@ -111,14 +104,24 @@ export function initializeDemoUsers() {
       isAdmin: profile.isAdmin || false,
       isBot: true // Marquer comme bot
     };
-  }).filter(u => u !== null); // Filtrer les profils déjà existants
 
-  // Ajouter les nouveaux profils démo
-  if (demoUsers.length > 0) {
-    const updatedUsers = [...users, ...demoUsers];
-    localStorage.setItem('jeutaime_users', JSON.stringify(updatedUsers));
-    console.log(`✅ ${demoUsers.length} profil(s) démo initialisé(s)`);
-  }
+    return demoProfile;
+  });
+
+  // Remplacer ou ajouter les profils démo
+  demoUsers.forEach(demoUser => {
+    const existingIndex = users.findIndex(u => u.email === demoUser.email);
+    if (existingIndex !== -1) {
+      // Mettre à jour le profil existant
+      users[existingIndex] = { ...users[existingIndex], ...demoUser };
+    } else {
+      // Ajouter un nouveau profil
+      users.push(demoUser);
+    }
+  });
+
+  localStorage.setItem('jeutaime_users', JSON.stringify(users));
+  console.log(`✅ ${demoUsers.length} profil(s) démo initialisé(s)/mis à jour`);
 }
 
 /**
