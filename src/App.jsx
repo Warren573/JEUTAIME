@@ -260,7 +260,7 @@ function MainApp() {
       {screen === 'journal' && !gameScreen && !selectedSalon && <JournalScreen {...appState} />}
       {screen === 'settings' && !gameScreen && !selectedSalon && <SettingsScreen {...appState} />}
       {screen === 'book-view' && !gameScreen && !selectedSalon && <BookViewScreen user={currentUser} setScreen={setScreen} />}
-      {screen === 'book-edit' && !gameScreen && !selectedSalon && <BookEditScreen user={currentUser} setScreen={setScreen} />}
+      {screen === 'book-edit' && !gameScreen && !selectedSalon && <BookEditScreen user={currentUser} setScreen={setScreen} setCurrentUser={setCurrentUser} />}
 
       {gameScreen === 'pong' && <PongGame {...appState} currentUser={currentUser} />}
       {gameScreen === 'reactivity' && <WhackAMoleGame {...appState} currentUser={currentUser} />}

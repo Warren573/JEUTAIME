@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { loadBookData, saveBookData } from '../../utils/bookSystem';
 
-export default function BookEditScreen({ user, setScreen }) {
+export default function BookEditScreen({ user, setScreen, setCurrentUser }) {
   const [bookData, setBookData] = useState(null);
   const [activeTab, setActiveTab] = useState('infos');
   const [hasChanges, setHasChanges] = useState(false);
@@ -9,6 +9,15 @@ export default function BookEditScreen({ user, setScreen }) {
   useEffect(() => {
     if (user?.email) {
       const data = loadBookData(user.email);
+      // Initialiser les styles personnalisés s'ils n'existent pas
+      if (!data.bookStyles) {
+        data.bookStyles = {
+          backgroundColor: '#F5E6D3',
+          backgroundImage: '',
+          primaryColor: '#DAA520',
+          secondaryColor: '#B8860B'
+        };
+      }
       setBookData(data);
     }
   }, [user?.email]);
@@ -18,11 +27,23 @@ export default function BookEditScreen({ user, setScreen }) {
     setHasChanges(true);
   };
 
+  const handleStyleChange = (field, value) => {
+    setBookData(prev => ({
+      ...prev,
+      bookStyles: { ...prev.bookStyles, [field]: value }
+    }));
+    setHasChanges(true);
+  };
+
   const handleSave = () => {
     if (user?.email && bookData) {
       const success = saveBookData(user.email, bookData);
       if (success) {
         setHasChanges(false);
+        // Mettre à jour l'utilisateur courant avec les nouveaux styles
+        const updatedUser = { ...user, bookStyles: bookData.bookStyles };
+        localStorage.setItem('jeutaime_current_user', JSON.stringify(updatedUser));
+        if (setCurrentUser) setCurrentUser(updatedUser);
         alert('✅ Book sauvegardé !');
       } else {
         alert('❌ Erreur lors de la sauvegarde');
@@ -62,6 +83,7 @@ export default function BookEditScreen({ user, setScreen }) {
     { id: 'photos', icon: '📸', label: 'Photos' },
     { id: 'notes', icon: '✍️', label: 'Notes' },
     { id: 'moodboard', icon: '🎨', label: 'Moodboard' },
+    { id: 'style', icon: '🌈', label: 'Style' },
     { id: 'private', icon: '🔒', label: 'Privé' }
   ];
 
@@ -106,20 +128,17 @@ export default function BookEditScreen({ user, setScreen }) {
         </button>
       </div>
 
-      {/* Tabs - Optimisées pour mobile */}
+      {/* Tabs - Grid multi-ligne */}
       <div style={{
-        display: 'flex',
-        overflowX: 'auto',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))',
         padding: '12px 10px',
         gap: '8px',
         background: 'var(--color-cream)',
         borderBottom: '2px solid var(--color-brown-light)',
         position: 'sticky',
         top: '60px',
-        zIndex: 99,
-        WebkitOverflowScrolling: 'touch',
-        scrollbarWidth: 'thin',
-        scrollbarColor: 'var(--color-gold) var(--color-cream)'
+        zIndex: 99
       }}>
         {tabs.map((tab) => (
           <TabButton
@@ -141,27 +160,13 @@ export default function BookEditScreen({ user, setScreen }) {
         margin: '0 auto',
         width: '100%'
       }}>
-        <style>{`
-          /* Custom scrollbar for tabs */
-          div::-webkit-scrollbar {
-            height: 4px;
-            width: 8px;
-          }
-          div::-webkit-scrollbar-track {
-            background: var(--color-beige-light);
-          }
-          div::-webkit-scrollbar-thumb {
-            background: var(--color-gold);
-            border-radius: 4px;
-          }
-        `}</style>
-
         {activeTab === 'infos' && <InfosTab bookData={bookData} onChange={handleChange} />}
         {activeTab === 'about' && <AboutTab bookData={bookData} onChange={handleChange} />}
         {activeTab === 'videos' && <VideosTab bookData={bookData} onChange={handleChange} />}
         {activeTab === 'photos' && <PhotosTab bookData={bookData} onChange={handleChange} />}
         {activeTab === 'notes' && <NotesTab bookData={bookData} onChange={handleChange} />}
         {activeTab === 'moodboard' && <MoodboardTab bookData={bookData} onChange={handleChange} />}
+        {activeTab === 'style' && <StyleTab bookData={bookData} onStyleChange={handleStyleChange} />}
         {activeTab === 'private' && <PrivateTab bookData={bookData} onChange={handleChange} />}
       </div>
 
@@ -308,6 +313,133 @@ function MoodboardTab({ bookData, onChange }) {
   );
 }
 
+function StyleTab({ bookData, onStyleChange }) {
+  const styles = bookData.bookStyles || {};
+
+  const presetColors = [
+    { name: 'Or (défaut)', primary: '#DAA520', secondary: '#B8860B', bg: '#F5E6D3' },
+    { name: 'Rose romantique', primary: '#E67E73', secondary: '#C85A54', bg: '#FFE5E5' },
+    { name: 'Vert nature', primary: '#8BA569', secondary: '#6B8E4E', bg: '#E8F5E8' },
+    { name: 'Bleu océan', primary: '#6B8E8E', secondary: '#4A6B6B', bg: '#E0F2F7' },
+    { name: 'Violet mystique', primary: '#9B7EBD', secondary: '#7B5E9D', bg: '#F3E5F5' },
+    { name: 'Orange soleil', primary: '#FFB84D', secondary: '#F4A460', bg: '#FFF4E5' }
+  ];
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div>
+        <h3 style={{ color: 'var(--color-text-primary)', marginBottom: '15px', fontSize: '1.2rem' }}>
+          🌈 Personnalise ton Book
+        </h3>
+        <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem', marginBottom: '20px' }}>
+          Choisis les couleurs et l'image de fond de ton Book personnel
+        </p>
+      </div>
+
+      {/* Couleurs prédéfinies */}
+      <div>
+        <label style={labelStyle}>🎨 Thèmes de couleurs</label>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px' }}>
+          {presetColors.map((preset) => (
+            <button
+              key={preset.name}
+              onClick={() => {
+                onStyleChange('primaryColor', preset.primary);
+                onStyleChange('secondaryColor', preset.secondary);
+                onStyleChange('backgroundColor', preset.bg);
+              }}
+              style={{
+                padding: '12px',
+                background: `linear-gradient(135deg, ${preset.primary}, ${preset.secondary})`,
+                border: styles.primaryColor === preset.primary ? '3px solid var(--color-brown-dark)' : '2px solid var(--color-brown-light)',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '0.85rem',
+                fontWeight: '600',
+                color: 'white',
+                textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                transition: 'all 0.2s'
+              }}
+            >
+              {preset.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Couleurs personnalisées */}
+      <div>
+        <label style={labelStyle}>🎨 Couleurs personnalisées</label>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+          <ColorPicker
+            label="Couleur principale"
+            value={styles.primaryColor || '#DAA520'}
+            onChange={(v) => onStyleChange('primaryColor', v)}
+          />
+          <ColorPicker
+            label="Couleur secondaire"
+            value={styles.secondaryColor || '#B8860B'}
+            onChange={(v) => onStyleChange('secondaryColor', v)}
+          />
+        </div>
+      </div>
+
+      {/* Couleur de fond */}
+      <div>
+        <label style={labelStyle}>🎨 Couleur de fond</label>
+        <ColorPicker
+          label="Fond du Book"
+          value={styles.backgroundColor || '#F5E6D3'}
+          onChange={(v) => onStyleChange('backgroundColor', v)}
+        />
+      </div>
+
+      {/* Image de fond */}
+      <div>
+        <label style={labelStyle}>🖼️ Image de fond</label>
+        <input
+          type="text"
+          value={styles.backgroundImage || ''}
+          onChange={(e) => onStyleChange('backgroundImage', e.target.value)}
+          placeholder="URL de l'image (https://...)"
+          style={inputStyle}
+        />
+        <p style={{ color: 'var(--color-text-light)', fontSize: '0.8rem', marginTop: '8px', fontStyle: 'italic' }}>
+          💡 Colle l'URL d'une image (par ex. depuis Unsplash, Imgur, etc.)
+        </p>
+        {styles.backgroundImage && (
+          <div style={{ marginTop: '15px' }}>
+            <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.85rem', marginBottom: '8px' }}>
+              Aperçu :
+            </p>
+            <div style={{
+              width: '100%',
+              height: '150px',
+              borderRadius: '8px',
+              background: `linear-gradient(rgba(255,248,231,0.85), rgba(255,248,231,0.85)), url(${styles.backgroundImage})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              border: '2px solid var(--color-brown-light)'
+            }} />
+          </div>
+        )}
+      </div>
+
+      {/* Note */}
+      <div style={{
+        padding: '15px',
+        background: 'var(--color-cream)',
+        borderRadius: '8px',
+        border: '2px solid var(--color-gold)'
+      }}>
+        <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.85rem', margin: 0 }}>
+          💡 <strong>Astuce :</strong> Les styles s'appliquent à toutes les pages de ton Book. N'oublie pas de sauvegarder !
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function PrivateTab({ bookData, onChange }) {
   return (
     <div>
@@ -344,12 +476,41 @@ function InputField({ label, value, onChange }) {
   );
 }
 
+function ColorPicker({ label, value, onChange }) {
+  return (
+    <div>
+      <label style={{ ...labelStyle, marginBottom: '6px' }}>{label}</label>
+      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+        <input
+          type="color"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          style={{
+            width: '50px',
+            height: '40px',
+            border: '2px solid var(--color-brown-light)',
+            borderRadius: '6px',
+            cursor: 'pointer'
+          }}
+        />
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="#DAA520"
+          style={{ ...inputStyle, flex: 1 }}
+        />
+      </div>
+    </div>
+  );
+}
+
 function TabButton({ active, onClick, icon, label }) {
   return (
     <button
       onClick={onClick}
       style={{
-        padding: '8px 14px',
+        padding: '8px 6px',
         background: active
           ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))'
           : 'var(--color-beige)',
@@ -358,17 +519,17 @@ function TabButton({ active, onClick, icon, label }) {
         borderRadius: '8px',
         cursor: 'pointer',
         fontWeight: '600',
-        fontSize: '0.85rem',
+        fontSize: '0.75rem',
         display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
-        gap: '6px',
-        whiteSpace: 'nowrap',
-        flexShrink: 0,
+        gap: '4px',
         transition: 'all 0.2s',
-        boxShadow: active ? 'var(--shadow-sm)' : 'none'
+        boxShadow: active ? 'var(--shadow-sm)' : 'none',
+        textAlign: 'center'
       }}
     >
-      <span>{icon}</span>
+      <span style={{ fontSize: '1.2rem' }}>{icon}</span>
       <span>{label}</span>
     </button>
   );
