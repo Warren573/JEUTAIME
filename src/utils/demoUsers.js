@@ -14,99 +14,98 @@ export function initializeDemoUsers() {
 
   console.log('🔧 CRÉATION FORCÉE des profils démo avec préférences de rencontre...');
 
-  const demoEmails = [
-    'admin@jeutaime.com',
-    'sophie@demo.jeutaime.com',
-    'emma@demo.jeutaime.com',
-    'chloe@demo.jeutaime.com'
+  // Créer 20 profils démo variés
+  const botNames = [
+    { name: 'Sophie', gender: 'Femme', age: 28, city: 'Paris', bio: 'Adepte de yoga et de bons livres 📚🧘‍♀️', ghoster: false },
+    { name: 'Emma', gender: 'Femme', age: 26, city: 'Lyon', bio: 'Photographe amateure, toujours en quête du cliché parfait 📷✨', ghoster: false },
+    { name: 'Chloé', gender: 'Femme', age: 24, city: 'Marseille', bio: 'Fan de randonnée et de bons vins 🥾🍷', ghoster: true },
+    { name: 'Léa', gender: 'Femme', age: 25, city: 'Bordeaux', bio: 'Passionnée de cuisine et de voyages 🍳✈️', ghoster: false },
+    { name: 'Clara', gender: 'Femme', age: 27, city: 'Toulouse', bio: 'Musicienne le jour, rêveuse la nuit 🎵🌙', ghoster: false },
+    { name: 'Océane', gender: 'Femme', age: 29, city: 'Nantes', bio: 'Surf, soleil et cocktails en terrasse 🏄‍♀️🍹', ghoster: false },
+    { name: 'Marine', gender: 'Femme', age: 24, city: 'Lille', bio: 'Architecte d\'intérieur avec un faible pour le vintage 🏠', ghoster: true },
+    { name: 'Zoé', gender: 'Femme', age: 26, city: 'Strasbourg', bio: 'Comédienne et amoureuse des animaux 🎭🐾', ghoster: false },
+    { name: 'Amélia', gender: 'Femme', age: 30, city: 'Nice', bio: 'Chef pâtissière, spécialiste des éclairs au chocolat 🍫', ghoster: false },
+    { name: 'Victoria', gender: 'Femme', age: 28, city: 'Rennes', bio: 'Développeuse web qui code et jardine 💻🌱', ghoster: false },
+
+    { name: 'Alexandre', gender: 'Homme', age: 32, city: 'Paris', bio: 'Ingénieur passionné de cinéma et de sci-fi 🎬🚀', ghoster: false },
+    { name: 'Jules', gender: 'Homme', age: 28, city: 'Lyon', bio: 'Barista et amateur de bières artisanales ☕🍺', ghoster: false },
+    { name: 'Lucas', gender: 'Homme', age: 30, city: 'Marseille', bio: 'Guide de montagne, toujours prêt pour l\'aventure ⛰️', ghoster: true },
+    { name: 'Kevin', gender: 'Homme', age: 27, city: 'Bordeaux', bio: 'Artiste graffeur et skateur 🎨🛹', ghoster: false },
+    { name: 'Xavier', gender: 'Homme', age: 35, city: 'Toulouse', bio: 'Professeur de danse salsa, j\'aime faire tourner les têtes 💃', ghoster: false },
+    { name: 'Thomas', gender: 'Homme', age: 29, city: 'Nantes', bio: 'Libraire et écrivain en herbe 📖✍️', ghoster: false },
+    { name: 'Maxime', gender: 'Homme', age: 26, city: 'Lille', bio: 'Chef cuisinier, expert en cuisine fusion 🍜', ghoster: true },
+    { name: 'Antoine', gender: 'Homme', age: 31, city: 'Strasbourg', bio: 'Photographe de mariage, je capture les émotions 📸💍', ghoster: false },
+    { name: 'Hugo', gender: 'Homme', age: 28, city: 'Nice', bio: 'Guitariste dans un groupe de rock indie 🎸', ghoster: false },
+    { name: 'Julien', gender: 'Homme', age: 33, city: 'Rennes', bio: 'Astrophysicien et fan de Star Wars 🌌⭐', ghoster: false }
   ];
 
+  const demoEmails = botNames.map((bot, i) => `${bot.name.toLowerCase()}${i}@bot.jeutaime.com`);
+
   // Garder SEULEMENT les vrais utilisateurs (pas les démos)
-  const freshUsers = users.filter(u => !demoEmails.includes(u.email) && !u.isBot);
+  const freshUsers = users.filter(u => !u.isBot);
 
   // Créer les nouveaux profils démo
-  const demoUsers = enrichedProfiles.map((profile, index) => {
+  const demoUsers = botNames.map((botData, index) => {
     const email = demoEmails[index];
+
+    const physicalDescriptions = ['filiforme', 'ras-motte', 'athletique', 'moyenne', 'formes-genereuses', 'muscle', 'grande-gigue', 'beaute-interieure'];
+    const interests = ['Voyages', 'Cuisine', 'Cinéma', 'Sport', 'Musique', 'Art', 'Lecture', 'Jeux vidéo'];
+    const jobs = ['Ingénieur', 'Professeur', 'Chef', 'Artiste', 'Développeur', 'Médecin', 'Designer', 'Entrepreneur'];
 
     // Créer/Mettre à jour le profil démo avec tous les champs requis
     const demoProfile = {
-      // Infos de base (comme ProfileCreation)
+      // Infos de base
       email: email,
-      password: 'demo123', // Mot de passe par défaut pour les bots
-      name: profile.name,
-      pseudo: profile.name,
-      age: profile.age,
-      city: profile.city,
-      postalCode: index === 0 ? '75001' : index === 1 ? '75008' : index === 2 ? '75011' : '75017',
-      birthDate: index === 0 ? '1990-05-15' : index === 1 ? '1995-08-22' : index === 2 ? '1993-03-10' : '1992-11-05',
-      gender: index === 0 ? 'Homme' : 'Femme',
+      password: 'demo123',
+      name: botData.name,
+      pseudo: botData.name,
+      age: botData.age,
+      city: botData.city,
+      postalCode: `${59000 + index}`,
+      birthDate: `${1995 - botData.age}-0${(index % 12) + 1}-15`,
+      gender: botData.gender,
 
       // Avatar et photos
-      avatar: profile.avatar,
-      photos: profile.photos || [],
+      avatar: {},
+      photos: [],
 
       // Bio et intérêts
-      bio: profile.bio,
-      interests: profile.interests?.split(', ') || [],
-      job: profile.job || '',
+      bio: botData.bio,
+      interests: [interests[index % interests.length], interests[(index + 1) % interests.length]],
+      job: jobs[index % jobs.length],
 
-      // Description physique humoristique
-      physicalDescription: index === 0 ? 'athletique' :
-                          index === 1 ? 'moyenne' :
-                          index === 2 ? 'formes-genereuses' :
-                          'muscle',
+      // Description physique
+      physicalDescription: physicalDescriptions[index % physicalDescriptions.length],
 
       // Préférences de rencontre
-      interestedIn: index === 0 ? 'Femmes' : index === 1 ? 'Hommes' : index === 2 ? 'Hommes' : 'Femmes',
-      lookingFor: index === 0 ? 'Relation sérieuse' :
-                  index === 1 ? 'Advienne que pourra' :
-                  index === 2 ? 'Amitiés' :
-                  'Du Fun',
-      children: index === 0 ? 'Je n\'ai pas d\'enfant' :
-                index === 1 ? 'J\'en veux un jour' :
-                index === 2 ? 'Je n\'en veux pas' :
-                'Rien n\'est certain',
+      interestedIn: botData.gender === 'Homme' ? 'Femmes' : 'Hommes',
+      lookingFor: index % 4 === 0 ? 'Relation sérieuse' : index % 4 === 1 ? 'Advienne que pourra' : index % 4 === 2 ? 'Amitiés' : 'Du Fun',
+      children: index % 5 === 0 ? 'Je n\'ai pas d\'enfant' : index % 5 === 1 ? 'J\'en veux un jour' : index % 5 === 2 ? 'Je n\'en veux pas' : index % 5 === 3 ? 'J\'en ai mais pas assez' : 'Rien n\'est certain',
 
-      // Questions (générer des réponses par défaut)
-      question1: {
-        text: "Qu'est-ce qui te fait rire ?",
-        answer: index === 0 ? "Les bugs corrigés du premier coup" :
-                index === 1 ? "Les situations absurdes du quotidien" :
-                index === 2 ? "Les vidéos d'animaux drôles" :
-                "Les jeux de mots pourris"
-      },
-      question2: {
-        text: "Ton plat préféré ?",
-        answer: index === 0 ? "Pizza margherita" :
-                index === 1 ? "Pâtes carbonara" :
-                index === 2 ? "Sushi" :
-                "Raclette"
-      },
-      question3: {
-        text: "Destination de rêve ?",
-        answer: index === 0 ? "Silicon Valley" :
-                index === 1 ? "Japon" :
-                index === 2 ? "Islande" :
-                "Nouvelle-Zélande"
-      },
+      // Questions
+      question1: { text: "Qu'est-ce qui te fait rire ?", answer: "Les situations absurdes et l'humour décalé" },
+      question2: { text: "Ton plat préféré ?", answer: "Difficile de choisir, j'adore la cuisine du monde !" },
+      question3: { text: "Destination de rêve ?", answer: `${botData.city === 'Paris' ? 'Tokyo' : 'New York'}, pour l'énergie et la découverte` },
 
-      // Système de jeu
+      // Système
       id: 1000 + index,
       createdAt: new Date().toISOString(),
-      coins: profile.id === 0 ? 999999 : 500,
-      points: profile.stats.letters * 10 + profile.stats.games * 5 + profile.stats.bars * 15,
-      premium: profile.badges.includes('premium'),
-      badges: [...profile.badges, 'bot'],
-      stats: profile.stats,
+      coins: 500,
+      points: Math.floor(Math.random() * 1000) + 100,
+      premium: index === 0,
+      badges: index === 0 ? ['bot', 'premium'] : ['bot'],
+      stats: { letters: Math.floor(Math.random() * 50), games: Math.floor(Math.random() * 30), bars: Math.floor(Math.random() * 20) },
 
-      // Compatibilité et distance
-      compatibility: profile.compatibility,
-      distance: profile.distance,
-      lastActive: profile.lastActive,
+      // Compatibilité
+      compatibility: Math.floor(Math.random() * 30) + 70,
+      distance: `${Math.floor(Math.random() * 50) + 1}km`,
+      lastActive: index % 3 === 0 ? 'En ligne' : index % 3 === 1 ? 'Il y a 5 min' : 'Il y a 1h',
 
-      // Admin flag
-      isAdmin: profile.isAdmin || false,
-      isBot: true // Marquer comme bot
+      // Flags
+      isAdmin: index === 0,
+      isBot: true,
+      isGhoster: botData.ghoster, // Certains vont ghoster après quelques messages
+      autoReply: !botData.ghoster // Les non-ghosters répondent automatiquement
     };
 
     return demoProfile;
@@ -234,4 +233,83 @@ export function incrementDuelWins(email) {
 
   // Retourner le nombre de victoires
   return users[userIndex].duelWins;
+}
+
+/**
+ * Génère une réponse automatique pour un bot
+ */
+export function generateBotReply(botEmail, userMessage, conversationHistory = []) {
+  const bot = getUserByEmail(botEmail);
+  if (!bot || !bot.isBot) return null;
+
+  // Si c'est un ghoster et qu'il y a déjà 3+ messages, ne pas répondre
+  if (bot.isGhoster && conversationHistory.length >= 6) {
+    return null; // Ghost après 3 échanges
+  }
+
+  // Pool de réponses variées
+  const messageLength = userMessage ? userMessage.length : 0;
+  const replies = [
+    'Salut ! ' + (messageLength > 50 ? 'J\'adore les messages longs, ça montre qu\'on prend le temps 😊' : 'Sympa de m\'écrire !'),
+    'Hey ! Merci pour ton message 💕',
+    'Coucou ! Content•e de faire ta connaissance 😄',
+    'Yo ! Moi aussi j\'adore discuter de tout et de rien',
+    'Hello ! Tu as l\'air sympa !',
+    'Salut ! On dirait qu\'on a des points communs !',
+    'Hey ! 😊 Moi je suis sur ' + bot.city + ', et toi ?',
+    'Coucou ! C\'est cool qu\'on puisse discuter comme ça',
+    'Salut ! ' + (bot.job ? 'Moi je bosse comme ' + bot.job + ', ' : '') + 'et toi tu fais quoi dans la vie ?',
+    'Hello ! Cool ton message !'
+  ];
+
+  // Réponses spéciales pour les ghosters (plus froides avant de ghost)
+  if (bot.isGhoster && conversationHistory.length >= 4) {
+    const coldReplies = ['Ok 👍', 'Ah d\'accord', 'Sympa !', 'Cool', 'Ouais pas mal'];
+    return coldReplies[Math.floor(Math.random() * coldReplies.length)];
+  }
+
+  return replies[Math.floor(Math.random() * replies.length)];
+}
+
+/**
+ * Envoie automatiquement une réponse d'un bot après un délai
+ */
+export function triggerBotAutoReply(botId, userEmail, userMessage) {
+  const bot = getUserById(botId);
+  if (!bot || !bot.isBot || !bot.autoReply) return;
+
+  // Récupérer la conversation
+  const convos = JSON.parse(localStorage.getItem('jeutaime_conversations') || '{}');
+  const convKey = [userEmail, bot.email].sort().join('_');
+  const conversation = convos[convKey] || { messages: [], unreadCount: 0 };
+
+  // Générer la réponse
+  const reply = generateBotReply(bot.email, userMessage, conversation.messages);
+
+  if (!reply) return; // Le bot a ghosté
+
+  // Attendre 2-5 secondes avant de répondre (simulation réaliste)
+  const delay = Math.random() * 3000 + 2000;
+
+  setTimeout(() => {
+    const newMessage = {
+      id: Date.now(),
+      from: bot.email,
+      to: userEmail,
+      text: reply,
+      timestamp: new Date().toISOString(),
+      read: false
+    };
+
+    conversation.messages.push(newMessage);
+    conversation.lastMessage = reply;
+    conversation.lastMessageTime = new Date().toISOString();
+    conversation.unreadCount = (conversation.unreadCount || 0) + 1;
+
+    convos[convKey] = conversation;
+    localStorage.setItem('jeutaime_conversations', JSON.stringify(convos));
+
+    // Dispatch event pour rafraîchir l'UI
+    window.dispatchEvent(new CustomEvent('bot-reply-received', { detail: { botEmail: bot.email } }));
+  }, delay);
 }

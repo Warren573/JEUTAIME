@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { awardPoints } from '../../utils/pointsSystem';
-import { updateUserStats, addPointsToUser } from '../../utils/demoUsers';
+import { updateUserStats, addPointsToUser, triggerBotAutoReply, getUserById } from '../../utils/demoUsers';
 import GiftSelector from '../gifts/GiftSelector';
 import UserAvatar from '../avatar/UserAvatar';
 
@@ -19,6 +19,18 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Écouter les réponses automatiques des bots
+  useEffect(() => {
+    const handleBotReply = (event) => {
+      if (event.detail.botEmail === matchedUser.email) {
+        loadConversation(); // Recharger la conversation pour afficher la réponse du bot
+      }
+    };
+
+    window.addEventListener('bot-reply-received', handleBotReply);
+    return () => window.removeEventListener('bot-reply-received', handleBotReply);
+  }, [matchedUser]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -87,6 +99,9 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
 
     // Award points for sending letter
     awardPoints(currentUser.email, 'LETTER_SENT');
+
+    // Si c'est un bot, déclencher sa réponse automatique
+    triggerBotAutoReply(matchedUser.id, currentUser.email, newMessage);
 
     // Vérifier badge romantic (20 lettres envoyées)
     if (updatedLetterCount.user >= 20) {
