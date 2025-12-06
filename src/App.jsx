@@ -65,6 +65,10 @@ function MainApp() {
 
   // Check if user is already logged in
   useEffect(() => {
+    console.log('🚀 JEUTAIME v2.0.0 - DATING PREFERENCES - Démarrage de l\'application...');
+    console.log('📅 Build: 2025-12-06T17:00:00Z');
+    console.log('✅ Nouvelles fonctionnalités: Préférences de rencontre, Description physique');
+
     // Initialiser les profils démo (bots) au démarrage
     initializeDemoUsers();
 
