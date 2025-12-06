@@ -329,7 +329,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
       <div style={{
         background: 'var(--color-cream)',
         borderRadius: '0',
-        overflow: 'hidden',
+        overflow: 'visible',
         marginBottom: '0',
         border: 'none',
         borderBottom: '4px solid var(--color-brown-light)',
