@@ -72,12 +72,39 @@ function MainApp() {
     // Initialiser les profils démo (bots) au démarrage
     initializeDemoUsers();
 
+    // Ajouter les préférences par défaut à tous les utilisateurs existants
+    const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+    let updated = false;
+    users.forEach(user => {
+      if (!user.interestedIn && !user.isBot) {
+        user.interestedIn = user.gender === 'Homme' ? 'Femmes' : user.gender === 'Femme' ? 'Hommes' : 'Tout le monde';
+        user.lookingFor = 'Advienne que pourra';
+        user.children = 'Je n\'ai pas d\'enfant';
+        user.physicalDescription = 'moyenne';
+        updated = true;
+      }
+    });
+    if (updated) {
+      localStorage.setItem('jeutaime_users', JSON.stringify(users));
+      console.log('✅ Préférences par défaut ajoutées aux profils existants');
+    }
+
     const savedUser = localStorage.getItem('jeutaime_current_user');
     if (savedUser) {
       const user = JSON.parse(savedUser);
-      setCurrentUser(user);
-      setUserCoins(user.coins || 100);
-      setPremiumActive(user.premium || false);
+
+      // Mettre à jour le currentUser avec les préférences par défaut si nécessaire
+      const updatedUserFromStorage = users.find(u => u.email === user.email);
+      if (updatedUserFromStorage) {
+        setCurrentUser(updatedUserFromStorage);
+        localStorage.setItem('jeutaime_current_user', JSON.stringify(updatedUserFromStorage));
+        setUserCoins(updatedUserFromStorage.coins || 100);
+        setPremiumActive(updatedUserFromStorage.premium || false);
+      } else {
+        setCurrentUser(user);
+        setUserCoins(user.coins || 100);
+        setPremiumActive(user.premium || false);
+      }
 
       // Award daily login points
       const awarded = awardDailyLogin(user.email);
