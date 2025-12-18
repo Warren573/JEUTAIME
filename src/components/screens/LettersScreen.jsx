@@ -6,6 +6,7 @@ export default function LettersScreen({ currentUser }) {
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [showGifts, setShowGifts] = useState(false);
+  const [selectedProfile, setSelectedProfile] = useState(null);
 
   useEffect(() => {
     loadConversations();
@@ -36,13 +37,17 @@ export default function LettersScreen({ currentUser }) {
       const convo = convos[convKey] || { messages: [], letterCount: { user: 0, matched: 0 } };
 
       const lastMessage = convo.messages[convo.messages.length - 1];
+      const totalMessages = convo.messages.length;
+      const isGhosted = matchedProfile.isGhoster && totalMessages >= 6;
 
       return {
         matchedUser: matchedProfile,
         lastMessage: lastMessage ? lastMessage.text : 'Commencez la conversation...',
         lastTimestamp: lastMessage ? lastMessage.timestamp : match.date,
         letterCount: convo.letterCount,
-        unread: lastMessage && lastMessage.sender === 'matched' && !lastMessage.read
+        unread: lastMessage && lastMessage.sender === 'matched' && !lastMessage.read,
+        totalMessages: totalMessages,
+        isGhosted: isGhosted
       };
     });
 
@@ -269,7 +274,13 @@ export default function LettersScreen({ currentUser }) {
                     }}>
                       <span>💌 {totalLetters} lettres</span>
                       <span>•</span>
-                      <span>{convo.unread ? '✨ Non lu' : 'Tu es ghosté'}</span>
+                      {convo.isGhosted ? (
+                        <span style={{ color: 'var(--color-error)', fontWeight: '600' }}>👻 Ghosté</span>
+                      ) : convo.unread ? (
+                        <span style={{ color: 'var(--color-friendly)', fontWeight: '600' }}>✨ Non lu</span>
+                      ) : (
+                        <span>💬 Lu</span>
+                      )}
                       {!isPhotoRevealed && (
                         <>
                           <span>•</span>
@@ -311,14 +322,14 @@ export default function LettersScreen({ currentUser }) {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      alert('Conversation archivée');
+                      setSelectedProfile(convo.matchedUser);
                     }}
                     style={{
                       padding: 'var(--spacing-sm)',
-                      background: 'var(--color-brown-light)',
-                      border: '2px solid var(--color-brown)',
+                      background: 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))',
+                      border: '2px solid var(--color-gold-light)',
                       borderRadius: 'var(--border-radius-sm)',
-                      color: 'var(--color-cream)',
+                      color: 'var(--color-brown-dark)',
                       fontSize: '0.8rem',
                       fontWeight: '700',
                       cursor: 'pointer',
@@ -328,7 +339,7 @@ export default function LettersScreen({ currentUser }) {
                     onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
                     onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
                   >
-                    Archiver
+                    👤 Profil
                   </button>
 
                   <button
@@ -492,6 +503,103 @@ export default function LettersScreen({ currentUser }) {
           </div>
         )}
       </div>
+
+      {/* Modal Profil */}
+      {selectedProfile && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.8)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000,
+          padding: '20px'
+        }}
+        onClick={() => setSelectedProfile(null)}
+        >
+          <div style={{
+            background: 'var(--color-cream)',
+            borderRadius: '20px',
+            padding: '30px',
+            maxWidth: '500px',
+            width: '100%',
+            maxHeight: '80vh',
+            overflowY: 'auto',
+            border: '3px solid var(--color-brown-dark)'
+          }}
+          onClick={(e) => e.stopPropagation()}
+          >
+            <h2 style={{ fontSize: '1.8rem', marginBottom: '20px', color: 'var(--color-brown-dark)' }}>
+              {selectedProfile.name}, {selectedProfile.age}
+            </h2>
+
+            <div style={{ marginBottom: '15px' }}>
+              <strong>📍 Ville:</strong> {selectedProfile.city}
+            </div>
+
+            {selectedProfile.bio && (
+              <div style={{ marginBottom: '15px', fontStyle: 'italic' }}>
+                "{selectedProfile.bio}"
+              </div>
+            )}
+
+            {selectedProfile.interestedIn && (
+              <div style={{ marginBottom: '10px' }}>
+                <strong>💑 Intéressé•e par:</strong> {selectedProfile.interestedIn}
+              </div>
+            )}
+
+            {selectedProfile.lookingFor && (
+              <div style={{ marginBottom: '10px' }}>
+                <strong>🔍 Recherche:</strong> {selectedProfile.lookingFor}
+              </div>
+            )}
+
+            {selectedProfile.children && (
+              <div style={{ marginBottom: '10px' }}>
+                <strong>👶 Enfants:</strong> {selectedProfile.children}
+              </div>
+            )}
+
+            {selectedProfile.physicalDescription && (
+              <div style={{ marginBottom: '10px' }}>
+                <strong>💪 Description:</strong> {
+                  selectedProfile.physicalDescription === 'filiforme' ? '🍝 Filiforme' :
+                  selectedProfile.physicalDescription === 'ras-motte' ? '🐭 Ras motte' :
+                  selectedProfile.physicalDescription === 'athletique' ? '🏃 Athlétique' :
+                  selectedProfile.physicalDescription === 'moyenne' ? '⚖️ Moyenne' :
+                  selectedProfile.physicalDescription === 'formes-genereuses' ? '🍑 En formes généreuses' :
+                  selectedProfile.physicalDescription === 'muscle' ? '💪 Musclé•e' :
+                  selectedProfile.physicalDescription === 'grande-gigue' ? '🦒 Grande gigue' :
+                  '✨ Grande beauté intérieure'
+                }
+              </div>
+            )}
+
+            <button
+              onClick={() => setSelectedProfile(null)}
+              style={{
+                marginTop: '20px',
+                width: '100%',
+                padding: '15px',
+                background: 'linear-gradient(135deg, var(--color-brown), var(--color-brown-dark))',
+                border: 'none',
+                borderRadius: '12px',
+                color: 'white',
+                fontSize: '16px',
+                fontWeight: '600',
+                cursor: 'pointer'
+              }}
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
