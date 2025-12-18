@@ -512,7 +512,7 @@ export default function LettersScreen({ currentUser }) {
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'rgba(0,0,0,0.8)',
+          background: 'rgba(0,0,0,0.9)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -529,61 +529,85 @@ export default function LettersScreen({ currentUser }) {
             width: '100%',
             maxHeight: '80vh',
             overflowY: 'auto',
-            border: '3px solid var(--color-brown-dark)'
+            border: '3px solid var(--color-brown-dark)',
+            color: 'var(--color-text-primary)'
           }}
           onClick={(e) => e.stopPropagation()}
           >
-            <h2 style={{ fontSize: '1.8rem', marginBottom: '20px', color: 'var(--color-brown-dark)' }}>
+            {/* Avatar */}
+            <div style={{
+              width: '120px',
+              height: '120px',
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '3rem',
+              margin: '0 auto 20px',
+              border: '4px solid var(--color-gold-light)',
+              boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+            }}>
+              👤
+            </div>
+
+            <h2 style={{ fontSize: '1.8rem', marginBottom: '10px', color: 'var(--color-brown-dark)', textAlign: 'center' }}>
               {selectedProfile.name}, {selectedProfile.age}
             </h2>
 
-            <div style={{ marginBottom: '15px' }}>
-              <strong>📍 Ville:</strong> {selectedProfile.city}
+            <div style={{ marginBottom: '20px', textAlign: 'center', color: 'var(--color-text-secondary)' }}>
+              <strong>📍</strong> {selectedProfile.city}
             </div>
 
             {selectedProfile.bio && (
-              <div style={{ marginBottom: '15px', fontStyle: 'italic' }}>
+              <div style={{ marginBottom: '20px', fontStyle: 'italic', color: 'var(--color-text-primary)', textAlign: 'center', padding: '15px', background: 'var(--color-beige-light)', borderRadius: '10px' }}>
                 "{selectedProfile.bio}"
               </div>
             )}
 
-            {selectedProfile.interestedIn && (
-              <div style={{ marginBottom: '10px' }}>
-                <strong>💑 Intéressé•e par:</strong> {selectedProfile.interestedIn}
-              </div>
-            )}
+            <div style={{ background: 'var(--color-beige-light)', borderRadius: '12px', padding: '20px', marginBottom: '15px' }}>
+              <h3 style={{ fontSize: '1rem', marginBottom: '15px', color: 'var(--color-brown-dark)', borderBottom: '2px solid var(--color-tan)', paddingBottom: '8px' }}>
+                💕 Préférences de Rencontre
+              </h3>
 
-            {selectedProfile.lookingFor && (
-              <div style={{ marginBottom: '10px' }}>
-                <strong>🔍 Recherche:</strong> {selectedProfile.lookingFor}
-              </div>
-            )}
+              {selectedProfile.interestedIn && (
+                <div style={{ marginBottom: '10px', color: 'var(--color-text-primary)' }}>
+                  <strong style={{ color: 'var(--color-brown-dark)' }}>💑 Intéressé•e par:</strong> {selectedProfile.interestedIn}
+                </div>
+              )}
 
-            {selectedProfile.children && (
-              <div style={{ marginBottom: '10px' }}>
-                <strong>👶 Enfants:</strong> {selectedProfile.children}
-              </div>
-            )}
+              {selectedProfile.lookingFor && (
+                <div style={{ marginBottom: '10px', color: 'var(--color-text-primary)' }}>
+                  <strong style={{ color: 'var(--color-brown-dark)' }}>🔍 Recherche:</strong> {selectedProfile.lookingFor}
+                </div>
+              )}
 
-            {selectedProfile.physicalDescription && (
-              <div style={{ marginBottom: '10px' }}>
-                <strong>💪 Description:</strong> {
-                  selectedProfile.physicalDescription === 'filiforme' ? '🍝 Filiforme' :
-                  selectedProfile.physicalDescription === 'ras-motte' ? '🐭 Ras motte' :
-                  selectedProfile.physicalDescription === 'athletique' ? '🏃 Athlétique' :
-                  selectedProfile.physicalDescription === 'moyenne' ? '⚖️ Moyenne' :
-                  selectedProfile.physicalDescription === 'formes-genereuses' ? '🍑 En formes généreuses' :
-                  selectedProfile.physicalDescription === 'muscle' ? '💪 Musclé•e' :
-                  selectedProfile.physicalDescription === 'grande-gigue' ? '🦒 Grande gigue' :
-                  '✨ Grande beauté intérieure'
-                }
-              </div>
-            )}
+              {selectedProfile.children && (
+                <div style={{ marginBottom: '10px', color: 'var(--color-text-primary)' }}>
+                  <strong style={{ color: 'var(--color-brown-dark)' }}>👶 Enfants:</strong> {selectedProfile.children}
+                </div>
+              )}
+
+              {selectedProfile.physicalDescription && (
+                <div style={{ color: 'var(--color-text-primary)' }}>
+                  <strong style={{ color: 'var(--color-brown-dark)' }}>💪 Description:</strong> {
+                    selectedProfile.physicalDescription === 'filiforme' ? '🍝 Filiforme' :
+                    selectedProfile.physicalDescription === 'ras-motte' ? '🐭 Ras motte' :
+                    selectedProfile.physicalDescription === 'athletique' ? '🏃 Athlétique' :
+                    selectedProfile.physicalDescription === 'moyenne' ? '⚖️ Moyenne' :
+                    selectedProfile.physicalDescription === 'formes-genereuses' ? '🍑 En formes généreuses' :
+                    selectedProfile.physicalDescription === 'muscle' ? '💪 Musclé•e' :
+                    selectedProfile.physicalDescription === 'grande-gigue' ? '🦒 Grande gigue' :
+                    '✨ Grande beauté intérieure'
+                  }
+                </div>
+              )}
+            </div>
 
             <button
               onClick={() => setSelectedProfile(null)}
               style={{
-                marginTop: '20px',
+                marginTop: '10px',
                 width: '100%',
                 padding: '15px',
                 background: 'linear-gradient(135deg, var(--color-brown), var(--color-brown-dark))',
@@ -592,7 +616,8 @@ export default function LettersScreen({ currentUser }) {
                 color: 'white',
                 fontSize: '16px',
                 fontWeight: '600',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                boxShadow: '0 4px 10px rgba(0,0,0,0.2)'
               }}
             >
               Fermer
