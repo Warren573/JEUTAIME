@@ -374,12 +374,13 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
                 onClick={() => setViewMode('discover')}
                 style={{
                   padding: 'var(--spacing-md) var(--spacing-lg)',
-                  background: 'linear-gradient(135deg, var(--color-friendly), var(--color-friendly-light))',
+                  background: 'linear-gradient(135deg, var(--color-brown), var(--color-brown-dark))',
                   border: 'none',
                   borderRadius: 'var(--border-radius-md)',
                   color: 'white',
                   fontWeight: '600',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
                 }}
               >
                 Découvrir des profils
@@ -406,13 +407,14 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
                         width: '60px',
                         height: '60px',
                         borderRadius: '50%',
-                        background: 'linear-gradient(135deg, var(--color-friendly), var(--color-friendly-light))',
+                        background: 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        fontSize: '2rem'
+                        fontSize: '2rem',
+                        border: '2px solid var(--color-gold-light)'
                       }}>
-                        👤
+                        💕
                       </div>
                       <div style={{ flex: 1 }}>
                         <h3 style={{ fontSize: '1.2rem', margin: 0, color: 'var(--color-text-primary)' }}>
@@ -441,12 +443,13 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
                       style={{
                         width: '100%',
                         padding: 'var(--spacing-md)',
-                        background: 'linear-gradient(135deg, var(--color-friendly), var(--color-friendly-light))',
+                        background: 'linear-gradient(135deg, var(--color-brown), var(--color-brown-dark))',
                         border: 'none',
                         borderRadius: 'var(--border-radius-md)',
                         color: 'white',
                         fontWeight: '600',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
                       }}
                     >
                       💬 Envoyer une lettre
@@ -527,12 +530,13 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
                       style={{
                         flex: 1,
                         padding: 'var(--spacing-md)',
-                        background: 'linear-gradient(135deg, var(--color-friendly), var(--color-friendly-light))',
+                        background: 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))',
                         border: 'none',
                         borderRadius: 'var(--border-radius-md)',
-                        color: 'white',
+                        color: 'var(--color-brown-dark)',
                         fontWeight: '600',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
                       }}
                     >
                       😊 Sourire en retour
@@ -554,7 +558,8 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
                         borderRadius: 'var(--border-radius-md)',
                         color: 'white',
                         fontWeight: '600',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
                       }}
                     >
                       😝 Grimace
