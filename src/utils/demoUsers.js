@@ -67,7 +67,14 @@ export function initializeDemoUsers() {
 
       // Avatar et photos
       avatar: {},
-      photos: [],
+      photos: [
+        { id: 1, emoji: index % 10 === 0 ? '🧘‍♀️' : index % 10 === 1 ? '📷' : index % 10 === 2 ? '🥾' : index % 10 === 3 ? '🍳' : index % 10 === 4 ? '🎵' : index % 10 === 5 ? '🏄‍♀️' : index % 10 === 6 ? '🏠' : index % 10 === 7 ? '🎭' : index % 10 === 8 ? '🍫' : '💻', caption: 'Ma passion du moment' },
+        { id: 2, emoji: index % 5 === 0 ? '🌅' : index % 5 === 1 ? '🎉' : index % 5 === 2 ? '🏔️' : index % 5 === 3 ? '🌊' : '🌃', caption: 'Coucher de soleil' },
+        { id: 3, emoji: index % 4 === 0 ? '☕' : index % 4 === 1 ? '🍕' : index % 4 === 2 ? '🍜' : '🍷', caption: 'Ma vie en un plat' },
+        { id: 4, emoji: '✈️', caption: `${botData.city} ❤️` },
+        { id: 5, emoji: index % 3 === 0 ? '🎨' : index % 3 === 1 ? '📚' : '🎮', caption: 'Détente du weekend' },
+        { id: 6, emoji: botData.gender === 'Femme' ? '👗' : '👔', caption: 'Mode du jour' }
+      ],
 
       // Bio et intérêts
       bio: botData.bio,

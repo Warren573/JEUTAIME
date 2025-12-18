@@ -646,6 +646,67 @@ export default function LettersScreen({ currentUser }) {
               )}
             </div>
 
+            {/* Photo Gallery */}
+            <div style={{ marginTop: '15px', background: 'var(--color-beige-light)', borderRadius: '12px', padding: '20px' }}>
+              <h3 style={{ fontSize: '1rem', marginBottom: '15px', color: 'var(--color-brown-dark)', borderBottom: '2px solid var(--color-tan)', paddingBottom: '8px' }}>
+                📸 Album Photo
+              </h3>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: '10px'
+              }}>
+                {(selectedProfile.photos || []).slice(0, 6).map((photo) => (
+                  <div
+                    key={photo.id}
+                    style={{
+                      aspectRatio: '1',
+                      background: photoRevealed
+                        ? 'linear-gradient(135deg, #667eea, #764ba2)'
+                        : 'linear-gradient(135deg, #888, #666)',
+                      borderRadius: '10px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '10px',
+                      textAlign: 'center',
+                      filter: photoRevealed ? 'none' : 'blur(10px)',
+                      opacity: photoRevealed ? 1 : 0.5,
+                      transition: 'all 0.3s'
+                    }}
+                  >
+                    <div style={{ fontSize: '2rem', marginBottom: '5px' }}>
+                      {photoRevealed ? photo.emoji : '🔒'}
+                    </div>
+                    {photoRevealed && (
+                      <p style={{
+                        margin: 0,
+                        fontSize: '0.7rem',
+                        color: 'white',
+                        fontWeight: '600'
+                      }}>
+                        {photo.caption}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+              {!photoRevealed && (
+                <div style={{
+                  marginTop: '15px',
+                  textAlign: 'center',
+                  color: 'var(--color-text-secondary)',
+                  fontSize: '0.85rem',
+                  padding: '10px',
+                  background: 'rgba(255,255,255,0.5)',
+                  borderRadius: '8px'
+                }}>
+                  🔒 Échangez {lettersNeeded} lettre{lettersNeeded > 1 ? 's' : ''} de plus pour dévoiler les photos
+                </div>
+              )}
+            </div>
+
             <button
               onClick={() => setSelectedProfile(null)}
               style={{
