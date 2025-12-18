@@ -660,9 +660,10 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
                     {pet.name}
                   </h3>
                   <p style={{
-                    color: 'var(--color-text-secondary)',
+                    color: 'var(--color-text-primary)',
                     fontSize: '0.9rem',
-                    marginBottom: 'var(--spacing-sm)'
+                    marginBottom: 'var(--spacing-sm)',
+                    fontStyle: 'italic'
                   }}>
                     {pet.description}
                   </p>
@@ -672,13 +673,14 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
                     borderRadius: 'var(--border-radius-md)',
                     marginBottom: 'var(--spacing-md)',
                     textAlign: 'left',
-                    fontSize: '0.85rem'
+                    fontSize: '0.85rem',
+                    color: 'var(--color-brown-dark)'
                   }}>
-                    <p style={{ margin: '6px 0' }}>
-                      <strong>Personnalité:</strong> {pet.personality}
+                    <p style={{ margin: '6px 0', color: 'var(--color-brown-dark)' }}>
+                      <strong style={{ color: 'var(--color-brown-darker)' }}>Personnalité:</strong> {pet.personality}
                     </p>
-                    <p style={{ margin: '6px 0' }}>
-                      <strong>Nourriture préférée:</strong> {pet.favoriteFood}
+                    <p style={{ margin: '6px 0', color: 'var(--color-brown-dark)' }}>
+                      <strong style={{ color: 'var(--color-brown-darker)' }}>Nourriture préférée:</strong> {pet.favoriteFood}
                     </p>
                   </div>
 
@@ -859,9 +861,10 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
                     {pet.name}
                   </h3>
                   <p style={{
-                    color: 'var(--color-text-secondary)',
+                    color: 'var(--color-text-primary)',
                     fontSize: '0.9rem',
-                    marginBottom: 'var(--spacing-sm)'
+                    marginBottom: 'var(--spacing-sm)',
+                    fontStyle: 'italic'
                   }}>
                     {pet.description}
                   </p>
@@ -871,13 +874,14 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
                     borderRadius: 'var(--border-radius-md)',
                     marginBottom: 'var(--spacing-md)',
                     textAlign: 'left',
-                    fontSize: '0.85rem'
+                    fontSize: '0.85rem',
+                    color: 'var(--color-brown-dark)'
                   }}>
-                    <p style={{ margin: '6px 0' }}>
-                      <strong>Personnalité:</strong> {pet.personality}
+                    <p style={{ margin: '6px 0', color: 'var(--color-brown-dark)' }}>
+                      <strong style={{ color: 'var(--color-brown-darker)' }}>Personnalité:</strong> {pet.personality}
                     </p>
-                    <p style={{ margin: '6px 0' }}>
-                      <strong>Nourriture préférée:</strong> {pet.favoriteFood}
+                    <p style={{ margin: '6px 0', color: 'var(--color-brown-dark)' }}>
+                      <strong style={{ color: 'var(--color-brown-darker)' }}>Nourriture préférée:</strong> {pet.favoriteFood}
                     </p>
                   </div>
 
