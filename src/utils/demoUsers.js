@@ -82,10 +82,28 @@ export function initializeDemoUsers() {
       lookingFor: index % 4 === 0 ? 'Relation sérieuse' : index % 4 === 1 ? 'Advienne que pourra' : index % 4 === 2 ? 'Amitiés' : 'Du Fun',
       children: index % 5 === 0 ? 'Je n\'ai pas d\'enfant' : index % 5 === 1 ? 'J\'en veux un jour' : index % 5 === 2 ? 'Je n\'en veux pas' : index % 5 === 3 ? 'J\'en ai mais pas assez' : 'Rien n\'est certain',
 
-      // Questions
-      question1: { text: "Qu'est-ce qui te fait rire ?", answer: "Les situations absurdes et l'humour décalé" },
-      question2: { text: "Ton plat préféré ?", answer: "Difficile de choisir, j'adore la cuisine du monde !" },
-      question3: { text: "Destination de rêve ?", answer: `${botData.city === 'Paris' ? 'Tokyo' : 'New York'}, pour l'énergie et la découverte` },
+      // Questions avec choix multiples pour le jeu de matching
+      question1: {
+        text: "Qu'est-ce qui te fait rire ?",
+        answerA: "Les blagues nulles",
+        answerB: "Les situations absurdes",
+        answerC: "Les vidéos d'animaux",
+        correctAnswer: "B"
+      },
+      question2: {
+        text: "Ton plat préféré ?",
+        answerA: "Pizza",
+        answerB: "Sushi",
+        answerC: "Cuisine du monde",
+        correctAnswer: index % 3 === 0 ? "A" : index % 3 === 1 ? "B" : "C"
+      },
+      question3: {
+        text: "Destination de rêve ?",
+        answerA: botData.city === 'Paris' ? 'Tokyo' : 'New York',
+        answerB: "Bali",
+        answerC: "Islande",
+        correctAnswer: "A"
+      },
 
       // Système
       id: 1000 + index,
@@ -292,22 +310,26 @@ export function triggerBotAutoReply(botId, userEmail, userMessage) {
   const delay = Math.random() * 3000 + 2000;
 
   setTimeout(() => {
+    // Récupérer la conversation à nouveau pour avoir l'état actuel
+    const updatedConvos = JSON.parse(localStorage.getItem('jeutaime_conversations') || '{}');
+    const updatedConversation = updatedConvos[convKey] || { messages: [], letterCount: { user: 0, matched: 0 } };
+
     const newMessage = {
       id: Date.now(),
-      from: bot.email,
-      to: userEmail,
+      sender: 'matched', // Format compatible avec ChatScreen
       text: reply,
       timestamp: new Date().toISOString(),
       read: false
     };
 
-    conversation.messages.push(newMessage);
-    conversation.lastMessage = reply;
-    conversation.lastMessageTime = new Date().toISOString();
-    conversation.unreadCount = (conversation.unreadCount || 0) + 1;
+    updatedConversation.messages.push(newMessage);
+    updatedConversation.letterCount = updatedConversation.letterCount || { user: 0, matched: 0 };
+    updatedConversation.letterCount.matched = (updatedConversation.letterCount.matched || 0) + 1;
+    updatedConversation.lastUpdate = new Date().toISOString();
+    updatedConversation.participants = updatedConversation.participants || { user: userEmail, matched: bot.id };
 
-    convos[convKey] = conversation;
-    localStorage.setItem('jeutaime_conversations', JSON.stringify(convos));
+    updatedConvos[convKey] = updatedConversation;
+    localStorage.setItem('jeutaime_conversations', JSON.stringify(updatedConvos));
 
     // Dispatch event pour rafraîchir l'UI
     window.dispatchEvent(new CustomEvent('bot-reply-received', { detail: { botEmail: bot.email } }));
