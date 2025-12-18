@@ -310,22 +310,26 @@ export function triggerBotAutoReply(botId, userEmail, userMessage) {
   const delay = Math.random() * 3000 + 2000;
 
   setTimeout(() => {
+    // Récupérer la conversation à nouveau pour avoir l'état actuel
+    const updatedConvos = JSON.parse(localStorage.getItem('jeutaime_conversations') || '{}');
+    const updatedConversation = updatedConvos[convKey] || { messages: [], letterCount: { user: 0, matched: 0 } };
+
     const newMessage = {
       id: Date.now(),
-      from: bot.email,
-      to: userEmail,
+      sender: 'matched', // Format compatible avec ChatScreen
       text: reply,
       timestamp: new Date().toISOString(),
       read: false
     };
 
-    conversation.messages.push(newMessage);
-    conversation.lastMessage = reply;
-    conversation.lastMessageTime = new Date().toISOString();
-    conversation.unreadCount = (conversation.unreadCount || 0) + 1;
+    updatedConversation.messages.push(newMessage);
+    updatedConversation.letterCount = updatedConversation.letterCount || { user: 0, matched: 0 };
+    updatedConversation.letterCount.matched = (updatedConversation.letterCount.matched || 0) + 1;
+    updatedConversation.lastUpdate = new Date().toISOString();
+    updatedConversation.participants = updatedConversation.participants || { user: userEmail, matched: bot.id };
 
-    convos[convKey] = conversation;
-    localStorage.setItem('jeutaime_conversations', JSON.stringify(convos));
+    updatedConvos[convKey] = updatedConversation;
+    localStorage.setItem('jeutaime_conversations', JSON.stringify(updatedConvos));
 
     // Dispatch event pour rafraîchir l'UI
     window.dispatchEvent(new CustomEvent('bot-reply-received', { detail: { botEmail: bot.email } }));
