@@ -331,6 +331,7 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
                 }}>
                   {myPets.map((pet) => {
                     const status = getPetStatus(pet);
+                    const isIncarnated = currentUser?.incarnatedAs?.petId === pet.type;
                     return (
                       <button
                         key={pet.id}
@@ -340,20 +341,41 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
                           padding: 'var(--spacing-sm)',
                           background: selectedPet?.id === pet.id
                             ? 'linear-gradient(135deg, #667eea, #764ba2)'
+                            : isIncarnated
+                            ? 'linear-gradient(135deg, #f093fb, #f5576c)'
                             : 'var(--color-cream)',
-                          border: `3px solid ${selectedPet?.id === pet.id ? '#667eea' : 'var(--color-brown)'}`,
+                          border: `3px solid ${selectedPet?.id === pet.id ? '#667eea' : isIncarnated ? '#f093fb' : 'var(--color-brown)'}`,
                           borderRadius: 'var(--border-radius-lg)',
                           cursor: 'pointer',
                           textAlign: 'center',
                           transition: 'all 0.2s',
-                          position: 'relative'
+                          position: 'relative',
+                          boxShadow: isIncarnated ? '0 0 15px rgba(240, 147, 251, 0.5)' : 'none'
                         }}
                       >
+                        {isIncarnated && (
+                          <div style={{
+                            position: 'absolute',
+                            top: '-8px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            background: '#f093fb',
+                            color: 'white',
+                            padding: '2px 8px',
+                            borderRadius: '10px',
+                            fontSize: '0.65rem',
+                            fontWeight: '700',
+                            whiteSpace: 'nowrap',
+                            zIndex: 1
+                          }}>
+                            🎭 INCARNÉ
+                          </div>
+                        )}
                         <div style={{ fontSize: '40px' }}>{pet.emoji}</div>
                         <div style={{
                           fontSize: '0.75rem',
                           fontWeight: '600',
-                          color: selectedPet?.id === pet.id ? 'white' : 'var(--color-text-primary)',
+                          color: selectedPet?.id === pet.id || isIncarnated ? 'white' : 'var(--color-text-primary)',
                           marginTop: '4px'
                         }}>
                           Niv. {pet.level}
@@ -401,6 +423,21 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
 
                     {/* Animal affiché */}
                     <div style={{ textAlign: 'center', marginBottom: 'var(--spacing-lg)' }}>
+                      {currentUser?.incarnatedAs?.petId === selectedPet.type && (
+                        <div style={{
+                          background: 'linear-gradient(135deg, #f093fb, #f5576c)',
+                          color: 'white',
+                          padding: 'var(--spacing-sm) var(--spacing-md)',
+                          borderRadius: 'var(--border-radius-lg)',
+                          marginBottom: 'var(--spacing-md)',
+                          display: 'inline-block',
+                          fontSize: '0.9rem',
+                          fontWeight: '700',
+                          boxShadow: '0 4px 15px rgba(240, 147, 251, 0.4)'
+                        }}>
+                          🎭 Tu es incarné en {selectedPet.name} !
+                        </div>
+                      )}
                       <div style={{ fontSize: '120px', marginBottom: 'var(--spacing-sm)' }}>
                         {selectedPet.emoji}
                       </div>
