@@ -40,6 +40,9 @@ import { awardDailyLogin } from './utils/pointsSystem';
 // Demo users
 import { initializeDemoUsers } from './utils/demoUsers';
 
+// Demo pets
+import { initializeDemoPets } from './utils/petsSystem';
+
 // Data
 import { salons } from './data/appData';
 
@@ -71,6 +74,9 @@ function MainApp() {
 
     // Initialiser les profils démo (bots) au démarrage
     initializeDemoUsers();
+
+    // Initialiser les animaux de démo pour tester
+    initializeDemoPets();
 
     // Ajouter les préférences par défaut à tous les utilisateurs existants
     const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
