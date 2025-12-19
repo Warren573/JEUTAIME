@@ -227,57 +227,90 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
 
       {/* Tabs */}
       <div style={{
-        display: 'flex',
-        gap: 'var(--spacing-sm)',
-        marginBottom: 'var(--spacing-lg)',
         padding: '0 var(--spacing-sm)',
-        justifyContent: 'center',
-        flexWrap: 'wrap'
+        marginBottom: 'var(--spacing-lg)'
       }}>
-        <button
-          onClick={() => setAdoptionTab('mypets')}
-          style={{
-            flex: 1,
-            minWidth: '130px',
-            maxWidth: '180px',
-            padding: 'var(--spacing-md)',
-            background: adoptionTab === 'mypets'
-              ? 'linear-gradient(135deg, #f093fb, #f5576c)'
-              : 'var(--color-brown-light)',
-            border: 'none',
-            borderRadius: 'var(--border-radius-lg)',
-            color: 'white',
-            fontSize: '0.9rem',
-            fontWeight: '600',
-            cursor: 'pointer',
-            boxShadow: adoptionTab === 'mypets' ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
-            transition: 'all 0.2s'
-          }}
-        >
-          🎭 Incarner ({myPets.length}/1)
-        </button>
-        <button
-          onClick={() => setAdoptionTab('adopt')}
-          style={{
-            flex: 1,
-            minWidth: '130px',
-            maxWidth: '180px',
-            padding: 'var(--spacing-md)',
-            background: adoptionTab === 'adopt'
-              ? 'linear-gradient(135deg, #667eea, #764ba2)'
-              : 'var(--color-brown-light)',
-            border: 'none',
-            borderRadius: 'var(--border-radius-lg)',
-            color: 'white',
-            fontSize: '0.9rem',
-            fontWeight: '600',
-            cursor: 'pointer',
-            boxShadow: adoptionTab === 'adopt' ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
-            transition: 'all 0.2s'
-          }}
-        >
-          🔄 Choisir incarnation
-        </button>
+        {/* Ligne 1 : Adopter et Incarner */}
+        <div style={{
+          display: 'flex',
+          gap: 'var(--spacing-sm)',
+          marginBottom: 'var(--spacing-sm)',
+          justifyContent: 'center'
+        }}>
+          <button
+            onClick={() => setAdoptionTab('adopt')}
+            style={{
+              flex: 1,
+              minWidth: '130px',
+              maxWidth: '180px',
+              padding: 'var(--spacing-md)',
+              background: adoptionTab === 'adopt'
+                ? 'linear-gradient(135deg, #667eea, #764ba2)'
+                : 'var(--color-brown-light)',
+              border: 'none',
+              borderRadius: 'var(--border-radius-lg)',
+              color: 'white',
+              fontSize: '0.9rem',
+              fontWeight: '600',
+              cursor: 'pointer',
+              boxShadow: adoptionTab === 'adopt' ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
+              transition: 'all 0.2s'
+            }}
+          >
+            🔄 Choisir
+          </button>
+          <button
+            onClick={() => setAdoptionTab('incarnate')}
+            style={{
+              flex: 1,
+              minWidth: '130px',
+              maxWidth: '180px',
+              padding: 'var(--spacing-md)',
+              background: adoptionTab === 'incarnate'
+                ? 'linear-gradient(135deg, #f093fb, #f5576c)'
+                : 'var(--color-brown-light)',
+              border: 'none',
+              borderRadius: 'var(--border-radius-lg)',
+              color: 'white',
+              fontSize: '0.9rem',
+              fontWeight: '600',
+              cursor: 'pointer',
+              boxShadow: adoptionTab === 'incarnate' ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
+              transition: 'all 0.2s'
+            }}
+          >
+            🎭 Incarner
+          </button>
+        </div>
+
+        {/* Ligne 2 : Mon incarnation */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center'
+        }}>
+          <button
+            onClick={() => setAdoptionTab('mypets')}
+            style={{
+              minWidth: '130px',
+              maxWidth: '370px',
+              width: '100%',
+              padding: 'var(--spacing-md)',
+              background: adoptionTab === 'mypets'
+                ? 'linear-gradient(135deg, #FFD700, #FFA500)'
+                : 'var(--color-brown-light)',
+              border: 'none',
+              borderRadius: 'var(--border-radius-lg)',
+              color: adoptionTab === 'mypets' ? '#000' : 'white',
+              fontSize: '0.9rem',
+              fontWeight: '600',
+              cursor: 'pointer',
+              boxShadow: adoptionTab === 'mypets' ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
+              transition: 'all 0.2s'
+            }}
+          >
+            ⚡ Mon incarnation ({myPets.length}/1)
+          </button>
+        </div>
       </div>
 
       <div style={{ padding: '0 var(--spacing-sm)', width: '100%', boxSizing: 'border-box' }}>
