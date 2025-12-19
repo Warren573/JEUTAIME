@@ -59,27 +59,15 @@ export default function Navigation({ navItems, screen, setScreen }) {
             }}
           >
             <div style={{
-              fontSize: '20px',
+              fontSize: '26px',
               filter: isActive ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' : 'none',
               transition: 'all var(--transition-normal)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              lineHeight: '1',
-              flexShrink: 0
+              lineHeight: '1'
             }}>
               {nav.icon}
-            </div>
-            <div style={{
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              textAlign: 'left',
-              lineHeight: '1',
-              fontFamily: 'var(--font-primary)',
-              flex: 1
-            }}>
-              {nav.label}
             </div>
           </button>
         );
