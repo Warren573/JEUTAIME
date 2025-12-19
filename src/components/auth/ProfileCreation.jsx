@@ -178,7 +178,7 @@ export default function ProfileCreation({ email, onComplete }) {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+    <div style={{ minHeight: '100dvh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
       <div style={{ maxWidth: '500px', width: '100%' }}>
         {/* Progress bar */}
         <div style={{ marginBottom: '30px' }}>

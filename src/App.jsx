@@ -41,6 +41,9 @@ import { initializeDemoUsers } from './utils/demoUsers';
 // Demo pets
 import { initializeDemoPets } from './utils/petsSystem';
 
+// Onboarding progressif
+import { getUserDay, isFeatureUnlocked, getOnboardingMessage } from './utils/onboarding';
+
 // Data
 import { salons } from './data/appData';
 
@@ -61,6 +64,8 @@ function MainApp() {
   const [joinedSalons, setJoinedSalons] = useState([1]);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
   const [adminMode, setAdminMode] = useState(false);
+  const [userDay, setUserDay] = useState(0);
+  const [showOnboardingMessage, setShowOnboardingMessage] = useState(false);
 
   const { isAdminAuthenticated } = useAdmin();
 
@@ -128,6 +133,15 @@ function MainApp() {
     if (currentUser) {
       setUserCoins(currentUser.coins || 0);
       setPremiumActive(currentUser.premium || false);
+    }
+  }, [currentUser]);
+
+  // Tracker le jour d'onboarding de l'utilisateur
+  useEffect(() => {
+    if (currentUser?.email) {
+      const day = getUserDay(currentUser.email);
+      setUserDay(day);
+      console.log(`📅 Jour d'onboarding: ${day}`);
     }
   }, [currentUser]);
 
@@ -215,12 +229,11 @@ function MainApp() {
   ]);
 
   const navItems = [
-    { icon: '⭐', label: 'Espace Perso', id: 'home' },
+    { icon: '⭐', label: 'Accueil', id: 'home' },
     { icon: '👤', label: 'Profils', id: 'profiles' },
     { icon: '👥', label: 'Social', id: 'social' },
     { icon: '💌', label: 'Lettres', id: 'letters' },
-    { icon: '📰', label: 'Journal', id: 'journal' },
-    { icon: '⚙️', label: 'Paramètres', id: 'settings' }
+    { icon: '⚙️', label: 'Plus', id: 'settings' }
   ];
 
   const appState = {
@@ -252,7 +265,9 @@ function MainApp() {
     adminMode, setAdminMode,
     isAdminAuthenticated,
     currentUser,
-    onLogout: handleLogout
+    onLogout: handleLogout,
+    userDay,
+    isFeatureUnlocked: (feature) => isFeatureUnlocked(currentUser?.email, feature)
   };
 
   // Show auth screen if not logged in
@@ -281,7 +296,7 @@ function MainApp() {
       maxWidth: '100vw',
       margin: '0 auto',
       background: '#000',
-      minHeight: '100vh',
+      minHeight: '100dvh',
       color: 'white',
       fontFamily: '-apple-system, sans-serif',
       overflow: 'hidden'
