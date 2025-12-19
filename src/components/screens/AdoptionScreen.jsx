@@ -308,7 +308,7 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
               transition: 'all 0.2s'
             }}
           >
-            ⚡ Mon incarnation ({myPets.length}/1)
+            🐾 Mon animal ({myPets.length}/1)
           </button>
         </div>
       </div>
