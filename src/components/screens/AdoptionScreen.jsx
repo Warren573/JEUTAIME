@@ -37,14 +37,40 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
     return () => clearInterval(interval);
   }, []);
 
-  // Adopter un animal
+  // Incarner un animal (adopter + incarner en une seule action)
   const handleAdopt = (petId) => {
+    // Vérifier qu'on n'a pas déjà un animal
+    if (myPets.length >= 1) {
+      alert('❌ Tu ne peux avoir qu\'une seule incarnation à la fois !\n\nDésincarne-toi d\'abord avant de choisir une nouvelle forme.');
+      return;
+    }
+
     const result = adoptPet(currentUser.email, petId);
 
     if (result.success) {
       setUserCoins(result.coinsRemaining);
+
+      // Incarner automatiquement l'animal adopté
+      const pet = PETS[petId];
+      const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+      const userIndex = users.findIndex(u => u.email === currentUser.email);
+
+      if (userIndex !== -1) {
+        users[userIndex].incarnatedAs = {
+          petId: pet.id,
+          emoji: pet.emoji,
+          name: pet.name,
+          since: new Date().toISOString()
+        };
+        localStorage.setItem('jeutaime_users', JSON.stringify(users));
+
+        if (setCurrentUser) {
+          setCurrentUser({...users[userIndex]});
+        }
+      }
+
       setRefreshKey(prev => prev + 1);
-      alert(`🎉 Félicitations ! Vous avez adopté un ${result.pet.name} !\n\nPrenez-en bien soin en le nourrissant, jouant avec lui, et en le gardant propre et reposé.`);
+      alert(`🎭 Transformation réussie !\n\nTu es maintenant incarné en ${result.pet.name} ${pet.emoji}\n\nPrends-en bien soin en le nourrissant, jouant avec lui, et en le gardant propre et reposé.`);
       setAdoptionTab('mypets');
       setSelectedPet(result.pet);
     } else {
@@ -216,7 +242,7 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
             maxWidth: '180px',
             padding: 'var(--spacing-md)',
             background: adoptionTab === 'mypets'
-              ? 'linear-gradient(135deg, #667eea, #764ba2)'
+              ? 'linear-gradient(135deg, #f093fb, #f5576c)'
               : 'var(--color-brown-light)',
             border: 'none',
             borderRadius: 'var(--border-radius-lg)',
@@ -228,7 +254,7 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
             transition: 'all 0.2s'
           }}
         >
-          🐾 Mes Animaux ({myPets.length}/3)
+          🎭 Incarner ({myPets.length}/1)
         </button>
         <button
           onClick={() => setAdoptionTab('adopt')}
@@ -238,29 +264,7 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
             maxWidth: '180px',
             padding: 'var(--spacing-md)',
             background: adoptionTab === 'adopt'
-              ? 'linear-gradient(135deg, #FFD700, #FFA500)'
-              : 'var(--color-brown-light)',
-            border: 'none',
-            borderRadius: 'var(--border-radius-lg)',
-            color: adoptionTab === 'adopt' ? '#000' : 'white',
-            fontSize: '0.9rem',
-            fontWeight: '600',
-            cursor: 'pointer',
-            boxShadow: adoptionTab === 'adopt' ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
-            transition: 'all 0.2s'
-          }}
-        >
-          🏠 Adopter
-        </button>
-        <button
-          onClick={() => setAdoptionTab('incarnate')}
-          style={{
-            flex: 1,
-            minWidth: '130px',
-            maxWidth: '180px',
-            padding: 'var(--spacing-md)',
-            background: adoptionTab === 'incarnate'
-              ? 'linear-gradient(135deg, #f093fb, #f5576c)'
+              ? 'linear-gradient(135deg, #667eea, #764ba2)'
               : 'var(--color-brown-light)',
             border: 'none',
             borderRadius: 'var(--border-radius-lg)',
@@ -268,11 +272,11 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
             fontSize: '0.9rem',
             fontWeight: '600',
             cursor: 'pointer',
-            boxShadow: adoptionTab === 'incarnate' ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
+            boxShadow: adoptionTab === 'adopt' ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
             transition: 'all 0.2s'
           }}
         >
-          🎭 Incarner
+          🔄 Choisir incarnation
         </button>
       </div>
 
