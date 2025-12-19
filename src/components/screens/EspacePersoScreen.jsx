@@ -92,19 +92,6 @@ export default function EspacePersoScreen({
           flexWrap: 'wrap'
         }}>
           <ActionButton
-            onClick={() => setScreen('book-view')}
-            gradient="linear-gradient(135deg, #FFD700, #FFA500)"
-            textColor="#000"
-          >
-            📖 Voir mon Book
-          </ActionButton>
-          <ActionButton
-            onClick={() => setScreen('book-edit')}
-            gradient="linear-gradient(135deg, #4CAF50, #45a049)"
-          >
-            ✏️ Éditer
-          </ActionButton>
-          <ActionButton
             onClick={() => alert('🎨 Personnalisation - À venir !')}
             gradient="linear-gradient(135deg, #FF6B6B, #FF8E53)"
           >
@@ -122,68 +109,6 @@ export default function EspacePersoScreen({
         maxWidth: '1200px',
         margin: '0 auto'
       }}>
-        {/* Aperçu du Book */}
-        <div style={{
-          background: '#2a2a2a',
-          borderRadius: '16px',
-          padding: '25px',
-          border: '2px solid #667eea',
-          cursor: 'pointer',
-          transition: 'all 0.2s'
-        }}
-        onClick={() => setScreen('book-view')}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'translateY(-4px)';
-          e.currentTarget.style.boxShadow = '0 12px 30px rgba(102, 126, 234, 0.3)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'translateY(0)';
-          e.currentTarget.style.boxShadow = 'none';
-        }}>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '15px'
-          }}>
-            <h3 style={{
-              margin: 0,
-              color: '#667eea',
-              fontSize: '1.5rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px'
-            }}>
-              📖 Mon Book Privé
-            </h3>
-            <span style={{ fontSize: '1.5rem' }}>→</span>
-          </div>
-          <p style={{ margin: '0 0 15px 0', color: '#aaa', fontSize: '0.95rem' }}>
-            Ton espace personnel façon Skyblog moderne ✨
-          </p>
-          <div style={{
-            display: 'flex',
-            gap: '10px',
-            flexWrap: 'wrap'
-          }}>
-            {['📖 Moi en vrai', '🎥 Vidéos', '📸 Album', '✍️ Notes', '🎨 Moodboard', '🔒 Ultra-Privé'].map((page) => (
-              <div
-                key={page}
-                style={{
-                  background: '#1a1a1a',
-                  padding: '8px 14px',
-                  borderRadius: '8px',
-                  fontSize: '0.85rem',
-                  color: 'white',
-                  border: '1px solid #444'
-                }}
-              >
-                {page}
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Offrandes reçues */}
         <ReceivedGifts currentUser={currentUser} />
 

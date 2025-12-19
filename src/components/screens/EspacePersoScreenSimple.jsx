@@ -9,8 +9,6 @@ export default function EspacePersoScreenSimple({
   setSelectedSalon,
   joinedSalons = []
 }) {
-  const [showBookPreview, setShowBookPreview] = useState(false);
-
   // Générer les options d'avatar de manière sécurisée
   const avatarOptions = currentUser?.avatarData || generateAvatarOptions(
     currentUser?.name || 'User',
@@ -127,10 +125,7 @@ export default function EspacePersoScreenSimple({
         flexDirection: 'column',
         gap: '20px'
       }}>
-        {/* 1. Book Personnel */}
-        <BookPersonnelSection currentUser={currentUser} setScreen={setScreen} />
-
-        {/* 2. Offrandes Reçues */}
+        {/* Offrandes Reçues */}
         <OffrandesRecuesSection currentUser={currentUser} />
 
         {/* 3. Inventaire Magique */}
@@ -150,166 +145,7 @@ export default function EspacePersoScreenSimple({
   );
 }
 
-// 1. BOOK PERSONNEL
-function BookPersonnelSection({ currentUser, setScreen }) {
-  const [bookData, setBookData] = useState(null);
-
-  useEffect(() => {
-    if (currentUser?.email) {
-      // Charger les données du book depuis localStorage
-      const key = `jeutaime_book_${currentUser.email}`;
-      const savedBook = localStorage.getItem(key);
-
-      if (savedBook) {
-        setBookData(JSON.parse(savedBook));
-      } else {
-        // Données par défaut
-        const defaultBook = {
-          about: currentUser.bio || 'Écris quelque chose sur toi...',
-          age: currentUser.age || '',
-          city: '',
-          job: '',
-          music: '',
-          movies: '',
-          videos: [],
-          photos: [],
-          notes: '',
-          moodboard: { quotes: [], emojis: [], tags: [] },
-          private: { passions: '', thoughts: '', dreams: '', fears: '', secrets: '' }
-        };
-        setBookData(defaultBook);
-        localStorage.setItem(key, JSON.stringify(defaultBook));
-      }
-    }
-  }, [currentUser?.email]);
-
-  const handleSaveBook = (newData) => {
-    if (currentUser?.email) {
-      const key = `jeutaime_book_${currentUser.email}`;
-      localStorage.setItem(key, JSON.stringify(newData));
-      setBookData(newData);
-    }
-  };
-
-  const getPageStatus = (pageName) => {
-    if (!bookData) return '○';
-
-    if (pageName.includes('Moi en vrai')) {
-      return bookData.about && bookData.about !== 'Écris quelque chose sur toi...' ? '●' : '○';
-    }
-    if (pageName.includes('Vidéos')) return bookData.videos?.length > 0 ? '●' : '○';
-    if (pageName.includes('Album')) return bookData.photos?.length > 0 ? '●' : '○';
-    if (pageName.includes('Notes')) return bookData.notes ? '●' : '○';
-    if (pageName.includes('Moodboard')) return bookData.moodboard?.quotes?.length > 0 ? '●' : '○';
-    if (pageName.includes('Ultra-Privé')) return bookData.private?.passions ? '●' : '○';
-    return '○';
-  };
-
-  const pages = ['📖 Moi en vrai', '🎥 Vidéos', '📸 Album', '✍️ Notes', '🎨 Moodboard', '🔒 Ultra-Privé'];
-
-  return (
-    <div style={{
-      background: 'var(--color-cream)',
-      borderRadius: 'var(--border-radius-lg)',
-      padding: '25px',
-      border: '3px solid var(--color-gold)',
-      boxShadow: 'var(--shadow-md)'
-    }}>
-      <h3 style={{
-        fontSize: '1.5rem',
-        marginBottom: '15px',
-        color: 'var(--color-text-primary)',
-        fontFamily: 'var(--font-heading)',
-        borderBottom: '2px solid var(--color-gold)',
-        paddingBottom: 'var(--spacing-xs)'
-      }}>
-        📖 Mon Book Personnel
-      </h3>
-      <p style={{
-        color: 'var(--color-text-secondary)',
-        marginBottom: '20px',
-        fontSize: '0.95rem',
-        fontStyle: 'italic'
-      }}>
-        Ton espace perso style Skyblog moderne
-      </p>
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(2, 1fr)',
-        gap: '10px',
-        marginBottom: '20px'
-      }}>
-        {pages.map((page) => (
-          <div
-            key={page}
-            style={{
-              background: 'var(--color-beige-light)',
-              padding: '12px',
-              borderRadius: 'var(--border-radius-md)',
-              fontSize: '0.85rem',
-              textAlign: 'center',
-              color: 'var(--color-text-primary)',
-              border: '2px solid var(--color-brown-light)',
-              boxShadow: 'var(--shadow-sm)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px'
-            }}
-          >
-            <span style={{
-              fontSize: '0.7rem',
-              color: getPageStatus(page) === '●' ? 'var(--color-gold)' : 'var(--color-text-light)'
-            }}>
-              {getPageStatus(page)}
-            </span>
-            {page}
-          </div>
-        ))}
-      </div>
-      <div style={{ display: 'flex', gap: '10px' }}>
-        <button
-          style={{
-            flex: 1,
-            padding: '12px',
-            background: 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))',
-            border: '2px solid var(--color-gold-dark)',
-            color: 'var(--color-cream)',
-            borderRadius: '10px',
-            cursor: 'pointer',
-            fontWeight: '600',
-            fontSize: '0.95rem',
-            boxShadow: 'var(--shadow-sm)',
-            transition: 'all var(--transition-normal)'
-          }}
-          onClick={() => setScreen('book-view')}
-        >
-          📖 Voir mon Book
-        </button>
-        <button
-          style={{
-            flex: 1,
-            padding: '12px',
-            background: 'linear-gradient(135deg, #4CAF50, #45a049)',
-            border: '2px solid #45a049',
-            color: 'white',
-            borderRadius: '10px',
-            cursor: 'pointer',
-            fontWeight: '600',
-            fontSize: '0.95rem',
-            boxShadow: 'var(--shadow-sm)',
-            transition: 'all var(--transition-normal)'
-          }}
-          onClick={() => setScreen('book-edit')}
-        >
-          ✏️ Éditer
-        </button>
-      </div>
-    </div>
-  );
-}
-
-// 2. OFFRANDES REÇUES
+// OFFRANDES REÇUES
 function OffrandesRecuesSection({ currentUser }) {
   const [receivedGifts, setReceivedGifts] = useState([]);
 
@@ -593,7 +429,6 @@ function StatsSocialesSection({ currentUser }) {
 
         const calculatedStats = {
           interactions: Math.floor(Math.random() * 30) + 10, // TODO: calculer depuis les lettres
-          bookViews: Math.floor(Math.random() * 15) + 5, // TODO: implémenter tracking
           goodVibes: Math.floor(Math.random() * 20) + 8, // TODO: calculer depuis bouteille
           giftsReceived: receivedGifts.length,
           giftsSent: 0, // TODO: implémenter tracking
@@ -639,7 +474,6 @@ function StatsSocialesSection({ currentUser }) {
         gap: '15px'
       }}>
         <StatCard icon="💬" label="Interactions" value={stats.interactions} />
-        <StatCard icon="📖" label="Visites Book" value={stats.bookViews} />
         <StatCard icon="✨" label="Good Vibes" value={stats.goodVibes} />
         <StatCard icon="🎁" label="Offrandes" value={stats.giftsReceived} />
       </div>

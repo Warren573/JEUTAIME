@@ -35,13 +35,6 @@ export default function SocialStats({ currentUser }) {
           color="#4CAF50"
         />
         <StatCard
-          icon="📖"
-          label="Visites Book"
-          value={stats.bookViews}
-          subtitle="total"
-          color="#2196F3"
-        />
-        <StatCard
           icon="✨"
           label="Bonne Vibes"
           value={stats.goodVibes}
@@ -212,7 +205,6 @@ function getUserStats(userEmail) {
   if (!userEmail) {
     return {
       interactions: 0,
-      bookViews: 0,
       goodVibes: 0,
       salonsJoined: 0,
       giftsSent: 0,
@@ -234,7 +226,6 @@ function getUserStats(userEmail) {
   // Stats par défaut
   return {
     interactions: Math.floor(Math.random() * 50) + 10,
-    bookViews: Math.floor(Math.random() * 20) + 5,
     goodVibes: Math.floor(Math.random() * 30) + 8,
     salonsJoined: Math.floor(Math.random() * 5) + 1,
     giftsSent: Math.floor(Math.random() * 15) + 3,
