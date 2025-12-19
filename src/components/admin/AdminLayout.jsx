@@ -22,7 +22,7 @@ export default function AdminLayout({ onExit }) {
   ];
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#0a0a0a' }}>
+    <div style={{ display: 'flex', minHeight: '100dvh', background: '#0a0a0a' }}>
       {/* Sidebar */}
       <div style={{ width: sidebarOpen ? '260px' : '80px', background: '#1a1a1a', borderRight: '1px solid #333', transition: 'width 0.3s', display: 'flex', flexDirection: 'column' }}>
         {/* Header */}

@@ -119,7 +119,7 @@ export default function AuthScreen({ onLogin, onSignup }) {
 
   if (mode === 'welcome') {
     return (
-      <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+      <div style={{ minHeight: '100dvh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
         <div style={{ maxWidth: '400px', width: '100%', textAlign: 'center' }}>
           {/* Logo */}
           <div style={{ fontSize: '80px', marginBottom: '20px' }}>💕</div>
@@ -179,7 +179,7 @@ export default function AuthScreen({ onLogin, onSignup }) {
 
   if (mode === 'login') {
     return (
-      <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+      <div style={{ minHeight: '100dvh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
         <div style={{ maxWidth: '400px', width: '100%' }}>
           <button
             onClick={() => setMode('welcome')}
@@ -245,7 +245,7 @@ export default function AuthScreen({ onLogin, onSignup }) {
 
   if (mode === 'signup') {
     return (
-      <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+      <div style={{ minHeight: '100dvh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
         <div style={{ maxWidth: '400px', width: '100%' }}>
           <button
             onClick={() => setMode('welcome')}

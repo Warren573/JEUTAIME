@@ -96,10 +96,10 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
 
   return (
     <div style={{
-      minHeight: '100vh',
-      maxHeight: '100vh',
+      minHeight: '100dvh',
+      maxHeight: '100dvh',
       overflowY: 'auto',
-      paddingBottom: '100px',
+      paddingBottom: 'max(80px, calc(70px + env(safe-area-inset-bottom)))',
       background: 'var(--color-beige-light)',
       display: 'flex',
       flexDirection: 'column'

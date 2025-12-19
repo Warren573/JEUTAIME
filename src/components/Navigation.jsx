@@ -13,7 +13,7 @@ export default function Navigation({ navItems, screen, setScreen }) {
       borderTop: '2px solid var(--color-gold)',
       padding: '5px 4px max(6px, env(safe-area-inset-bottom))',
       display: 'grid',
-      gridTemplateColumns: 'repeat(6, 1fr)',
+      gridTemplateColumns: 'repeat(5, 1fr)',
       gap: '4px',
       boxShadow: '0 -4px 12px rgba(58, 40, 24, 0.3)',
       zIndex: 1000

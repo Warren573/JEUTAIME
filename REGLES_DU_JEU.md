@@ -202,7 +202,7 @@ Chaque animal a 4 stats qui évoluent :
 - **Limite quotidienne** : Aucune ! Écris autant que tu veux
 - **Déverrouillage photos** : 20 lettres envoyées débloquent toutes les photos du profil
 - **Points** : +10 pts envoi, +15 pts réception
-- **Ghosting** : Les bots répondent entre 30 sec et 5 min, puis peuvent ghoster
+- **Communication asynchrone** : Les personnes répondent quand elles sont disponibles
 
 ---
 
@@ -261,8 +261,8 @@ Chaque animal a 4 stats qui évoluent :
 ### Limites & Contraintes
 - **1 seul animal** : Adoption et incarnation limitées à 1 animal simultané
 - **Photos verrouillées** : 6 photos par profil, floues jusqu'à 20 lettres envoyées
-- **Bots actifs** : Les profils démo répondent automatiquement
-- **Ghosting réaliste** : Les bots peuvent arrêter de répondre aléatoirement
+- **Vraies rencontres** : Application conçue pour connecter de vraies personnes
+- **Profils démo** : Présents uniquement pour tester les fonctionnalités de l'app
 
 ### Stockage
 - **Tout en localStorage** : Données persistantes dans le navigateur
