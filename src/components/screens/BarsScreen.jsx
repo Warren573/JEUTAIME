@@ -1,4 +1,5 @@
 import React from 'react';
+import ScreenHeader from '../common/ScreenHeader';
 
 export default function BarsScreen({ setScreen, setGameScreen, setSelectedSalon, currentUser }) {
   const salons = [
@@ -71,37 +72,11 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedSalon,
       display: 'flex',
       flexDirection: 'column'
     }}>
-      {/* En-tête */}
-      <div style={{
-        background: 'var(--color-cream)',
-        borderBottom: '4px double var(--color-brown-dark)',
-        padding: 'var(--spacing-lg)',
-        marginBottom: 'var(--spacing-lg)',
-        boxShadow: 'var(--shadow-md)'
-      }}>
-        <h1 style={{
-          fontFamily: 'var(--font-heading)',
-          fontSize: '2.5rem',
-          textAlign: 'center',
-          margin: '0 0 var(--spacing-xs) 0',
-          color: 'var(--color-brown-dark)',
-          textTransform: 'uppercase',
-          letterSpacing: '2px',
-          borderBottom: '2px solid var(--color-gold)',
-          paddingBottom: 'var(--spacing-xs)'
-        }}>
-          🍸 Les Salons
-        </h1>
-        <p style={{
-          textAlign: 'center',
-          color: 'var(--color-text-secondary)',
-          fontSize: '0.95rem',
-          fontStyle: 'italic',
-          margin: 'var(--spacing-sm) 0 0 0'
-        }}>
-          Écrivez des histoires ensemble • Une phrase chacun • Timer 24h
-        </p>
-      </div>
+      <ScreenHeader
+        icon="🍸"
+        title="Les Salons"
+        subtitle="Écrivez des histoires ensemble • Une phrase chacun • Timer 24h"
+      />
 
       {/* Bouton créer son salon (Premium) */}
       <div style={{

@@ -12,6 +12,7 @@ import {
   getBarName,
   getTimeRemaining
 } from '../../utils/barExchangeSystem';
+import ScreenHeader from '../common/ScreenHeader';
 
 export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, setSelectedSalon, adminMode, isAdminAuthenticated, currentUser, userCoins, setUserCoins, setScreen, setCurrentUser }) {
   const [magicStates, setMagicStates] = useState({});
@@ -106,35 +107,17 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
     }}>
       {/* Logo Social - Affiché uniquement quand aucun onglet actif */}
       {socialTab === null && (
-        <div style={{
-          background: 'var(--color-cream)',
-          borderBottom: '4px double var(--color-brown-dark)',
-          padding: 'var(--spacing-md)',
-          marginBottom: 'var(--spacing-md)',
-          boxShadow: 'var(--shadow-md)'
-        }}>
-          <h1 style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: '1.8rem',
-            textAlign: 'center',
-            margin: '0 0 var(--spacing-xs) 0',
-            color: 'var(--color-brown-dark)',
-            textTransform: 'uppercase',
-            letterSpacing: '2px',
-            borderBottom: '2px solid var(--color-text-primary)',
-            paddingBottom: 'var(--spacing-xs)'
+        <>
+          <ScreenHeader
+            icon="👥"
+            title="SOCIAL"
+            subtitle="Choisis une catégorie"
+          />
+          <div style={{
+            background: 'var(--color-cream)',
+            padding: 'var(--spacing-md)',
+            marginBottom: 'var(--spacing-md)'
           }}>
-            👥 SOCIAL
-          </h1>
-          <p style={{
-            textAlign: 'center',
-            color: 'var(--color-text-secondary)',
-            fontSize: '0.95rem',
-            fontStyle: 'italic',
-            margin: 0
-          }}>
-            Choisis une catégorie
-          </p>
 
           {/* Bouteille à la mer */}
           <div style={{ textAlign: 'center', marginTop: 'var(--spacing-md)' }}>
@@ -173,8 +156,6 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
               )}
             </button>
           </div>
-
-          {adminMode && isAdminAuthenticated && socialTab === 'bars' && (
             <div style={{ textAlign: 'center', marginTop: 'var(--spacing-sm)' }}>
               <button
                 onClick={handleAdminCreateSalon}
@@ -184,9 +165,6 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                 ➕ Nouveau Salon
               </button>
             </div>
-          )}
-        </div>
-      )}
 
       {/* Onglets - Grille uniforme 2x2 - Affichés seulement si pas de tab actif */}
       {socialTab === null && (
@@ -289,37 +267,11 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
           width: '100%',
           boxSizing: 'border-box'
         }}>
-          {/* Header Salons */}
-          <div style={{
-            background: 'var(--color-cream)',
-            borderBottom: '4px double var(--color-brown-dark)',
-            padding: 'var(--spacing-lg)',
-            marginBottom: 'var(--spacing-lg)',
-            boxShadow: 'var(--shadow-md)'
-          }}>
-            <h1 style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: '2.5rem',
-              textAlign: 'center',
-              margin: '0 0 var(--spacing-xs) 0',
-              color: 'var(--color-brown-dark)',
-              textTransform: 'uppercase',
-              letterSpacing: '2px',
-              borderBottom: '2px solid var(--color-gold)',
-              paddingBottom: 'var(--spacing-xs)'
-            }}>
-              ✨ SALONS
-            </h1>
-            <p style={{
-              textAlign: 'center',
-              color: 'var(--color-text-secondary)',
-              fontSize: '0.95rem',
-              fontStyle: 'italic',
-              margin: 'var(--spacing-sm) 0 0 0'
-            }}>
-              Écrivez des histoires ensemble • Une phrase chacun • Timer 24h
-            </p>
-          </div>
+          <ScreenHeader
+            icon="✨"
+            title="SALONS"
+            subtitle="Écrivez des histoires ensemble • Une phrase chacun • Timer 24h"
+          />
 
           {/* Bouton vers liste complète des salons magiques */}
           <button
@@ -713,37 +665,11 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
 
       {socialTab === 'games' && (
         <>
-          {/* Header Jeux */}
-          <div style={{
-            background: 'var(--color-cream)',
-            borderBottom: '4px double var(--color-brown-dark)',
-            padding: 'var(--spacing-lg)',
-            marginBottom: 'var(--spacing-lg)',
-            boxShadow: 'var(--shadow-md)'
-          }}>
-            <h1 style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: '2.5rem',
-              textAlign: 'center',
-              margin: '0 0 var(--spacing-xs) 0',
-              color: 'var(--color-brown-dark)',
-              textTransform: 'uppercase',
-              letterSpacing: '2px',
-              borderBottom: '2px solid var(--color-gold)',
-              paddingBottom: 'var(--spacing-xs)'
-            }}>
-              🎮 JEUX
-            </h1>
-            <p style={{
-              textAlign: 'center',
-              color: 'var(--color-text-secondary)',
-              fontSize: '0.95rem',
-              fontStyle: 'italic',
-              margin: 'var(--spacing-sm) 0 0 0'
-            }}>
-              Joue et gagne des pièces !
-            </p>
-          </div>
+          <ScreenHeader
+            icon="🎮"
+            title="JEUX"
+            subtitle="Joue et gagne des pièces !"
+          />
 
           <div style={{
             display: 'grid',

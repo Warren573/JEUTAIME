@@ -8,6 +8,7 @@ import Avatar from 'avataaars';
 import GiftSelector from '../gifts/GiftSelector';
 import MagicEffect from '../effects/MagicEffect';
 import { getReceivedGifts } from '../../utils/giftsSystem';
+import ScreenHeader from '../common/ScreenHeader';
 
 export default function ProfilesScreen({ currentProfile, setCurrentProfile, adminMode, isAdminAuthenticated, currentUser }) {
   const [viewMode, setViewMode] = useState('discover');
@@ -265,36 +266,130 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
       display: 'flex',
       flexDirection: 'column'
     }}>
-      {/* En-tête style Journal */}
+      <ScreenHeader
+        icon="👥"
+        title="Découverte"
+        subtitle="Explorez et rencontrez de nouvelles personnes"
+      />
+
+      {/* Navigation Rapide */}
       <div style={{
-        background: 'var(--color-cream)',
-        borderBottom: '4px double var(--color-brown-dark)',
-        padding: 'var(--spacing-lg)',
-        marginBottom: 'var(--spacing-lg)',
-        boxShadow: 'var(--shadow-md)'
+        padding: '20px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '12px'
       }}>
-        <h1 style={{
-          fontFamily: 'var(--font-heading)',
-          fontSize: '2.5rem',
-          textAlign: 'center',
-          margin: '0 0 var(--spacing-xs) 0',
-          color: 'var(--color-brown-dark)',
-          textTransform: 'uppercase',
-          letterSpacing: '2px',
-          borderBottom: '2px solid var(--color-text-primary)',
-          paddingBottom: 'var(--spacing-xs)'
-        }}>
-          👥 Découverte
-        </h1>
-        <p style={{
-          textAlign: 'center',
-          color: 'var(--color-text-secondary)',
-          fontSize: '0.95rem',
-          fontStyle: 'italic',
-          margin: 0
-        }}>
-          Explorez et rencontrez de nouvelles personnes
-        </p>
+        <button
+          onClick={() => setScreen('home')}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '15px',
+            padding: '16px 20px',
+            background: 'var(--color-cream)',
+            border: '2px solid var(--color-brown-light)',
+            borderRadius: '12px',
+            cursor: 'pointer',
+            boxShadow: 'var(--shadow-sm)',
+            transition: 'all var(--transition-normal)',
+            width: '100%'
+          }}
+        >
+          <div style={{ fontSize: '28px', lineHeight: '1', flexShrink: 0 }}>⭐</div>
+          <div style={{
+            flex: 1,
+            textAlign: 'left',
+            color: 'var(--color-text-primary)',
+            fontWeight: '600',
+            fontSize: '1rem'
+          }}>
+            Accueil
+          </div>
+        </button>
+
+        <button
+          onClick={() => setScreen('social')}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '15px',
+            padding: '16px 20px',
+            background: 'var(--color-cream)',
+            border: '2px solid var(--color-brown-light)',
+            borderRadius: '12px',
+            cursor: 'pointer',
+            boxShadow: 'var(--shadow-sm)',
+            transition: 'all var(--transition-normal)',
+            width: '100%'
+          }}
+        >
+          <div style={{ fontSize: '28px', lineHeight: '1', flexShrink: 0 }}>👥</div>
+          <div style={{
+            flex: 1,
+            textAlign: 'left',
+            color: 'var(--color-text-primary)',
+            fontWeight: '600',
+            fontSize: '1rem'
+          }}>
+            Social
+          </div>
+        </button>
+
+        <button
+          onClick={() => setScreen('letters')}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '15px',
+            padding: '16px 20px',
+            background: 'var(--color-cream)',
+            border: '2px solid var(--color-brown-light)',
+            borderRadius: '12px',
+            cursor: 'pointer',
+            boxShadow: 'var(--shadow-sm)',
+            transition: 'all var(--transition-normal)',
+            width: '100%'
+          }}
+        >
+          <div style={{ fontSize: '28px', lineHeight: '1', flexShrink: 0 }}>💌</div>
+          <div style={{
+            flex: 1,
+            textAlign: 'left',
+            color: 'var(--color-text-primary)',
+            fontWeight: '600',
+            fontSize: '1rem'
+          }}>
+            Lettres
+          </div>
+        </button>
+
+        <button
+          onClick={() => setScreen('settings')}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '15px',
+            padding: '16px 20px',
+            background: 'var(--color-cream)',
+            border: '2px solid var(--color-brown-light)',
+            borderRadius: '12px',
+            cursor: 'pointer',
+            boxShadow: 'var(--shadow-sm)',
+            transition: 'all var(--transition-normal)',
+            width: '100%'
+          }}
+        >
+          <div style={{ fontSize: '28px', lineHeight: '1', flexShrink: 0 }}>⚙️</div>
+          <div style={{
+            flex: 1,
+            textAlign: 'left',
+            color: 'var(--color-text-primary)',
+            fontWeight: '600',
+            fontSize: '1rem'
+          }}>
+            Paramètres
+          </div>
+        </button>
       </div>
 
       {/* Tabs */}
