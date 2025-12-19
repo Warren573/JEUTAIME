@@ -104,7 +104,6 @@ export default function JournalScreen({ currentUser }) {
             }}>
               <h3 style={{
                 fontFamily: 'var(--font-heading)',
-                fontSize: '1rem',
                 color: 'var(--color-text-primary)',
                 marginBottom: 'var(--spacing-sm)',
                 borderBottom: '1px solid var(--color-text-primary)',
@@ -133,7 +132,6 @@ export default function JournalScreen({ currentUser }) {
             }}>
               <h3 style={{
                 fontFamily: 'var(--font-heading)',
-                fontSize: '1rem',
                 color: 'var(--color-text-primary)',
                 marginBottom: 'var(--spacing-sm)',
                 borderBottom: '1px solid var(--color-text-primary)',

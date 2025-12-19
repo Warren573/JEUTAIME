@@ -165,6 +165,9 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                 ➕ Nouveau Salon
               </button>
             </div>
+          </div>
+        </>
+      )}
 
       {/* Onglets - Grille uniforme 2x2 - Affichés seulement si pas de tab actif */}
       {socialTab === null && (
