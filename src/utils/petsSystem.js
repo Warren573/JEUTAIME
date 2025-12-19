@@ -501,20 +501,27 @@ export function getPetInteraction(petType) {
 export function initializeDemoPets() {
   // Vérifier si déjà initialisé
   const demoVersion = localStorage.getItem('jeutaime_demo_pets_version');
-  if (demoVersion === '1.0') {
+  console.log('🐾 Version actuelle des pets:', demoVersion);
+
+  if (demoVersion === '1.1') {
+    console.log('✅ Pets déjà initialisés en version 1.1');
     return;
   }
 
-  console.log('🐾 Initialisation des animaux de démo...');
+  console.log('🐾 Initialisation des animaux de démo (version 1.1)...');
 
   // Trouver l'utilisateur de démo (le premier utilisateur non-bot)
   const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+  console.log('👥 Nombre total d\'utilisateurs:', users.length);
   const demoUser = users.find(u => !u.isBot);
 
   if (!demoUser) {
     console.log('❌ Aucun utilisateur de démo trouvé');
+    console.log('   Utilisateurs disponibles:', users.map(u => `${u.name} (bot: ${u.isBot})`));
     return;
   }
+
+  console.log('✅ Utilisateur de démo trouvé:', demoUser.name, '/', demoUser.email);
 
   // Créer 2 animaux adoptés avec différentes stats
   const demoPets = [
@@ -586,6 +593,8 @@ export function initializeDemoPets() {
     }
   }
 
-  localStorage.setItem('jeutaime_demo_pets_version', '1.0');
-  console.log('✅ Animaux de démo initialisés: Chat (incarné) + Chien');
+  localStorage.setItem('jeutaime_demo_pets_version', '1.1');
+  console.log('✅ Animaux de démo initialisés v1.1: Chat (incarné) + Chien');
+  console.log('📧 Email utilisateur:', demoUser.email);
+  console.log('🐾 Pets sauvegardés:', demoPets.length);
 }
