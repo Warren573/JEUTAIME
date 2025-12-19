@@ -32,12 +32,12 @@ export default function Navigation({ navItems, screen, setScreen }) {
               color: isActive ? 'var(--color-brown-dark)' : 'var(--color-tan)',
               cursor: 'pointer',
               display: 'flex',
-              flexDirection: 'column',
+              flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '3px',
-              fontSize: '10px',
-              padding: '7px 4px',
+              gap: '6px',
+              fontSize: '11px',
+              padding: '8px 6px',
               minHeight: '48px',
               fontWeight: isActive ? '700' : '500',
               borderRadius: '6px',
@@ -59,15 +59,14 @@ export default function Navigation({ navItems, screen, setScreen }) {
             }}
           >
             <div style={{
-              fontSize: '22px',
+              fontSize: '20px',
               filter: isActive ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' : 'none',
               transition: 'all var(--transition-normal)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: '28px',
-              height: '28px',
-              lineHeight: '1'
+              lineHeight: '1',
+              flexShrink: 0
             }}>
               {nav.icon}
             </div>
@@ -75,11 +74,10 @@ export default function Navigation({ navItems, screen, setScreen }) {
               whiteSpace: 'nowrap',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
-              textAlign: 'center',
+              textAlign: 'left',
               lineHeight: '1',
               fontFamily: 'var(--font-primary)',
-              width: '100%',
-              maxWidth: '100%'
+              flex: 1
             }}>
               {nav.label}
             </div>
