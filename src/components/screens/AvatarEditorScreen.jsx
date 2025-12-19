@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Avatar from 'avataaars';
+import BackButton from '../common/BackButton';
 
 export default function AvatarEditorScreen({ currentUser, setCurrentUser, onClose }) {
   // Options d'avatar
@@ -202,23 +203,7 @@ export default function AvatarEditorScreen({ currentUser, setCurrentUser, onClos
         top: 0,
         zIndex: 100
       }}>
-        <button
-          onClick={onClose}
-          style={{
-            position: 'absolute',
-            top: '10px',
-            left: '10px',
-            background: 'var(--color-gold)',
-            border: '2px solid var(--color-brown-dark)',
-            borderRadius: '8px',
-            padding: '8px 16px',
-            cursor: 'pointer',
-            fontWeight: '600',
-            minHeight: '48px'
-          }}
-        >
-          ← Retour
-        </button>
+        <BackButton onClick={onClose} />
         <h1 style={{
           fontFamily: 'var(--font-heading)',
           fontSize: '2rem',

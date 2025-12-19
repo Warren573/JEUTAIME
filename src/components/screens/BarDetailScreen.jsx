@@ -3,6 +3,7 @@ import GiftSelector from '../gifts/GiftSelector';
 import MagicEffect from '../effects/MagicEffect';
 import MagicGiftsPanel from '../MagicGiftsPanel';
 import Avatar from 'avataaars';
+import BackButton from '../common/BackButton';
 import { generateAvatarOptions } from '../../utils/avatarGenerator';
 import {
   loadBarState,
@@ -338,21 +339,7 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
         borderBottom: '4px solid rgba(0,0,0,0.2)'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px' }}>
-          <button
-            onClick={() => setSelectedSalon(null)}
-            style={{
-              background: 'rgba(255,255,255,0.2)',
-              border: 'none',
-              color: 'white',
-              padding: '8px 15px',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontWeight: '600',
-              fontSize: '0.9rem'
-            }}
-          >
-            ← Retour
-          </button>
+          <BackButton onClick={() => setSelectedSalon(null)} />
 
           {/* Timer discret en haut à droite */}
           {barTab === 'story' && (

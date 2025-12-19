@@ -3,6 +3,7 @@ import { awardPoints } from '../../utils/pointsSystem';
 import { updateUserStats, addPointsToUser, triggerBotAutoReply, getUserById } from '../../utils/demoUsers';
 import GiftSelector from '../gifts/GiftSelector';
 import UserAvatar from '../avatar/UserAvatar';
+import BackButton from '../common/BackButton';
 
 export default function ChatScreen({ currentUser, matchedUser, onBack }) {
   const [messages, setMessages] = useState([]);
@@ -194,22 +195,7 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
         marginBottom: '15px',
         boxShadow: '0 5px 15px rgba(102, 126, 234, 0.3)'
       }}>
-        <button
-          onClick={onBack}
-          style={{
-            background: 'rgba(255,255,255,0.2)',
-            border: 'none',
-            color: 'white',
-            padding: '8px 15px',
-            borderRadius: '10px',
-            cursor: 'pointer',
-            marginBottom: '15px',
-            fontSize: '14px',
-            fontWeight: '600'
-          }}
-        >
-          ← Retour
-        </button>
+        <BackButton onClick={onBack} />
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
           {/* Avatar/Photo avec floutage progressif */}
