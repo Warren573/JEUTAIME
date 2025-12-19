@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { awardPoints, checkAndAwardBadge } from '../../utils/pointsSystem';
 import { addCoinsToUser, updateUserStats, incrementDuelWins } from '../../utils/demoUsers';
+import BackButton from '../common/BackButton';
 
 const WINNING_SCORE = 5; // Premier à 5 points gagne
 
@@ -219,30 +220,23 @@ export default function PongGame({ setGameScreen, currentUser, setUserCoins }) {
 
   return (
     <div style={{
-      height: '100vh',
-      overflowY: 'auto',
-      paddingBottom: '100px',
+      height: '100dvh',
+      overflow: 'hidden',
+      paddingTop: 'env(safe-area-inset-top)',
+      paddingBottom: 'calc(70px + env(safe-area-inset-bottom))',
       background: 'var(--color-beige-light)',
-      padding: 'var(--spacing-md)'
+      display: 'flex',
+      flexDirection: 'column',
+      boxSizing: 'border-box'
     }}>
-      <button
-        onClick={() => setGameScreen(null)}
-        style={{
-          padding: '12px 24px',
-          background: 'var(--color-brown)',
-          border: '2px solid var(--color-gold)',
-          color: 'var(--color-cream)',
-          borderRadius: 'var(--border-radius-md)',
-          marginBottom: '20px',
-          cursor: 'pointer',
-          fontWeight: '700',
-          fontSize: '1rem',
-          boxShadow: 'var(--shadow-md)'
-        }}
-      >
-        ← Retour aux jeux
-      </button>
-      <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600', color: 'var(--color-brown-dark)' }}>🎮 Pong</h2>
+      <BackButton onClick={() => setGameScreen(null)} />
+
+      <div style={{
+        flex: 1,
+        overflow: 'auto',
+        padding: 'var(--spacing-md)'
+      }}>
+        <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600', color: 'var(--color-brown-dark)' }}>🎮 Pong</h2>
 
       <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '15px', textAlign: 'center' }}>
         <div
@@ -317,6 +311,7 @@ export default function PongGame({ setGameScreen, currentUser, setUserCoins }) {
             Nouvelle partie
           </button>
         )}
+      </div>
       </div>
     </div>
   );

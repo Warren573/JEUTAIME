@@ -692,20 +692,34 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
       )}
 
       {socialTab === 'games' && (
-        <div style={{ flex: 1, overflow: 'auto', padding: '0 var(--spacing-sm)' }}>
-          <ScreenHeader
-            icon="🎮"
-            title="JEUX"
-            subtitle="Joue et gagne des pièces !"
-          />
+        <div style={{
+          height: '100%',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          padding: '0 var(--spacing-sm)',
+          boxSizing: 'border-box'
+        }}>
+          <div style={{ flexShrink: 0 }}>
+            <ScreenHeader
+              icon="🎮"
+              title="JEUX"
+              subtitle="Joue et gagne des pièces !"
+            />
+          </div>
 
           <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '12px',
-            width: '100%',
-            boxSizing: 'border-box'
+            flex: 1,
+            overflow: 'auto',
+            paddingBottom: 'var(--spacing-sm)'
           }}>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '12px',
+              width: '100%',
+              boxSizing: 'border-box'
+            }}>
             <div onClick={() => setGameScreen('reactivity')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
               <div style={{ fontSize: '36px', marginBottom: '8px' }}>⚡</div>
               <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Tape Taupe</h4>
@@ -735,6 +749,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
               <div style={{ fontSize: '36px', marginBottom: '8px' }}>🎴</div>
               <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Jeu des Cartes</h4>
               <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo - Gagne des pièces!</p>
+            </div>
             </div>
           </div>
         </div>
