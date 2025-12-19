@@ -227,437 +227,385 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
 
       {/* Tabs */}
       <div style={{
+        display: 'flex',
+        gap: 'var(--spacing-sm)',
+        marginBottom: 'var(--spacing-lg)',
         padding: '0 var(--spacing-sm)',
-        marginBottom: 'var(--spacing-lg)'
+        justifyContent: 'center',
+        flexWrap: 'wrap'
       }}>
-        {/* Ligne 1 : Adopter et Incarner */}
-        <div style={{
-          display: 'flex',
-          gap: 'var(--spacing-sm)',
-          marginBottom: 'var(--spacing-sm)',
-          justifyContent: 'center'
-        }}>
-          <button
-            onClick={() => setAdoptionTab('adopt')}
-            style={{
-              flex: 1,
-              minWidth: '130px',
-              maxWidth: '180px',
-              padding: 'var(--spacing-md)',
-              background: adoptionTab === 'adopt'
-                ? 'linear-gradient(135deg, #667eea, #764ba2)'
-                : 'var(--color-brown-light)',
-              border: 'none',
-              borderRadius: 'var(--border-radius-lg)',
-              color: 'white',
-              fontSize: '0.9rem',
-              fontWeight: '600',
-              cursor: 'pointer',
-              boxShadow: adoptionTab === 'adopt' ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
-              transition: 'all 0.2s'
-            }}
-          >
-            🔄 Choisir
-          </button>
-          <button
-            onClick={() => setAdoptionTab('incarnate')}
-            style={{
-              flex: 1,
-              minWidth: '130px',
-              maxWidth: '180px',
-              padding: 'var(--spacing-md)',
-              background: adoptionTab === 'incarnate'
-                ? 'linear-gradient(135deg, #f093fb, #f5576c)'
-                : 'var(--color-brown-light)',
-              border: 'none',
-              borderRadius: 'var(--border-radius-lg)',
-              color: 'white',
-              fontSize: '0.9rem',
-              fontWeight: '600',
-              cursor: 'pointer',
-              boxShadow: adoptionTab === 'incarnate' ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
-              transition: 'all 0.2s'
-            }}
-          >
-            🎭 Incarner
-          </button>
-        </div>
-
-        {/* Ligne 2 : Mon incarnation */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center'
-        }}>
-          <button
-            onClick={() => setAdoptionTab('mypets')}
-            style={{
-              minWidth: '130px',
-              maxWidth: '370px',
-              width: '100%',
-              padding: 'var(--spacing-md)',
-              background: adoptionTab === 'mypets'
-                ? 'linear-gradient(135deg, #FFD700, #FFA500)'
-                : 'var(--color-brown-light)',
-              border: 'none',
-              borderRadius: 'var(--border-radius-lg)',
-              color: adoptionTab === 'mypets' ? '#000' : 'white',
-              fontSize: '0.9rem',
-              fontWeight: '600',
-              cursor: 'pointer',
-              boxShadow: adoptionTab === 'mypets' ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
-              transition: 'all 0.2s'
-            }}
-          >
-            🐾 Mon animal ({myPets.length}/1)
-          </button>
-        </div>
+        <button
+          onClick={() => setAdoptionTab('adopt')}
+          style={{
+            flex: 1,
+            minWidth: '130px',
+            maxWidth: '180px',
+            padding: 'var(--spacing-md)',
+            background: adoptionTab === 'adopt'
+              ? 'linear-gradient(135deg, #667eea, #764ba2)'
+              : 'var(--color-brown-light)',
+            border: 'none',
+            borderRadius: 'var(--border-radius-lg)',
+            color: 'white',
+            fontSize: '0.9rem',
+            fontWeight: '600',
+            cursor: 'pointer',
+            boxShadow: adoptionTab === 'adopt' ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
+            transition: 'all 0.2s'
+          }}
+        >
+          🏠 Adopter
+        </button>
+        <button
+          onClick={() => setAdoptionTab('incarnate')}
+          style={{
+            flex: 1,
+            minWidth: '130px',
+            maxWidth: '180px',
+            padding: 'var(--spacing-md)',
+            background: adoptionTab === 'incarnate'
+              ? 'linear-gradient(135deg, #f093fb, #f5576c)'
+              : 'var(--color-brown-light)',
+            border: 'none',
+            borderRadius: 'var(--border-radius-lg)',
+            color: 'white',
+            fontSize: '0.9rem',
+            fontWeight: '600',
+            cursor: 'pointer',
+            boxShadow: adoptionTab === 'incarnate' ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
+            transition: 'all 0.2s'
+          }}
+        >
+          🎭 Incarner
+        </button>
       </div>
 
-      <div style={{ padding: '0 var(--spacing-sm)', width: '100%', boxSizing: 'border-box' }}>
-        {/* MES ANIMAUX */}
-        {adoptionTab === 'mypets' && (
-          <>
-            {myPets.length === 0 ? (
-              <div style={{
-                background: 'var(--color-cream)',
-                borderRadius: 'var(--border-radius-xl)',
-                padding: 'var(--spacing-xl)',
-                textAlign: 'center',
-                border: '3px solid var(--color-brown)'
-              }}>
-                <div style={{ fontSize: '80px', marginBottom: 'var(--spacing-md)' }}>🐾</div>
-                <h3 style={{
-                  fontSize: '1.5rem',
-                  marginBottom: 'var(--spacing-sm)',
-                  color: 'var(--color-brown-dark)'
-                }}>
-                  Aucun animal adopté
-                </h3>
-                <p style={{
-                  color: 'var(--color-text-secondary)',
-                  marginBottom: 'var(--spacing-lg)'
-                }}>
-                  Rendez-vous dans le refuge pour adopter votre premier compagnon !
-                </p>
-                <button
-                  onClick={() => setAdoptionTab('adopt')}
-                  style={{
-                    padding: 'var(--spacing-md) var(--spacing-lg)',
-                    background: 'linear-gradient(135deg, #FFD700, #FFA500)',
-                    border: 'none',
-                    borderRadius: 'var(--border-radius-lg)',
-                    color: '#000',
-                    fontSize: '1rem',
-                    fontWeight: '600',
-                    cursor: 'pointer',
-                    boxShadow: 'var(--shadow-md)'
-                  }}
-                >
-                  🏠 Adopter un compagnon
-                </button>
-              </div>
-            ) : (
-              <>
-                {/* Sélecteur d'animal */}
-                <div style={{
-                  display: 'flex',
-                  gap: 'var(--spacing-sm)',
-                  marginBottom: 'var(--spacing-lg)',
-                  overflowX: 'auto',
-                  padding: 'var(--spacing-xs)'
-                }}>
-                  {myPets.map((pet) => {
-                    const status = getPetStatus(pet);
-                    const isIncarnated = currentUser?.incarnatedAs?.petId === pet.type;
-                    return (
-                      <button
-                        key={pet.id}
-                        onClick={() => setSelectedPet(pet)}
-                        style={{
-                          minWidth: '100px',
-                          padding: 'var(--spacing-sm)',
-                          background: selectedPet?.id === pet.id
-                            ? 'linear-gradient(135deg, #667eea, #764ba2)'
-                            : isIncarnated
-                            ? 'linear-gradient(135deg, #f093fb, #f5576c)'
-                            : 'var(--color-cream)',
-                          border: `3px solid ${selectedPet?.id === pet.id ? '#667eea' : isIncarnated ? '#f093fb' : 'var(--color-brown)'}`,
-                          borderRadius: 'var(--border-radius-lg)',
-                          cursor: 'pointer',
-                          textAlign: 'center',
-                          transition: 'all 0.2s',
-                          position: 'relative',
-                          boxShadow: isIncarnated ? '0 0 15px rgba(240, 147, 251, 0.5)' : 'none'
-                        }}
-                      >
-                        {isIncarnated && (
-                          <div style={{
-                            position: 'absolute',
-                            top: '-8px',
-                            left: '50%',
-                            transform: 'translateX(-50%)',
-                            background: '#f093fb',
-                            color: 'white',
-                            padding: '2px 8px',
-                            borderRadius: '10px',
-                            fontSize: '0.65rem',
-                            fontWeight: '700',
-                            whiteSpace: 'nowrap',
-                            zIndex: 1
-                          }}>
-                            🎭 INCARNÉ
-                          </div>
-                        )}
-                        <div style={{ fontSize: '40px' }}>{pet.emoji}</div>
-                        <div style={{
-                          fontSize: '0.75rem',
-                          fontWeight: '600',
-                          color: selectedPet?.id === pet.id || isIncarnated ? 'white' : 'var(--color-text-primary)',
-                          marginTop: '4px'
-                        }}>
-                          Niv. {pet.level}
-                        </div>
-                        <div style={{
-                          position: 'absolute',
-                          top: '4px',
-                          right: '4px',
-                          fontSize: '12px'
-                        }}>
-                          {status.emoji}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
+      {/* Mon animal adopté/incarné - toujours visible */}
+      {myPets.length > 0 && (
+        <div style={{ padding: '0 var(--spacing-sm)', width: '100%', boxSizing: 'border-box', marginBottom: 'var(--spacing-lg)' }}>
+          <div style={{
+            background: 'linear-gradient(135deg, #FFD700, #FFA500)',
+            borderRadius: 'var(--border-radius-xl)',
+            padding: 'var(--spacing-lg)',
+            boxShadow: 'var(--shadow-lg)',
+            border: '3px solid #FFA500'
+          }}>
+            <h3 style={{
+              margin: '0 0 var(--spacing-md) 0',
+              fontSize: '1.3rem',
+              color: '#000',
+              textAlign: 'center',
+              fontWeight: '700'
+            }}>
+              🐾 Mon animal
+            </h3>
 
-                {/* Affichage de l'animal sélectionné */}
-                {selectedPet && (
-                  <div style={{
-                    background: 'var(--color-cream)',
-                    borderRadius: 'var(--border-radius-xl)',
-                    padding: 'var(--spacing-lg)',
-                    border: '3px solid var(--color-brown)',
-                    boxShadow: 'var(--shadow-lg)',
-                    marginBottom: 'var(--spacing-lg)'
-                  }}>
-                    {/* Message d'interaction */}
-                    {interactionMessage && (
+            {/* Sélecteur d'animaux */}
+            <div style={{
+              display: 'flex',
+              gap: 'var(--spacing-sm)',
+              marginBottom: 'var(--spacing-md)',
+              justifyContent: 'center',
+              flexWrap: 'wrap'
+            }}>
+              {myPets.map((pet) => {
+                const status = getPetStatus(pet);
+                const isIncarnated = currentUser?.incarnatedAs?.petId === pet.type;
+                return (
+                  <button
+                    key={pet.id}
+                    onClick={() => setSelectedPet(pet)}
+                    style={{
+                      position: 'relative',
+                      padding: 'var(--spacing-sm)',
+                      background: selectedPet?.id === pet.id
+                        ? 'linear-gradient(135deg, #667eea, #764ba2)'
+                        : isIncarnated
+                        ? 'linear-gradient(135deg, #f093fb, #f5576c)'
+                        : 'var(--color-cream)',
+                      border: `3px solid ${selectedPet?.id === pet.id ? '#667eea' : isIncarnated ? '#f093fb' : 'var(--color-brown)'}`,
+                      borderRadius: 'var(--border-radius-lg)',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s',
+                      boxShadow: isIncarnated ? '0 0 15px rgba(240, 147, 251, 0.5)' : 'var(--shadow-sm)',
+                      minWidth: '80px'
+                    }}
+                  >
+                    {isIncarnated && (
                       <div style={{
-                        background: 'linear-gradient(135deg, #4CAF50, #2E7D32)',
+                        position: 'absolute',
+                        top: '-8px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        background: '#f093fb',
                         color: 'white',
-                        padding: 'var(--spacing-md)',
-                        borderRadius: 'var(--border-radius-lg)',
-                        marginBottom: 'var(--spacing-md)',
-                        textAlign: 'center',
-                        fontSize: '0.9rem',
-                        fontWeight: '600',
-                        whiteSpace: 'pre-line',
-                        animation: 'fadeIn 0.3s ease'
+                        padding: '2px 8px',
+                        borderRadius: '10px',
+                        fontSize: '0.65rem',
+                        fontWeight: '700',
+                        whiteSpace: 'nowrap',
+                        zIndex: 1
                       }}>
-                        {interactionMessage}
+                        🎭 INCARNÉ
                       </div>
                     )}
-
-                    {/* Animal affiché */}
-                    <div style={{ textAlign: 'center', marginBottom: 'var(--spacing-lg)' }}>
-                      {currentUser?.incarnatedAs?.petId === selectedPet.type && (
-                        <div style={{
-                          background: 'linear-gradient(135deg, #f093fb, #f5576c)',
-                          color: 'white',
-                          padding: 'var(--spacing-sm) var(--spacing-md)',
-                          borderRadius: 'var(--border-radius-lg)',
-                          marginBottom: 'var(--spacing-md)',
-                          display: 'inline-block',
-                          fontSize: '0.9rem',
-                          fontWeight: '700',
-                          boxShadow: '0 4px 15px rgba(240, 147, 251, 0.4)'
-                        }}>
-                          🎭 Tu es incarné en {selectedPet.name} !
-                        </div>
-                      )}
-                      <div style={{ fontSize: '120px', marginBottom: 'var(--spacing-sm)' }}>
-                        {selectedPet.emoji}
-                      </div>
-                      <h2 style={{
-                        fontSize: '1.8rem',
-                        margin: '0 0 var(--spacing-xs) 0',
-                        color: 'var(--color-brown-dark)'
-                      }}>
-                        {selectedPet.name}
-                      </h2>
-                      <div style={{
-                        display: 'flex',
-                        gap: 'var(--spacing-md)',
-                        justifyContent: 'center',
-                        fontSize: '0.9rem',
-                        color: 'var(--color-text-secondary)'
-                      }}>
-                        <span>⭐ Niveau {selectedPet.level}</span>
-                        <span>📊 {selectedPet.experience} exp</span>
-                        <span style={{ color: getPetStatus(selectedPet).color, fontWeight: '600' }}>
-                          {getPetStatus(selectedPet).emoji} {getPetStatus(selectedPet).status}
-                        </span>
-                      </div>
-                      <div style={{
-                        fontSize: '0.8rem',
-                        color: 'var(--color-text-light)',
-                        marginTop: 'var(--spacing-xs)',
-                        fontStyle: 'italic'
-                      }}>
-                        {getPetData(selectedPet.type)?.personality}
-                      </div>
-                    </div>
-
-                    {/* Stats */}
+                    <div style={{ fontSize: '40px' }}>{pet.emoji}</div>
                     <div style={{
-                      background: 'var(--color-beige-light)',
-                      padding: 'var(--spacing-md)',
-                      borderRadius: 'var(--border-radius-lg)',
-                      border: '2px solid var(--color-brown-light)',
-                      marginBottom: 'var(--spacing-lg)'
+                      fontSize: '0.75rem',
+                      fontWeight: '600',
+                      color: selectedPet?.id === pet.id || isIncarnated ? 'white' : 'var(--color-text-primary)',
+                      marginTop: '4px'
                     }}>
-                      <h3 style={{
-                        fontSize: '1.1rem',
-                        marginBottom: 'var(--spacing-md)',
-                        color: 'var(--color-brown-dark)',
-                        textAlign: 'center'
-                      }}>
-                        📊 Statistiques
-                      </h3>
-                      <StatBar label="Faim" value={selectedPet.stats.hunger} color="#FF9800" icon="🍽️" />
-                      <StatBar label="Bonheur" value={selectedPet.stats.happiness} color="#E91E63" icon="😊" />
-                      <StatBar label="Énergie" value={selectedPet.stats.energy} color="#2196F3" icon="⚡" />
-                      <StatBar label="Propreté" value={selectedPet.stats.cleanliness} color="#4CAF50" icon="✨" />
+                      Niv. {pet.level}
                     </div>
+                  </button>
+                );
+              })}
+            </div>
 
-                    {/* Actions */}
+            {/* Détails de l'animal sélectionné */}
+            {selectedPet && (
+              <>
+                {currentUser?.incarnatedAs?.petId === selectedPet.type && (
+                  <div style={{
+                    background: 'linear-gradient(135deg, #f093fb, #f5576c)',
+                    color: 'white',
+                    padding: 'var(--spacing-sm) var(--spacing-md)',
+                    borderRadius: 'var(--border-radius-lg)',
+                    marginBottom: 'var(--spacing-md)',
+                    display: 'inline-block',
+                    fontSize: '0.9rem',
+                    fontWeight: '700',
+                    boxShadow: '0 4px 15px rgba(240, 147, 251, 0.4)'
+                  }}>
+                    🎭 Tu es incarné en {selectedPet.name} !
+                  </div>
+                )}
+
+                {/* Stats */}
+                <div style={{
+                  background: 'rgba(255, 255, 255, 0.9)',
+                  borderRadius: 'var(--border-radius-lg)',
+                  padding: 'var(--spacing-md)',
+                  marginBottom: 'var(--spacing-md)'
+                }}>
+                  <div style={{ marginBottom: 'var(--spacing-sm)' }}>
                     <div style={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 1fr',
-                      gap: 'var(--spacing-sm)'
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      marginBottom: '4px',
+                      fontSize: '0.85rem',
+                      fontWeight: '600'
                     }}>
-                      <button
-                        onClick={handleFeed}
-                        style={{
-                          padding: 'var(--spacing-md)',
-                          background: 'linear-gradient(135deg, #FF9800, #F57C00)',
-                          border: 'none',
-                          borderRadius: 'var(--border-radius-lg)',
-                          color: 'white',
-                          fontSize: '0.95rem',
-                          fontWeight: '600',
-                          cursor: 'pointer',
-                          boxShadow: 'var(--shadow-md)',
-                          transition: 'transform 0.2s'
-                        }}
-                        onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
-                        onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                      >
-                        🍽️ Nourrir
-                      </button>
-                      <button
-                        onClick={handlePlay}
-                        style={{
-                          padding: 'var(--spacing-md)',
-                          background: 'linear-gradient(135deg, #E91E63, #C2185B)',
-                          border: 'none',
-                          borderRadius: 'var(--border-radius-lg)',
-                          color: 'white',
-                          fontSize: '0.95rem',
-                          fontWeight: '600',
-                          cursor: 'pointer',
-                          boxShadow: 'var(--shadow-md)',
-                          transition: 'transform 0.2s'
-                        }}
-                        onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
-                        onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                      >
-                        🎮 Jouer
-                      </button>
-                      <button
-                        onClick={handleClean}
-                        style={{
-                          padding: 'var(--spacing-md)',
-                          background: 'linear-gradient(135deg, #4CAF50, #2E7D32)',
-                          border: 'none',
-                          borderRadius: 'var(--border-radius-lg)',
-                          color: 'white',
-                          fontSize: '0.95rem',
-                          fontWeight: '600',
-                          cursor: 'pointer',
-                          boxShadow: 'var(--shadow-md)',
-                          transition: 'transform 0.2s'
-                        }}
-                        onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
-                        onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                      >
-                        🧼 Nettoyer
-                      </button>
-                      <button
-                        onClick={handleSleep}
-                        style={{
-                          padding: 'var(--spacing-md)',
-                          background: 'linear-gradient(135deg, #2196F3, #1976D2)',
-                          border: 'none',
-                          borderRadius: 'var(--border-radius-lg)',
-                          color: 'white',
-                          fontSize: '0.95rem',
-                          fontWeight: '600',
-                          cursor: 'pointer',
-                          boxShadow: 'var(--shadow-md)',
-                          transition: 'transform 0.2s'
-                        }}
-                        onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
-                        onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                      >
-                        😴 Dormir
-                      </button>
+                      <span>🍽️ Faim</span>
+                      <span style={{ color: selectedPet.stats.hunger >= 70 ? '#28a745' : selectedPet.stats.hunger >= 40 ? '#FFA500' : '#dc3545' }}>{Math.round(selectedPet.stats.hunger)}%</span>
                     </div>
-
-                    {/* Stats d'interactions */}
                     <div style={{
-                      marginTop: 'var(--spacing-lg)',
-                      padding: 'var(--spacing-md)',
-                      background: 'var(--color-beige-light)',
-                      borderRadius: 'var(--border-radius-md)',
+                      background: 'var(--color-tan)',
+                      borderRadius: '10px',
+                      height: '12px',
+                      overflow: 'hidden',
                       border: '2px solid var(--color-brown-light)'
                     }}>
                       <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 1fr 1fr 1fr',
-                        gap: 'var(--spacing-sm)',
-                        textAlign: 'center',
-                        fontSize: '0.8rem'
-                      }}>
-                        <div>
-                          <div style={{ fontSize: '1.2rem', marginBottom: '2px' }}>🍽️</div>
-                          <div style={{ fontWeight: '600' }}>{selectedPet.interactions.fed}</div>
-                        </div>
-                        <div>
-                          <div style={{ fontSize: '1.2rem', marginBottom: '2px' }}>🎮</div>
-                          <div style={{ fontWeight: '600' }}>{selectedPet.interactions.played}</div>
-                        </div>
-                        <div>
-                          <div style={{ fontSize: '1.2rem', marginBottom: '2px' }}>🧼</div>
-                          <div style={{ fontWeight: '600' }}>{selectedPet.interactions.cleaned}</div>
-                        </div>
-                        <div>
-                          <div style={{ fontSize: '1.2rem', marginBottom: '2px' }}>😴</div>
-                          <div style={{ fontWeight: '600' }}>{selectedPet.interactions.slept}</div>
-                        </div>
-                      </div>
+                        width: `${selectedPet.stats.hunger}%`,
+                        height: '100%',
+                        background: selectedPet.stats.hunger >= 70 ? '#28a745' : selectedPet.stats.hunger >= 40 ? '#FFA500' : '#dc3545',
+                        borderRadius: '8px',
+                        transition: 'width 0.3s'
+                      }} />
                     </div>
+                  </div>
+
+                  <div style={{ marginBottom: 'var(--spacing-sm)' }}>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      marginBottom: '4px',
+                      fontSize: '0.85rem',
+                      fontWeight: '600'
+                    }}>
+                      <span>😊 Bonheur</span>
+                      <span style={{ color: selectedPet.stats.happiness >= 70 ? '#28a745' : selectedPet.stats.happiness >= 40 ? '#FFA500' : '#dc3545' }}>{Math.round(selectedPet.stats.happiness)}%</span>
+                    </div>
+                    <div style={{
+                      background: 'var(--color-tan)',
+                      borderRadius: '10px',
+                      height: '12px',
+                      overflow: 'hidden',
+                      border: '2px solid var(--color-brown-light)'
+                    }}>
+                      <div style={{
+                        width: `${selectedPet.stats.happiness}%`,
+                        height: '100%',
+                        background: selectedPet.stats.happiness >= 70 ? '#28a745' : selectedPet.stats.happiness >= 40 ? '#FFA500' : '#dc3545',
+                        borderRadius: '8px',
+                        transition: 'width 0.3s'
+                      }} />
+                    </div>
+                  </div>
+
+                  <div style={{ marginBottom: 'var(--spacing-sm)' }}>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      marginBottom: '4px',
+                      fontSize: '0.85rem',
+                      fontWeight: '600'
+                    }}>
+                      <span>⚡ Énergie</span>
+                      <span style={{ color: selectedPet.stats.energy >= 70 ? '#28a745' : selectedPet.stats.energy >= 40 ? '#FFA500' : '#dc3545' }}>{Math.round(selectedPet.stats.energy)}%</span>
+                    </div>
+                    <div style={{
+                      background: 'var(--color-tan)',
+                      borderRadius: '10px',
+                      height: '12px',
+                      overflow: 'hidden',
+                      border: '2px solid var(--color-brown-light)'
+                    }}>
+                      <div style={{
+                        width: `${selectedPet.stats.energy}%`,
+                        height: '100%',
+                        background: selectedPet.stats.energy >= 70 ? '#28a745' : selectedPet.stats.energy >= 40 ? '#FFA500' : '#dc3545',
+                        borderRadius: '8px',
+                        transition: 'width 0.3s'
+                      }} />
+                    </div>
+                  </div>
+
+                  <div style={{ marginBottom: 'var(--spacing-sm)' }}>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      marginBottom: '4px',
+                      fontSize: '0.85rem',
+                      fontWeight: '600'
+                    }}>
+                      <span>🧼 Propreté</span>
+                      <span style={{ color: selectedPet.stats.cleanliness >= 70 ? '#28a745' : selectedPet.stats.cleanliness >= 40 ? '#FFA500' : '#dc3545' }}>{Math.round(selectedPet.stats.cleanliness)}%</span>
+                    </div>
+                    <div style={{
+                      background: 'var(--color-tan)',
+                      borderRadius: '10px',
+                      height: '12px',
+                      overflow: 'hidden',
+                      border: '2px solid var(--color-brown-light)'
+                    }}>
+                      <div style={{
+                        width: `${selectedPet.stats.cleanliness}%`,
+                        height: '100%',
+                        background: selectedPet.stats.cleanliness >= 70 ? '#28a745' : selectedPet.stats.cleanliness >= 40 ? '#FFA500' : '#dc3545',
+                        borderRadius: '8px',
+                        transition: 'width 0.3s'
+                      }} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Boutons d'action */}
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(2, 1fr)',
+                  gap: 'var(--spacing-sm)'
+                }}>
+                  <button
+                    onClick={handleFeed}
+                    style={{
+                      padding: 'var(--spacing-md)',
+                      background: 'linear-gradient(135deg, #28a745, #20c997)',
+                      border: 'none',
+                      borderRadius: 'var(--border-radius-lg)',
+                      color: 'white',
+                      fontSize: '0.9rem',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      boxShadow: 'var(--shadow-md)',
+                      transition: 'transform 0.2s'
+                    }}
+                  >
+                    🍽️ Nourrir
+                  </button>
+                  <button
+                    onClick={handlePlay}
+                    style={{
+                      padding: 'var(--spacing-md)',
+                      background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                      border: 'none',
+                      borderRadius: 'var(--border-radius-lg)',
+                      color: 'white',
+                      fontSize: '0.9rem',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      boxShadow: 'var(--shadow-md)',
+                      transition: 'transform 0.2s'
+                    }}
+                  >
+                    🎮 Jouer
+                  </button>
+                  <button
+                    onClick={handleClean}
+                    style={{
+                      padding: 'var(--spacing-md)',
+                      background: 'linear-gradient(135deg, #17a2b8, #138496)',
+                      border: 'none',
+                      borderRadius: 'var(--border-radius-lg)',
+                      color: 'white',
+                      fontSize: '0.9rem',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      boxShadow: 'var(--shadow-md)',
+                      transition: 'transform 0.2s'
+                    }}
+                  >
+                    🧼 Nettoyer
+                  </button>
+                  <button
+                    onClick={handleSleep}
+                    style={{
+                      padding: 'var(--spacing-md)',
+                      background: 'linear-gradient(135deg, #6c757d, #5a6268)',
+                      border: 'none',
+                      borderRadius: 'var(--border-radius-lg)',
+                      color: 'white',
+                      fontSize: '0.9rem',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      boxShadow: 'var(--shadow-md)',
+                      transition: 'transform 0.2s'
+                    }}
+                  >
+                    😴 Dormir
+                  </button>
+                </div>
+
+                {interactionMessage && (
+                  <div style={{
+                    marginTop: 'var(--spacing-md)',
+                    padding: 'var(--spacing-md)',
+                    background: 'rgba(40, 167, 69, 0.1)',
+                    border: '2px solid #28a745',
+                    borderRadius: 'var(--border-radius-lg)',
+                    color: '#155724',
+                    textAlign: 'center',
+                    fontSize: '0.9rem',
+                    fontWeight: '600',
+                    whiteSpace: 'pre-line',
+                    animation: 'fadeIn 0.3s'
+                  }}>
+                    {interactionMessage}
                   </div>
                 )}
               </>
             )}
-          </>
-        )}
+          </div>
+        </div>
+      )}
 
+      <div style={{ padding: '0 var(--spacing-sm)', width: '100%', boxSizing: 'border-box' }}>
         {/* ADOPTER */}
         {adoptionTab === 'adopt' && (
           <>
-            {myPets.length >= 3 && (
+            {myPets.length >= 1 && (
               <div style={{
                 background: '#fff3cd',
                 border: '2px solid #ffc107',
@@ -667,7 +615,7 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
                 textAlign: 'center'
               }}>
                 <p style={{ margin: 0, color: '#856404', fontSize: '0.9rem' }}>
-                  ⚠️ Vous avez déjà 3 animaux (maximum). Vous ne pouvez plus en adopter.
+                  ⚠️ Tu as déjà une incarnation. Tu ne peux en avoir qu'une seule à la fois !
                 </p>
               </div>
             )}
