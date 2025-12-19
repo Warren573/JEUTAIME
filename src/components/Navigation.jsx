@@ -11,7 +11,7 @@ export default function Navigation({ navItems, screen, setScreen }) {
       margin: '0 auto',
       background: 'var(--color-brown-dark)',
       borderTop: '2px solid var(--color-gold)',
-      padding: '5px 4px max(6px, env(safe-area-inset-bottom))',
+      padding: '5px 4px env(safe-area-inset-bottom)',
       display: 'grid',
       gridTemplateColumns: 'repeat(5, 1fr)',
       gap: '4px',

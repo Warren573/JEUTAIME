@@ -33,6 +33,7 @@ export default function EspacePersoScreenSimple({
       minHeight: '100dvh',
       maxHeight: '100dvh',
       overflowY: 'auto',
+      paddingTop: 'env(safe-area-inset-top)',
       paddingBottom: 'max(80px, calc(70px + env(safe-area-inset-bottom)))',
       background: 'var(--color-beige-light)',
       display: 'flex',
