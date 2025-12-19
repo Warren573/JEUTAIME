@@ -503,12 +503,12 @@ export function initializeDemoPets() {
   const demoVersion = localStorage.getItem('jeutaime_demo_pets_version');
   console.log('🐾 Version actuelle des pets:', demoVersion);
 
-  if (demoVersion === '1.1') {
-    console.log('✅ Pets déjà initialisés en version 1.1');
+  if (demoVersion === '1.2') {
+    console.log('✅ Pets déjà initialisés en version 1.2');
     return;
   }
 
-  console.log('🐾 Initialisation des animaux de démo (version 1.1)...');
+  console.log('🐾 Initialisation des animaux de démo (version 1.2)...');
 
   // Trouver l'utilisateur de démo (le premier utilisateur non-bot)
   const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
@@ -523,7 +523,7 @@ export function initializeDemoPets() {
 
   console.log('✅ Utilisateur de démo trouvé:', demoUser.name, '/', demoUser.email);
 
-  // Créer 2 animaux adoptés avec différentes stats
+  // Créer 1 seul animal adopté et incarné
   const demoPets = [
     {
       id: Date.now(),
@@ -545,28 +545,6 @@ export function initializeDemoPets() {
         played: 12,
         cleaned: 8,
         slept: 10
-      }
-    },
-    {
-      id: Date.now() + 1,
-      type: 'dog',
-      name: 'Chien',
-      emoji: '🐶',
-      adoptedAt: Date.now() - (86400000 * 3), // Adopté il y a 3 jours
-      lastUpdated: Date.now(),
-      level: 2,
-      experience: 28,
-      stats: {
-        hunger: 50,
-        happiness: 95,
-        energy: 80,
-        cleanliness: 65
-      },
-      interactions: {
-        fed: 10,
-        played: 18,
-        cleaned: 5,
-        slept: 7
       }
     }
   ];
@@ -593,8 +571,8 @@ export function initializeDemoPets() {
     }
   }
 
-  localStorage.setItem('jeutaime_demo_pets_version', '1.1');
-  console.log('✅ Animaux de démo initialisés v1.1: Chat (incarné) + Chien');
+  localStorage.setItem('jeutaime_demo_pets_version', '1.2');
+  console.log('✅ Animal de démo initialisé v1.2: Chat (incarné)');
   console.log('📧 Email utilisateur:', demoUser.email);
   console.log('🐾 Pets sauvegardés:', demoPets.length);
 }

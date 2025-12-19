@@ -281,114 +281,87 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
       </div>
 
       {/* Mon animal adopté/incarné - toujours visible */}
-      {myPets.length > 0 && (
+      {myPets.length > 0 && selectedPet && (
         <div style={{ padding: '0 var(--spacing-sm)', width: '100%', boxSizing: 'border-box', marginBottom: 'var(--spacing-lg)' }}>
           <div style={{
-            background: 'linear-gradient(135deg, #FFD700, #FFA500)',
+            background: 'var(--color-cream)',
             borderRadius: 'var(--border-radius-xl)',
             padding: 'var(--spacing-lg)',
             boxShadow: 'var(--shadow-lg)',
-            border: '3px solid #FFA500'
+            border: '3px solid var(--color-brown)',
+            position: 'relative',
+            overflow: 'hidden'
           }}>
-            <h3 style={{
-              margin: '0 0 var(--spacing-md) 0',
-              fontSize: '1.3rem',
-              color: '#000',
-              textAlign: 'center',
-              fontWeight: '700'
-            }}>
-              🐾 Mon animal
-            </h3>
-
-            {/* Sélecteur d'animaux */}
+            {/* Background décoratif */}
             <div style={{
-              display: 'flex',
-              gap: 'var(--spacing-sm)',
-              marginBottom: 'var(--spacing-md)',
-              justifyContent: 'center',
-              flexWrap: 'wrap'
+              position: 'absolute',
+              top: '-50px',
+              right: '-50px',
+              width: '150px',
+              height: '150px',
+              background: 'radial-gradient(circle, rgba(255, 215, 0, 0.15), transparent)',
+              borderRadius: '50%',
+              pointerEvents: 'none'
+            }} />
+
+            {/* Header avec animal */}
+            <div style={{
+              textAlign: 'center',
+              marginBottom: 'var(--spacing-lg)',
+              position: 'relative'
             }}>
-              {myPets.map((pet) => {
-                const status = getPetStatus(pet);
-                const isIncarnated = currentUser?.incarnatedAs?.petId === pet.type;
-                return (
-                  <button
-                    key={pet.id}
-                    onClick={() => setSelectedPet(pet)}
-                    style={{
-                      position: 'relative',
-                      padding: 'var(--spacing-sm)',
-                      background: selectedPet?.id === pet.id
-                        ? 'linear-gradient(135deg, #667eea, #764ba2)'
-                        : isIncarnated
-                        ? 'linear-gradient(135deg, #f093fb, #f5576c)'
-                        : 'var(--color-cream)',
-                      border: `3px solid ${selectedPet?.id === pet.id ? '#667eea' : isIncarnated ? '#f093fb' : 'var(--color-brown)'}`,
-                      borderRadius: 'var(--border-radius-lg)',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s',
-                      boxShadow: isIncarnated ? '0 0 15px rgba(240, 147, 251, 0.5)' : 'var(--shadow-sm)',
-                      minWidth: '80px'
-                    }}
-                  >
-                    {isIncarnated && (
-                      <div style={{
-                        position: 'absolute',
-                        top: '-8px',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        background: '#f093fb',
-                        color: 'white',
-                        padding: '2px 8px',
-                        borderRadius: '10px',
-                        fontSize: '0.65rem',
-                        fontWeight: '700',
-                        whiteSpace: 'nowrap',
-                        zIndex: 1
-                      }}>
-                        🎭 INCARNÉ
-                      </div>
-                    )}
-                    <div style={{ fontSize: '40px' }}>{pet.emoji}</div>
-                    <div style={{
-                      fontSize: '0.75rem',
-                      fontWeight: '600',
-                      color: selectedPet?.id === pet.id || isIncarnated ? 'white' : 'var(--color-text-primary)',
-                      marginTop: '4px'
-                    }}>
-                      Niv. {pet.level}
-                    </div>
-                  </button>
-                );
-              })}
+              {currentUser?.incarnatedAs?.petId === selectedPet.type && (
+                <div style={{
+                  background: 'linear-gradient(135deg, #f093fb, #f5576c)',
+                  color: 'white',
+                  padding: '6px 16px',
+                  borderRadius: '20px',
+                  display: 'inline-block',
+                  fontSize: '0.75rem',
+                  fontWeight: '700',
+                  marginBottom: 'var(--spacing-sm)',
+                  boxShadow: '0 4px 15px rgba(240, 147, 251, 0.4)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '1px'
+                }}>
+                  🎭 Tu es incarné
+                </div>
+              )}
+
+              <div style={{ fontSize: '100px', marginBottom: 'var(--spacing-xs)', lineHeight: 1 }}>
+                {selectedPet.emoji}
+              </div>
+
+              <h3 style={{
+                margin: '0 0 var(--spacing-xs) 0',
+                fontSize: '1.8rem',
+                color: 'var(--color-brown-dark)',
+                fontWeight: '700'
+              }}>
+                {selectedPet.name}
+              </h3>
+
+              <div style={{
+                display: 'flex',
+                gap: 'var(--spacing-md)',
+                justifyContent: 'center',
+                fontSize: '0.85rem',
+                color: 'var(--color-text-secondary)',
+                fontWeight: '600'
+              }}>
+                <span>⭐ Niveau {selectedPet.level}</span>
+                <span>✨ {selectedPet.experience} XP</span>
+              </div>
             </div>
 
-            {/* Détails de l'animal sélectionné */}
-            {selectedPet && (
-              <>
-                {currentUser?.incarnatedAs?.petId === selectedPet.type && (
-                  <div style={{
-                    background: 'linear-gradient(135deg, #f093fb, #f5576c)',
-                    color: 'white',
-                    padding: 'var(--spacing-sm) var(--spacing-md)',
-                    borderRadius: 'var(--border-radius-lg)',
-                    marginBottom: 'var(--spacing-md)',
-                    display: 'inline-block',
-                    fontSize: '0.9rem',
-                    fontWeight: '700',
-                    boxShadow: '0 4px 15px rgba(240, 147, 251, 0.4)'
-                  }}>
-                    🎭 Tu es incarné en {selectedPet.name} !
-                  </div>
-                )}
-
-                {/* Stats */}
-                <div style={{
-                  background: 'rgba(255, 255, 255, 0.9)',
-                  borderRadius: 'var(--border-radius-lg)',
-                  padding: 'var(--spacing-md)',
-                  marginBottom: 'var(--spacing-md)'
-                }}>
+            {/* Stats */}
+            <div style={{
+              background: 'var(--color-tan)',
+              borderRadius: 'var(--border-radius-lg)',
+              padding: 'var(--spacing-md)',
+              marginBottom: 'var(--spacing-md)',
+              border: '2px solid var(--color-brown-light)'
+            }}>
                   <div style={{ marginBottom: 'var(--spacing-sm)' }}>
                     <div style={{
                       display: 'flex',
@@ -578,24 +551,23 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
                   </button>
                 </div>
 
-                {interactionMessage && (
-                  <div style={{
-                    marginTop: 'var(--spacing-md)',
-                    padding: 'var(--spacing-md)',
-                    background: 'rgba(40, 167, 69, 0.1)',
-                    border: '2px solid #28a745',
-                    borderRadius: 'var(--border-radius-lg)',
-                    color: '#155724',
-                    textAlign: 'center',
-                    fontSize: '0.9rem',
-                    fontWeight: '600',
-                    whiteSpace: 'pre-line',
-                    animation: 'fadeIn 0.3s'
-                  }}>
-                    {interactionMessage}
-                  </div>
-                )}
-              </>
+            {interactionMessage && (
+              <div style={{
+                marginTop: 'var(--spacing-md)',
+                padding: 'var(--spacing-md)',
+                background: 'linear-gradient(135deg, #d4edda, #c3e6cb)',
+                border: '2px solid #28a745',
+                borderRadius: 'var(--border-radius-lg)',
+                color: '#155724',
+                textAlign: 'center',
+                fontSize: '0.9rem',
+                fontWeight: '700',
+                whiteSpace: 'pre-line',
+                animation: 'fadeIn 0.3s',
+                boxShadow: '0 2px 8px rgba(40, 167, 69, 0.2)'
+              }}>
+                {interactionMessage}
+              </div>
             )}
           </div>
         </div>
