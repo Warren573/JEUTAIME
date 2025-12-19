@@ -126,7 +126,10 @@ export default function EspacePersoScreenSimple({
         flexDirection: 'column',
         gap: '20px'
       }}>
-        {/* Offrandes Reçues */}
+        {/* 1. Règles du jeu */}
+        <ReglesSection />
+
+        {/* 2. Offrandes Reçues */}
         <OffrandesRecuesSection currentUser={currentUser} />
 
         {/* 3. Inventaire Magique */}
@@ -141,9 +144,6 @@ export default function EspacePersoScreenSimple({
 
         {/* 5. Stats Sociales */}
         <StatsSocialesSection currentUser={currentUser} />
-
-        {/* 6. Règles du jeu */}
-        <ReglesSection />
       </div>
     </div>
   );
