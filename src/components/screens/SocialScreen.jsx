@@ -100,7 +100,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
     <div style={{
       minHeight: '100dvh',
       maxHeight: '100dvh',
-      overflowY: 'auto',
+      overflow: 'hidden',
       paddingTop: 'env(safe-area-inset-top)',
       paddingBottom: 'max(80px, calc(70px + env(safe-area-inset-bottom)))',
       background: 'var(--color-beige-light)',
@@ -158,15 +158,17 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
               )}
             </button>
           </div>
-            <div style={{ textAlign: 'center', marginTop: 'var(--spacing-sm)' }}>
-              <button
-                onClick={handleAdminCreateSalon}
-                className="btn-primary"
-                style={{ padding: 'var(--spacing-sm) var(--spacing-md)', fontSize: '0.875rem' }}
-              >
-                ➕ Nouveau Salon
-              </button>
-            </div>
+            {currentUser?.premium && (
+              <div style={{ textAlign: 'center', marginTop: 'var(--spacing-sm)' }}>
+                <button
+                  onClick={handleAdminCreateSalon}
+                  className="btn-primary"
+                  style={{ padding: 'var(--spacing-sm) var(--spacing-md)', fontSize: '0.875rem' }}
+                >
+                  ➕ Nouveau Salon
+                </button>
+              </div>
+            )}
           </div>
         </>
       )}
@@ -250,7 +252,9 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
           padding: '0 var(--spacing-sm)',
           position: 'relative',
           width: '100%',
-          boxSizing: 'border-box'
+          boxSizing: 'border-box',
+          flex: 1,
+          overflow: 'auto'
         }}>
           <ScreenHeader
             icon="✨"
@@ -641,15 +645,19 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
       )}
 
       {socialTab === 'ranking' && (
-        <RankingScreen currentUser={currentUser} />
+        <div style={{ flex: 1, overflow: 'auto' }}>
+          <RankingScreen currentUser={currentUser} />
+        </div>
       )}
 
       {socialTab === 'adoption' && (
-        <AdoptionScreen currentUser={currentUser} userCoins={userCoins} setUserCoins={setUserCoins} setCurrentUser={setCurrentUser} />
+        <div style={{ flex: 1, overflow: 'auto' }}>
+          <AdoptionScreen currentUser={currentUser} userCoins={userCoins} setUserCoins={setUserCoins} setCurrentUser={setCurrentUser} />
+        </div>
       )}
 
       {socialTab === 'games' && (
-        <>
+        <div style={{ flex: 1, overflow: 'auto', padding: '0 var(--spacing-sm)' }}>
           <ScreenHeader
             icon="🎮"
             title="JEUX"
@@ -660,7 +668,6 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
             gap: '12px',
-            padding: '0 var(--spacing-sm)',
             width: '100%',
             boxSizing: 'border-box'
           }}>
@@ -695,7 +702,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
               <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo - Gagne des pièces!</p>
             </div>
           </div>
-        </>
+        </div>
       )}
 
       {/* Modal Bouteille à la mer */}
