@@ -59,7 +59,7 @@ export default function Navigation({ navItems, screen, setScreen }) {
             }}
           >
             <div style={{
-              fontSize: '26px',
+              fontSize: '30px',
               filter: isActive ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' : 'none',
               transition: 'all var(--transition-normal)',
               display: 'flex',
