@@ -49,6 +49,34 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
     return lettersCount >= requiredLetters;
   };
 
+  // Load matches from localStorage
+  const getMatches = () => {
+    const matches = JSON.parse(localStorage.getItem('jeutaime_matches') || '{}');
+    const userId = currentUser?.email || 'guest';
+    return matches[userId] || [];
+  };
+
+  // Load received smiles from localStorage
+  const getReceivedSmiles = () => {
+    const smiles = JSON.parse(localStorage.getItem('jeutaime_smiles') || '{}');
+    const allUsers = getAllUsers();
+    const receivedSmiles = [];
+
+    // Pour chaque utilisateur qui a envoyé un sourire au currentUser
+    Object.keys(smiles).forEach(userEmail => {
+      const userSmiles = smiles[userEmail];
+      if (userSmiles.sentTo && userSmiles.sentTo.includes(currentUser?.id)) {
+        // Trouver le profil de cet utilisateur
+        const senderProfile = allUsers.find(u => u.email === userEmail);
+        if (senderProfile) {
+          receivedSmiles.push(senderProfile);
+        }
+      }
+    });
+
+    return receivedSmiles;
+  };
+
   // Load smiles data from localStorage
   const getSmiles = () => {
     return JSON.parse(localStorage.getItem('jeutaime_smiles') || '{}');
@@ -306,26 +334,246 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
           transition: 'all var(--transition-normal)',
           boxShadow: viewMode === 'matches' ? 'var(--shadow-md)' : 'var(--shadow-sm)'
         }}>
-          💕 Matches (3)
+          💕 Matches ({getMatches().length})
         </button>
-        <button onClick={() => setViewMode('likes')} style={{
+        <button onClick={() => setViewMode('smiles')} style={{
           padding: 'var(--spacing-sm) var(--spacing-md)',
-          background: viewMode === 'likes' ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))' : 'var(--color-brown)',
-          border: viewMode === 'likes' ? '2px solid var(--color-gold-light)' : '2px solid var(--color-brown-dark)',
-          color: viewMode === 'likes' ? 'var(--color-brown-dark)' : 'var(--color-cream)',
+          background: viewMode === 'smiles' ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))' : 'var(--color-brown)',
+          border: viewMode === 'smiles' ? '2px solid var(--color-gold-light)' : '2px solid var(--color-brown-dark)',
+          color: viewMode === 'smiles' ? 'var(--color-brown-dark)' : 'var(--color-cream)',
           borderRadius: 'var(--border-radius-md)',
           cursor: 'pointer',
           fontWeight: '600',
           fontSize: '0.875rem',
           minWidth: 'fit-content',
           transition: 'all var(--transition-normal)',
-          boxShadow: viewMode === 'likes' ? 'var(--shadow-md)' : 'var(--shadow-sm)'
+          boxShadow: viewMode === 'smiles' ? 'var(--shadow-md)' : 'var(--shadow-sm)'
         }}>
-          ❤️ Likes reçus (12)
+          😊 Sourires reçus ({getReceivedSmiles().length})
         </button>
       </div>
 
-      {/* Carte profil */}
+      {/* MODE: Matches */}
+      {viewMode === 'matches' && (
+        <div style={{ padding: 'var(--spacing-lg)' }}>
+          {getMatches().length === 0 ? (
+            <div style={{
+              background: 'var(--color-cream)',
+              borderRadius: 'var(--border-radius-lg)',
+              padding: 'var(--spacing-xl)',
+              textAlign: 'center'
+            }}>
+              <div style={{ fontSize: '4rem', marginBottom: 'var(--spacing-md)' }}>💔</div>
+              <h3 style={{ fontSize: '1.2rem', marginBottom: 'var(--spacing-sm)', color: 'var(--color-text-primary)' }}>
+                Aucun match pour le moment
+              </h3>
+              <p style={{ color: 'var(--color-text-secondary)', marginBottom: 'var(--spacing-md)' }}>
+                Réponds aux questions pour matcher avec tes sourires !
+              </p>
+              <button
+                onClick={() => setViewMode('discover')}
+                style={{
+                  padding: 'var(--spacing-md) var(--spacing-lg)',
+                  background: 'linear-gradient(135deg, var(--color-brown), var(--color-brown-dark))',
+                  border: 'none',
+                  borderRadius: 'var(--border-radius-md)',
+                  color: 'white',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                }}
+              >
+                Découvrir des profils
+              </button>
+            </div>
+          ) : (
+            <div style={{ display: 'grid', gap: 'var(--spacing-md)' }}>
+              {getMatches().map((match, index) => {
+                const matchedProfile = allProfiles.find(p => p.id === match.userId);
+                if (!matchedProfile) return null;
+
+                return (
+                  <div
+                    key={index}
+                    style={{
+                      background: 'var(--color-cream)',
+                      borderRadius: 'var(--border-radius-lg)',
+                      padding: 'var(--spacing-lg)',
+                      border: '2px solid var(--color-gold)'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)', marginBottom: 'var(--spacing-md)' }}>
+                      <div style={{
+                        width: '60px',
+                        height: '60px',
+                        borderRadius: '50%',
+                        background: 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '2rem',
+                        border: '2px solid var(--color-gold-light)'
+                      }}>
+                        💕
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <h3 style={{ fontSize: '1.2rem', margin: 0, color: 'var(--color-text-primary)' }}>
+                          {matchedProfile.name}, {matchedProfile.age}
+                        </h3>
+                        <p style={{ fontSize: '0.9rem', margin: '4px 0', color: 'var(--color-text-secondary)' }}>
+                          📍 {matchedProfile.city}
+                        </p>
+                      </div>
+                    </div>
+                    <div style={{
+                      background: 'var(--color-beige-light)',
+                      borderRadius: 'var(--border-radius-md)',
+                      padding: 'var(--spacing-sm)',
+                      marginBottom: 'var(--spacing-md)'
+                    }}>
+                      <p style={{ fontSize: '0.85rem', color: 'var(--color-text-primary)', margin: 0 }}>
+                        <strong>Ton score:</strong> {match.userScore}/3 ✅ • <strong>Son score:</strong> {match.otherScore}/3 ✅
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        // Aller à la conversation avec cette personne
+                        alert(`Ouvrir la conversation avec ${matchedProfile.name}`);
+                      }}
+                      style={{
+                        width: '100%',
+                        padding: 'var(--spacing-md)',
+                        background: 'linear-gradient(135deg, var(--color-brown), var(--color-brown-dark))',
+                        border: 'none',
+                        borderRadius: 'var(--border-radius-md)',
+                        color: 'white',
+                        fontWeight: '600',
+                        cursor: 'pointer',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                      }}
+                    >
+                      💬 Envoyer une lettre
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* MODE: Sourires reçus */}
+      {viewMode === 'smiles' && (
+        <div style={{ padding: 'var(--spacing-lg)' }}>
+          {getReceivedSmiles().length === 0 ? (
+            <div style={{
+              background: 'var(--color-cream)',
+              borderRadius: 'var(--border-radius-lg)',
+              padding: 'var(--spacing-xl)',
+              textAlign: 'center'
+            }}>
+              <div style={{ fontSize: '4rem', marginBottom: 'var(--spacing-md)' }}>😔</div>
+              <h3 style={{ fontSize: '1.2rem', marginBottom: 'var(--spacing-sm)', color: 'var(--color-text-primary)' }}>
+                Aucun sourire reçu
+              </h3>
+              <p style={{ color: 'var(--color-text-secondary)' }}>
+                Sois patient•e, les sourires arrivent !
+              </p>
+            </div>
+          ) : (
+            <div style={{ display: 'grid', gap: 'var(--spacing-md)' }}>
+              {getReceivedSmiles().map((profile, index) => (
+                <div
+                  key={index}
+                  style={{
+                    background: 'var(--color-cream)',
+                    borderRadius: 'var(--border-radius-lg)',
+                    padding: 'var(--spacing-lg)',
+                    border: '2px solid var(--color-romantic)'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)', marginBottom: 'var(--spacing-md)' }}>
+                    <div style={{
+                      width: '60px',
+                      height: '60px',
+                      borderRadius: '50%',
+                      background: 'linear-gradient(135deg, var(--color-romantic), var(--color-romantic-light))',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '2rem'
+                    }}>
+                      😊
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <h3 style={{ fontSize: '1.2rem', margin: 0, color: 'var(--color-text-primary)' }}>
+                        {profile.name}, {profile.age}
+                      </h3>
+                      <p style={{ fontSize: '0.9rem', margin: '4px 0', color: 'var(--color-text-secondary)' }}>
+                        📍 {profile.city}
+                      </p>
+                      <p style={{ fontSize: '0.85rem', margin: 0, color: 'var(--color-romantic)', fontStyle: 'italic' }}>
+                        {profile.bio?.substring(0, 50)}...
+                      </p>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
+                    <button
+                      onClick={() => {
+                        // Trouver l'index du profil et afficher en mode découverte
+                        const profileIndex = allProfiles.findIndex(p => p.id === profile.id);
+                        if (profileIndex !== -1) {
+                          setCurrentProfile(profileIndex);
+                          setViewMode('discover');
+                        }
+                      }}
+                      style={{
+                        flex: 1,
+                        padding: 'var(--spacing-md)',
+                        background: 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))',
+                        border: 'none',
+                        borderRadius: 'var(--border-radius-md)',
+                        color: 'var(--color-brown-dark)',
+                        fontWeight: '600',
+                        cursor: 'pointer',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                      }}
+                    >
+                      😊 Sourire en retour
+                    </button>
+                    <button
+                      onClick={() => {
+                        const profileIndex = allProfiles.findIndex(p => p.id === profile.id);
+                        if (profileIndex !== -1) {
+                          setCurrentProfile(profileIndex);
+                          setViewMode('discover');
+                          handleGrimace();
+                        }
+                      }}
+                      style={{
+                        flex: 1,
+                        padding: 'var(--spacing-md)',
+                        background: 'linear-gradient(135deg, var(--color-romantic), var(--color-romantic-light))',
+                        border: 'none',
+                        borderRadius: 'var(--border-radius-md)',
+                        color: 'white',
+                        fontWeight: '600',
+                        cursor: 'pointer',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                      }}
+                    >
+                      😝 Grimace
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* MODE: Découverte (carte profil) */}
+      {viewMode === 'discover' && (
       <div style={{
         background: 'var(--color-cream)',
         borderRadius: '0',
@@ -796,6 +1044,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
           )}
         </div>
       </div>
+      )}
 
       {/* Question Game Modal */}
       {showQuestionGame && mutualSmileUser && (

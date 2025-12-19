@@ -241,7 +241,7 @@ export default function MessageBottleModal({ currentUser, onClose }) {
                     📜 {todayCount}/3 bouteilles envoyées aujourd'hui
                   </p>
                   {todayCount >= 3 && (
-                    <p style={{ margin: '8px 0 0 0', fontSize: '0.85rem', color: 'var(--color-text-secondary)' }}>
+                    <p style={{ margin: '8px 0 0 0', fontSize: '0.85rem', color: 'var(--color-brown-dark)' }}>
                       Deviens Premium pour envoyer sans limite !
                     </p>
                   )}
@@ -310,7 +310,7 @@ export default function MessageBottleModal({ currentUser, onClose }) {
               <p style={{
                 textAlign: 'right',
                 fontSize: '0.8rem',
-                color: 'var(--color-text-secondary)',
+                color: 'var(--color-brown-dark)',
                 margin: '4px 0 16px 0'
               }}>
                 {message.length}/500
@@ -359,7 +359,7 @@ export default function MessageBottleModal({ currentUser, onClose }) {
               {receivedBottles.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '40px 20px' }}>
                   <div style={{ fontSize: '4rem', marginBottom: '16px' }}>🌊</div>
-                  <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem' }}>
+                  <p style={{ color: 'var(--color-text-primary)', fontSize: '0.95rem' }}>
                     Aucune bouteille reçue pour le moment...
                   </p>
                 </div>
@@ -382,7 +382,7 @@ export default function MessageBottleModal({ currentUser, onClose }) {
                       <span style={{ fontSize: '1.5rem' }}>
                         {BOTTLE_TYPES[bottle.type].icon}
                       </span>
-                      <span style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>
+                      <span style={{ fontSize: '0.8rem', color: 'var(--color-brown-dark)' }}>
                         {formatDate(bottle.timestamp)}
                       </span>
                     </div>
@@ -424,7 +424,7 @@ export default function MessageBottleModal({ currentUser, onClose }) {
               {sentBottles.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '40px 20px' }}>
                   <div style={{ fontSize: '4rem', marginBottom: '16px' }}>📜</div>
-                  <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem' }}>
+                  <p style={{ color: 'var(--color-text-primary)', fontSize: '0.95rem' }}>
                     Tu n'as encore envoyé aucune bouteille...
                   </p>
                 </div>
@@ -444,7 +444,7 @@ export default function MessageBottleModal({ currentUser, onClose }) {
                       <span style={{ fontSize: '1.5rem' }}>
                         {BOTTLE_TYPES[bottle.type].icon}
                       </span>
-                      <span style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>
+                      <span style={{ fontSize: '0.8rem', color: 'var(--color-brown-dark)' }}>
                         {formatDate(bottle.timestamp)}
                       </span>
                     </div>
@@ -529,10 +529,10 @@ export default function MessageBottleModal({ currentUser, onClose }) {
                 borderRadius: '8px',
                 marginBottom: '16px'
               }}>
-                <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--color-text-secondary)' }}>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--color-brown-dark)', fontWeight: '600' }}>
                   De : {selectedBottle.revealed ? getSenderName(selectedBottle.senderId) : '🎭 Anonyme'}
                 </p>
-                <p style={{ margin: '4px 0 0 0', fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>
+                <p style={{ margin: '4px 0 0 0', fontSize: '0.8rem', color: 'var(--color-brown-dark)' }}>
                   {formatDate(selectedBottle.timestamp)}
                 </p>
               </div>

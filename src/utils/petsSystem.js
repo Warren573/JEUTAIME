@@ -494,3 +494,98 @@ export function getPetInteraction(petType) {
   const petInteractions = interactions[petType] || ['Ton animal te regarde avec affection'];
   return petInteractions[Math.floor(Math.random() * petInteractions.length)];
 }
+
+/**
+ * Initialiser des animaux de démo pour tester l'application
+ */
+export function initializeDemoPets() {
+  // Vérifier si déjà initialisé
+  const demoVersion = localStorage.getItem('jeutaime_demo_pets_version');
+  if (demoVersion === '1.0') {
+    return;
+  }
+
+  console.log('🐾 Initialisation des animaux de démo...');
+
+  // Trouver l'utilisateur de démo (le premier utilisateur non-bot)
+  const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+  const demoUser = users.find(u => !u.isBot);
+
+  if (!demoUser) {
+    console.log('❌ Aucun utilisateur de démo trouvé');
+    return;
+  }
+
+  // Créer 2 animaux adoptés avec différentes stats
+  const demoPets = [
+    {
+      id: Date.now(),
+      type: 'cat',
+      name: 'Chat',
+      emoji: '🐱',
+      adoptedAt: Date.now() - (86400000 * 5), // Adopté il y a 5 jours
+      lastUpdated: Date.now(),
+      level: 3,
+      experience: 45,
+      stats: {
+        hunger: 75,
+        happiness: 85,
+        energy: 60,
+        cleanliness: 90
+      },
+      interactions: {
+        fed: 15,
+        played: 12,
+        cleaned: 8,
+        slept: 10
+      }
+    },
+    {
+      id: Date.now() + 1,
+      type: 'dog',
+      name: 'Chien',
+      emoji: '🐶',
+      adoptedAt: Date.now() - (86400000 * 3), // Adopté il y a 3 jours
+      lastUpdated: Date.now(),
+      level: 2,
+      experience: 28,
+      stats: {
+        hunger: 50,
+        happiness: 95,
+        energy: 80,
+        cleanliness: 65
+      },
+      interactions: {
+        fed: 10,
+        played: 18,
+        cleaned: 5,
+        slept: 7
+      }
+    }
+  ];
+
+  // Sauvegarder les pets
+  localStorage.setItem(`jeutaime_pets_${demoUser.email}`, JSON.stringify(demoPets));
+
+  // Incarner le chat
+  const userIndex = users.findIndex(u => u.email === demoUser.email);
+  if (userIndex !== -1) {
+    users[userIndex].incarnatedAs = {
+      petId: 'cat',
+      emoji: '🐱',
+      name: 'Chat',
+      since: new Date().toISOString()
+    };
+    localStorage.setItem('jeutaime_users', JSON.stringify(users));
+
+    // Mettre à jour current_user si c'est celui-là
+    const currentUser = JSON.parse(localStorage.getItem('jeutaime_current_user') || 'null');
+    if (currentUser && currentUser.email === demoUser.email) {
+      currentUser.incarnatedAs = users[userIndex].incarnatedAs;
+      localStorage.setItem('jeutaime_current_user', JSON.stringify(currentUser));
+    }
+  }
+
+  localStorage.setItem('jeutaime_demo_pets_version', '1.0');
+  console.log('✅ Animaux de démo initialisés: Chat (incarné) + Chien');
+}

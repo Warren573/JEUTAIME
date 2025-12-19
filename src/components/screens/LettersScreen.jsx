@@ -7,6 +7,8 @@ export default function LettersScreen({ currentUser }) {
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [showGifts, setShowGifts] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState(null);
+  const [photoRevealed, setPhotoRevealed] = useState(false);
+  const [lettersNeeded, setLettersNeeded] = useState(0);
 
   useEffect(() => {
     loadConversations();
@@ -322,6 +324,10 @@ export default function LettersScreen({ currentUser }) {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
+                      const totalLetters = convo.letterCount.user + convo.letterCount.matched;
+                      const isRevealed = totalLetters >= 20 || currentUser.premium;
+                      setPhotoRevealed(isRevealed);
+                      setLettersNeeded(isRevealed ? 0 : 20 - totalLetters);
                       setSelectedProfile(convo.matchedUser);
                     }}
                     style={{
@@ -534,21 +540,57 @@ export default function LettersScreen({ currentUser }) {
           }}
           onClick={(e) => e.stopPropagation()}
           >
-            {/* Avatar */}
-            <div style={{
-              width: '120px',
-              height: '120px',
-              borderRadius: '50%',
-              background: 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '3rem',
-              margin: '0 auto 20px',
-              border: '4px solid var(--color-gold-light)',
-              boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
-            }}>
-              👤
+            {/* Avatar ou Photo */}
+            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+              <div style={{
+                width: '120px',
+                height: '120px',
+                borderRadius: '50%',
+                background: photoRevealed
+                  ? 'linear-gradient(135deg, #4CAF50, #45a049)'
+                  : 'linear-gradient(135deg, #888, #666)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '3rem',
+                margin: '0 auto',
+                border: photoRevealed ? '4px solid #4CAF50' : '4px solid #888',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                filter: photoRevealed ? 'none' : 'blur(8px)',
+                position: 'relative'
+              }}>
+                👤
+              </div>
+              {!photoRevealed && (
+                <div style={{
+                  marginTop: '10px',
+                  padding: '8px 15px',
+                  background: 'linear-gradient(135deg, var(--color-gold-light), var(--color-gold))',
+                  borderRadius: '20px',
+                  fontSize: '0.85rem',
+                  color: 'var(--color-brown-dark)',
+                  fontWeight: '600',
+                  display: 'inline-block',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                }}>
+                  🔒 {lettersNeeded} lettres pour dévoiler
+                </div>
+              )}
+              {photoRevealed && (
+                <div style={{
+                  marginTop: '10px',
+                  padding: '8px 15px',
+                  background: 'linear-gradient(135deg, #4CAF50, #45a049)',
+                  borderRadius: '20px',
+                  fontSize: '0.85rem',
+                  color: 'white',
+                  fontWeight: '600',
+                  display: 'inline-block',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                }}>
+                  ✅ Photo dévoilée
+                </div>
+              )}
             </div>
 
             <h2 style={{ fontSize: '1.8rem', marginBottom: '10px', color: 'var(--color-brown-dark)', textAlign: 'center' }}>
@@ -600,6 +642,67 @@ export default function LettersScreen({ currentUser }) {
                     selectedProfile.physicalDescription === 'grande-gigue' ? '🦒 Grande gigue' :
                     '✨ Grande beauté intérieure'
                   }
+                </div>
+              )}
+            </div>
+
+            {/* Photo Gallery */}
+            <div style={{ marginTop: '15px', background: 'var(--color-beige-light)', borderRadius: '12px', padding: '20px' }}>
+              <h3 style={{ fontSize: '1rem', marginBottom: '15px', color: 'var(--color-brown-dark)', borderBottom: '2px solid var(--color-tan)', paddingBottom: '8px' }}>
+                📸 Album Photo
+              </h3>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: '10px'
+              }}>
+                {(selectedProfile.photos || []).slice(0, 6).map((photo) => (
+                  <div
+                    key={photo.id}
+                    style={{
+                      aspectRatio: '1',
+                      background: photoRevealed
+                        ? 'linear-gradient(135deg, #667eea, #764ba2)'
+                        : 'linear-gradient(135deg, #888, #666)',
+                      borderRadius: '10px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '10px',
+                      textAlign: 'center',
+                      filter: photoRevealed ? 'none' : 'blur(10px)',
+                      opacity: photoRevealed ? 1 : 0.5,
+                      transition: 'all 0.3s'
+                    }}
+                  >
+                    <div style={{ fontSize: '2rem', marginBottom: '5px' }}>
+                      {photoRevealed ? photo.emoji : '🔒'}
+                    </div>
+                    {photoRevealed && (
+                      <p style={{
+                        margin: 0,
+                        fontSize: '0.7rem',
+                        color: 'white',
+                        fontWeight: '600'
+                      }}>
+                        {photo.caption}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+              {!photoRevealed && (
+                <div style={{
+                  marginTop: '15px',
+                  textAlign: 'center',
+                  color: 'var(--color-text-secondary)',
+                  fontSize: '0.85rem',
+                  padding: '10px',
+                  background: 'rgba(255,255,255,0.5)',
+                  borderRadius: '8px'
+                }}>
+                  🔒 Échangez {lettersNeeded} lettre{lettersNeeded > 1 ? 's' : ''} de plus pour dévoiler les photos
                 </div>
               )}
             </div>
