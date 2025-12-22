@@ -190,11 +190,12 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
       display: 'flex',
       flexDirection: 'column',
       background: '#000',
+      paddingTop: 'env(safe-area-inset-top)',
       paddingBottom: 'env(safe-area-inset-bottom)',
       zIndex: 1000,
       boxSizing: 'border-box'
     }}>
-      <BackButton onClick={onBack} />
+      <BackButton onClick={onBack} noSafeArea={true} />
 
       {/* Header */}
       <div style={{
