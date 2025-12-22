@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { awardPoints, checkAndAwardBadge } from '../../utils/pointsSystem';
-import BackButton from '../common/BackButton';
 
 export default function BrickBreakerGame({ setGameScreen, currentUser, setUserCoins }) {
   const canvasRef = useRef(null);
@@ -353,8 +352,6 @@ export default function BrickBreakerGame({ setGameScreen, currentUser, setUserCo
       flexDirection: 'column',
       boxSizing: 'border-box'
     }}>
-      <BackButton onClick={() => setGameScreen(null)} />
-
       <div style={{
         flex: 1,
         overflow: 'auto',

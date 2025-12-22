@@ -1,5 +1,4 @@
 import React from 'react';
-import BackButton from '../common/BackButton';
 
 export default function StoryTimeGame({ setGameScreen, storyText, setStoryText, storyInput, setStoryInput }) {
   return (
@@ -13,8 +12,6 @@ export default function StoryTimeGame({ setGameScreen, storyText, setStoryText, 
       flexDirection: 'column',
       boxSizing: 'border-box'
     }}>
-      <BackButton onClick={() => setGameScreen(null)} />
-
       <div style={{
         flex: 1,
         overflow: 'auto',

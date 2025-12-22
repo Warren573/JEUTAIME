@@ -13,7 +13,6 @@ import {
   getTimeRemaining
 } from '../../utils/barExchangeSystem';
 import ScreenHeader from '../common/ScreenHeader';
-import BackButton from '../common/BackButton';
 
 export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, setSelectedSalon, adminMode, isAdminAuthenticated, currentUser, userCoins, setUserCoins, setScreen, setCurrentUser }) {
   const [magicStates, setMagicStates] = useState({});
@@ -277,9 +276,6 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
       )}
 
       {/* Bouton retour quand un onglet est sélectionné */}
-      {socialTab !== null && (
-        <BackButton onClick={() => setSocialTab(null)} />
-      )}
 
       {/* Section Bars */}
       {socialTab === 'bars' && (

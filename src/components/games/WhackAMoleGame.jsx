@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { addCoinsToUser, addPointsToUser, updateUserStats } from '../../utils/demoUsers';
-import BackButton from '../common/BackButton';
 
 export default function WhackAMoleGame({ setGameScreen, moleBestScore, setMoleBestScore, currentUser, setUserCoins }) {
   const [localMoleScore, setLocalMoleScore] = useState(0);
@@ -109,8 +108,6 @@ export default function WhackAMoleGame({ setGameScreen, moleBestScore, setMoleBe
       flexDirection: 'column',
       boxSizing: 'border-box'
     }}>
-      <BackButton onClick={() => setGameScreen(null)} />
-
       <div style={{
         flex: 1,
         overflow: 'auto',

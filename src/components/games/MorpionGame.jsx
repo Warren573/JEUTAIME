@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { awardPoints, checkAndAwardBadge } from '../../utils/pointsSystem';
-import BackButton from '../common/BackButton';
 
 export default function MorpionGame({ setGameScreen, morpionBoard, setMorpionBoard, morpionTurn, setMorpionTurn, currentUser, setUserCoins }) {
   const calculateWinner = (squares) => {
@@ -91,8 +90,6 @@ export default function MorpionGame({ setGameScreen, morpionBoard, setMorpionBoa
       flexDirection: 'column',
       boxSizing: 'border-box'
     }}>
-      <BackButton onClick={() => setGameScreen(null)} />
-
       <div style={{
         flex: 1,
         overflow: 'auto',

@@ -3,7 +3,6 @@ import { awardPoints } from '../../utils/pointsSystem';
 import { updateUserStats, addPointsToUser, triggerBotAutoReply, getUserById } from '../../utils/demoUsers';
 import GiftSelector from '../gifts/GiftSelector';
 import UserAvatar from '../avatar/UserAvatar';
-import BackButton from '../common/BackButton';
 
 export default function ChatScreen({ currentUser, matchedUser, onBack }) {
   const [messages, setMessages] = useState([]);
@@ -189,8 +188,6 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
       display: 'flex',
       flexDirection: 'column'
     }}>
-      <BackButton onClick={onBack} />
-
       {/* Header */}
       <div style={{
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',

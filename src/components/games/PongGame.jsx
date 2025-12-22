@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { awardPoints, checkAndAwardBadge } from '../../utils/pointsSystem';
 import { addCoinsToUser, updateUserStats, incrementDuelWins } from '../../utils/demoUsers';
-import BackButton from '../common/BackButton';
 
 const WINNING_SCORE = 5; // Premier à 5 points gagne
 
@@ -229,8 +228,6 @@ export default function PongGame({ setGameScreen, currentUser, setUserCoins }) {
       flexDirection: 'column',
       boxSizing: 'border-box'
     }}>
-      <BackButton onClick={() => setGameScreen(null)} />
-
       <div style={{
         flex: 1,
         overflow: 'auto',

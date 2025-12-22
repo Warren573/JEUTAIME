@@ -3,7 +3,6 @@ import GiftSelector from '../gifts/GiftSelector';
 import MagicEffect from '../effects/MagicEffect';
 import MagicGiftsPanel from '../MagicGiftsPanel';
 import Avatar from 'avataaars';
-import BackButton from '../common/BackButton';
 import { generateAvatarOptions } from '../../utils/avatarGenerator';
 import {
   loadBarState,
@@ -334,8 +333,6 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
       display: 'flex',
       flexDirection: 'column'
     }}>
-      <BackButton onClick={() => setSelectedSalon(null)} />
-
       {/* En-tête du salon */}
       <div style={{
         background: salon?.gradient || 'linear-gradient(135deg, #667eea, #764ba2)',

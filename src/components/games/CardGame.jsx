@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { addCoinsToUser, addPointsToUser, updateUserStats } from '../../utils/demoUsers';
-import BackButton from '../common/BackButton';
 
 export default function CardGame({
   setGameScreen,
@@ -138,8 +137,6 @@ export default function CardGame({
       flexDirection: 'column',
       boxSizing: 'border-box'
     }}>
-      <BackButton onClick={() => setGameScreen(null)} />
-
       <div style={{
         flex: 1,
         overflow: 'auto',
