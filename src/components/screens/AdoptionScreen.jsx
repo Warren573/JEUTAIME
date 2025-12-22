@@ -10,8 +10,9 @@ import {
   getPetStatus,
   getPetInteraction
 } from '../../utils/petsSystem';
+import BackButton from '../common/BackButton';
 
-export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, setCurrentUser, isEmbedded = false }) {
+export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, setCurrentUser, isEmbedded = false, onBack }) {
   const [adoptionTab, setAdoptionTab] = useState('mypets'); // 'mypets', 'adopt', 'incarnate'
   const [myPets, setMyPets] = useState([]);
   const [selectedPet, setSelectedPet] = useState(null);
@@ -213,6 +214,8 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
 
   return (
     <div style={containerStyle}>
+      {!isEmbedded && onBack && <BackButton onClick={onBack} />}
+
       {/* En-tête */}
       <div style={headerStyle}>
         <h1 style={{
