@@ -194,6 +194,8 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
       zIndex: 1000,
       boxSizing: 'border-box'
     }}>
+      <BackButton onClick={onBack} />
+
       {/* Header */}
       <div style={{
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -202,8 +204,6 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
         marginBottom: '15px',
         boxShadow: '0 5px 15px rgba(102, 126, 234, 0.3)'
       }}>
-        <BackButton onClick={onBack} />
-
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
           {/* Avatar/Photo avec floutage progressif */}
           <div style={{
