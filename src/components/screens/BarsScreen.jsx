@@ -64,18 +64,15 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedSalon,
 
   return (
     <div style={{
-      minHeight: '100dvh',
-      maxHeight: '100dvh',
+      height: '100%',
       overflowY: 'auto',
-      paddingTop: 'env(safe-area-inset-top)',
-      paddingBottom: 'max(80px, calc(70px + env(safe-area-inset-bottom)))',
       background: 'var(--color-beige-light)',
       display: 'flex',
       flexDirection: 'column'
     }}>
       <ScreenHeader
-        icon="🍸"
-        title="Les Salons"
+        icon="✨"
+        title="SALONS"
         subtitle="Écrivez des histoires ensemble • Une phrase chacun • Timer 24h"
       />
 
@@ -157,7 +154,7 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedSalon,
               }}>
                 {salon.emoji} {salon.name}
               </h3>
-              {bar.badge && (
+              {salon.badge && (
                 <span style={{
                   background: '#FFD700',
                   color: '#000',
@@ -173,7 +170,7 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedSalon,
 
             {/* Description */}
             <p style={{
-              color: bar.textColor === '#1a1a1a' ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.9)',
+              color: salon.textColor === '#1a1a1a' ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.9)',
               margin: '10px 0',
               fontSize: '0.95rem',
               lineHeight: '1.4'
@@ -212,7 +209,7 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedSalon,
                 )}
               </div>
               <button
-                onClick={bar.action}
+                onClick={salon.action}
                 disabled={salon.currentMembers === salon.maxMembers}
                 style={{
                   padding: '10px 20px',
