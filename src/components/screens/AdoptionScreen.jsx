@@ -249,11 +249,33 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
         flexWrap: 'wrap'
       }}>
         <button
+          onClick={() => setAdoptionTab('mypets')}
+          style={{
+            flex: 1,
+            minWidth: '120px',
+            maxWidth: '150px',
+            padding: 'var(--spacing-md)',
+            background: adoptionTab === 'mypets'
+              ? 'linear-gradient(135deg, #4CAF50, #2E7D32)'
+              : 'var(--color-brown-light)',
+            border: 'none',
+            borderRadius: 'var(--border-radius-lg)',
+            color: 'white',
+            fontSize: '0.9rem',
+            fontWeight: '600',
+            cursor: 'pointer',
+            boxShadow: adoptionTab === 'mypets' ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
+            transition: 'all 0.2s'
+          }}
+        >
+          📊 Mes animaux
+        </button>
+        <button
           onClick={() => setAdoptionTab('adopt')}
           style={{
             flex: 1,
-            minWidth: '130px',
-            maxWidth: '180px',
+            minWidth: '120px',
+            maxWidth: '150px',
             padding: 'var(--spacing-md)',
             background: adoptionTab === 'adopt'
               ? 'linear-gradient(135deg, #667eea, #764ba2)'
@@ -274,8 +296,8 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
           onClick={() => setAdoptionTab('incarnate')}
           style={{
             flex: 1,
-            minWidth: '130px',
-            maxWidth: '180px',
+            minWidth: '120px',
+            maxWidth: '150px',
             padding: 'var(--spacing-md)',
             background: adoptionTab === 'incarnate'
               ? 'linear-gradient(135deg, #f093fb, #f5576c)'
