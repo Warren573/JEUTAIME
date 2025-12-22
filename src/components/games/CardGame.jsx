@@ -131,7 +131,7 @@ export default function CardGame({
     <div style={{
       height: '100dvh',
       overflow: 'hidden',
-      paddingTop: 'env(safe-area-inset-top)',
+      
       paddingBottom: 'calc(70px + env(safe-area-inset-bottom))',
       background: 'var(--color-beige-light)',
       display: 'flex',

@@ -195,23 +195,26 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
     minHeight: '100dvh',
     maxHeight: '100dvh',
     overflowY: 'auto',
-    paddingTop: 'env(safe-area-inset-top)',
     paddingBottom: 'max(80px, calc(70px + env(safe-area-inset-bottom)))',
     background: 'var(--color-beige-light)',
     display: 'flex',
     flexDirection: 'column'
   };
 
+  // Style pour le header selon le mode
+  const headerStyle = {
+    background: 'var(--color-cream)',
+    borderBottom: '4px double var(--color-brown-dark)',
+    padding: isEmbedded ? 'var(--spacing-lg)' : 'var(--spacing-lg)',
+    paddingTop: isEmbedded ? 'var(--spacing-lg)' : 'calc(var(--spacing-lg) + env(safe-area-inset-top))',
+    marginBottom: 'var(--spacing-lg)',
+    boxShadow: 'var(--shadow-md)'
+  };
+
   return (
     <div style={containerStyle}>
       {/* En-tête */}
-      <div style={{
-        background: 'var(--color-cream)',
-        borderBottom: '4px double var(--color-brown-dark)',
-        padding: 'var(--spacing-lg)',
-        marginBottom: 'var(--spacing-lg)',
-        boxShadow: 'var(--shadow-md)'
-      }}>
+      <div style={headerStyle}>
         <h1 style={{
           fontFamily: 'var(--font-heading)',
           fontSize: '2.5rem',
