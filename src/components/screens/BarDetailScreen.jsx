@@ -332,6 +332,7 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
       bottom: 0,
       height: '100dvh',
       overflowY: 'auto',
+      paddingTop: 'env(safe-area-inset-top)',
       paddingBottom: 'calc(70px + env(safe-area-inset-bottom))',
       background: 'var(--color-beige-light)',
       zIndex: 1000,
@@ -341,7 +342,6 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
       <div style={{
         background: salon?.gradient || 'linear-gradient(135deg, #667eea, #764ba2)',
         padding: 'var(--spacing-lg)',
-        paddingTop: 'calc(env(safe-area-inset-top) + var(--spacing-lg))',
         boxShadow: 'var(--shadow-md)',
         borderBottom: '4px solid rgba(0,0,0,0.2)',
         position: 'relative'
@@ -350,7 +350,7 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
           onClick={() => setSelectedSalon(null)}
           style={{
             position: 'absolute',
-            top: 'calc(env(safe-area-inset-top) + 10px)',
+            top: '10px',
             left: '10px',
             width: '40px',
             height: '40px',
