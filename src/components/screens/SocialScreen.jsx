@@ -681,13 +681,13 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
 
       {socialTab === 'ranking' && (
         <div style={{ flex: 1, overflow: 'auto' }}>
-          <RankingScreen currentUser={currentUser} />
+          <RankingScreen currentUser={currentUser} isEmbedded={true} />
         </div>
       )}
 
       {socialTab === 'adoption' && (
         <div style={{ flex: 1, overflow: 'auto' }}>
-          <AdoptionScreen currentUser={currentUser} userCoins={userCoins} setUserCoins={setUserCoins} setCurrentUser={setCurrentUser} />
+          <AdoptionScreen currentUser={currentUser} userCoins={userCoins} setUserCoins={setUserCoins} setCurrentUser={setCurrentUser} isEmbedded={true} />
         </div>
       )}
 

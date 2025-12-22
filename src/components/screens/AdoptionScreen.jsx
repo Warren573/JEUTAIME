@@ -11,7 +11,7 @@ import {
   getPetInteraction
 } from '../../utils/petsSystem';
 
-export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, setCurrentUser }) {
+export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, setCurrentUser, isEmbedded = false }) {
   const [adoptionTab, setAdoptionTab] = useState('mypets'); // 'mypets', 'adopt', 'incarnate'
   const [myPets, setMyPets] = useState([]);
   const [selectedPet, setSelectedPet] = useState(null);
@@ -186,13 +186,24 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
     return Object.values(PETS).find(p => p.id === petType);
   };
 
+  // Style pour le container principal
+  const containerStyle = isEmbedded ? {
+    height: '100%',
+    overflowY: 'auto',
+    background: 'var(--color-beige-light)'
+  } : {
+    minHeight: '100dvh',
+    maxHeight: '100dvh',
+    overflowY: 'auto',
+    paddingTop: 'env(safe-area-inset-top)',
+    paddingBottom: 'max(80px, calc(70px + env(safe-area-inset-bottom)))',
+    background: 'var(--color-beige-light)',
+    display: 'flex',
+    flexDirection: 'column'
+  };
+
   return (
-    <div style={{
-      height: '100vh',
-      overflowY: 'auto',
-      paddingBottom: '100px',
-      background: 'var(--color-beige-light)'
-    }}>
+    <div style={containerStyle}>
       {/* En-tête */}
       <div style={{
         background: 'var(--color-cream)',
