@@ -339,8 +339,34 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
         padding: 'var(--spacing-lg)',
         paddingTop: 'calc(var(--spacing-lg) + env(safe-area-inset-top))',
         boxShadow: 'var(--shadow-md)',
-        borderBottom: '4px solid rgba(0,0,0,0.2)'
+        borderBottom: '4px solid rgba(0,0,0,0.2)',
+        position: 'relative'
       }}>
+        {/* Bouton retour */}
+        <button
+          onClick={() => setSelectedSalon(null)}
+          style={{
+            position: 'absolute',
+            top: 'calc(env(safe-area-inset-top) + 10px)',
+            left: '10px',
+            width: '35px',
+            height: '35px',
+            borderRadius: '50%',
+            border: '2px solid white',
+            background: 'rgba(255,255,255,0.2)',
+            color: 'white',
+            fontSize: '18px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            zIndex: 10,
+            backdropFilter: 'blur(10px)'
+          }}
+        >
+          ←
+        </button>
+
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px' }}>
 
           {/* Timer discret en haut à droite */}

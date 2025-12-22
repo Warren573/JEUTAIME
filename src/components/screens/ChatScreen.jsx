@@ -195,8 +195,34 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
         paddingTop: 'calc(20px + env(safe-area-inset-top))',
         borderRadius: '0 0 20px 20px',
         marginBottom: '15px',
-        boxShadow: '0 5px 15px rgba(102, 126, 234, 0.3)'
+        boxShadow: '0 5px 15px rgba(102, 126, 234, 0.3)',
+        position: 'relative'
       }}>
+        {/* Bouton retour */}
+        <button
+          onClick={onBack}
+          style={{
+            position: 'absolute',
+            top: 'calc(env(safe-area-inset-top) + 10px)',
+            left: '10px',
+            width: '35px',
+            height: '35px',
+            borderRadius: '50%',
+            border: '2px solid white',
+            background: 'rgba(255,255,255,0.2)',
+            color: 'white',
+            fontSize: '18px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            zIndex: 10,
+            backdropFilter: 'blur(10px)'
+          }}
+        >
+          ←
+        </button>
+
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
           {/* Avatar/Photo avec floutage progressif */}
           <div style={{
