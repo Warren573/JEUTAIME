@@ -1,12 +1,12 @@
 import React from 'react';
 
-export default function BackButton({ onClick }) {
+export default function BackButton({ onClick, noSafeArea = false, absolute = false }) {
   return (
     <button
       onClick={onClick}
       style={{
-        position: 'sticky',
-        top: 'calc(env(safe-area-inset-top) + 10px)',
+        position: absolute ? 'absolute' : 'sticky',
+        top: noSafeArea ? '10px' : 'calc(env(safe-area-inset-top) + 10px)',
         left: '10px',
         width: '40px',
         height: '40px',
