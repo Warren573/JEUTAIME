@@ -51,10 +51,14 @@ export default function MemoriesScreen({ currentUser }) {
   if (selectedMemory) {
     return (
       <div style={{
-        height: '100vh',
+        minHeight: '100dvh',
+        maxHeight: '100dvh',
         overflowY: 'auto',
-        paddingBottom: '80px',
-        background: 'var(--color-brown-dark)'
+        paddingTop: 'env(safe-area-inset-top)',
+        paddingBottom: 'max(80px, calc(70px + env(safe-area-inset-bottom)))',
+        background: 'var(--color-brown-dark)',
+        display: 'flex',
+        flexDirection: 'column'
       }}>
         {/* Bouton retour */}
         <div style={{
@@ -134,10 +138,14 @@ export default function MemoriesScreen({ currentUser }) {
 
   return (
     <div style={{
-      height: '100vh',
+      minHeight: '100dvh',
+      maxHeight: '100dvh',
       overflowY: 'auto',
-      paddingBottom: '80px',
-      background: 'var(--color-brown-dark)'
+      paddingTop: 'env(safe-area-inset-top)',
+      paddingBottom: 'max(80px, calc(70px + env(safe-area-inset-bottom)))',
+      background: 'var(--color-brown-dark)',
+      display: 'flex',
+      flexDirection: 'column'
     }}>
       {/* En-tête Boîte à souvenirs */}
       <div style={{

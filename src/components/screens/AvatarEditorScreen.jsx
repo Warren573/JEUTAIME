@@ -187,10 +187,14 @@ export default function AvatarEditorScreen({ currentUser, setCurrentUser, onClos
 
   return (
     <div style={{
-      height: '100vh',
+      minHeight: '100dvh',
+      maxHeight: '100dvh',
       overflowY: 'auto',
-      paddingBottom: '100px',
-      background: 'var(--color-beige-light)'
+      paddingTop: 'env(safe-area-inset-top)',
+      paddingBottom: 'max(80px, calc(70px + env(safe-area-inset-bottom)))',
+      background: 'var(--color-beige-light)',
+      display: 'flex',
+      flexDirection: 'column'
     }}>
       {/* Header */}
       <div style={{
