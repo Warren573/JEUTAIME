@@ -3,7 +3,6 @@ import GiftSelector from '../gifts/GiftSelector';
 import MagicEffect from '../effects/MagicEffect';
 import MagicGiftsPanel from '../MagicGiftsPanel';
 import Avatar from 'avataaars';
-import BackButton from '../common/BackButton';
 import { generateAvatarOptions } from '../../utils/avatarGenerator';
 import {
   loadBarState,
@@ -338,16 +337,37 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
       zIndex: 1000,
       boxSizing: 'border-box'
     }}>
-      <BackButton onClick={() => setSelectedSalon(null)} absolute={true} />
-
       {/* En-tête du salon */}
       <div style={{
         background: salon?.gradient || 'linear-gradient(135deg, #667eea, #764ba2)',
         padding: 'var(--spacing-lg)',
         paddingTop: 'calc(env(safe-area-inset-top) + var(--spacing-lg))',
         boxShadow: 'var(--shadow-md)',
-        borderBottom: '4px solid rgba(0,0,0,0.2)'
+        borderBottom: '4px solid rgba(0,0,0,0.2)',
+        position: 'relative'
       }}>
+        <button
+          onClick={() => setSelectedSalon(null)}
+          style={{
+            position: 'absolute',
+            top: 'calc(env(safe-area-inset-top) + 10px)',
+            left: '10px',
+            width: '40px',
+            height: '40px',
+            background: 'var(--color-cream)',
+            border: '2px solid var(--color-brown-light)',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            fontSize: '20px',
+            boxShadow: 'var(--shadow-md)',
+            zIndex: 10
+          }}
+        >
+          ←
+        </button>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px' }}>
 
           {/* Timer discret en haut à droite */}
