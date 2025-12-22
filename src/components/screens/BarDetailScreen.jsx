@@ -330,13 +330,11 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
       left: 0,
       right: 0,
       bottom: 0,
-      height: '100dvh',
       overflowY: 'auto',
       paddingTop: 'env(safe-area-inset-top)',
       paddingBottom: 'calc(70px + env(safe-area-inset-bottom))',
       background: 'var(--color-beige-light)',
-      zIndex: 1000,
-      boxSizing: 'border-box'
+      zIndex: 1000
     }}>
       {/* En-tête du salon */}
       <div style={{

@@ -185,14 +185,13 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
       left: 0,
       right: 0,
       bottom: 0,
-      height: '100dvh',
-      display: 'flex',
-      flexDirection: 'column',
-      background: '#000',
+      overflowY: 'auto',
       paddingTop: 'env(safe-area-inset-top)',
       paddingBottom: 'env(safe-area-inset-bottom)',
-      zIndex: 1000,
-      boxSizing: 'border-box'
+      background: '#000',
+      display: 'flex',
+      flexDirection: 'column',
+      zIndex: 1000
     }}>
       {/* Header */}
       <div style={{
