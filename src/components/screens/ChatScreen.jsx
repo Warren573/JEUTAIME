@@ -3,6 +3,7 @@ import { awardPoints } from '../../utils/pointsSystem';
 import { updateUserStats, addPointsToUser, triggerBotAutoReply, getUserById } from '../../utils/demoUsers';
 import GiftSelector from '../gifts/GiftSelector';
 import UserAvatar from '../avatar/UserAvatar';
+import BackButton from '../common/BackButton';
 
 export default function ChatScreen({ currentUser, matchedUser, onBack }) {
   const [messages, setMessages] = useState([]);
@@ -180,50 +181,25 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
 
   return (
     <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
+      minHeight: '100dvh',
+      maxHeight: '100dvh',
       overflowY: 'auto',
       paddingBottom: 'env(safe-area-inset-bottom)',
       background: '#000',
       display: 'flex',
-      flexDirection: 'column',
-      zIndex: 1000
+      flexDirection: 'column'
     }}>
+      <BackButton onClick={onBack} />
+
       {/* Header */}
       <div style={{
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         padding: '20px',
-        paddingTop: 'calc(env(safe-area-inset-top) + 20px)',
+        paddingTop: 'calc(20px + env(safe-area-inset-top))',
         borderRadius: '0 0 20px 20px',
         marginBottom: '15px',
-        boxShadow: '0 5px 15px rgba(102, 126, 234, 0.3)',
-        position: 'relative'
+        boxShadow: '0 5px 15px rgba(102, 126, 234, 0.3)'
       }}>
-        <button
-          onClick={onBack}
-          style={{
-            position: 'absolute',
-            top: 'calc(env(safe-area-inset-top) + 10px)',
-            left: '10px',
-            width: '40px',
-            height: '40px',
-            background: 'var(--color-cream)',
-            border: '2px solid var(--color-brown-light)',
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            fontSize: '20px',
-            boxShadow: 'var(--shadow-md)',
-            zIndex: 10
-          }}
-        >
-          ←
-        </button>
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
           {/* Avatar/Photo avec floutage progressif */}
           <div style={{

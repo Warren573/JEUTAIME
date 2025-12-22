@@ -3,6 +3,7 @@ import GiftSelector from '../gifts/GiftSelector';
 import MagicEffect from '../effects/MagicEffect';
 import MagicGiftsPanel from '../MagicGiftsPanel';
 import Avatar from 'avataaars';
+import BackButton from '../common/BackButton';
 import { generateAvatarOptions } from '../../utils/avatarGenerator';
 import {
   loadBarState,
@@ -325,47 +326,24 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
 
   return (
     <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
+      minHeight: '100dvh',
+      maxHeight: '100dvh',
       overflowY: 'auto',
       paddingBottom: 'calc(70px + env(safe-area-inset-bottom))',
       background: 'var(--color-beige-light)',
-      zIndex: 1000
+      display: 'flex',
+      flexDirection: 'column'
     }}>
+      <BackButton onClick={() => setSelectedSalon(null)} />
+
       {/* En-tête du salon */}
       <div style={{
         background: salon?.gradient || 'linear-gradient(135deg, #667eea, #764ba2)',
         padding: 'var(--spacing-lg)',
-        paddingTop: 'calc(env(safe-area-inset-top) + var(--spacing-lg))',
+        paddingTop: 'calc(var(--spacing-lg) + env(safe-area-inset-top))',
         boxShadow: 'var(--shadow-md)',
-        borderBottom: '4px solid rgba(0,0,0,0.2)',
-        position: 'relative'
+        borderBottom: '4px solid rgba(0,0,0,0.2)'
       }}>
-        <button
-          onClick={() => setSelectedSalon(null)}
-          style={{
-            position: 'absolute',
-            top: 'calc(env(safe-area-inset-top) + 10px)',
-            left: '10px',
-            width: '40px',
-            height: '40px',
-            background: 'var(--color-cream)',
-            border: '2px solid var(--color-brown-light)',
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            fontSize: '20px',
-            boxShadow: 'var(--shadow-md)',
-            zIndex: 10
-          }}
-        >
-          ←
-        </button>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px' }}>
 
           {/* Timer discret en haut à droite */}
