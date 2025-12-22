@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { awardPoints, checkAndAwardBadge } from '../../utils/pointsSystem';
+import BackButton from '../common/BackButton';
 
 export default function MorpionGame({ setGameScreen, morpionBoard, setMorpionBoard, morpionTurn, setMorpionTurn, currentUser, setUserCoins }) {
   const calculateWinner = (squares) => {
@@ -81,40 +82,35 @@ export default function MorpionGame({ setGameScreen, morpionBoard, setMorpionBoa
 
   return (
     <div style={{
-      height: '100vh',
-      overflowY: 'auto',
-      paddingBottom: '100px',
+      height: '100dvh',
+      overflow: 'hidden',
+      
+      paddingBottom: 'calc(70px + env(safe-area-inset-bottom))',
       background: 'var(--color-beige-light)',
-      padding: 'var(--spacing-md)'
+      display: 'flex',
+      flexDirection: 'column',
+      boxSizing: 'border-box'
     }}>
-      <button
-        onClick={() => setGameScreen(null)}
-        style={{
-          padding: '12px 24px',
-          background: 'var(--color-brown)',
-          border: '2px solid var(--color-gold)',
-          color: 'var(--color-cream)',
-          borderRadius: 'var(--border-radius-md)',
-          marginBottom: '20px',
-          cursor: 'pointer',
-          fontWeight: '700',
-          fontSize: '1rem',
-          boxShadow: 'var(--shadow-md)'
-        }}>
-        ← Retour aux jeux
-      </button>
-      <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600', color: 'var(--color-brown-dark)' }}>⭕ Morpion</h2>
-      <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '30px', textAlign: 'center' }}>
-        <p style={{ fontSize: '16px', marginBottom: '20px', fontWeight: '600' }}>Joueur: {morpionTurn}</p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 80px)', gap: '5px', margin: '0 auto 30px', width: 'fit-content' }}>
-          {morpionBoard.map((val, idx) => (
-            <button key={idx} onClick={() => handleMorpionClick(idx)} style={{ width: '80px', height: '80px', fontSize: '32px', background: '#0a0a0a', border: '2px solid #333', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', color: val === 'X' ? '#E91E63' : '#2196F3' }}>
-              {val}
-            </button>
-          ))}
+      <BackButton onClick={() => setGameScreen(null)} />
+
+      <div style={{
+        flex: 1,
+        overflow: 'auto',
+        padding: 'var(--spacing-md)'
+      }}>
+        <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600', color: 'var(--color-brown-dark)' }}>⭕ Morpion</h2>
+        <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '30px', textAlign: 'center' }}>
+          <p style={{ fontSize: '16px', marginBottom: '20px', fontWeight: '600' }}>Joueur: {morpionTurn}</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 80px)', gap: '5px', margin: '0 auto 30px', width: 'fit-content' }}>
+            {morpionBoard.map((val, idx) => (
+              <button key={idx} onClick={() => handleMorpionClick(idx)} style={{ width: '80px', height: '80px', fontSize: '32px', background: '#0a0a0a', border: '2px solid #333', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', color: val === 'X' ? '#E91E63' : '#2196F3' }}>
+                {val}
+              </button>
+            ))}
+          </div>
+          {winner && <p style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}>Gagnant: {winner}!</p>}
+          <button onClick={() => { setMorpionBoard(Array(9).fill(null)); setMorpionTurn('X'); }} style={{ padding: '12px 24px', background: 'linear-gradient(135deg, #E91E63, #C2185B)', border: 'none', color: 'white', borderRadius: '10px', cursor: 'pointer', fontWeight: '600' }}>Nouvelle partie</button>
         </div>
-        {winner && <p style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}>Gagnant: {winner}!</p>}
-        <button onClick={() => { setMorpionBoard(Array(9).fill(null)); setMorpionTurn('X'); }} style={{ padding: '12px 24px', background: 'linear-gradient(135deg, #E91E63, #C2185B)', border: 'none', color: 'white', borderRadius: '10px', cursor: 'pointer', fontWeight: '600' }}>Nouvelle partie</button>
       </div>
     </div>
   );

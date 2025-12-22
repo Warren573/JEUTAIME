@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getTitleFromPoints } from '../../config/gameConfig';
 import UserAvatar from '../avatar/UserAvatar';
 
-export default function RankingScreen({ currentUser }) {
+export default function RankingScreen({ currentUser, isEmbedded = false }) {
   const [rankings, setRankings] = useState([]);
   const [myRank, setMyRank] = useState(null);
 
@@ -39,13 +39,9 @@ export default function RankingScreen({ currentUser }) {
 
   const currentUserTitle = getTitleFromPoints(currentUser?.points || 0);
 
-  return (
-    <div style={{
-      height: '100vh',
-      overflowY: 'auto',
-      paddingBottom: '100px',
-      background: 'var(--color-beige-light)'
-    }}>
+  // Contenu commun à extraire
+  const renderContent = () => (
+    <>
       {/* En-tête style Journal */}
       <div style={{
         background: 'var(--color-cream)',
@@ -320,6 +316,35 @@ export default function RankingScreen({ currentUser }) {
         </div>
       </div>
       </div>
+    </>
+  );
+
+  // Layout pour mode embedded (dans SocialScreen)
+  if (isEmbedded) {
+    return (
+      <div style={{
+        height: '100%',
+        overflowY: 'auto',
+        background: 'var(--color-beige-light)'
+      }}>
+        {renderContent()}
+      </div>
+    );
+  }
+
+  // Layout pour mode standalone (écran principal)
+  return (
+    <div style={{
+      minHeight: '100dvh',
+      maxHeight: '100dvh',
+      overflowY: 'auto',
+      paddingTop: 'env(safe-area-inset-top)',
+      paddingBottom: 'max(80px, calc(70px + env(safe-area-inset-bottom)))',
+      background: 'var(--color-beige-light)',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
+      {renderContent()}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Avatar from 'avataaars';
+import BackButton from '../common/BackButton';
 
 export default function AvatarEditorScreen({ currentUser, setCurrentUser, onClose }) {
   // Options d'avatar
@@ -186,10 +187,14 @@ export default function AvatarEditorScreen({ currentUser, setCurrentUser, onClos
 
   return (
     <div style={{
-      height: '100vh',
+      minHeight: '100dvh',
+      maxHeight: '100dvh',
       overflowY: 'auto',
-      paddingBottom: '100px',
-      background: 'var(--color-beige-light)'
+      paddingTop: 'env(safe-area-inset-top)',
+      paddingBottom: 'max(80px, calc(70px + env(safe-area-inset-bottom)))',
+      background: 'var(--color-beige-light)',
+      display: 'flex',
+      flexDirection: 'column'
     }}>
       {/* Header */}
       <div style={{
@@ -202,23 +207,7 @@ export default function AvatarEditorScreen({ currentUser, setCurrentUser, onClos
         top: 0,
         zIndex: 100
       }}>
-        <button
-          onClick={onClose}
-          style={{
-            position: 'absolute',
-            top: '10px',
-            left: '10px',
-            background: 'var(--color-gold)',
-            border: '2px solid var(--color-brown-dark)',
-            borderRadius: '8px',
-            padding: '8px 16px',
-            cursor: 'pointer',
-            fontWeight: '600',
-            minHeight: '48px'
-          }}
-        >
-          ← Retour
-        </button>
+        <BackButton onClick={onClose} />
         <h1 style={{
           fontFamily: 'var(--font-heading)',
           fontSize: '2rem',

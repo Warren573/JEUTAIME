@@ -1,5 +1,6 @@
 import React from 'react';
 import { journalNews } from '../../data/appData';
+import ScreenHeader from '../common/ScreenHeader';
 
 export default function JournalScreen({ currentUser }) {
   // Données simulées pour les différentes sections
@@ -34,43 +35,17 @@ export default function JournalScreen({ currentUser }) {
       minHeight: '100dvh',
       maxHeight: '100dvh',
       overflowY: 'auto',
+      paddingTop: 'env(safe-area-inset-top)',
       paddingBottom: 'max(80px, calc(70px + env(safe-area-inset-bottom)))',
       background: 'var(--color-beige-light)',
       display: 'flex',
       flexDirection: 'column'
     }}>
-      {/* En-tête Journal - Style gazette */}
-      <div style={{
-        background: 'var(--color-cream)',
-        borderBottom: '4px double var(--color-brown-dark)',
-        padding: 'var(--spacing-lg)',
-        marginBottom: 'var(--spacing-lg)',
-        boxShadow: 'var(--shadow-md)'
-      }}>
-        <h1 style={{
-          fontFamily: 'var(--font-heading)',
-          fontSize: '2.5rem',
-          textAlign: 'center',
-          margin: '0 0 var(--spacing-xs) 0',
-          color: 'var(--color-text-primary)',
-          textTransform: 'uppercase',
-          letterSpacing: '2px',
-          borderBottom: '2px solid var(--color-text-primary)',
-          paddingBottom: 'var(--spacing-sm)'
-        }}>
-          JOURNAL
-        </h1>
-        <p style={{
-          textAlign: 'center',
-          fontFamily: 'var(--font-heading)',
-          fontSize: '0.9rem',
-          color: 'var(--color-text-secondary)',
-          margin: 0,
-          fontStyle: 'italic'
-        }}>
-          Actualités de la communauté
-        </p>
-      </div>
+      <ScreenHeader
+        icon="📰"
+        title="JOURNAL"
+        subtitle="Actualités de la communauté"
+      />
 
       {/* Grille de sections style journal */}
       <div style={{ padding: '0 var(--spacing-sm)' }}>
@@ -130,7 +105,6 @@ export default function JournalScreen({ currentUser }) {
             }}>
               <h3 style={{
                 fontFamily: 'var(--font-heading)',
-                fontSize: '1rem',
                 color: 'var(--color-text-primary)',
                 marginBottom: 'var(--spacing-sm)',
                 borderBottom: '1px solid var(--color-text-primary)',
@@ -159,7 +133,6 @@ export default function JournalScreen({ currentUser }) {
             }}>
               <h3 style={{
                 fontFamily: 'var(--font-heading)',
-                fontSize: '1rem',
                 color: 'var(--color-text-primary)',
                 marginBottom: 'var(--spacing-sm)',
                 borderBottom: '1px solid var(--color-text-primary)',

@@ -11,7 +11,7 @@ export default function Navigation({ navItems, screen, setScreen }) {
       margin: '0 auto',
       background: 'var(--color-brown-dark)',
       borderTop: '2px solid var(--color-gold)',
-      padding: '5px 4px max(6px, env(safe-area-inset-bottom))',
+      padding: '5px 4px env(safe-area-inset-bottom)',
       display: 'grid',
       gridTemplateColumns: 'repeat(5, 1fr)',
       gap: '4px',
@@ -32,12 +32,12 @@ export default function Navigation({ navItems, screen, setScreen }) {
               color: isActive ? 'var(--color-brown-dark)' : 'var(--color-tan)',
               cursor: 'pointer',
               display: 'flex',
-              flexDirection: 'column',
+              flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '3px',
-              fontSize: '10px',
-              padding: '7px 4px',
+              gap: '6px',
+              fontSize: '11px',
+              padding: '8px 6px',
               minHeight: '48px',
               fontWeight: isActive ? '700' : '500',
               borderRadius: '6px',
@@ -59,29 +59,15 @@ export default function Navigation({ navItems, screen, setScreen }) {
             }}
           >
             <div style={{
-              fontSize: '22px',
+              fontSize: '30px',
               filter: isActive ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' : 'none',
               transition: 'all var(--transition-normal)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: '28px',
-              height: '28px',
               lineHeight: '1'
             }}>
               {nav.icon}
-            </div>
-            <div style={{
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              textAlign: 'center',
-              lineHeight: '1',
-              fontFamily: 'var(--font-primary)',
-              width: '100%',
-              maxWidth: '100%'
-            }}>
-              {nav.label}
             </div>
           </button>
         );

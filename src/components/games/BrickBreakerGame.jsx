@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { awardPoints, checkAndAwardBadge } from '../../utils/pointsSystem';
+import BackButton from '../common/BackButton';
 
 export default function BrickBreakerGame({ setGameScreen, currentUser, setUserCoins }) {
   const canvasRef = useRef(null);
@@ -343,31 +344,23 @@ export default function BrickBreakerGame({ setGameScreen, currentUser, setUserCo
 
   return (
     <div style={{
-      height: '100vh',
-      overflowY: 'auto',
-      paddingBottom: '100px',
+      height: '100dvh',
+      overflow: 'hidden',
+      
+      paddingBottom: 'calc(70px + env(safe-area-inset-bottom))',
       background: 'var(--color-beige-light)',
-      padding: 'var(--spacing-md)'
+      display: 'flex',
+      flexDirection: 'column',
+      boxSizing: 'border-box'
     }}>
-      <button
-        onClick={() => setGameScreen(null)}
-        style={{
-          padding: '12px 24px',
-          background: 'var(--color-brown)',
-          border: '2px solid var(--color-gold)',
-          color: 'var(--color-cream)',
-          borderRadius: 'var(--border-radius-md)',
-          marginBottom: '20px',
-          cursor: 'pointer',
-          fontWeight: '700',
-          fontSize: '1rem',
-          boxShadow: 'var(--shadow-md)'
-        }}
-      >
-        ← Retour aux jeux
-      </button>
+      <BackButton onClick={() => setGameScreen(null)} />
 
-      <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600', color: 'var(--color-brown-dark)' }}>🧱 Casse Brique</h2>
+      <div style={{
+        flex: 1,
+        overflow: 'auto',
+        padding: 'var(--spacing-md)'
+      }}>
+        <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600', color: 'var(--color-brown-dark)' }}>🧱 Casse Brique</h2>
 
       <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '15px', textAlign: 'center' }}>
         <div style={{ marginBottom: '15px', color: '#888' }}>
@@ -433,6 +426,7 @@ export default function BrickBreakerGame({ setGameScreen, currentUser, setUserCo
         >
           {gameRunning ? '🎮 Jeu en cours...' : gameWon || gameOver ? '🔄 Rejouer' : '▶️ Démarrer'}
         </button>
+      </div>
       </div>
     </div>
   );

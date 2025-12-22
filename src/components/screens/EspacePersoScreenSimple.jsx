@@ -33,6 +33,7 @@ export default function EspacePersoScreenSimple({
       minHeight: '100dvh',
       maxHeight: '100dvh',
       overflowY: 'auto',
+      paddingTop: 'env(safe-area-inset-top)',
       paddingBottom: 'max(80px, calc(70px + env(safe-area-inset-bottom)))',
       background: 'var(--color-beige-light)',
       display: 'flex',
@@ -125,7 +126,10 @@ export default function EspacePersoScreenSimple({
         flexDirection: 'column',
         gap: '20px'
       }}>
-        {/* Offrandes Reçues */}
+        {/* 1. Règles du jeu */}
+        <ReglesSection />
+
+        {/* 2. Offrandes Reçues */}
         <OffrandesRecuesSection currentUser={currentUser} />
 
         {/* 3. Inventaire Magique */}
@@ -141,6 +145,169 @@ export default function EspacePersoScreenSimple({
         {/* 5. Stats Sociales */}
         <StatsSocialesSection currentUser={currentUser} />
       </div>
+    </div>
+  );
+}
+
+// 6. RÈGLES DU JEU
+function ReglesSection() {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <div style={{
+      background: 'var(--color-cream)',
+      borderRadius: 'var(--border-radius-lg)',
+      padding: '25px',
+      border: '2px solid var(--color-tan)',
+      boxShadow: 'var(--shadow-md)'
+    }}>
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        style={{
+          width: '100%',
+          background: 'none',
+          border: 'none',
+          padding: 0,
+          cursor: 'pointer',
+          textAlign: 'left'
+        }}
+      >
+        <h3 style={{
+          fontSize: '1.5rem',
+          marginBottom: isExpanded ? '20px' : 0,
+          color: 'var(--color-text-primary)',
+          fontFamily: 'var(--font-heading)',
+          borderBottom: '2px solid var(--color-gold)',
+          paddingBottom: 'var(--spacing-xs)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          <span>📖 Règles du Jeu</span>
+          <span style={{ fontSize: '1rem' }}>{isExpanded ? '▼' : '▶'}</span>
+        </h3>
+      </button>
+
+      {isExpanded && (
+        <div style={{
+          color: 'var(--color-text-primary)',
+          fontSize: '0.95rem',
+          lineHeight: '1.6'
+        }}>
+          <div style={{ marginBottom: '20px', textAlign: 'center', fontStyle: 'italic' }}>
+            <p style={{ margin: '10px 0', fontSize: '1.1rem', fontWeight: '600' }}>Bienvenue sur JeuTaime 💖</p>
+            <p style={{ margin: '10px 0' }}>JeuTaime est une application de rencontres sous forme de jeu social.</p>
+            <p style={{ margin: '10px 0' }}>Le principe est simple : interagir avec les autres pour créer des échanges, s'amuser et, pourquoi pas, faire de vraies rencontres.</p>
+          </div>
+
+          <div style={{ marginBottom: '20px' }}>
+            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.2rem', marginBottom: '10px' }}>🎯 LE BUT DU JEU</h4>
+            <p style={{ margin: '10px 0' }}>Sur JeuTaime, le but n'est pas de collectionner des profils. Le but est de :</p>
+            <ul style={{ marginLeft: '20px' }}>
+              <li>discuter</li>
+              <li>réagir</li>
+              <li>jouer</li>
+              <li>écrire</li>
+              <li>créer du lien</li>
+            </ul>
+            <p style={{ margin: '10px 0', fontWeight: '600' }}>👉 Plus tu interagis, plus tu progresses.</p>
+          </div>
+
+          <div style={{ marginBottom: '20px' }}>
+            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.2rem', marginBottom: '10px' }}>💌 LES LETTRES (CŒUR DE L'APP)</h4>
+            <p style={{ margin: '10px 0' }}>Les lettres sont au centre de JeuTaime.</p>
+            <ul style={{ marginLeft: '20px' }}>
+              <li>Envoyer une lettre : +10 points</li>
+              <li>Recevoir une lettre : +15 points</li>
+            </ul>
+            <p style={{ margin: '10px 0', fontWeight: '600' }}>🔓 Photos de profil</p>
+            <p style={{ margin: '10px 0' }}>Les photos sont floues au départ. Pour les déverrouiller : au minimum 10 lettres échangées chacun.</p>
+            <p style={{ margin: '10px 0', fontStyle: 'italic' }}>👉 JeuTaime privilégie la personnalité, les mots et les échanges avant l'image.</p>
+          </div>
+
+          <div style={{ marginBottom: '20px' }}>
+            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.2rem', marginBottom: '10px' }}>😊 SOURIRES & 😬 GRIMACES</h4>
+            <ul style={{ marginLeft: '20px' }}>
+              <li>😊 Sourire : le profil te plaît (style, humour, vibe)</li>
+              <li>😬 Grimace : le profil ne te correspond pas</li>
+            </ul>
+            <p style={{ margin: '10px 0', fontWeight: '600' }}>Effets :</p>
+            <ul style={{ marginLeft: '20px' }}>
+              <li>Sourire envoyé : +5 points</li>
+              <li>Sourire reçu : +10 points</li>
+              <li>Grimace reçue : -5 points</li>
+            </ul>
+          </div>
+
+          <div style={{ marginBottom: '20px' }}>
+            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.2rem', marginBottom: '10px' }}>💘 MATCHS</h4>
+            <p style={{ margin: '10px 0' }}>Un match se crée lorsque deux personnes se sourient mutuellement.</p>
+            <ul style={{ marginLeft: '20px' }}>
+              <li>Bonus : +50 points chacun</li>
+              <li>Un petit questionnaire de compatibilité valide le match</li>
+            </ul>
+          </div>
+
+          <div style={{ marginBottom: '20px' }}>
+            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.2rem', marginBottom: '10px' }}>🏛️ LES SALONS DE DISCUSSION</h4>
+            <p style={{ margin: '10px 0' }}>Dans un salon, tu peux :</p>
+            <ul style={{ marginLeft: '20px' }}>
+              <li>discuter librement</li>
+              <li>observer avant de participer</li>
+              <li>rencontrer plusieurs personnes en même temps</li>
+              <li>participer à une histoire collective</li>
+            </ul>
+            <p style={{ margin: '10px 0', fontWeight: '600' }}>📖 Histoire collective :</p>
+            <ul style={{ marginLeft: '20px' }}>
+              <li>Ajouter une phrase : +5 points</li>
+              <li>Histoire complétée : bonus collectif +50 points</li>
+            </ul>
+          </div>
+
+          <div style={{ marginBottom: '20px' }}>
+            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.2rem', marginBottom: '10px' }}>🎮 LES MINI-JEUX</h4>
+            <p style={{ margin: '10px 0' }}>Jeux disponibles : Pong, Morpion, Memory, Whack-a-mole</p>
+            <ul style={{ marginLeft: '20px' }}>
+              <li>Victoire : +50 points</li>
+              <li>Défaite : -10 points</li>
+            </ul>
+          </div>
+
+          <div style={{ marginBottom: '20px' }}>
+            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.2rem', marginBottom: '10px' }}>🐾 L'ANIMAL VIRTUEL</h4>
+            <p style={{ margin: '10px 0' }}>Tu peux adopter un seul animal à la fois.</p>
+            <p style={{ margin: '10px 0' }}>Ton animal a 4 jauges simples : 🍽️ Faim, 😊 Bonheur, ⚡ Énergie, 🧼 Propreté</p>
+            <p style={{ margin: '10px 0', fontWeight: '600' }}>🐶 Réactions de l'animal</p>
+            <p style={{ margin: '10px 0' }}>Ton animal est vivant et expressif. Ces réactions sont visibles par les autres et rendent ton profil plus vivant.</p>
+          </div>
+
+          <div style={{ marginBottom: '20px' }}>
+            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.2rem', marginBottom: '10px' }}>🏅 POINTS, NIVEAUX & BADGES</h4>
+            <p style={{ margin: '10px 0' }}>Chaque action te fait gagner des points pour monter de niveau et débloquer des titres.</p>
+            <p style={{ margin: '10px 0', fontWeight: '600' }}>🌟 Profil de la semaine</p>
+            <p style={{ margin: '10px 0' }}>Chaque semaine, la communauté met en avant 1 profil féminin et 1 profil masculin pour leur originalité et implication.</p>
+          </div>
+
+          <div style={{ marginBottom: '20px' }}>
+            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.2rem', marginBottom: '10px' }}>🎁 CADEAUX & 🔮 MAGIE</h4>
+            <p style={{ margin: '10px 0' }}>Les cadeaux servent à faire plaisir et marquer les esprits. Les sorts ajoutent du fun dans les salons.</p>
+          </div>
+
+          <div style={{
+            marginTop: '30px',
+            padding: '20px',
+            background: 'var(--color-beige-light)',
+            borderRadius: '10px',
+            textAlign: 'center'
+          }}>
+            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.3rem', marginBottom: '15px' }}>❤️ L'ESPRIT JEUTAIME</h4>
+            <p style={{ margin: '10px 0', fontWeight: '600', fontSize: '1.1rem' }}>👉 Prendre le temps</p>
+            <p style={{ margin: '10px 0', fontWeight: '600', fontSize: '1.1rem' }}>👉 Interagir sincèrement</p>
+            <p style={{ margin: '10px 0', fontWeight: '600', fontSize: '1.1rem' }}>👉 Jouer pour créer du lien</p>
+            <p style={{ margin: '20px 0', fontSize: '1.2rem' }}>Bienvenue dans le jeu 💖</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

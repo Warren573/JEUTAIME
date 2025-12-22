@@ -12,6 +12,8 @@ import {
   getBarName,
   getTimeRemaining
 } from '../../utils/barExchangeSystem';
+import ScreenHeader from '../common/ScreenHeader';
+import BackButton from '../common/BackButton';
 
 export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, setSelectedSalon, adminMode, isAdminAuthenticated, currentUser, userCoins, setUserCoins, setScreen, setCurrentUser }) {
   const [magicStates, setMagicStates] = useState({});
@@ -96,62 +98,78 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
 
   return (
     <div style={{
-      minHeight: '100dvh',
-      maxHeight: '100dvh',
-      overflowY: 'auto',
-      paddingBottom: 'max(80px, calc(70px + env(safe-area-inset-bottom)))',
+      height: '100dvh',
+      overflow: 'hidden',
+      paddingTop: 'env(safe-area-inset-top)',
+      paddingBottom: 'calc(60px + env(safe-area-inset-bottom))',
       background: 'var(--color-beige-light)',
       display: 'flex',
-      flexDirection: 'column'
+      flexDirection: 'column',
+      boxSizing: 'border-box'
     }}>
       {/* Logo Social - Affiché uniquement quand aucun onglet actif */}
       {socialTab === null && (
-        <div style={{
-          background: 'var(--color-cream)',
-          borderBottom: '4px double var(--color-brown-dark)',
-          padding: 'var(--spacing-md)',
-          marginBottom: 'var(--spacing-md)',
-          boxShadow: 'var(--shadow-md)'
-        }}>
-          <h1 style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: '1.8rem',
-            textAlign: 'center',
-            margin: '0 0 var(--spacing-xs) 0',
-            color: 'var(--color-brown-dark)',
-            textTransform: 'uppercase',
-            letterSpacing: '2px',
-            borderBottom: '2px solid var(--color-text-primary)',
-            paddingBottom: 'var(--spacing-xs)'
+        <>
+          <div style={{ flexShrink: 0, marginBottom: '0' }}>
+            <div style={{
+              background: 'var(--color-cream)',
+              borderBottom: '4px double var(--color-brown-dark)',
+              padding: 'var(--spacing-sm)',
+              marginBottom: '0',
+              boxShadow: 'var(--shadow-md)'
+            }}>
+              <h1 style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: '1.5rem',
+                textAlign: 'center',
+                margin: '0 0 var(--spacing-xs) 0',
+                color: 'var(--color-brown-dark)',
+                textTransform: 'uppercase',
+                letterSpacing: '2px',
+                borderBottom: '2px solid var(--color-text-primary)',
+                paddingBottom: 'var(--spacing-xs)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
+              }}>
+                <span style={{ fontSize: '1.5rem', lineHeight: '1' }}>👥</span>
+                <span>SOCIAL</span>
+              </h1>
+              <p style={{
+                textAlign: 'center',
+                color: 'var(--color-text-secondary)',
+                fontSize: '0.85rem',
+                fontStyle: 'italic',
+                margin: 0
+              }}>
+                Choisis une catégorie
+              </p>
+            </div>
+          </div>
+          <div style={{
+            background: 'var(--color-cream)',
+            padding: 'var(--spacing-sm)',
+            marginBottom: '0',
+            flexShrink: 0
           }}>
-            👥 SOCIAL
-          </h1>
-          <p style={{
-            textAlign: 'center',
-            color: 'var(--color-text-secondary)',
-            fontSize: '0.95rem',
-            fontStyle: 'italic',
-            margin: 0
-          }}>
-            Choisis une catégorie
-          </p>
 
           {/* Bouteille à la mer */}
-          <div style={{ textAlign: 'center', marginTop: 'var(--spacing-md)' }}>
+          <div style={{ textAlign: 'center' }}>
             <button
               onClick={() => setShowBottleModal(true)}
               style={{
-                padding: '10px 20px',
+                padding: '8px 16px',
                 background: 'linear-gradient(135deg, #4FC3F7, #0288D1)',
                 border: '2px solid #0277BD',
                 borderRadius: '12px',
                 color: 'white',
                 fontWeight: '700',
-                fontSize: '0.9rem',
+                fontSize: '0.85rem',
                 cursor: 'pointer',
                 boxShadow: '0 4px 12px rgba(2,136,209,0.3)',
                 position: 'relative',
-                minHeight: '48px'
+                minHeight: '44px'
               }}
             >
               📜 Bouteille à la mer
@@ -173,19 +191,19 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
               )}
             </button>
           </div>
-
-          {adminMode && isAdminAuthenticated && socialTab === 'bars' && (
-            <div style={{ textAlign: 'center', marginTop: 'var(--spacing-sm)' }}>
-              <button
-                onClick={handleAdminCreateSalon}
-                className="btn-primary"
-                style={{ padding: 'var(--spacing-sm) var(--spacing-md)', fontSize: '0.875rem' }}
-              >
-                ➕ Nouveau Salon
-              </button>
-            </div>
-          )}
-        </div>
+            {currentUser?.premium && (
+              <div style={{ textAlign: 'center', marginTop: 'var(--spacing-xs)' }}>
+                <button
+                  onClick={handleAdminCreateSalon}
+                  className="btn-primary"
+                  style={{ padding: 'var(--spacing-xs) var(--spacing-sm)', fontSize: '0.8rem' }}
+                >
+                  ➕ Nouveau Salon
+                </button>
+              </div>
+            )}
+          </div>
+        </>
       )}
 
       {/* Onglets - Grille uniforme 2x2 - Affichés seulement si pas de tab actif */}
@@ -195,17 +213,19 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: 'var(--spacing-lg)'
+          padding: 'var(--spacing-sm)',
+          overflow: 'hidden',
+          minHeight: 0
         }}>
           <div style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
             gridTemplateRows: '1fr 1fr',
-            gap: 'var(--spacing-md)',
+            gap: 'var(--spacing-sm)',
             width: '100%',
             maxWidth: '600px',
-            height: '70vh',
-            maxHeight: '450px'
+            height: '100%',
+            maxHeight: '100%'
           }}>
             {['bars', 'ranking', 'games', 'adoption'].map((tab) => {
               const icons = {
@@ -225,14 +245,14 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                   key={tab}
                   onClick={() => setSocialTab(tab)}
                   style={{
-                    padding: 'var(--spacing-xl)',
+                    padding: 'var(--spacing-md)',
                     background: 'linear-gradient(135deg, var(--color-brown), var(--color-brown-dark))',
                     border: '3px solid var(--color-gold)',
                     color: 'var(--color-cream)',
                     borderRadius: 'var(--border-radius-xl)',
                     cursor: 'pointer',
                     fontWeight: '700',
-                    fontSize: '1.2rem',
+                    fontSize: '1.1rem',
                     transition: 'all var(--transition-normal)',
                     boxShadow: 'var(--shadow-lg)',
                     textAlign: 'center',
@@ -240,14 +260,14 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: 'var(--spacing-sm)'
+                    gap: 'var(--spacing-xs)'
                   }}
                   onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
                   onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
                   onTouchStart={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
                   onTouchEnd={(e) => e.currentTarget.style.transform = 'scale(1)'}
                 >
-                  <div style={{ fontSize: '4rem' }}>{icons[tab]}</div>
+                  <div style={{ fontSize: '3rem' }}>{icons[tab]}</div>
                   <div>{labels[tab]}</div>
                 </button>
               );
@@ -258,27 +278,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
 
       {/* Bouton retour quand un onglet est sélectionné */}
       {socialTab !== null && (
-        <div style={{ padding: '0 var(--spacing-sm)', marginTop: 'var(--spacing-md)', marginBottom: 'var(--spacing-md)' }}>
-          <button
-            onClick={() => setSocialTab(null)}
-            style={{
-              padding: 'var(--spacing-sm) var(--spacing-md)',
-              background: 'var(--color-brown-light)',
-              border: '2px solid var(--color-brown)',
-              borderRadius: 'var(--border-radius-md)',
-              color: 'var(--color-cream)',
-              fontSize: '0.9rem',
-              fontWeight: '600',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 'var(--spacing-xs)',
-              boxShadow: 'var(--shadow-sm)'
-            }}
-          >
-            ← Retour
-          </button>
-        </div>
+        <BackButton onClick={() => setSocialTab(null)} />
       )}
 
       {/* Section Bars */}
@@ -287,39 +287,15 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
           padding: '0 var(--spacing-sm)',
           position: 'relative',
           width: '100%',
-          boxSizing: 'border-box'
+          boxSizing: 'border-box',
+          flex: 1,
+          overflow: 'auto'
         }}>
-          {/* Header Salons */}
-          <div style={{
-            background: 'var(--color-cream)',
-            borderBottom: '4px double var(--color-brown-dark)',
-            padding: 'var(--spacing-lg)',
-            marginBottom: 'var(--spacing-lg)',
-            boxShadow: 'var(--shadow-md)'
-          }}>
-            <h1 style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: '2.5rem',
-              textAlign: 'center',
-              margin: '0 0 var(--spacing-xs) 0',
-              color: 'var(--color-brown-dark)',
-              textTransform: 'uppercase',
-              letterSpacing: '2px',
-              borderBottom: '2px solid var(--color-gold)',
-              paddingBottom: 'var(--spacing-xs)'
-            }}>
-              ✨ SALONS
-            </h1>
-            <p style={{
-              textAlign: 'center',
-              color: 'var(--color-text-secondary)',
-              fontSize: '0.95rem',
-              fontStyle: 'italic',
-              margin: 'var(--spacing-sm) 0 0 0'
-            }}>
-              Écrivez des histoires ensemble • Une phrase chacun • Timer 24h
-            </p>
-          </div>
+          <ScreenHeader
+            icon="✨"
+            title="SALONS"
+            subtitle="Écrivez des histoires ensemble • Une phrase chacun • Timer 24h"
+          />
 
           {/* Bouton vers liste complète des salons magiques */}
           <button
@@ -704,55 +680,46 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
       )}
 
       {socialTab === 'ranking' && (
-        <RankingScreen currentUser={currentUser} />
+        <div style={{ flex: 1, overflow: 'auto' }}>
+          <RankingScreen currentUser={currentUser} isEmbedded={true} />
+        </div>
       )}
 
       {socialTab === 'adoption' && (
-        <AdoptionScreen currentUser={currentUser} userCoins={userCoins} setUserCoins={setUserCoins} setCurrentUser={setCurrentUser} />
+        <div style={{ flex: 1, overflow: 'auto' }}>
+          <AdoptionScreen currentUser={currentUser} userCoins={userCoins} setUserCoins={setUserCoins} setCurrentUser={setCurrentUser} isEmbedded={true} />
+        </div>
       )}
 
       {socialTab === 'games' && (
-        <>
-          {/* Header Jeux */}
-          <div style={{
-            background: 'var(--color-cream)',
-            borderBottom: '4px double var(--color-brown-dark)',
-            padding: 'var(--spacing-lg)',
-            marginBottom: 'var(--spacing-lg)',
-            boxShadow: 'var(--shadow-md)'
-          }}>
-            <h1 style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: '2.5rem',
-              textAlign: 'center',
-              margin: '0 0 var(--spacing-xs) 0',
-              color: 'var(--color-brown-dark)',
-              textTransform: 'uppercase',
-              letterSpacing: '2px',
-              borderBottom: '2px solid var(--color-gold)',
-              paddingBottom: 'var(--spacing-xs)'
-            }}>
-              🎮 JEUX
-            </h1>
-            <p style={{
-              textAlign: 'center',
-              color: 'var(--color-text-secondary)',
-              fontSize: '0.95rem',
-              fontStyle: 'italic',
-              margin: 'var(--spacing-sm) 0 0 0'
-            }}>
-              Joue et gagne des pièces !
-            </p>
+        <div style={{
+          height: '100%',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          padding: '0 var(--spacing-sm)',
+          boxSizing: 'border-box'
+        }}>
+          <div style={{ flexShrink: 0 }}>
+            <ScreenHeader
+              icon="🎮"
+              title="JEUX"
+              subtitle="Joue et gagne des pièces !"
+            />
           </div>
 
           <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '12px',
-            padding: '0 var(--spacing-sm)',
-            width: '100%',
-            boxSizing: 'border-box'
+            flex: 1,
+            overflow: 'auto',
+            paddingBottom: 'var(--spacing-sm)'
           }}>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '12px',
+              width: '100%',
+              boxSizing: 'border-box'
+            }}>
             <div onClick={() => setGameScreen('reactivity')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
               <div style={{ fontSize: '36px', marginBottom: '8px' }}>⚡</div>
               <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Tape Taupe</h4>
@@ -783,8 +750,9 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
               <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Jeu des Cartes</h4>
               <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo - Gagne des pièces!</p>
             </div>
+            </div>
           </div>
-        </>
+        </div>
       )}
 
       {/* Modal Bouteille à la mer */}

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { addCoinsToUser, addPointsToUser, updateUserStats } from '../../utils/demoUsers';
+import BackButton from '../common/BackButton';
 
 export default function CardGame({
   setGameScreen,
@@ -128,32 +129,23 @@ export default function CardGame({
 
   return (
     <div style={{
-      height: '100vh',
-      overflowY: 'auto',
-      paddingBottom: '100px',
+      height: '100dvh',
+      overflow: 'hidden',
+      
+      paddingBottom: 'calc(70px + env(safe-area-inset-bottom))',
       background: 'var(--color-beige-light)',
-      padding: 'var(--spacing-md)',
-      width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
       boxSizing: 'border-box'
     }}>
-      <button
-        onClick={() => setGameScreen(null)}
-        style={{
-          padding: '12px 24px',
-          background: 'var(--color-brown)',
-          border: '2px solid var(--color-gold)',
-          color: 'var(--color-cream)',
-          borderRadius: 'var(--border-radius-md)',
-          marginBottom: '20px',
-          cursor: 'pointer',
-          fontWeight: '700',
-          fontSize: '1rem',
-          boxShadow: 'var(--shadow-md)'
-        }}
-      >
-        ← Retour aux jeux
-      </button>
-      <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600', color: 'var(--color-brown-dark)' }}>🎴 Jeu des Cartes</h2>
+      <BackButton onClick={() => setGameScreen(null)} />
+
+      <div style={{
+        flex: 1,
+        overflow: 'auto',
+        padding: 'var(--spacing-md)'
+      }}>
+        <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600', color: 'var(--color-brown-dark)' }}>🎴 Jeu des Cartes</h2>
       <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', width: '100%', boxSizing: 'border-box' }}>
         <p style={{ textAlign: 'center', fontSize: '16px', marginBottom: '10px', color: '#ccc' }}>{cardMessage}</p>
         <p style={{ textAlign: 'center', fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}>💰 Gains: {cardGains} pièces</p>
@@ -203,6 +195,7 @@ export default function CardGame({
             Rejouer
           </button>
         </div>
+      </div>
       </div>
     </div>
   );

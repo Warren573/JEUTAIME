@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { addCoinsToUser, addPointsToUser, updateUserStats } from '../../utils/demoUsers';
+import BackButton from '../common/BackButton';
 
 export default function WhackAMoleGame({ setGameScreen, moleBestScore, setMoleBestScore, currentUser, setUserCoins }) {
   const [localMoleScore, setLocalMoleScore] = useState(0);
@@ -100,30 +101,22 @@ export default function WhackAMoleGame({ setGameScreen, moleBestScore, setMoleBe
 
   return (
     <div style={{
-      height: '100vh',
-      overflowY: 'auto',
-      paddingBottom: '100px',
+      height: '100dvh',
+      overflow: 'hidden',
+      paddingBottom: 'calc(70px + env(safe-area-inset-bottom))',
       background: 'var(--color-beige-light)',
-      padding: 'var(--spacing-md)'
+      display: 'flex',
+      flexDirection: 'column',
+      boxSizing: 'border-box'
     }}>
-      <button
-        onClick={() => setGameScreen(null)}
-        style={{
-          padding: '12px 24px',
-          background: 'var(--color-brown)',
-          border: '2px solid var(--color-gold)',
-          color: 'var(--color-cream)',
-          borderRadius: 'var(--border-radius-md)',
-          marginBottom: '20px',
-          cursor: 'pointer',
-          fontWeight: '700',
-          fontSize: '1rem',
-          boxShadow: 'var(--shadow-md)'
-        }}
-      >
-        ← Retour aux jeux
-      </button>
-      <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600', color: 'var(--color-brown-dark)' }}>⚡ Tape Taupe</h2>
+      <BackButton onClick={() => setGameScreen(null)} />
+
+      <div style={{
+        flex: 1,
+        overflow: 'auto',
+        padding: 'var(--spacing-md)'
+      }}>
+        <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600', color: 'var(--color-brown-dark)' }}>⚡ Tape Taupe</h2>
 
       <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', textAlign: 'center' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', marginBottom: '20px', maxWidth: '300px', margin: '0 auto 20px' }}>
@@ -178,6 +171,7 @@ export default function WhackAMoleGame({ setGameScreen, moleBestScore, setMoleBe
         >
           {localGameActive ? 'Partie en cours...' : 'Jouer'}
         </button>
+      </div>
       </div>
     </div>
   );

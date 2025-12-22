@@ -230,7 +230,7 @@ function MainApp() {
 
   const navItems = [
     { icon: '⭐', label: 'Accueil', id: 'home' },
-    { icon: '👤', label: 'Profils', id: 'profiles' },
+    { icon: '🔍', label: 'Profils', id: 'profiles' },
     { icon: '👥', label: 'Social', id: 'social' },
     { icon: '💌', label: 'Lettres', id: 'letters' },
     { icon: '⚙️', label: 'Plus', id: 'settings' }

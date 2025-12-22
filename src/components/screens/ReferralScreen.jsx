@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ScreenHeader from '../common/ScreenHeader';
 
 export default function ReferralScreen({ currentUser }) {
   const [referralCode] = useState('JEUTAIME2024');
@@ -40,42 +41,17 @@ export default function ReferralScreen({ currentUser }) {
       minHeight: '100dvh',
       maxHeight: '100dvh',
       overflowY: 'auto',
+      paddingTop: 'env(safe-area-inset-top)',
       paddingBottom: 'max(80px, calc(70px + env(safe-area-inset-bottom)))',
       background: 'var(--color-beige-light)',
       display: 'flex',
       flexDirection: 'column'
     }}>
-      {/* En-tête */}
-      <div style={{
-        background: 'var(--color-cream)',
-        borderBottom: '4px double var(--color-brown-dark)',
-        padding: 'var(--spacing-lg)',
-        marginBottom: 'var(--spacing-lg)',
-        boxShadow: 'var(--shadow-md)'
-      }}>
-        <h1 style={{
-          fontFamily: 'var(--font-heading)',
-          fontSize: '2.5rem',
-          textAlign: 'center',
-          margin: '0 0 var(--spacing-xs) 0',
-          color: 'var(--color-brown-dark)',
-          textTransform: 'uppercase',
-          letterSpacing: '2px',
-          borderBottom: '2px solid var(--color-text-primary)',
-          paddingBottom: 'var(--spacing-xs)'
-        }}>
-          🤝 Parrainage
-        </h1>
-        <p style={{
-          textAlign: 'center',
-          color: 'var(--color-text-secondary)',
-          fontSize: '0.95rem',
-          fontStyle: 'italic',
-          margin: 0
-        }}>
-          Invitez vos amis et gagnez des récompenses
-        </p>
-      </div>
+      <ScreenHeader
+        icon="🤝"
+        title="Parrainage"
+        subtitle="Invitez vos amis et gagnez des récompenses"
+      />
 
       {/* Carte d'explication */}
       <div style={{ padding: '0 var(--spacing-sm)' }}>

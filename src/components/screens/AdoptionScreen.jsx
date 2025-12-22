@@ -10,8 +10,9 @@ import {
   getPetStatus,
   getPetInteraction
 } from '../../utils/petsSystem';
+import BackButton from '../common/BackButton';
 
-export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, setCurrentUser }) {
+export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, setCurrentUser, isEmbedded = false, onBack }) {
   const [adoptionTab, setAdoptionTab] = useState('mypets'); // 'mypets', 'adopt', 'incarnate'
   const [myPets, setMyPets] = useState([]);
   const [selectedPet, setSelectedPet] = useState(null);
@@ -186,21 +187,37 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
     return Object.values(PETS).find(p => p.id === petType);
   };
 
+  // Style pour le container principal
+  const containerStyle = isEmbedded ? {
+    height: '100%',
+    overflowY: 'auto',
+    background: 'var(--color-beige-light)'
+  } : {
+    minHeight: '100dvh',
+    maxHeight: '100dvh',
+    overflowY: 'auto',
+    paddingBottom: 'max(80px, calc(70px + env(safe-area-inset-bottom)))',
+    background: 'var(--color-beige-light)',
+    display: 'flex',
+    flexDirection: 'column'
+  };
+
+  // Style pour le header selon le mode
+  const headerStyle = {
+    background: 'var(--color-cream)',
+    borderBottom: '4px double var(--color-brown-dark)',
+    padding: isEmbedded ? 'var(--spacing-lg)' : 'var(--spacing-lg)',
+    paddingTop: isEmbedded ? 'var(--spacing-lg)' : 'calc(var(--spacing-lg) + env(safe-area-inset-top))',
+    marginBottom: 'var(--spacing-lg)',
+    boxShadow: 'var(--shadow-md)'
+  };
+
   return (
-    <div style={{
-      height: '100vh',
-      overflowY: 'auto',
-      paddingBottom: '100px',
-      background: 'var(--color-beige-light)'
-    }}>
+    <div style={containerStyle}>
+      {!isEmbedded && onBack && <BackButton onClick={onBack} />}
+
       {/* En-tête */}
-      <div style={{
-        background: 'var(--color-cream)',
-        borderBottom: '4px double var(--color-brown-dark)',
-        padding: 'var(--spacing-lg)',
-        marginBottom: 'var(--spacing-lg)',
-        boxShadow: 'var(--shadow-md)'
-      }}>
+      <div style={headerStyle}>
         <h1 style={{
           fontFamily: 'var(--font-heading)',
           fontSize: '2.5rem',

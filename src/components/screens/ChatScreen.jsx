@@ -3,6 +3,7 @@ import { awardPoints } from '../../utils/pointsSystem';
 import { updateUserStats, addPointsToUser, triggerBotAutoReply, getUserById } from '../../utils/demoUsers';
 import GiftSelector from '../gifts/GiftSelector';
 import UserAvatar from '../avatar/UserAvatar';
+import BackButton from '../common/BackButton';
 
 export default function ChatScreen({ currentUser, matchedUser, onBack }) {
   const [messages, setMessages] = useState([]);
@@ -180,36 +181,30 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
 
   return (
     <div style={{
-      height: 'calc(100vh - 80px)',
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      height: '100dvh',
       display: 'flex',
       flexDirection: 'column',
       background: '#000',
-      paddingBottom: '0'
+      paddingBottom: 'env(safe-area-inset-bottom)',
+      zIndex: 1000,
+      boxSizing: 'border-box'
     }}>
       {/* Header */}
       <div style={{
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         padding: '20px',
+        paddingTop: '20px',
+        marginTop: 'env(safe-area-inset-top)',
         borderRadius: '0 0 20px 20px',
         marginBottom: '15px',
         boxShadow: '0 5px 15px rgba(102, 126, 234, 0.3)'
       }}>
-        <button
-          onClick={onBack}
-          style={{
-            background: 'rgba(255,255,255,0.2)',
-            border: 'none',
-            color: 'white',
-            padding: '8px 15px',
-            borderRadius: '10px',
-            cursor: 'pointer',
-            marginBottom: '15px',
-            fontSize: '14px',
-            fontWeight: '600'
-          }}
-        >
-          ← Retour
-        </button>
+        <BackButton onClick={onBack} />
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
           {/* Avatar/Photo avec floutage progressif */}
