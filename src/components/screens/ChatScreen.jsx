@@ -198,8 +198,6 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
       <div style={{
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         padding: '20px',
-        paddingTop: '20px',
-        marginTop: 'env(safe-area-inset-top)',
         borderRadius: '0 0 20px 20px',
         marginBottom: '15px',
         boxShadow: '0 5px 15px rgba(102, 126, 234, 0.3)'

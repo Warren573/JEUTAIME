@@ -342,8 +342,6 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
       <div style={{
         background: salon?.gradient || 'linear-gradient(135deg, #667eea, #764ba2)',
         padding: 'var(--spacing-lg)',
-        paddingTop: 'var(--spacing-lg)',
-        marginTop: 'env(safe-area-inset-top)',
         boxShadow: 'var(--shadow-md)',
         borderBottom: '4px solid rgba(0,0,0,0.2)'
       }}>
