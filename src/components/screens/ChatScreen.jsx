@@ -186,7 +186,6 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
       right: 0,
       bottom: 0,
       overflowY: 'auto',
-      paddingTop: 'env(safe-area-inset-top)',
       paddingBottom: 'env(safe-area-inset-bottom)',
       background: '#000',
       display: 'flex',
@@ -197,6 +196,7 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
       <div style={{
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         padding: '20px',
+        paddingTop: 'calc(env(safe-area-inset-top) + 20px)',
         borderRadius: '0 0 20px 20px',
         marginBottom: '15px',
         boxShadow: '0 5px 15px rgba(102, 126, 234, 0.3)',
@@ -206,7 +206,7 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
           onClick={onBack}
           style={{
             position: 'absolute',
-            top: '10px',
+            top: 'calc(env(safe-area-inset-top) + 10px)',
             left: '10px',
             width: '40px',
             height: '40px',
