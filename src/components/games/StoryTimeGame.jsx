@@ -1,4 +1,5 @@
 import React from 'react';
+import ScreenHeader from '../common/ScreenHeader';
 
 export default function StoryTimeGame({ setGameScreen, storyText, setStoryText, storyInput, setStoryInput }) {
   return (
@@ -13,12 +14,18 @@ export default function StoryTimeGame({ setGameScreen, storyText, setStoryText, 
       flexDirection: 'column',
       boxSizing: 'border-box'
     }}>
+      <ScreenHeader
+        icon="📖"
+        title="Continue l'histoire"
+        subtitle="Ajoute ta phrase à l'histoire collective !"
+        onBack={() => setGameScreen(null)}
+      />
+
       <div style={{
         flex: 1,
         overflow: 'auto',
-        padding: 'var(--spacing-md)'
+        padding: '0 var(--spacing-md) var(--spacing-md) var(--spacing-md)'
       }}>
-        <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600', color: 'var(--color-brown-dark)' }}>📖 Continue l'histoire</h2>
         <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px' }}>
           <div style={{ background: '#0a0a0a', borderRadius: '10px', padding: '15px', marginBottom: '15px', minHeight: '150px', maxHeight: '200px', overflowY: 'auto' }}>
             <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#ccc' }}>{storyText}</p>

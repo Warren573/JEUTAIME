@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { awardPoints, checkAndAwardBadge } from '../../utils/pointsSystem';
+import ScreenHeader from '../common/ScreenHeader';
 
 export default function BrickBreakerGame({ setGameScreen, currentUser, setUserCoins }) {
   const canvasRef = useRef(null);
@@ -353,13 +354,18 @@ export default function BrickBreakerGame({ setGameScreen, currentUser, setUserCo
       flexDirection: 'column',
       boxSizing: 'border-box'
     }}>
+      <ScreenHeader
+        icon="🧱"
+        title="Casse Brique"
+        subtitle="Détruis toutes les briques avec la balle !"
+        onBack={() => setGameScreen(null)}
+      />
+
       <div style={{
         flex: 1,
         overflow: 'auto',
-        padding: 'var(--spacing-md)'
+        padding: '0 var(--spacing-md) var(--spacing-md) var(--spacing-md)'
       }}>
-        <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600', color: 'var(--color-brown-dark)' }}>🧱 Casse Brique</h2>
-
       <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '15px', textAlign: 'center' }}>
         <div style={{ marginBottom: '15px', color: '#888' }}>
           {!gameRunning && !gameOver && !gameWon && (

@@ -1,14 +1,52 @@
 import React from 'react';
 
-export default function ScreenHeader({ icon, title, subtitle }) {
+export default function ScreenHeader({ icon, title, subtitle, onBack }) {
   return (
     <div style={{
       background: 'var(--color-cream)',
       borderBottom: '4px double var(--color-brown-dark)',
       padding: 'var(--spacing-lg)',
       marginBottom: 'var(--spacing-lg)',
-      boxShadow: 'var(--shadow-md)'
+      boxShadow: 'var(--shadow-md)',
+      position: 'relative'
     }}>
+      {/* Bouton retour optionnel */}
+      {onBack && (
+        <button
+          onClick={onBack}
+          style={{
+            position: 'absolute',
+            top: '10px',
+            left: '10px',
+            width: '35px',
+            height: '35px',
+            borderRadius: '50%',
+            border: '2px solid var(--color-brown-dark)',
+            background: 'rgba(255,255,255,0.8)',
+            color: 'var(--color-brown-dark)',
+            fontSize: '18px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            zIndex: 10,
+            backdropFilter: 'blur(10px)',
+            boxShadow: 'var(--shadow-sm)',
+            transition: 'all 0.2s'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(255,255,255,1)';
+            e.currentTarget.style.transform = 'scale(1.1)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(255,255,255,0.8)';
+            e.currentTarget.style.transform = 'scale(1)';
+          }}
+        >
+          ←
+        </button>
+      )}
+
       <h1 style={{
         fontFamily: 'var(--font-heading)',
         fontSize: '2rem',
