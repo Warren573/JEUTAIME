@@ -121,13 +121,13 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
           {/* Bouteille à la mer */}
           <div style={{
             padding: '0 var(--spacing-sm)',
-            marginBottom: 'var(--spacing-lg)'
+            marginBottom: 'var(--spacing-sm)'
           }}>
             <button
               onClick={() => setShowBottleModal(true)}
               style={{
                 width: '100%',
-                padding: '12px 16px',
+                padding: '14px 16px',
                 background: 'linear-gradient(135deg, #4FC3F7, #0288D1)',
                 border: '2px solid #0277BD',
                 borderRadius: '12px',
@@ -137,14 +137,14 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                 cursor: 'pointer',
                 boxShadow: '0 4px 12px rgba(2,136,209,0.3)',
                 position: 'relative',
-                minHeight: '50px',
+                minHeight: '54px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '8px'
               }}
             >
-              <span style={{ fontSize: '1.5rem' }}>📜</span>
+              <span style={{ fontSize: '1.8rem' }}>📜</span>
               <span>Bouteille à la mer</span>
               {unreadBottles > 0 && (
                 <span style={{
@@ -183,9 +183,10 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
         <div style={{
           flex: 1,
           display: 'flex',
-          alignItems: 'center',
+          alignItems: 'flex-start',
           justifyContent: 'center',
           padding: 'var(--spacing-sm)',
+          paddingTop: 'var(--spacing-md)',
           overflow: 'hidden',
           minHeight: 0
         }}>
@@ -193,11 +194,11 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
             gridTemplateRows: '1fr 1fr',
-            gap: 'var(--spacing-sm)',
+            gap: 'var(--spacing-md)',
             width: '100%',
             maxWidth: '600px',
-            height: '100%',
-            maxHeight: '100%'
+            height: 'auto',
+            aspectRatio: '1'
           }}>
             {['bars', 'ranking', 'games', 'adoption'].map((tab) => {
               const icons = {
@@ -217,14 +218,14 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                   key={tab}
                   onClick={() => setSocialTab(tab)}
                   style={{
-                    padding: 'var(--spacing-md)',
+                    padding: 'var(--spacing-lg)',
                     background: 'linear-gradient(135deg, var(--color-brown), var(--color-brown-dark))',
                     border: '3px solid var(--color-gold)',
                     color: 'var(--color-cream)',
                     borderRadius: 'var(--border-radius-xl)',
                     cursor: 'pointer',
                     fontWeight: '700',
-                    fontSize: '1.1rem',
+                    fontSize: '1.15rem',
                     transition: 'all var(--transition-normal)',
                     boxShadow: 'var(--shadow-lg)',
                     textAlign: 'center',
@@ -232,14 +233,15 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: 'var(--spacing-xs)'
+                    gap: 'var(--spacing-sm)',
+                    minHeight: '140px'
                   }}
                   onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
                   onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
                   onTouchStart={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
                   onTouchEnd={(e) => e.currentTarget.style.transform = 'scale(1)'}
                 >
-                  <div style={{ fontSize: '3rem' }}>{icons[tab]}</div>
+                  <div style={{ fontSize: '3.5rem' }}>{icons[tab]}</div>
                   <div>{labels[tab]}</div>
                 </button>
               );
