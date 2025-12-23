@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import BackButton from '../common/BackButton';
 
 export default function MemoriesScreen({ currentUser }) {
   const [selectedMemory, setSelectedMemory] = useState(null);
@@ -66,7 +65,6 @@ export default function MemoriesScreen({ currentUser }) {
           background: 'var(--color-brown-darker)',
           boxShadow: 'var(--shadow-md)'
         }}>
-          <BackButton onClick={() => setSelectedMemory(null)} />
         </div>
 
         {/* Contenu du souvenir */}

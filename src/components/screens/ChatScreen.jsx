@@ -180,50 +180,49 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
 
   return (
     <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
+      minHeight: '100dvh',
+      maxHeight: '100dvh',
       overflowY: 'auto',
       paddingBottom: 'env(safe-area-inset-bottom)',
       background: '#000',
       display: 'flex',
-      flexDirection: 'column',
-      zIndex: 1000
+      flexDirection: 'column'
     }}>
       {/* Header */}
       <div style={{
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         padding: '20px',
-        paddingTop: 'calc(env(safe-area-inset-top) + 20px)',
+        paddingTop: 'calc(20px + env(safe-area-inset-top))',
         borderRadius: '0 0 20px 20px',
         marginBottom: '15px',
         boxShadow: '0 5px 15px rgba(102, 126, 234, 0.3)',
         position: 'relative'
       }}>
+        {/* Bouton retour */}
         <button
           onClick={onBack}
           style={{
             position: 'absolute',
             top: 'calc(env(safe-area-inset-top) + 10px)',
             left: '10px',
-            width: '40px',
-            height: '40px',
-            background: 'var(--color-cream)',
-            border: '2px solid var(--color-brown-light)',
+            width: '35px',
+            height: '35px',
             borderRadius: '50%',
+            border: '2px solid white',
+            background: 'rgba(255,255,255,0.2)',
+            color: 'white',
+            fontSize: '18px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            fontSize: '20px',
-            boxShadow: 'var(--shadow-md)',
-            zIndex: 10
+            zIndex: 10,
+            backdropFilter: 'blur(10px)'
           }}
         >
           ←
         </button>
+
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
           {/* Avatar/Photo avec floutage progressif */}
           <div style={{

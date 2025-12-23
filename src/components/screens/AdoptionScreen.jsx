@@ -10,10 +10,9 @@ import {
   getPetStatus,
   getPetInteraction
 } from '../../utils/petsSystem';
-import BackButton from '../common/BackButton';
 
 export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, setCurrentUser, isEmbedded = false, onBack }) {
-  const [adoptionTab, setAdoptionTab] = useState('mypets'); // 'mypets', 'adopt', 'incarnate'
+  const [adoptionTab, setAdoptionTab] = useState('adopt'); // 'adopt', 'incarnate'
   const [myPets, setMyPets] = useState([]);
   const [selectedPet, setSelectedPet] = useState(null);
   const [interactionMessage, setInteractionMessage] = useState('');
@@ -214,8 +213,6 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
 
   return (
     <div style={containerStyle}>
-      {!isEmbedded && onBack && <BackButton onClick={onBack} />}
-
       {/* En-tête */}
       <div style={headerStyle}>
         <h1 style={{
@@ -242,6 +239,94 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
         </p>
       </div>
 
+      {/* Section d'introduction et règles */}
+      <div style={{
+        padding: '0 var(--spacing-md)',
+        marginBottom: 'var(--spacing-lg)'
+      }}>
+        <div style={{
+          background: 'linear-gradient(135deg, #fff3e0, #ffe0b2)',
+          borderRadius: 'var(--border-radius-xl)',
+          padding: 'var(--spacing-lg)',
+          border: '3px solid var(--color-brown-light)',
+          boxShadow: 'var(--shadow-lg)'
+        }}>
+          {/* Illustration SPA style */}
+          <div style={{
+            textAlign: 'center',
+            fontSize: '4rem',
+            marginBottom: 'var(--spacing-md)',
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '15px'
+          }}>
+            <span>🐶</span>
+            <span>🐱</span>
+            <span>🦊</span>
+            <span>🐼</span>
+          </div>
+
+          <h2 style={{
+            fontSize: '1.5rem',
+            fontWeight: '700',
+            color: 'var(--color-brown-dark)',
+            textAlign: 'center',
+            marginBottom: 'var(--spacing-md)',
+            borderBottom: '2px solid var(--color-brown-light)',
+            paddingBottom: 'var(--spacing-sm)'
+          }}>
+            🏠 Refuge d'Animaux Virtuels
+          </h2>
+
+          <div style={{
+            background: 'white',
+            borderRadius: 'var(--border-radius-md)',
+            padding: 'var(--spacing-md)',
+            marginBottom: 'var(--spacing-md)'
+          }}>
+            <p style={{
+              fontSize: '0.95rem',
+              lineHeight: '1.6',
+              color: 'var(--color-text-primary)',
+              margin: '0 0 var(--spacing-sm) 0'
+            }}>
+              Bienvenue au refuge ! Ici, tu peux adopter un compagnon virtuel et en prendre soin.
+              Chaque animal a sa personnalité et ses besoins uniques.
+            </p>
+          </div>
+
+          <div style={{
+            background: 'rgba(102, 126, 234, 0.1)',
+            borderRadius: 'var(--border-radius-md)',
+            padding: 'var(--spacing-md)',
+            borderLeft: '4px solid #667eea'
+          }}>
+            <h3 style={{
+              fontSize: '1.1rem',
+              fontWeight: '600',
+              color: 'var(--color-brown-dark)',
+              marginBottom: 'var(--spacing-sm)'
+            }}>
+              📋 Règles du jeu
+            </h3>
+            <ul style={{
+              margin: 0,
+              paddingLeft: '20px',
+              color: 'var(--color-text-primary)',
+              fontSize: '0.9rem',
+              lineHeight: '1.8'
+            }}>
+              <li><strong>Adopte</strong> un animal avec tes pièces 🪙</li>
+              <li><strong>Incarne-toi</strong> en ton animal préféré pour changer d'avatar 🎭</li>
+              <li><strong>Nourris, joue et nettoie</strong> ton animal pour maintenir ses stats 💪</li>
+              <li><strong>Gagne de l'XP</strong> et fais monter ton animal de niveau ⭐</li>
+              <li><strong>Attention !</strong> Les stats baissent avec le temps - reviens régulièrement ⏰</li>
+              <li>Tu ne peux avoir qu'<strong>une seule incarnation</strong> à la fois 🐾</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
       {/* Tabs */}
       <div style={{
         display: 'flex',
@@ -255,8 +340,8 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
           onClick={() => setAdoptionTab('adopt')}
           style={{
             flex: 1,
-            minWidth: '130px',
-            maxWidth: '180px',
+            minWidth: '150px',
+            maxWidth: '200px',
             padding: 'var(--spacing-md)',
             background: adoptionTab === 'adopt'
               ? 'linear-gradient(135deg, #667eea, #764ba2)'
@@ -277,8 +362,8 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
           onClick={() => setAdoptionTab('incarnate')}
           style={{
             flex: 1,
-            minWidth: '130px',
-            maxWidth: '180px',
+            minWidth: '150px',
+            maxWidth: '200px',
             padding: 'var(--spacing-md)',
             background: adoptionTab === 'incarnate'
               ? 'linear-gradient(135deg, #f093fb, #f5576c)'

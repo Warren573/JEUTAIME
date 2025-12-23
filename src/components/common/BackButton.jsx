@@ -21,7 +21,8 @@ export default function BackButton({ onClick, noSafeArea = false, absolute = fal
         boxShadow: 'var(--shadow-md)',
         transition: 'all var(--transition-normal)',
         zIndex: 100,
-        margin: '10px',
+        margin: '0',
+        marginTop: '-60px',
         flexShrink: 0
       }}
       onMouseEnter={(e) => {
