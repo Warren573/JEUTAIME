@@ -77,6 +77,7 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedSalon,
         icon="✨"
         title="SALONS"
         subtitle="Écrivez des histoires ensemble • Une phrase chacun • Timer 24h"
+        onBack={() => setScreen('social')}
       />
 
       {/* Bouton créer son salon (Premium) */}

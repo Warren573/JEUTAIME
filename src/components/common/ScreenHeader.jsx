@@ -57,6 +57,8 @@ export default function ScreenHeader({ icon, title, subtitle, onBack }) {
         letterSpacing: '2px',
         borderBottom: '2px solid var(--color-text-primary)',
         paddingBottom: 'var(--spacing-xs)',
+        paddingLeft: onBack ? '45px' : '0',
+        paddingRight: onBack ? '45px' : '0',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
