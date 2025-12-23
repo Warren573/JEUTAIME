@@ -110,69 +110,42 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
       {/* Logo Social - Affiché uniquement quand aucun onglet actif */}
       {socialTab === null && (
         <>
-          <div style={{ flexShrink: 0, marginBottom: '0' }}>
-            <div style={{
-              background: 'var(--color-cream)',
-              borderBottom: '4px double var(--color-brown-dark)',
-              padding: 'var(--spacing-sm)',
-              marginBottom: '0',
-              boxShadow: 'var(--shadow-md)'
-            }}>
-              <h1 style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: '1.5rem',
-                textAlign: 'center',
-                margin: '0 0 var(--spacing-xs) 0',
-                color: 'var(--color-brown-dark)',
-                textTransform: 'uppercase',
-                letterSpacing: '2px',
-                borderBottom: '2px solid var(--color-text-primary)',
-                paddingBottom: 'var(--spacing-xs)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px'
-              }}>
-                <span style={{ fontSize: '1.5rem', lineHeight: '1' }}>👥</span>
-                <span>SOCIAL</span>
-              </h1>
-              <p style={{
-                textAlign: 'center',
-                color: 'var(--color-text-secondary)',
-                fontSize: '0.85rem',
-                fontStyle: 'italic',
-                margin: 0
-              }}>
-                Choisis une catégorie
-              </p>
-            </div>
+          <div style={{ padding: '0 var(--spacing-sm)', marginBottom: 'var(--spacing-md)' }}>
+            <ScreenHeader
+              icon="👥"
+              title="SOCIAL"
+              subtitle="Rencontres, jeux et animations"
+            />
           </div>
-          <div style={{
-            background: 'var(--color-cream)',
-            padding: 'var(--spacing-sm)',
-            marginBottom: '0',
-            flexShrink: 0
-          }}>
 
           {/* Bouteille à la mer */}
-          <div style={{ textAlign: 'center' }}>
+          <div style={{
+            padding: '0 var(--spacing-sm)',
+            marginBottom: 'var(--spacing-sm)'
+          }}>
             <button
               onClick={() => setShowBottleModal(true)}
               style={{
-                padding: '8px 16px',
+                width: '100%',
+                padding: '14px 16px',
                 background: 'linear-gradient(135deg, #4FC3F7, #0288D1)',
                 border: '2px solid #0277BD',
                 borderRadius: '12px',
                 color: 'white',
                 fontWeight: '700',
-                fontSize: '0.85rem',
+                fontSize: '0.95rem',
                 cursor: 'pointer',
                 boxShadow: '0 4px 12px rgba(2,136,209,0.3)',
                 position: 'relative',
-                minHeight: '44px'
+                minHeight: '54px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
               }}
             >
-              📜 Bouteille à la mer
+              <span style={{ fontSize: '1.8rem' }}>📜</span>
+              <span>Bouteille à la mer</span>
               {unreadBottles > 0 && (
                 <span style={{
                   position: 'absolute',
@@ -190,9 +163,8 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                 </span>
               )}
             </button>
-          </div>
             {currentUser?.premium && (
-              <div style={{ textAlign: 'center', marginTop: 'var(--spacing-xs)' }}>
+              <div style={{ textAlign: 'center', marginTop: 'var(--spacing-sm)' }}>
                 <button
                   onClick={handleAdminCreateSalon}
                   className="btn-primary"
@@ -211,9 +183,10 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
         <div style={{
           flex: 1,
           display: 'flex',
-          alignItems: 'center',
+          alignItems: 'flex-start',
           justifyContent: 'center',
           padding: 'var(--spacing-sm)',
+          paddingTop: 'var(--spacing-md)',
           overflow: 'hidden',
           minHeight: 0
         }}>
@@ -221,11 +194,11 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
             gridTemplateRows: '1fr 1fr',
-            gap: 'var(--spacing-sm)',
+            gap: 'var(--spacing-md)',
             width: '100%',
             maxWidth: '600px',
-            height: '100%',
-            maxHeight: '100%'
+            height: 'auto',
+            aspectRatio: '1'
           }}>
             {['bars', 'ranking', 'games', 'adoption'].map((tab) => {
               const icons = {
@@ -245,14 +218,14 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                   key={tab}
                   onClick={() => setSocialTab(tab)}
                   style={{
-                    padding: 'var(--spacing-md)',
+                    padding: 'var(--spacing-lg)',
                     background: 'linear-gradient(135deg, var(--color-brown), var(--color-brown-dark))',
                     border: '3px solid var(--color-gold)',
                     color: 'var(--color-cream)',
                     borderRadius: 'var(--border-radius-xl)',
                     cursor: 'pointer',
                     fontWeight: '700',
-                    fontSize: '1.1rem',
+                    fontSize: '1.15rem',
                     transition: 'all var(--transition-normal)',
                     boxShadow: 'var(--shadow-lg)',
                     textAlign: 'center',
@@ -260,14 +233,15 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: 'var(--spacing-xs)'
+                    gap: 'var(--spacing-sm)',
+                    minHeight: '140px'
                   }}
                   onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
                   onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
                   onTouchStart={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
                   onTouchEnd={(e) => e.currentTarget.style.transform = 'scale(1)'}
                 >
-                  <div style={{ fontSize: '3rem' }}>{icons[tab]}</div>
+                  <div style={{ fontSize: '3.5rem' }}>{icons[tab]}</div>
                   <div>{labels[tab]}</div>
                 </button>
               );
