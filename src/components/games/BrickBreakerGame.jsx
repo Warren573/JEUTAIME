@@ -343,9 +343,10 @@ export default function BrickBreakerGame({ setGameScreen, currentUser, setUserCo
 
   return (
     <div style={{
-      height: '100dvh',
-      overflow: 'hidden',
-      
+      minHeight: '100dvh',
+      maxHeight: '100dvh',
+      overflowY: 'auto',
+      paddingTop: 'env(safe-area-inset-top)',
       paddingBottom: 'calc(70px + env(safe-area-inset-bottom))',
       background: 'var(--color-beige-light)',
       display: 'flex',
