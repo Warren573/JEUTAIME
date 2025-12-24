@@ -1,6 +1,8 @@
 import React from 'react';
 
 export default function ScreenHeader({ icon, title, subtitle, onBack }) {
+  console.log('ScreenHeader - onBack:', onBack ? 'PRÉSENT' : 'ABSENT', 'title:', title);
+
   return (
     <div style={{
       background: 'var(--color-cream)',
@@ -16,30 +18,30 @@ export default function ScreenHeader({ icon, title, subtitle, onBack }) {
           onClick={onBack}
           style={{
             position: 'absolute',
-            top: '10px',
-            left: '10px',
-            width: '35px',
-            height: '35px',
+            top: '12px',
+            left: '12px',
+            width: '38px',
+            height: '38px',
             borderRadius: '50%',
-            border: '2px solid var(--color-brown-dark)',
-            background: 'rgba(255,255,255,0.8)',
+            border: '3px solid var(--color-brown-dark)',
+            background: 'white',
             color: 'var(--color-brown-dark)',
-            fontSize: '18px',
+            fontSize: '20px',
+            fontWeight: 'bold',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            zIndex: 10,
-            backdropFilter: 'blur(10px)',
-            boxShadow: 'var(--shadow-sm)',
+            zIndex: 100,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
             transition: 'all 0.2s'
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(255,255,255,1)';
-            e.currentTarget.style.transform = 'scale(1.1)';
+            e.currentTarget.style.background = 'var(--color-gold)';
+            e.currentTarget.style.transform = 'scale(1.15)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'rgba(255,255,255,0.8)';
+            e.currentTarget.style.background = 'white';
             e.currentTarget.style.transform = 'scale(1)';
           }}
         >

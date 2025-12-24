@@ -88,21 +88,24 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
           </button>
         )}
 
-        <h1 style={{
-          fontFamily: 'var(--font-heading)',
-          fontSize: '2.5rem',
-          textAlign: 'center',
-          margin: '0 0 var(--spacing-xs) 0',
-          color: 'var(--color-brown-dark)',
-          textTransform: 'uppercase',
-          letterSpacing: '2px',
-          borderBottom: '2px solid var(--color-gold)',
-          paddingBottom: 'var(--spacing-xs)',
-          paddingLeft: (isEmbedded && onBack) ? '45px' : '0',
-          paddingRight: (isEmbedded && onBack) ? '45px' : '0'
-        }}>
-          🏆 CLASSEMENT
-        </h1>
+        <div style={{ textAlign: 'center', marginBottom: 'var(--spacing-xs)' }}>
+          <div style={{ fontSize: '3rem', marginBottom: '8px' }}>🏆</div>
+          <h1 style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: '2rem',
+            textAlign: 'center',
+            margin: '0 0 var(--spacing-xs) 0',
+            color: 'var(--color-brown-dark)',
+            textTransform: 'uppercase',
+            letterSpacing: '2px',
+            borderBottom: '2px solid var(--color-gold)',
+            paddingBottom: 'var(--spacing-xs)',
+            paddingLeft: (isEmbedded && onBack) ? '50px' : '0',
+            paddingRight: (isEmbedded && onBack) ? '50px' : '0'
+          }}>
+            CLASSEMENT
+          </h1>
+        </div>
         <p style={{
           textAlign: 'center',
           fontSize: '0.9rem',
