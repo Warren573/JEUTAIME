@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { awardPoints, checkAndAwardBadge } from '../../utils/pointsSystem';
 import { addCoinsToUser, updateUserStats, incrementDuelWins } from '../../utils/demoUsers';
+import ScreenHeader from '../common/ScreenHeader';
 
 const WINNING_SCORE = 5; // Premier à 5 points gagne
 
@@ -229,13 +230,18 @@ export default function PongGame({ setGameScreen, currentUser, setUserCoins }) {
       flexDirection: 'column',
       boxSizing: 'border-box'
     }}>
+      <ScreenHeader
+        icon="🎮"
+        title="Pong"
+        subtitle="Affronte le bot au Pong classique !"
+        onBack={() => setGameScreen(null)}
+      />
+
       <div style={{
         flex: 1,
         overflow: 'auto',
-        padding: 'var(--spacing-md)'
+        padding: '0 var(--spacing-md) var(--spacing-md) var(--spacing-md)'
       }}>
-        <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600', color: 'var(--color-brown-dark)' }}>🎮 Pong</h2>
-
       <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '15px', textAlign: 'center' }}>
         <div
           onTouchMove={handleTouchMove}

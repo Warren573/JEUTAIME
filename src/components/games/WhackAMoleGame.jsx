@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { addCoinsToUser, addPointsToUser, updateUserStats } from '../../utils/demoUsers';
+import ScreenHeader from '../common/ScreenHeader';
 
 export default function WhackAMoleGame({ setGameScreen, moleBestScore, setMoleBestScore, currentUser, setUserCoins }) {
   const [localMoleScore, setLocalMoleScore] = useState(0);
@@ -110,13 +111,18 @@ export default function WhackAMoleGame({ setGameScreen, moleBestScore, setMoleBe
       flexDirection: 'column',
       boxSizing: 'border-box'
     }}>
+      <ScreenHeader
+        icon="⚡"
+        title="Tape Taupe"
+        subtitle="Tape les taupes aussi vite que possible !"
+        onBack={() => setGameScreen(null)}
+      />
+
       <div style={{
         flex: 1,
         overflow: 'auto',
-        padding: 'var(--spacing-md)'
+        padding: '0 var(--spacing-md) var(--spacing-md) var(--spacing-md)'
       }}>
-        <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600', color: 'var(--color-brown-dark)' }}>⚡ Tape Taupe</h2>
-
       <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', textAlign: 'center' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', marginBottom: '20px', maxWidth: '300px', margin: '0 auto 20px' }}>
           {moleHoles.map(index => (

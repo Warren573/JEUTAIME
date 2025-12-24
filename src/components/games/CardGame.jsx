@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { addCoinsToUser, addPointsToUser, updateUserStats } from '../../utils/demoUsers';
+import ScreenHeader from '../common/ScreenHeader';
 
 export default function CardGame({
   setGameScreen,
@@ -138,12 +139,18 @@ export default function CardGame({
       flexDirection: 'column',
       boxSizing: 'border-box'
     }}>
+      <ScreenHeader
+        icon="🎴"
+        title="Jeu des Cartes"
+        subtitle="Révèle toutes les cartes pour gagner !"
+        onBack={() => setGameScreen(null)}
+      />
+
       <div style={{
         flex: 1,
         overflow: 'auto',
-        padding: 'var(--spacing-md)'
+        padding: '0 var(--spacing-md) var(--spacing-md) var(--spacing-md)'
       }}>
-        <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600', color: 'var(--color-brown-dark)' }}>🎴 Jeu des Cartes</h2>
       <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', width: '100%', boxSizing: 'border-box' }}>
         <p style={{ textAlign: 'center', fontSize: '16px', marginBottom: '10px', color: '#ccc' }}>{cardMessage}</p>
         <p style={{ textAlign: 'center', fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}>💰 Gains: {cardGains} pièces</p>

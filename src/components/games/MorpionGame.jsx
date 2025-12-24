@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { awardPoints, checkAndAwardBadge } from '../../utils/pointsSystem';
+import ScreenHeader from '../common/ScreenHeader';
 
 export default function MorpionGame({ setGameScreen, morpionBoard, setMorpionBoard, morpionTurn, setMorpionTurn, currentUser, setUserCoins }) {
   const calculateWinner = (squares) => {
@@ -91,12 +92,18 @@ export default function MorpionGame({ setGameScreen, morpionBoard, setMorpionBoa
       flexDirection: 'column',
       boxSizing: 'border-box'
     }}>
+      <ScreenHeader
+        icon="⭕"
+        title="Morpion"
+        subtitle="Tic-Tac-Toe classique contre le bot !"
+        onBack={() => setGameScreen(null)}
+      />
+
       <div style={{
         flex: 1,
         overflow: 'auto',
-        padding: 'var(--spacing-md)'
+        padding: '0 var(--spacing-md) var(--spacing-md) var(--spacing-md)'
       }}>
-        <h2 style={{ fontSize: '28px', marginBottom: '20px', fontWeight: '600', color: 'var(--color-brown-dark)' }}>⭕ Morpion</h2>
         <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '30px', textAlign: 'center' }}>
           <p style={{ fontSize: '16px', marginBottom: '20px', fontWeight: '600' }}>Joueur: {morpionTurn}</p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 80px)', gap: '5px', margin: '0 auto 30px', width: 'fit-content' }}>
