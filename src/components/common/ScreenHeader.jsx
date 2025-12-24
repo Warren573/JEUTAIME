@@ -1,8 +1,6 @@
 import React from 'react';
 
 export default function ScreenHeader({ icon, title, subtitle, onBack }) {
-  console.log('ScreenHeader - onBack:', onBack ? 'PRÉSENT' : 'ABSENT', 'title:', title);
-
   return (
     <div style={{
       background: 'var(--color-cream)',
