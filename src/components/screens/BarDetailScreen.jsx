@@ -347,21 +347,31 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
           onClick={() => setSelectedSalon(null)}
           style={{
             position: 'absolute',
-            top: 'calc(env(safe-area-inset-top) + 10px)',
-            left: '10px',
-            width: '35px',
-            height: '35px',
+            top: 'calc(env(safe-area-inset-top) + 12px)',
+            left: '12px',
+            width: '38px',
+            height: '38px',
             borderRadius: '50%',
-            border: '2px solid white',
-            background: 'rgba(255,255,255,0.2)',
-            color: 'white',
-            fontSize: '18px',
+            border: '3px solid white',
+            background: 'white',
+            color: 'var(--color-brown-dark)',
+            fontSize: '20px',
+            fontWeight: 'bold',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            zIndex: 10,
-            backdropFilter: 'blur(10px)'
+            zIndex: 100,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+            transition: 'all 0.2s'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'var(--color-gold)';
+            e.currentTarget.style.transform = 'scale(1.15)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'white';
+            e.currentTarget.style.transform = 'scale(1)';
           }}
         >
           ←
@@ -388,7 +398,9 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
           fontSize: '1.8rem',
           color: 'white',
           margin: '0 0 12px 0',
-          fontWeight: '700'
+          fontWeight: '700',
+          paddingLeft: '50px',
+          textAlign: 'left'
         }}>
           {salon?.emoji} {salon?.name}
         </h1>
