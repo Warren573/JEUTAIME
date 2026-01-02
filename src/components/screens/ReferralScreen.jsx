@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ScreenHeader from '../common/ScreenHeader';
 
-export default function ReferralScreen({ currentUser }) {
+export default function ReferralScreen({ currentUser, setScreen }) {
   const [referralCode] = useState('JEUTAIME2024');
   const [referredFriends] = useState(3);
   const [coinsEarned] = useState(1500);
@@ -51,6 +51,7 @@ export default function ReferralScreen({ currentUser }) {
         icon="🤝"
         title="Parrainage"
         subtitle="Invitez vos amis et gagnez des récompenses"
+        onBack={() => setScreen('home')}
       />
 
       {/* Carte d'explication */}

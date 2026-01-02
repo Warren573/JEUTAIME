@@ -10,7 +10,7 @@ import MagicEffect from '../effects/MagicEffect';
 import { getReceivedGifts } from '../../utils/giftsSystem';
 import ScreenHeader from '../common/ScreenHeader';
 
-export default function ProfilesScreen({ currentProfile, setCurrentProfile, adminMode, isAdminAuthenticated, currentUser }) {
+export default function ProfilesScreen({ currentProfile, setCurrentProfile, adminMode, isAdminAuthenticated, currentUser, setScreen }) {
   const [viewMode, setViewMode] = useState('discover');
   const [selectedPhoto, setSelectedPhoto] = useState(-1); // -1 = afficher avatar, 0+ = afficher photo
   const [showQuestionGame, setShowQuestionGame] = useState(false);
@@ -271,6 +271,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
         icon="🔍"
         title="Découverte"
         subtitle="Explorez et rencontrez de nouvelles personnes"
+        onBack={() => setScreen('home')}
       />
 
       {/* Tabs */}

@@ -62,9 +62,56 @@ export default function MemoriesScreen({ currentUser }) {
         {/* Bouton retour */}
         <div style={{
           padding: 'var(--spacing-lg)',
+          paddingTop: 'calc(var(--spacing-lg) + env(safe-area-inset-top))',
           background: 'var(--color-brown-darker)',
-          boxShadow: 'var(--shadow-md)'
+          boxShadow: 'var(--shadow-md)',
+          position: 'relative'
         }}>
+          <button
+            onClick={() => setSelectedMemory(null)}
+            style={{
+              position: 'absolute',
+              top: 'calc(env(safe-area-inset-top) + 12px)',
+              left: '12px',
+              width: '38px',
+              height: '38px',
+              borderRadius: '50%',
+              border: '3px solid var(--color-gold)',
+              background: 'white',
+              color: 'var(--color-brown-dark)',
+              fontSize: '20px',
+              fontWeight: 'bold',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              zIndex: 100,
+              boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'var(--color-gold)';
+              e.currentTarget.style.transform = 'scale(1.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'white';
+              e.currentTarget.style.transform = 'scale(1)';
+            }}
+          >
+            ←
+          </button>
+
+          <h2 style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: '1.5rem',
+            color: 'var(--color-gold)',
+            textAlign: 'center',
+            margin: 0,
+            paddingLeft: '50px',
+            paddingRight: '50px'
+          }}>
+            📖 Souvenir
+          </h2>
         </div>
 
         {/* Contenu du souvenir */}
