@@ -139,10 +139,23 @@ function ItemCard({ item, userCoins, onUse }) {
       opacity: canAfford ? 1 : 0.6
     }}>
       <div style={{
-        fontSize: '2.5rem',
         flexShrink: 0
       }}>
-        {item.icon}
+        {item.gifUrl ? (
+          <img
+            src={item.gifUrl}
+            alt={item.name}
+            style={{
+              width: '60px',
+              height: '60px',
+              borderRadius: '10px',
+              objectFit: 'cover',
+              border: '2px solid rgba(255,255,255,0.2)'
+            }}
+          />
+        ) : (
+          <div style={{ fontSize: '2.5rem' }}>{item.icon}</div>
+        )}
       </div>
 
       <div style={{ flex: 1 }}>

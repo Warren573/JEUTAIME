@@ -266,6 +266,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
             icon="✨"
             title="SALONS"
             subtitle="Écrivez des histoires ensemble • Une phrase chacun • Timer 24h"
+            onBack={() => setSocialTab(null)}
           />
 
           {/* Bouton vers liste complète des salons magiques */}
@@ -676,6 +677,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
               icon="🎮"
               title="JEUX"
               subtitle="Joue et gagne des pièces !"
+              onBack={() => setSocialTab(null)}
             />
           </div>
 

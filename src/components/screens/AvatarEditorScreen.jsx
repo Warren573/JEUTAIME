@@ -204,8 +204,42 @@ export default function AvatarEditorScreen({ currentUser, setCurrentUser, onClos
         boxShadow: 'var(--shadow-md)',
         position: 'sticky',
         top: 0,
-        zIndex: 100
+        zIndex: 100,
+        position: 'relative'
       }}>
+        <button
+          onClick={onClose}
+          style={{
+            position: 'absolute',
+            top: '12px',
+            left: '12px',
+            width: '38px',
+            height: '38px',
+            borderRadius: '50%',
+            border: '3px solid var(--color-brown-dark)',
+            background: 'white',
+            color: 'var(--color-brown-dark)',
+            fontSize: '20px',
+            fontWeight: 'bold',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            zIndex: 100,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+            transition: 'all 0.2s'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'var(--color-gold)';
+            e.currentTarget.style.transform = 'scale(1.15)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'white';
+            e.currentTarget.style.transform = 'scale(1)';
+          }}
+        >
+          ←
+        </button>
         <h1 style={{
           fontFamily: 'var(--font-heading)',
           fontSize: '2rem',
@@ -213,7 +247,9 @@ export default function AvatarEditorScreen({ currentUser, setCurrentUser, onClos
           margin: '0 0 var(--spacing-xs) 0',
           color: 'var(--color-brown-dark)',
           textTransform: 'uppercase',
-          letterSpacing: '2px'
+          letterSpacing: '2px',
+          paddingLeft: '50px',
+          paddingRight: '50px'
         }}>
           🎨 Éditeur d'Avatar
         </h1>

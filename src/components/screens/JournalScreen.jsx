@@ -2,7 +2,7 @@ import React from 'react';
 import { journalNews } from '../../data/appData';
 import ScreenHeader from '../common/ScreenHeader';
 
-export default function JournalScreen({ currentUser }) {
+export default function JournalScreen({ currentUser, setScreen }) {
   // Données simulées pour les différentes sections
   const activities = [
     { text: 'Dix nouveaux contenus ajoutés', icon: '📝' },
@@ -45,6 +45,7 @@ export default function JournalScreen({ currentUser }) {
         icon="📰"
         title="JOURNAL"
         subtitle="Actualités de la communauté"
+        onBack={() => setScreen('home')}
       />
 
       {/* Grille de sections style journal */}

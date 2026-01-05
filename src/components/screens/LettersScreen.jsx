@@ -3,7 +3,7 @@ import { getAllUsers } from '../../utils/demoUsers';
 import ChatScreen from './ChatScreen';
 import ScreenHeader from '../common/ScreenHeader';
 
-export default function LettersScreen({ currentUser }) {
+export default function LettersScreen({ currentUser, setScreen }) {
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [showGifts, setShowGifts] = useState(false);
@@ -113,6 +113,7 @@ export default function LettersScreen({ currentUser }) {
         icon="💌"
         title="Lettres"
         subtitle="Vos conversations et messages privés"
+        onBack={() => setScreen('home')}
       />
 
       {/* Message si pas de conversations */}
@@ -499,7 +500,11 @@ export default function LettersScreen({ currentUser }) {
           alignItems: 'center',
           justifyContent: 'center',
           zIndex: 1000,
-          padding: '20px'
+          padding: '20px',
+          paddingTop: 'max(20px, env(safe-area-inset-top))',
+          paddingBottom: 'max(20px, env(safe-area-inset-bottom))',
+          paddingLeft: 'max(20px, env(safe-area-inset-left))',
+          paddingRight: 'max(20px, env(safe-area-inset-right))'
         }}
         onClick={() => setSelectedProfile(null)}
         >
@@ -509,7 +514,7 @@ export default function LettersScreen({ currentUser }) {
             padding: '30px',
             maxWidth: '500px',
             width: '100%',
-            maxHeight: '80vh',
+            maxHeight: 'calc(100dvh - max(40px, env(safe-area-inset-top) + env(safe-area-inset-bottom)))',
             overflowY: 'auto',
             border: '3px solid var(--color-brown-dark)',
             color: 'var(--color-text-primary)'

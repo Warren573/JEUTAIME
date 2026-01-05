@@ -97,6 +97,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
         icon="⚙️"
         title="Paramètres"
         subtitle="Personnalisez votre expérience"
+        onBack={() => setScreen('home')}
       />
 
       {/* Tabs */}

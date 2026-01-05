@@ -25,21 +25,6 @@
 - **Description physique humoristique** : 8 options amusantes (Filiforme, Athlétique, En formes généreuses, etc.)
 - **Photos** : Jusqu'à 3 photos débloquées progressivement (10, 20, 30 lettres échangées)
 
-### 📖 Mon Book - Portfolio personnel
-
-Système unique de "livre" personnel éditable avec 5 pages :
-- **Page 1** : Profil et préférences de rencontre
-- **Page 2** : Votre personnalité
-- **Page 3** : Vos passions et hobbies
-- **Page 4** : Vos rêves et projets
-- **Page 5** : Ce que vous recherchez
-
-**Personnalisation complète** :
-- Choix des couleurs (6 palettes prédéfinies)
-- Image de fond personnalisée
-- Disposition des onglets (horizontal ou superposé)
-- Mode privé (visible uniquement après échange de lettres)
-
 ### 💌 Système de lettres
 
 - **Conversations privées** illimitées (ou 10 max pour utilisateurs gratuits)
@@ -210,13 +195,11 @@ JEUTAIME/
 │   │   │   └── ProfileCreation.jsx
 │   │   ├── avatar/              # Gestion des avatars
 │   │   │   └── UserAvatar.jsx
-│   │   ├── book/                # Système de Book
-│   │   │   ├── BookEditor.jsx
-│   │   │   ├── BookIndex.jsx
-│   │   │   ├── BookPrivate.jsx
-│   │   │   ├── BookPage1.jsx ... BookPage5.jsx
 │   │   ├── bottle/              # Messages en bouteille
 │   │   │   └── MessageBottleModal.jsx
+│   │   ├── common/              # Composants réutilisables
+│   │   │   ├── BackButton.jsx
+│   │   │   └── ScreenHeader.jsx
 │   │   ├── effects/             # Effets visuels
 │   │   │   └── MagicEffect.jsx
 │   │   ├── games/               # 6 jeux
@@ -235,7 +218,7 @@ JEUTAIME/
 │   │   ├── personal/            # Stats personnelles
 │   │   │   ├── ReceivedGifts.jsx
 │   │   │   └── SocialStats.jsx
-│   │   ├── screens/             # Écrans principaux (19 screens)
+│   │   ├── screens/             # Écrans principaux (17 screens)
 │   │   │   ├── HomeScreen.jsx
 │   │   │   ├── ProfilesScreen.jsx
 │   │   │   ├── SocialScreen.jsx
@@ -247,8 +230,6 @@ JEUTAIME/
 │   │   │   ├── SettingsScreen.jsx
 │   │   │   ├── EspacePersoScreen.jsx
 │   │   │   ├── EspacePersoScreenSimple.jsx
-│   │   │   ├── BookEditScreen.jsx
-│   │   │   ├── BookViewScreen.jsx
 │   │   │   ├── AvatarEditorScreen.jsx
 │   │   │   ├── AdoptionScreen.jsx
 │   │   │   ├── BadgesScreen.jsx
@@ -291,14 +272,6 @@ JEUTAIME/
    - 3 questions sur votre personnalité
    - Préférences de rencontre
    - Description physique
-
-### 📖 Personnaliser votre Book
-
-1. Allez dans **Espace Perso** → **Mon Book**
-2. Cliquez sur **Éditer**
-3. Personnalisez chaque page (5 pages)
-4. Choisissez vos couleurs et fond
-5. Définissez si votre Book est public ou privé
 
 ### 💌 Envoyer une lettre
 
@@ -439,13 +412,13 @@ Accédez à `https://jeutaime.vercel.app/version.txt`
 
 ## 📝 Changelog
 
-### v2.0.0 (2025-12-05)
+### v2.0.0 (2025-01-05)
 - ✨ Ajout des préférences de rencontre (Intéressé•e par, Recherche, Enfants)
 - ✨ Ajout de la description physique humoristique
-- ✨ Système de Book avec 5 pages personnalisables
-- ✨ Personnalisation complète (couleurs, fond, disposition)
 - 🎮 Renommage "Tape la Taupe" → "Tape Taupe"
 - 🐛 Amélioration du système de profils démo
+- 🐛 Correction complète des boutons retour manquants sur mobile
+- 📱 Ajout des safe areas pour iOS/Android
 - 🚀 Optimisation du déploiement automatique
 
 ### v1.0.1

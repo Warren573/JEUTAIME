@@ -1,7 +1,7 @@
 import React from 'react';
 import { getTitleFromPoints } from '../../config/gameConfig';
 
-export default function BadgesScreen({ currentUser }) {
+export default function BadgesScreen({ currentUser, setScreen }) {
   const userPoints = currentUser?.points || 0;
   const userTitle = getTitleFromPoints(userPoints);
 
@@ -113,8 +113,44 @@ export default function BadgesScreen({ currentUser }) {
         background: 'var(--color-brown)',
         padding: 'var(--spacing-xl)',
         marginBottom: 'var(--spacing-lg)',
-        boxShadow: 'var(--shadow-lg)'
+        boxShadow: 'var(--shadow-lg)',
+        position: 'relative'
       }}>
+        {setScreen && (
+          <button
+            onClick={() => setScreen('home')}
+            style={{
+              position: 'absolute',
+              top: '12px',
+              left: '12px',
+              width: '38px',
+              height: '38px',
+              borderRadius: '50%',
+              border: '3px solid var(--color-gold)',
+              background: 'white',
+              color: 'var(--color-brown-dark)',
+              fontSize: '20px',
+              fontWeight: 'bold',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              zIndex: 100,
+              boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'var(--color-gold)';
+              e.currentTarget.style.transform = 'scale(1.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'white';
+              e.currentTarget.style.transform = 'scale(1)';
+            }}
+          >
+            ←
+          </button>
+        )}
         <h1 style={{
           fontFamily: 'var(--font-heading)',
           fontSize: '2rem',
@@ -122,7 +158,9 @@ export default function BadgesScreen({ currentUser }) {
           color: 'var(--color-cream)',
           margin: '0 0 var(--spacing-xs) 0',
           textTransform: 'uppercase',
-          letterSpacing: '2px'
+          letterSpacing: '2px',
+          paddingLeft: setScreen ? '50px' : '0',
+          paddingRight: setScreen ? '50px' : '0'
         }}>
           BADGES
         </h1>
