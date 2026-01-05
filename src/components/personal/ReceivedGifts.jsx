@@ -77,7 +77,21 @@ export default function ReceivedGifts({ currentUser }) {
             Dernière offrande reçue :
           </p>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ fontSize: '2rem' }}>{stats.lastReceived.icon}</span>
+            {stats.lastReceived.gifUrl ? (
+              <img
+                src={stats.lastReceived.gifUrl}
+                alt={stats.lastReceived.name}
+                style={{
+                  width: '50px',
+                  height: '50px',
+                  borderRadius: '8px',
+                  objectFit: 'cover',
+                  border: '2px solid rgba(255,255,255,0.2)'
+                }}
+              />
+            ) : (
+              <span style={{ fontSize: '2rem' }}>{stats.lastReceived.icon}</span>
+            )}
             <div style={{ flex: 1 }}>
               <h4 style={{ margin: '0 0 4px 0', color: 'white' }}>
                 {stats.lastReceived.name}
@@ -130,7 +144,20 @@ export default function ReceivedGifts({ currentUser }) {
                 e.currentTarget.style.boxShadow = 'none';
               }}
             >
-              <div style={{ fontSize: '2.5rem' }}>{gift.icon}</div>
+              {gift.gifUrl ? (
+                <img
+                  src={gift.gifUrl}
+                  alt={gift.name}
+                  style={{
+                    width: '60px',
+                    height: '60px',
+                    borderRadius: '10px',
+                    objectFit: 'cover'
+                  }}
+                />
+              ) : (
+                <div style={{ fontSize: '2.5rem' }}>{gift.icon}</div>
+              )}
               {gift.count > 1 && (
                 <div style={{
                   position: 'absolute',
@@ -240,8 +267,22 @@ function GiftModal({ gift, onClose }) {
           border: '2px solid #667eea'
         }}
       >
-        <div style={{ fontSize: '4rem', textAlign: 'center', marginBottom: '15px' }}>
-          {gift.icon}
+        <div style={{ textAlign: 'center', marginBottom: '15px', display: 'flex', justifyContent: 'center' }}>
+          {gift.gifUrl ? (
+            <img
+              src={gift.gifUrl}
+              alt={gift.name}
+              style={{
+                width: '100px',
+                height: '100px',
+                borderRadius: '16px',
+                objectFit: 'cover',
+                border: '3px solid rgba(255,255,255,0.2)'
+              }}
+            />
+          ) : (
+            <div style={{ fontSize: '4rem' }}>{gift.icon}</div>
+          )}
         </div>
         <h3 style={{
           margin: '0 0 15px 0',
