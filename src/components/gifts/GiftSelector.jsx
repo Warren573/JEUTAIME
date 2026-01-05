@@ -221,8 +221,22 @@ export default function GiftSelector({ currentUser, receiverId, onClose, onGiftS
                   {getRarityLabel(gift.rarity)}
                 </div>
 
-                <div style={{ fontSize: '50px', marginBottom: '10px' }}>
-                  {gift.emoji}
+                <div style={{ marginBottom: '10px', width: '100%', display: 'flex', justifyContent: 'center' }}>
+                  {gift.gifUrl ? (
+                    <img
+                      src={gift.gifUrl}
+                      alt={gift.name}
+                      style={{
+                        width: '80px',
+                        height: '80px',
+                        borderRadius: '12px',
+                        objectFit: 'cover',
+                        border: '2px solid rgba(255,255,255,0.2)'
+                      }}
+                    />
+                  ) : (
+                    <div style={{ fontSize: '50px' }}>{gift.emoji}</div>
+                  )}
                 </div>
 
                 <h3 style={{
@@ -280,7 +294,23 @@ export default function GiftSelector({ currentUser, receiverId, onClose, onGiftS
             Cadeau sélectionné :
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-            <div style={{ fontSize: '40px' }}>{selectedGift.emoji}</div>
+            <div>
+              {selectedGift.gifUrl ? (
+                <img
+                  src={selectedGift.gifUrl}
+                  alt={selectedGift.name}
+                  style={{
+                    width: '50px',
+                    height: '50px',
+                    borderRadius: '10px',
+                    objectFit: 'cover',
+                    border: '2px solid rgba(255,255,255,0.3)'
+                  }}
+                />
+              ) : (
+                <div style={{ fontSize: '40px' }}>{selectedGift.emoji}</div>
+              )}
+            </div>
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: '18px', fontWeight: '700', color: 'white', marginBottom: '3px' }}>
                 {selectedGift.name}
