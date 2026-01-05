@@ -201,11 +201,26 @@ export default function MagicGiftsPanel({
                     }}
                   >
                     <div style={{
-                      fontSize: '2.5rem',
                       marginBottom: 'var(--spacing-xs)',
-                      textAlign: 'center'
+                      textAlign: 'center',
+                      display: 'flex',
+                      justifyContent: 'center'
                     }}>
-                      {magic.icon}
+                      {magic.gifUrl ? (
+                        <img
+                          src={magic.gifUrl}
+                          alt={magic.name}
+                          style={{
+                            width: '80px',
+                            height: '80px',
+                            borderRadius: '12px',
+                            objectFit: 'cover',
+                            border: '2px solid rgba(139, 69, 19, 0.3)'
+                          }}
+                        />
+                      ) : (
+                        <div style={{ fontSize: '2.5rem' }}>{magic.icon}</div>
+                      )}
                     </div>
                     <h4 style={{
                       fontSize: '1rem',
@@ -337,11 +352,26 @@ export default function MagicGiftsPanel({
                       </div>
                     )}
                     <div style={{
-                      fontSize: '2.5rem',
                       marginBottom: 'var(--spacing-xs)',
-                      textAlign: 'center'
+                      textAlign: 'center',
+                      display: 'flex',
+                      justifyContent: 'center'
                     }}>
-                      {gift.icon}
+                      {gift.gifUrl ? (
+                        <img
+                          src={gift.gifUrl}
+                          alt={gift.name}
+                          style={{
+                            width: '80px',
+                            height: '80px',
+                            borderRadius: '12px',
+                            objectFit: 'cover',
+                            border: '2px solid rgba(139, 69, 19, 0.3)'
+                          }}
+                        />
+                      ) : (
+                        <div style={{ fontSize: '2.5rem' }}>{gift.icon}</div>
+                      )}
                     </div>
                     <h4 style={{
                       fontSize: '1rem',
