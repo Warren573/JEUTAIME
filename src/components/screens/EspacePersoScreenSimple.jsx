@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Avatar from 'avataaars';
-import { generateAvatarOptions } from '../../utils/avatarGenerator';
+import UserAvatar from '../avatar/UserAvatar';
 import { allMagic, allGifts } from '../../data/magicGifts';
 
 export default function EspacePersoScreenSimple({
@@ -9,11 +8,6 @@ export default function EspacePersoScreenSimple({
   setSelectedSalon,
   joinedSalons = []
 }) {
-  // Générer les options d'avatar de manière sécurisée
-  const avatarOptions = currentUser?.avatarData || generateAvatarOptions(
-    currentUser?.name || 'User',
-    currentUser?.gender || 'homme'
-  );
 
   // Récupérer les salons depuis appData de manière sécurisée
   const salons = [];
@@ -62,9 +56,10 @@ export default function EspacePersoScreenSimple({
             flexShrink: 0,
             background: 'white'
           }}>
-            <Avatar
-              style={{ width: '100px', height: '100px' }}
-              {...avatarOptions}
+            <UserAvatar
+              user={currentUser}
+              isOwn={true}
+              size={100}
             />
           </div>
 

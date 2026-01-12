@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import Avatar from 'avataaars';
-import { generateAvatarOptions } from '../../utils/avatarGenerator';
+import UserAvatar from '../avatar/UserAvatar';
 import ReceivedGifts from '../personal/ReceivedGifts';
 import SocialStats from '../personal/SocialStats';
 import MagicInventory from '../magic/MagicInventory';
@@ -13,8 +12,6 @@ export default function EspacePersoScreen({
   joinedSalons = []
 }) {
   const [activeSection, setActiveSection] = useState('overview');
-
-  const avatarOptions = currentUser?.avatarData || generateAvatarOptions(currentUser?.name, currentUser?.gender);
 
   // Salons actifs de l'utilisateur
   const activeSalons = (salons || []).filter(s => joinedSalons.includes(s.id));
@@ -49,9 +46,10 @@ export default function EspacePersoScreen({
             flexShrink: 0,
             background: 'white'
           }}>
-            <Avatar
-              style={{ width: '100px', height: '100px' }}
-              {...avatarOptions}
+            <UserAvatar
+              user={currentUser}
+              isOwn={true}
+              size={100}
             />
           </div>
 

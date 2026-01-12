@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import GiftSelector from '../gifts/GiftSelector';
 import MagicEffect from '../effects/MagicEffect';
 import MagicGiftsPanel from '../MagicGiftsPanel';
-import Avatar from 'avataaars';
-import { generateAvatarOptions } from '../../utils/avatarGenerator';
+import UserAvatar from '../avatar/UserAvatar';
 import {
   loadBarState,
   saveBarState,
@@ -42,7 +41,7 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
     return barState?.story || [];
   });
 
-  // Transformer les participants du salon en membres avec avatars + ajouter l'utilisateur
+  // Transformer les participants du salon en membres + ajouter l'utilisateur
   const [members, setMembers] = useState(() => {
     const salonMembers = salon?.participants?.map((p, index) => ({
       id: index + 1,
@@ -50,7 +49,6 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
       gender: p.gender,
       age: p.age,
       online: p.online,
-      avatarOptions: generateAvatarOptions(p.name, p.gender),
       isPatron: false,
       skippedTurns: 0
     })) || [];
@@ -62,7 +60,6 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
         id: salonMembers.length + 1,
         name: currentUser?.name || 'Vous',
         gender: currentUser?.gender || 'M',
-        avatarOptions: currentUser?.avatarData || generateAvatarOptions(currentUser?.name || 'Vous', currentUser?.gender || 'M'),
         isPatron: true,
         skippedTurns: 0
       }
@@ -479,9 +476,10 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
                   position: 'relative',
                   zIndex: 1
                 }}>
-                  <Avatar
-                    style={{ width: '100px', height: '100px' }}
-                    {...member.avatarOptions}
+                  <UserAvatar
+                    user={member}
+                    isOwn={member.isPatron}
+                    size={100}
                   />
                 </div>
                 {/* Indicateur en ligne */}

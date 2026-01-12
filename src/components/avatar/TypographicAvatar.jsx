@@ -1,5 +1,5 @@
 import React from 'react';
-import { getPreviousLevel, getContentForLevel } from '../../lib/avatarEngine';
+import { getPreviousLevel } from '../../lib/avatarEngine';
 
 /**
  * Composant d'avatar typographique
