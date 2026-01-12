@@ -65,8 +65,8 @@ export function initializeDemoUsers() {
       birthDate: `${1995 - botData.age}-0${(index % 12) + 1}-15`,
       gender: botData.gender,
 
-      // Avatar et photos
-      avatar: {},
+      // Avatar (système typographique - pas d'image)
+      // Les métriques ci-dessous détermineront l'avatar typographique
       photos: [
         { id: 1, emoji: index % 10 === 0 ? '🧘‍♀️' : index % 10 === 1 ? '📷' : index % 10 === 2 ? '🥾' : index % 10 === 3 ? '🍳' : index % 10 === 4 ? '🎵' : index % 10 === 5 ? '🏄‍♀️' : index % 10 === 6 ? '🏠' : index % 10 === 7 ? '🎭' : index % 10 === 8 ? '🍫' : '💻', caption: 'Ma passion du moment' },
         { id: 2, emoji: index % 5 === 0 ? '🌅' : index % 5 === 1 ? '🎉' : index % 5 === 2 ? '🏔️' : index % 5 === 3 ? '🌊' : '🌃', caption: 'Coucher de soleil' },
@@ -120,6 +120,17 @@ export function initializeDemoUsers() {
       premium: index === 0,
       badges: index === 0 ? ['bot', 'premium'] : ['bot'],
       stats: { letters: Math.floor(Math.random() * 50), games: Math.floor(Math.random() * 30), bars: Math.floor(Math.random() * 20) },
+
+      // Métriques pour avatar typographique
+      daysSinceJoined: Math.floor(Math.random() * 60) + 1, // 1-60 jours
+      messagesCount: Math.floor(Math.random() * 100), // 0-100 messages
+      avgMessageLength: Math.floor(Math.random() * 50) + 5, // 5-55 mots
+      avgResponseDelay: Math.floor(Math.random() * 24) + 1, // 1-24 heures
+      consistencyScore: Math.floor(Math.random() * 100), // 0-100
+      vocabularyDiversity: Math.random() * 0.6 + 0.2, // 0.2-0.8
+      profileViewsCount: Math.floor(Math.random() * 200),
+      reactionsGiven: Math.floor(Math.random() * 50),
+      nightMessagesRatio: Math.random() * 0.5, // 0-0.5
 
       // Compatibilité
       compatibility: Math.floor(Math.random() * 30) + 70,
