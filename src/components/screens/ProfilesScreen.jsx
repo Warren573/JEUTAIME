@@ -4,7 +4,6 @@ import { getAllUsers } from '../../utils/demoUsers';
 import QuestionGame from '../matching/QuestionGame';
 import { awardPoints, checkAndAwardBadge } from '../../utils/pointsSystem';
 import UserAvatar from '../avatar/UserAvatar';
-import Avatar from 'avataaars';
 import GiftSelector from '../gifts/GiftSelector';
 import MagicEffect from '../effects/MagicEffect';
 import { getReceivedGifts } from '../../utils/giftsSystem';
@@ -576,7 +575,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
               justifyContent: 'center',
               paddingBottom: '140px' // Espace pour les infos en bas
             }}>
-              {/* AVATAR STYLISÉ AVATAAARS */}
+              {/* AVATAR TYPOGRAPHIQUE */}
               <div style={{
                 width: '200px',
                 height: '200px',
@@ -589,18 +588,10 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
                 margin: '0 auto',
                 overflow: 'hidden'
               }}>
-                <Avatar
-                  style={{ width: '200px', height: '200px' }}
-                  avatarStyle="Circle"
-                  topType={currentProfile === 0 ? "ShortHairShortFlat" : currentProfile === 1 ? "LongHairStraight" : currentProfile === 2 ? "LongHairBun" : "LongHairCurly"}
-                  accessoriesType="Blank"
-                  hairColor={currentProfile === 0 ? "Brown" : currentProfile === 1 ? "BrownDark" : currentProfile === 2 ? "Blonde" : "Auburn"}
-                  facialHairType="Blank"
-                  clotheType={currentProfile === 0 ? "Hoodie" : "BlazerShirt"}
-                  eyeType="Happy"
-                  eyebrowType="Default"
-                  mouthType="Smile"
-                  skinColor="Light"
+                <UserAvatar
+                  user={currentProfileData}
+                  isOwn={false}
+                  size={200}
                 />
               </div>
 
@@ -655,7 +646,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
               justifyContent: 'center',
               paddingBottom: '140px' // Espace pour les infos en bas
             }}>
-              {/* AVATAR STYLISÉ AVATAAARS */}
+              {/* AVATAR TYPOGRAPHIQUE */}
               <div style={{
                 width: '200px',
                 height: '200px',
@@ -668,18 +659,10 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
                 margin: '0 auto',
                 overflow: 'hidden'
               }}>
-                <Avatar
-                  style={{ width: '200px', height: '200px' }}
-                  avatarStyle="Circle"
-                  topType={currentProfile === 0 ? "ShortHairShortFlat" : currentProfile === 1 ? "LongHairStraight" : currentProfile === 2 ? "LongHairBun" : "LongHairCurly"}
-                  accessoriesType="Blank"
-                  hairColor={currentProfile === 0 ? "Brown" : currentProfile === 1 ? "BrownDark" : currentProfile === 2 ? "Blonde" : "Auburn"}
-                  facialHairType="Blank"
-                  clotheType={currentProfile === 0 ? "Hoodie" : "BlazerShirt"}
-                  eyeType="Happy"
-                  eyebrowType="Default"
-                  mouthType="Smile"
-                  skinColor="Light"
+                <UserAvatar
+                  user={currentProfileData}
+                  isOwn={false}
+                  size={200}
                 />
               </div>
 
