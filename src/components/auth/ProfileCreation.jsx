@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import AvatarCreator from './AvatarCreator';
 import { applyReferralCode, initializeReferralCode } from '../../utils/referralSystem';
 
 export default function ProfileCreation({ email, onComplete }) {
@@ -12,8 +11,6 @@ export default function ProfileCreation({ email, onComplete }) {
     gender: '',
     city: '',
     zipCode: '',
-    avatar: null,
-    avatarConfig: null,
     bio: '',
     job: '',
     interests: '',
@@ -41,7 +38,7 @@ export default function ProfileCreation({ email, onComplete }) {
   const [error, setError] = useState('');
   const [referralMessage, setReferralMessage] = useState('');
 
-  const totalSteps = 7;
+  const totalSteps = 6;
 
   const calculateAge = (birthdate) => {
     const today = new Date();
@@ -80,34 +77,27 @@ export default function ProfileCreation({ email, onComplete }) {
     }
 
     if (step === 3) {
-      if (!profile.avatar) {
-        setError('Créez votre avatar avant de continuer');
-        return;
-      }
-    }
-
-    if (step === 4) {
       if (!profile.bio || profile.bio.length < 50) {
         setError('La bio doit contenir au moins 50 caractères');
         return;
       }
     }
 
-    if (step === 5) {
+    if (step === 4) {
       if (!profile.job || !profile.interests) {
         setError('Veuillez remplir tous les champs');
         return;
       }
     }
 
-    if (step === 6) {
+    if (step === 5) {
       if (!profile.physicalDescription) {
         setError('Choisis une description physique');
         return;
       }
     }
 
-    if (step === 7) {
+    if (step === 6) {
       // Validate all 3 questions are complete
       const q1 = profile.question1;
       const q2 = profile.question2;
@@ -327,36 +317,8 @@ export default function ProfileCreation({ email, onComplete }) {
             </>
           )}
 
-          {/* Étape 3: Avatar */}
+          {/* Étape 3: Bio */}
           {step === 3 && (
-            <>
-              <h2 style={{ fontSize: '28px', fontWeight: '700', margin: '0 0 10px 0', color: '#333' }}>Ton avatar</h2>
-              <p style={{ color: '#666', marginBottom: '20px' }}>Personnalise ton apparence</p>
-
-              {error && (
-                <div style={{ background: '#fee', border: '1px solid #fcc', borderRadius: '10px', padding: '12px', marginBottom: '20px', color: '#c33', fontSize: '14px' }}>
-                  {error}
-                </div>
-              )}
-
-              <AvatarCreator
-                gender={profile.gender}
-                onSave={(avatarUrl, avatarConfig) => {
-                  setProfile({ ...profile, avatar: avatarUrl, avatarConfig });
-                  setError('');
-                }}
-              />
-
-              {profile.avatar && (
-                <div style={{ marginTop: '15px', background: '#e8f5e9', border: '1px solid #81c784', borderRadius: '10px', padding: '12px', fontSize: '13px', color: '#2e7d32', textAlign: 'center' }}>
-                  ✓ Avatar créé ! Tu peux continuer ou le modifier avant de passer à l'étape suivante.
-                </div>
-              )}
-            </>
-          )}
-
-          {/* Étape 4: Bio */}
-          {step === 4 && (
             <>
               <h2 style={{ fontSize: '28px', fontWeight: '700', margin: '0 0 10px 0', color: '#333' }}>Parlez de vous</h2>
               <p style={{ color: '#666', marginBottom: '30px' }}>Une bio authentique et détaillée (min. 50 caractères)</p>
@@ -384,8 +346,8 @@ export default function ProfileCreation({ email, onComplete }) {
             </>
           )}
 
-          {/* Étape 5: Intérêts */}
-          {step === 5 && (
+          {/* Étape 4: Intérêts */}
+          {step === 4 && (
             <>
               <h2 style={{ fontSize: '28px', fontWeight: '700', margin: '0 0 10px 0', color: '#333' }}>Dernières touches</h2>
               <p style={{ color: '#666', marginBottom: '30px' }}>Pour mieux vous matcher</p>
@@ -570,8 +532,8 @@ export default function ProfileCreation({ email, onComplete }) {
             </>
           )}
 
-          {/* Étape 6: Description physique amusante */}
-          {step === 6 && (
+          {/* Étape 5: Description physique amusante */}
+          {step === 5 && (
             <>
               <h2 style={{ fontSize: '28px', fontWeight: '700', margin: '0 0 10px 0', color: '#333' }}>Comment te décrire ? 😄</h2>
               <p style={{ color: '#666', marginBottom: '20px' }}>Choisis ta description avec humour !</p>
@@ -623,8 +585,8 @@ export default function ProfileCreation({ email, onComplete }) {
             </>
           )}
 
-          {/* Étape 7: Créer tes 3 Questions */}
-          {step === 7 && (
+          {/* Étape 6: Créer tes 3 Questions */}
+          {step === 6 && (
             <>
               <h2 style={{ fontSize: '28px', fontWeight: '700', margin: '0 0 10px 0', color: '#333' }}>Tes 3 Questions 🎯</h2>
               <p style={{ color: '#666', marginBottom: '20px' }}>Crée 3 questions que les autres devront répondre pour matcher avec toi</p>

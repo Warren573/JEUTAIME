@@ -1,58 +1,36 @@
 import React from 'react';
+import TypographicAvatar from './TypographicAvatar';
+import { useAvatarEvolution } from '../../hooks/useAvatarEvolution';
 
 /**
- * Composant pour afficher l'avatar d'un utilisateur
- * Affiche l'image avatar si disponible, sinon un emoji par défaut
+ * Composant pour afficher l'avatar typographique d'un utilisateur
+ * Remplace complètement l'ancien système d'images/avataaars
+ *
+ * @param {Object} user - L'utilisateur
+ * @param {boolean} isOwn - Si c'est le profil de l'utilisateur actuel
+ * @param {number} size - Taille de l'avatar en pixels
  */
-export default function UserAvatar({ avatar, user, size = 50, emoji = '👤' }) {
-  // Priority 1: Use avatar URL if provided directly
-  const avatarUrl = avatar || user?.avatar;
+export default function UserAvatar({ user, isOwn = false, size = 50 }) {
+  // Calcule l'avatar typographique basé sur le comportement
+  const avatar = useAvatarEvolution(user);
 
-  if (avatarUrl) {
-    return (
-      <div style={{
-        width: `${size}px`,
-        height: `${size}px`,
-        borderRadius: '50%',
-        overflow: 'hidden',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        border: '2px solid var(--color-gold)',
-        background: 'var(--color-beige-light)'
-      }}>
-        <img
-          src={avatarUrl}
-          alt="Avatar"
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover'
-          }}
-          onError={(e) => {
-            // Fallback to emoji if image fails to load
-            e.target.style.display = 'none';
-            e.target.parentElement.innerHTML = `<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: ${size * 0.5}px; background: linear-gradient(135deg, #667eea, #764ba2);">${emoji}</div>`;
-          }}
-        />
-      </div>
-    );
-  }
+  // Détermine la taille relative
+  const sizeCategory = size < 60 ? 'small' : size > 100 ? 'large' : 'medium';
 
-  // Fallback: emoji
   return (
     <div style={{
       width: `${size}px`,
       height: `${size}px`,
-      borderRadius: '50%',
-      background: 'linear-gradient(135deg, #667eea, #764ba2)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      fontSize: `${size * 0.5}px`,
-      border: '2px solid var(--color-gold)'
+      overflow: 'hidden',
     }}>
-      {emoji}
+      <TypographicAvatar
+        avatar={avatar}
+        isOwn={isOwn}
+        size={sizeCategory}
+      />
     </div>
   );
 }
