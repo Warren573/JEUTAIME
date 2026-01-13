@@ -1,568 +1,606 @@
 /**
- * Composant Avatar principal (version réaliste détaillée)
- * Affiche un avatar graphique SVG avec détails, textures et gradients
+ * Composant Avatar ultra-réaliste avec filtres SVG avancés
  */
 
 import React from 'react';
 
-// Fonction utilitaire pour assombrir une couleur
+// Utilitaires de couleur
 const darkenColor = (color, percent) => {
   const num = parseInt(color.replace("#", ""), 16);
   const amt = Math.round(2.55 * percent);
-  const R = (num >> 16) - amt;
-  const G = (num >> 8 & 0x00FF) - amt;
-  const B = (num & 0x0000FF) - amt;
-  return "#" + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
-    (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
-    (B < 255 ? B < 1 ? 0 : B : 255))
-    .toString(16).slice(1);
+  const R = Math.max(0, Math.min(255, (num >> 16) - amt));
+  const G = Math.max(0, Math.min(255, (num >> 8 & 0x00FF) - amt));
+  const B = Math.max(0, Math.min(255, (num & 0x0000FF) - amt));
+  return "#" + ((1 << 24) + (R << 16) + (G << 8) + B).toString(16).slice(1);
 };
 
-// Styles de cheveux avec détails et texture
-const renderHair = (hairType, hairColor, scale = 1) => {
-  const darkHair = darkenColor(hairColor, 20);
-  const lightHair = hairColor + 'DD'; // Légère transparence
-
-  const styles = {
-    'short-1': (
-      <g>
-        {/* Base cheveux courts */}
-        <ellipse cx="0" cy="-35" rx="68" ry="48" fill={hairColor} />
-        <rect x="-68" y="-35" width="136" height="35" fill={hairColor} />
-        {/* Mèches individuelles */}
-        <path d="M -50 -60 Q -45 -70 -40 -65 L -42 -50" fill={darkHair} opacity="0.6" />
-        <path d="M -30 -65 Q -25 -75 -20 -70 L -22 -55" fill={darkHair} opacity="0.6" />
-        <path d="M -10 -68 Q -5 -78 0 -73 L -2 -58" fill={darkHair} opacity="0.6" />
-        <path d="M 10 -68 Q 15 -78 20 -70 L 18 -55" fill={darkHair} opacity="0.6" />
-        <path d="M 30 -65 Q 35 -75 40 -65 L 38 -50" fill={darkHair} opacity="0.6" />
-        <path d="M 50 -60 Q 55 -70 60 -65 L 58 -50" fill={darkHair} opacity="0.6" />
-        {/* Reflets */}
-        <ellipse cx="-25" cy="-55" rx="15" ry="8" fill="white" opacity="0.15" />
-        <ellipse cx="20" cy="-55" rx="15" ry="8" fill="white" opacity="0.15" />
-      </g>
-    ),
-    'short-2': (
-      <g>
-        {/* Coupe courte ébouriffée */}
-        <path d="M -60 -20 Q -50 -60 -30 -50 Q 0 -70 30 -50 Q 50 -60 60 -20 Z" fill={hairColor} />
-        {/* Mèches ébouriffées */}
-        <path d="M -45 -50 L -50 -65 Q -48 -68 -46 -65 Z" fill={darkHair} />
-        <path d="M -30 -55 L -32 -72 Q -30 -75 -28 -72 Z" fill={darkHair} />
-        <path d="M -10 -60 L -8 -75 Q -5 -77 -6 -74 Z" fill={darkHair} />
-        <path d="M 10 -62 L 12 -77 Q 15 -79 14 -76 Z" fill={darkHair} />
-        <path d="M 30 -58 L 34 -73 Q 36 -76 35 -73 Z" fill={darkHair} />
-        <path d="M 45 -52 L 50 -67 Q 52 -70 51 -67 Z" fill={darkHair} />
-        {/* Texture */}
-        {Array.from({length: 8}).map((_, i) => (
-          <line
-            key={i}
-            x1={-40 + i * 10}
-            y1={-50 + Math.sin(i) * 5}
-            x2={-40 + i * 10}
-            y2={-35 + Math.sin(i) * 5}
-            stroke={darkHair}
-            strokeWidth="1.5"
-            opacity="0.3"
-          />
-        ))}
-      </g>
-    ),
-    'medium-1': (
-      <g>
-        {/* Cheveux mi-longs avec volume */}
-        <ellipse cx="0" cy="-30" rx="72" ry="52" fill={hairColor} />
-        <path d="M -72 0 Q -77 35 -65 55 L -60 58 Q -70 40 -68 10 Z" fill={hairColor} />
-        <path d="M 72 0 Q 77 35 65 55 L 60 58 Q 70 40 68 10 Z" fill={hairColor} />
-        {/* Mèches sur les côtés */}
-        <path d="M -70 5 Q -75 25 -70 45 Q -68 35 -67 15" fill={darkHair} opacity="0.5" />
-        <path d="M -60 8 Q -63 28 -58 48 Q -57 38 -56 18" fill={darkHair} opacity="0.5" />
-        <path d="M 70 5 Q 75 25 70 45 Q 68 35 67 15" fill={darkHair} opacity="0.5" />
-        <path d="M 60 8 Q 63 28 58 48 Q 57 38 56 18" fill={darkHair} opacity="0.5" />
-        {/* Frange partielle */}
-        <path d="M -35 -40 Q -30 -25 -25 -35 Q -20 -45 -15 -35" fill={hairColor} />
-        <path d="M -10 -42 Q -5 -27 0 -37 Q 5 -47 10 -37" fill={hairColor} />
-        <path d="M 15 -40 Q 20 -25 25 -35 Q 30 -45 35 -35" fill={hairColor} />
-        {/* Reflets */}
-        <ellipse cx="-30" cy="-45" rx="20" ry="10" fill="white" opacity="0.2" />
-        <ellipse cx="25" cy="-45" rx="20" ry="10" fill="white" opacity="0.2" />
-      </g>
-    ),
-    'long-1': (
-      <g>
-        {/* Cheveux longs avec détails */}
-        <ellipse cx="0" cy="-30" rx="75" ry="52" fill={hairColor} />
-        {/* Mèches longues gauche */}
-        <path d="M -72 10 Q -82 65 -75 95 L -70 98 Q -75 70 -70 15 Z" fill={hairColor} />
-        <path d="M -60 12 Q -68 68 -62 98 L -58 100 Q -63 72 -58 17 Z" fill={darkHair} opacity="0.7" />
-        <path d="M -50 15 Q -56 70 -50 100 L -46 102 Q -52 74 -48 20 Z" fill={lightHair} />
-        {/* Mèches longues droite */}
-        <path d="M 72 10 Q 82 65 75 95 L 70 98 Q 75 70 70 15 Z" fill={hairColor} />
-        <path d="M 60 12 Q 68 68 62 98 L 58 100 Q 63 72 58 17 Z" fill={darkHair} opacity="0.7" />
-        <path d="M 50 15 Q 56 70 50 100 L 46 102 Q 52 74 48 20 Z" fill={lightHair} />
-        {/* Texture sur les mèches */}
-        {Array.from({length: 6}).map((_, i) => (
-          <path
-            key={`left-${i}`}
-            d={`M ${-70 + i * 4} ${20 + i * 10} Q ${-72 + i * 4} ${40 + i * 12} ${-70 + i * 4} ${60 + i * 10}`}
-            stroke={darkHair}
-            strokeWidth="0.8"
-            fill="none"
-            opacity="0.4"
-          />
-        ))}
-        {Array.from({length: 6}).map((_, i) => (
-          <path
-            key={`right-${i}`}
-            d={`M ${70 - i * 4} ${20 + i * 10} Q ${72 - i * 4} ${40 + i * 12} ${70 - i * 4} ${60 + i * 10}`}
-            stroke={darkHair}
-            strokeWidth="0.8"
-            fill="none"
-            opacity="0.4"
-          />
-        ))}
-        {/* Reflets */}
-        <ellipse cx="-35" cy="-40" rx="18" ry="12" fill="white" opacity="0.25" />
-        <ellipse cx="30" cy="-40" rx="18" ry="12" fill="white" opacity="0.25" />
-      </g>
-    ),
-    'minimal': (
-      <g>
-        {/* Cheveux très courts / rasés */}
-        <path d="M -60 -25 Q -45 -52 -25 -48 Q 0 -58 25 -48 Q 45 -52 60 -25 L 60 -10 Q 50 -20 30 -25 Q 0 -30 -30 -25 Q -50 -20 -60 -10 Z"
-          fill={hairColor} />
-        {/* Texture rasée */}
-        {Array.from({length: 15}).map((_, i) => (
-          <circle
-            key={i}
-            cx={-50 + (i % 5) * 25}
-            cy={-40 + Math.floor(i / 5) * 8}
-            r="0.5"
-            fill={darkHair}
-            opacity="0.4"
-          />
-        ))}
-      </g>
-    )
-  };
-
-  return styles[hairType] || styles['short-1'];
+const lightenColor = (color, percent) => {
+  const num = parseInt(color.replace("#", ""), 16);
+  const amt = Math.round(2.55 * percent);
+  const R = Math.max(0, Math.min(255, (num >> 16) + amt));
+  const G = Math.max(0, Math.min(255, (num >> 8 & 0x00FF) + amt));
+  const B = Math.max(0, Math.min(255, (num & 0x0000FF) + amt));
+  return "#" + ((1 << 24) + (R << 16) + (G << 8) + B).toString(16).slice(1);
 };
 
-// Sourcils avec texture de poils
-const renderEyebrows = (eyebrowType, hairColor, scale = 1) => {
-  const browColor = darkenColor(hairColor, 30);
+// Définitions des filtres et effets SVG globaux
+const SVGDefs = ({ skinTone, hairColor, eyeColor }) => {
+  const skinLight = lightenColor(skinTone, 20);
+  const skinDark = darkenColor(skinTone, 15);
+  const hairDark = darkenColor(hairColor, 25);
+  const hairLight = lightenColor(hairColor, 15);
 
-  const styles = {
-    'straight': (
-      <>
-        {/* Base du sourcil */}
-        <path d="M -35 -20 L -15 -20" stroke={browColor} strokeWidth="3" strokeLinecap="round" opacity="0.8" />
-        <path d="M 15 -20 L 35 -20" stroke={browColor} strokeWidth="3" strokeLinecap="round" opacity="0.8" />
-        {/* Poils individuels */}
-        {Array.from({length: 5}).map((_, i) => (
-          <line key={`left-${i}`} x1={-35 + i * 5} y1={-20} x2={-34 + i * 5} y2={-22} stroke={browColor} strokeWidth="0.8" opacity="0.6" />
-        ))}
-        {Array.from({length: 5}).map((_, i) => (
-          <line key={`right-${i}`} x1={15 + i * 5} y1={-20} x2={16 + i * 5} y2={-22} stroke={browColor} strokeWidth="0.8" opacity="0.6" />
-        ))}
-      </>
-    ),
-    'arched': (
-      <>
-        <path d="M -35 -18 Q -25 -23 -15 -18" stroke={browColor} strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.8" />
-        <path d="M 15 -18 Q 25 -23 35 -18" stroke={browColor} strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.8" />
-        {/* Poils sur sourcil arqué */}
-        {Array.from({length: 5}).map((_, i) => {
-          const x = -35 + i * 5;
-          const y = -18 + (i === 2 ? -5 : i === 1 || i === 3 ? -3 : 0);
-          return <line key={`left-${i}`} x1={x} y1={y} x2={x + 1} y2={y - 2} stroke={browColor} strokeWidth="0.8" opacity="0.6" />;
+  return (
+    <defs>
+      {/* Filtre de flou pour ombres douces */}
+      <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+        <feOffset dx="0" dy="2" result="offsetblur"/>
+        <feComponentTransfer>
+          <feFuncA type="linear" slope="0.3"/>
+        </feComponentTransfer>
+        <feMerge>
+          <feMergeNode/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      {/* Filtre pour effet de profondeur */}
+      <filter id="depth">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="1.5"/>
+        <feOffset dx="0" dy="1" result="offsetblur"/>
+        <feComponentTransfer>
+          <feFuncA type="linear" slope="0.25"/>
+        </feComponentTransfer>
+        <feMerge>
+          <feMergeNode/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      {/* Gradient de peau réaliste */}
+      <radialGradient id="skinGradient" cx="50%" cy="30%">
+        <stop offset="0%" stopColor={skinLight} />
+        <stop offset="40%" stopColor={skinTone} />
+        <stop offset="80%" stopColor={skinDark} />
+        <stop offset="100%" stopColor={darkenColor(skinTone, 25)} />
+      </radialGradient>
+
+      {/* Gradient pour cheveux brillants */}
+      <linearGradient id="hairGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stopColor={hairLight} />
+        <stop offset="30%" stopColor={hairColor} />
+        <stop offset="70%" stopColor={hairColor} />
+        <stop offset="100%" stopColor={hairDark} />
+      </linearGradient>
+
+      {/* Gradient pour reflet des cheveux */}
+      <linearGradient id="hairShine" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stopColor="white" stopOpacity="0" />
+        <stop offset="40%" stopColor="white" stopOpacity="0.4" />
+        <stop offset="60%" stopColor="white" stopOpacity="0.4" />
+        <stop offset="100%" stopColor="white" stopOpacity="0" />
+      </linearGradient>
+
+      {/* Gradient iris détaillé */}
+      <radialGradient id="irisGradient" cx="50%" cy="50%">
+        <stop offset="0%" stopColor={lightenColor(eyeColor, 30)} />
+        <stop offset="30%" stopColor={eyeColor} />
+        <stop offset="70%" stopColor={darkenColor(eyeColor, 20)} />
+        <stop offset="100%" stopColor={darkenColor(eyeColor, 40)} />
+      </radialGradient>
+
+      {/* Pattern texture peau */}
+      <pattern id="skinTexture" x="0" y="0" width="4" height="4" patternUnits="userSpaceOnUse">
+        <circle cx="1" cy="1" r="0.3" fill={skinDark} opacity="0.05" />
+        <circle cx="3" cy="3" r="0.3" fill={skinDark} opacity="0.05" />
+      </pattern>
+
+      {/* Gradient pour pommettes rosées */}
+      <radialGradient id="blushGradient" cx="50%" cy="50%">
+        <stop offset="0%" stopColor="#FF6B9D" stopOpacity="0.25" />
+        <stop offset="60%" stopColor="#FF8BA7" stopOpacity="0.12" />
+        <stop offset="100%" stopColor="#FFB3C6" stopOpacity="0" />
+      </radialGradient>
+
+      {/* Gradient lèvres */}
+      <linearGradient id="lipGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stopColor="#D4999F" />
+        <stop offset="50%" stopColor="#C88B8B" />
+        <stop offset="100%" stopColor="#B67878" />
+      </linearGradient>
+    </defs>
+  );
+};
+
+// Rendu du visage avec anatomie détaillée
+const renderFace = (faceShape, skinTone) => {
+  const shadowTone = darkenColor(skinTone, 12);
+
+  return (
+    <g id="face">
+      {/* Ombre portée du visage */}
+      <ellipse cx="0" cy="8" rx="64" ry="77" fill="#00000020" filter="url(#softShadow)" />
+
+      {/* Base du visage avec gradient */}
+      <ellipse cx="0" cy="5" rx="62" ry="75" fill="url(#skinGradient)" />
+
+      {/* Texture de peau */}
+      <ellipse cx="0" cy="5" rx="62" ry="75" fill="url(#skinTexture)" opacity="0.3" />
+
+      {/* Structure osseuse - pommettes */}
+      <ellipse cx="-32" cy="12" rx="16" ry="22" fill={shadowTone} opacity="0.15" filter="url(#softShadow)" />
+      <ellipse cx="32" cy="12" rx="16" ry="22" fill={shadowTone} opacity="0.15" filter="url(#softShadow)" />
+
+      {/* Pommettes rosées (blush naturel) */}
+      <ellipse cx="-30" cy="15" rx="14" ry="18" fill="url(#blushGradient)" />
+      <ellipse cx="30" cy="15" rx="14" ry="18" fill="url(#blushGradient)" />
+
+      {/* Orbites des yeux (creux) */}
+      <ellipse cx="-26" cy="-12" rx="15" ry="10" fill={shadowTone} opacity="0.12" />
+      <ellipse cx="26" cy="-12" rx="15" ry="10" fill={shadowTone} opacity="0.12" />
+
+      {/* Arête du nez (highlight) */}
+      <ellipse cx="0" cy="0" rx="5" ry="20" fill="white" opacity="0.18" />
+
+      {/* Côtés du nez (ombres) */}
+      <ellipse cx="-8" cy="8" rx="4" ry="12" fill={shadowTone} opacity="0.1" />
+      <ellipse cx="8" cy="8" rx="4" ry="12" fill={shadowTone} opacity="0.1" />
+
+      {/* Ombre sous le nez */}
+      <ellipse cx="0" cy="18" rx="10" ry="4" fill={shadowTone} opacity="0.18" />
+
+      {/* Philtrum (sillon naso-labial) */}
+      <path d="M 0 18 L 0 22" stroke={shadowTone} strokeWidth="1.5" opacity="0.15" />
+      <path d="M -2 18 Q -1 20 -1 22" stroke={shadowTone} strokeWidth="0.8" opacity="0.1" />
+      <path d="M 2 18 Q 1 20 1 22" stroke={shadowTone} strokeWidth="0.8" opacity="0.1" />
+
+      {/* Ombre du menton */}
+      <ellipse cx="0" cy="58" rx="28" ry="16" fill={shadowTone} opacity="0.1" filter="url(#softShadow)" />
+
+      {/* Mâchoire (structure) */}
+      <path d="M -45 25 Q -50 40 -42 52 Q -35 58 -20 62 Q 0 64 20 62 Q 35 58 42 52 Q 50 40 45 25"
+        stroke={shadowTone} strokeWidth="0.5" fill="none" opacity="0.08" />
+
+      {/* Highlight front */}
+      <ellipse cx="-15" cy="-28" rx="18" ry="14" fill="white" opacity="0.15" />
+      <ellipse cx="15" cy="-28" rx="18" ry="14" fill="white" opacity="0.15" />
+
+      {/* Highlight pommettes supérieures */}
+      <ellipse cx="-28" cy="8" rx="12" ry="10" fill="white" opacity="0.12" />
+      <ellipse cx="28" cy="8" rx="12" ry="10" fill="white" opacity="0.12" />
+
+      {/* Contour du visage */}
+      <ellipse cx="0" cy="5" rx="62" ry="75" fill="none" stroke={darkenColor(skinTone, 20)} strokeWidth="0.8" opacity="0.3" />
+    </g>
+  );
+};
+
+// Nez détaillé 3D
+const renderNose = (skinTone) => {
+  const shadowTone = darkenColor(skinTone, 15);
+  const highlightTone = lightenColor(skinTone, 25);
+
+  return (
+    <g id="nose">
+      {/* Arête du nez - highlight central */}
+      <ellipse cx="0" cy="5" rx="3.5" ry="15" fill={highlightTone} opacity="0.6" />
+
+      {/* Structure osseuse du nez */}
+      <path d="M -6 -2 Q -3 0 -2 5 Q -1 8 -3 10 M 6 -2 Q 3 0 2 5 Q 1 8 3 10"
+        stroke={shadowTone} strokeWidth="0.8" fill="none" opacity="0.15" />
+
+      {/* Narines */}
+      <ellipse cx="-4.5" cy="14" rx="3" ry="3.5" fill={shadowTone} opacity="0.3" />
+      <ellipse cx="4.5" cy="14" rx="3" ry="3.5" fill={shadowTone} opacity="0.3" />
+
+      {/* Intérieur des narines (ombre profonde) */}
+      <ellipse cx="-4" cy="15" rx="2" ry="2.5" fill="#00000030" />
+      <ellipse cx="4" cy="15" rx="2" ry="2.5" fill="#00000030" />
+
+      {/* Bout du nez (highlight) */}
+      <ellipse cx="0" cy="13" rx="5" ry="4" fill={highlightTone} opacity="0.25" />
+
+      {/* Pointe du nez */}
+      <circle cx="0" cy="14" r="3.5" fill="white" opacity="0.1" />
+
+      {/* Ailes du nez */}
+      <path d="M -7 12 Q -5 14 -3 13" fill={shadowTone} opacity="0.1" />
+      <path d="M 7 12 Q 5 14 3 13" fill={shadowTone} opacity="0.1" />
+    </g>
+  );
+};
+
+// Yeux ultra-détaillés
+const renderEyes = (eyeType, eyeColor) => {
+  const darkIris = darkenColor(eyeColor, 25);
+
+  return (
+    <g id="eyes">
+      {/* ŒIL GAUCHE */}
+      <g id="leftEye">
+        {/* Ombre de l'œil */}
+        <ellipse cx="-26" cy="-9" rx="12" ry="14" fill="#00000015" filter="url(#softShadow)" />
+
+        {/* Blanc de l'œil (sclère) avec volume */}
+        <ellipse cx="-26" cy="-10" rx="11" ry="13" fill="#FFFFFF" />
+        <ellipse cx="-26" cy="-10" rx="11" ry="13" fill="url(#skinGradient)" opacity="0.05" />
+
+        {/* Veinules subtiles */}
+        <path d="M -35 -10 Q -30 -8 -28 -10" stroke="#FF000008" strokeWidth="0.4" />
+        <path d="M -33 -15 Q -29 -12 -26 -14" stroke="#FF000006" strokeWidth="0.4" />
+        <path d="M -30 -5 Q -28 -8 -25 -6" stroke="#FF000006" strokeWidth="0.4" />
+
+        {/* Limbe (anneau sombre autour de l'iris) */}
+        <circle cx="-26" cy="-10" r="7.5" fill={darkIris} opacity="0.6" />
+
+        {/* Iris avec gradient radial */}
+        <circle cx="-26" cy="-10" r="7" fill="url(#irisGradient)" />
+
+        {/* Motif cryptes de l'iris (lignes radiales) */}
+        {Array.from({length: 16}).map((_, i) => {
+          const angle = (i * Math.PI * 2) / 16;
+          const x1 = -26 + Math.cos(angle) * 2.5;
+          const y1 = -10 + Math.sin(angle) * 2.5;
+          const x2 = -26 + Math.cos(angle) * 6;
+          const y2 = -10 + Math.sin(angle) * 6;
+          return (
+            <line key={`left-crypt-${i}`} x1={x1} y1={y1} x2={x2} y2={y2}
+              stroke={darkIris} strokeWidth="0.5" opacity="0.4" />
+          );
         })}
-        {Array.from({length: 5}).map((_, i) => {
-          const x = 15 + i * 5;
-          const y = -18 + (i === 2 ? -5 : i === 1 || i === 3 ? -3 : 0);
-          return <line key={`right-${i}`} x1={x} y1={y} x2={x + 1} y2={y - 2} stroke={browColor} strokeWidth="0.8" opacity="0.6" />;
-        })}
-      </>
-    ),
-    'soft': (
-      <>
-        <path d="M -35 -20 Q -25 -21 -15 -20" stroke={browColor} strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.75" />
-        <path d="M 15 -20 Q 25 -21 35 -20" stroke={browColor} strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.75" />
-        {/* Poils fins */}
-        {Array.from({length: 6}).map((_, i) => (
-          <line key={`left-${i}`} x1={-35 + i * 4} y1={-20} x2={-34 + i * 4} y2={-21.5} stroke={browColor} strokeWidth="0.6" opacity="0.5" />
-        ))}
-        {Array.from({length: 6}).map((_, i) => (
-          <line key={`right-${i}`} x1={15 + i * 4} y1={-20} x2={16 + i * 4} y2={-21.5} stroke={browColor} strokeWidth="0.6" opacity="0.5" />
-        ))}
-      </>
-    )
-  };
 
-  return styles[eyebrowType] || styles['straight'];
-};
-
-// Yeux détaillés avec cils et reflets
-const renderEyes = (eyeType, eyeColor, scale = 1) => {
-  const leftEyeX = -25;
-  const rightEyeX = 25;
-  const eyeY = -10;
-  const darkIris = darkenColor(eyeColor, 15);
-
-  const styles = {
-    'almond': (
-      <>
-        {/* Forme de l'œil en amande avec ombre */}
-        <ellipse cx={leftEyeX} cy={eyeY + 1} rx="11" ry="13" fill="#00000010" />
-        <ellipse cx={rightEyeX} cy={eyeY + 1} rx="11" ry="13" fill="#00000010" />
-
-        {/* Blanc de l'œil */}
-        <ellipse cx={leftEyeX} cy={eyeY} rx="10" ry="12" fill="white" />
-        <ellipse cx={rightEyeX} cy={eyeY} rx="10" ry="12" fill="white" />
-
-        {/* Contour de l'œil */}
-        <ellipse cx={leftEyeX} cy={eyeY} rx="10" ry="12" fill="none" stroke="#3a3a3a" strokeWidth="1.2" />
-        <ellipse cx={rightEyeX} cy={eyeY} rx="10" ry="12" fill="none" stroke="#3a3a3a" strokeWidth="1.2" />
-
-        {/* Iris avec dégradé */}
-        <circle cx={leftEyeX} cy={eyeY} r="6.5" fill={eyeColor} />
-        <circle cx={rightEyeX} cy={eyeY} r="6.5" fill={eyeColor} />
-        <circle cx={leftEyeX} cy={eyeY} r="6.5" fill={darkIris} opacity="0.3" />
-        <circle cx={rightEyeX} cy={eyeY} r="6.5" fill={darkIris} opacity="0.3" />
-
-        {/* Motif de l'iris */}
-        {Array.from({length: 8}).map((_, i) => (
-          <line
-            key={`left-iris-${i}`}
-            x1={leftEyeX + Math.cos(i * Math.PI / 4) * 2}
-            y1={eyeY + Math.sin(i * Math.PI / 4) * 2}
-            x2={leftEyeX + Math.cos(i * Math.PI / 4) * 5}
-            y2={eyeY + Math.sin(i * Math.PI / 4) * 5}
-            stroke={darkIris}
-            strokeWidth="0.5"
-            opacity="0.4"
-          />
-        ))}
-        {Array.from({length: 8}).map((_, i) => (
-          <line
-            key={`right-iris-${i}`}
-            x1={rightEyeX + Math.cos(i * Math.PI / 4) * 2}
-            y1={eyeY + Math.sin(i * Math.PI / 4) * 2}
-            x2={rightEyeX + Math.cos(i * Math.PI / 4) * 5}
-            y2={eyeY + Math.sin(i * Math.PI / 4) * 5}
-            stroke={darkIris}
-            strokeWidth="0.5"
-            opacity="0.4"
-          />
-        ))}
+        {/* Collerette de l'iris (cercle intermédiaire) */}
+        <circle cx="-26" cy="-10" r="4" fill="none" stroke={darkIris} strokeWidth="0.6" opacity="0.3" />
 
         {/* Pupille */}
-        <circle cx={leftEyeX} cy={eyeY} r="3.5" fill="#0a0a0a" />
-        <circle cx={rightEyeX} cy={eyeY} r="3.5" fill="#0a0a0a" />
+        <circle cx="-26" cy="-10" r="3.5" fill="#0a0a0a" />
 
-        {/* Reflets multiples */}
-        <circle cx={leftEyeX + 2} cy={eyeY - 2} r="2" fill="white" opacity="0.95" />
-        <circle cx={rightEyeX + 2} cy={eyeY - 2} r="2" fill="white" opacity="0.95" />
-        <circle cx={leftEyeX - 1.5} cy={eyeY + 2} r="1" fill="white" opacity="0.6" />
-        <circle cx={rightEyeX - 1.5} cy={eyeY + 2} r="1" fill="white" opacity="0.6" />
+        {/* Reflets dans la pupille */}
+        <circle cx="-24.5" cy="-11.5" r="2" fill="white" opacity="0.9" />
+        <circle cx="-27" cy="-8" r="1" fill="white" opacity="0.6" />
+        <ellipse cx="-24" cy="-7" rx="1.2" ry="0.8" fill="white" opacity="0.4" />
+
+        {/* Contour de l'œil (paupière supérieure) */}
+        <path d="M -37 -10 Q -32 -15 -26 -15 Q -20 -15 -15 -10"
+          stroke="#3a3a3a" strokeWidth="1.5" fill="none" opacity="0.8" />
+
+        {/* Paupière inférieure */}
+        <path d="M -37 -10 Q -32 -6 -26 -5 Q -20 -6 -15 -10"
+          stroke="#3a3a3a" strokeWidth="1" fill="none" opacity="0.6" />
 
         {/* Cils supérieurs */}
-        {Array.from({length: 5}).map((_, i) => {
-          const angle = -0.6 + (i * 0.3);
+        {Array.from({length: 8}).map((_, i) => {
+          const x = -35 + i * 2.8;
+          const startY = -10 - Math.abs(4 - i) * 1.2;
+          const endY = startY - 4 - Math.random() * 2;
+          const curvature = (i - 4) * 0.5;
           return (
-            <path
-              key={`left-lash-top-${i}`}
-              d={`M ${leftEyeX - 8 + i * 4} ${eyeY - 11} Q ${leftEyeX - 8 + i * 4 + Math.sin(angle)} ${eyeY - 15} ${leftEyeX - 7 + i * 4} ${eyeY - 14}`}
-              stroke="#2a2a2a"
-              strokeWidth="0.6"
-              fill="none"
-              opacity="0.7"
-            />
+            <path key={`left-lash-top-${i}`}
+              d={`M ${x} ${startY} Q ${x + curvature} ${endY - 1} ${x + curvature * 0.5} ${endY}`}
+              stroke="#1a1a1a" strokeWidth="0.6" fill="none" opacity="0.8"
+              strokeLinecap="round" />
           );
         })}
+
+        {/* Cils inférieurs */}
         {Array.from({length: 5}).map((_, i) => {
-          const angle = -0.6 + (i * 0.3);
+          const x = -33 + i * 3.5;
+          const startY = -10 + Math.abs(2 - i) * 0.8;
+          const endY = startY + 2 + Math.random();
           return (
-            <path
-              key={`right-lash-top-${i}`}
-              d={`M ${rightEyeX - 8 + i * 4} ${eyeY - 11} Q ${rightEyeX - 8 + i * 4 + Math.sin(angle)} ${eyeY - 15} ${rightEyeX - 7 + i * 4} ${eyeY - 14}`}
-              stroke="#2a2a2a"
-              strokeWidth="0.6"
-              fill="none"
-              opacity="0.7"
-            />
+            <path key={`left-lash-bottom-${i}`}
+              d={`M ${x} ${startY} L ${x + (i - 2) * 0.3} ${endY}`}
+              stroke="#1a1a1a" strokeWidth="0.4" fill="none" opacity="0.5"
+              strokeLinecap="round" />
           );
         })}
-      </>
-    ),
-    'round': (
-      <>
+      </g>
+
+      {/* ŒIL DROIT (symétrique) */}
+      <g id="rightEye">
         {/* Ombre */}
-        <circle cx={leftEyeX} cy={eyeY + 1} r="12" fill="#00000010" />
-        <circle cx={rightEyeX} cy={eyeY + 1} r="12" fill="#00000010" />
+        <ellipse cx="26" cy="-9" rx="12" ry="14" fill="#00000015" filter="url(#softShadow)" />
 
-        {/* Blanc de l'œil */}
-        <circle cx={leftEyeX} cy={eyeY} r="11" fill="white" />
-        <circle cx={rightEyeX} cy={eyeY} r="11" fill="white" />
+        {/* Sclère */}
+        <ellipse cx="26" cy="-10" rx="11" ry="13" fill="#FFFFFF" />
+        <ellipse cx="26" cy="-10" rx="11" ry="13" fill="url(#skinGradient)" opacity="0.05" />
 
-        {/* Contour */}
-        <circle cx={leftEyeX} cy={eyeY} r="11" fill="none" stroke="#3a3a3a" strokeWidth="1.2" />
-        <circle cx={rightEyeX} cy={eyeY} r="11" fill="none" stroke="#3a3a3a" strokeWidth="1.2" />
+        {/* Veinules */}
+        <path d="M 35 -10 Q 30 -8 28 -10" stroke="#FF000008" strokeWidth="0.4" />
+        <path d="M 33 -15 Q 29 -12 26 -14" stroke="#FF000006" strokeWidth="0.4" />
+        <path d="M 30 -5 Q 28 -8 25 -6" stroke="#FF000006" strokeWidth="0.4" />
+
+        {/* Limbe */}
+        <circle cx="26" cy="-10" r="7.5" fill={darkIris} opacity="0.6" />
 
         {/* Iris */}
-        <circle cx={leftEyeX} cy={eyeY} r="6.5" fill={eyeColor} />
-        <circle cx={rightEyeX} cy={eyeY} r="6.5" fill={eyeColor} />
-        <circle cx={leftEyeX} cy={eyeY + 1} r="6" fill={darkIris} opacity="0.3" />
-        <circle cx={rightEyeX} cy={eyeY + 1} r="6" fill={darkIris} opacity="0.3" />
+        <circle cx="26" cy="-10" r="7" fill="url(#irisGradient)" />
 
-        {/* Motif iris */}
-        {Array.from({length: 12}).map((_, i) => (
-          <line
-            key={`left-${i}`}
-            x1={leftEyeX}
-            y1={eyeY}
-            x2={leftEyeX + Math.cos(i * Math.PI / 6) * 5.5}
-            y2={eyeY + Math.sin(i * Math.PI / 6) * 5.5}
-            stroke={darkIris}
-            strokeWidth="0.4"
-            opacity="0.3"
-          />
-        ))}
-        {Array.from({length: 12}).map((_, i) => (
-          <line
-            key={`right-${i}`}
-            x1={rightEyeX}
-            y1={eyeY}
-            x2={rightEyeX + Math.cos(i * Math.PI / 6) * 5.5}
-            y2={eyeY + Math.sin(i * Math.PI / 6) * 5.5}
-            stroke={darkIris}
-            strokeWidth="0.4"
-            opacity="0.3"
-          />
-        ))}
+        {/* Cryptes */}
+        {Array.from({length: 16}).map((_, i) => {
+          const angle = (i * Math.PI * 2) / 16;
+          const x1 = 26 + Math.cos(angle) * 2.5;
+          const y1 = -10 + Math.sin(angle) * 2.5;
+          const x2 = 26 + Math.cos(angle) * 6;
+          const y2 = -10 + Math.sin(angle) * 6;
+          return (
+            <line key={`right-crypt-${i}`} x1={x1} y1={y1} x2={x2} y2={y2}
+              stroke={darkIris} strokeWidth="0.5" opacity="0.4" />
+          );
+        })}
+
+        {/* Collerette */}
+        <circle cx="26" cy="-10" r="4" fill="none" stroke={darkIris} strokeWidth="0.6" opacity="0.3" />
 
         {/* Pupille */}
-        <circle cx={leftEyeX} cy={eyeY} r="3.5" fill="#0a0a0a" />
-        <circle cx={rightEyeX} cy={eyeY} r="3.5" fill="#0a0a0a" />
+        <circle cx="26" cy="-10" r="3.5" fill="#0a0a0a" />
 
         {/* Reflets */}
-        <circle cx={leftEyeX + 2.5} cy={eyeY - 2.5} r="2.2" fill="white" opacity="0.95" />
-        <circle cx={rightEyeX + 2.5} cy={eyeY - 2.5} r="2.2" fill="white" opacity="0.95" />
-        <circle cx={leftEyeX - 2} cy={eyeY + 2} r="1.2" fill="white" opacity="0.6" />
-        <circle cx={rightEyeX - 2} cy={eyeY + 2} r="1.2" fill="white" opacity="0.6" />
+        <circle cx="27.5" cy="-11.5" r="2" fill="white" opacity="0.9" />
+        <circle cx="25" cy="-8" r="1" fill="white" opacity="0.6" />
+        <ellipse cx="28" cy="-7" rx="1.2" ry="0.8" fill="white" opacity="0.4" />
 
-        {/* Cils */}
-        {Array.from({length: 6}).map((_, i) => {
-          const angle = (i - 2.5) * 0.5;
+        {/* Paupières */}
+        <path d="M 15 -10 Q 20 -15 26 -15 Q 32 -15 37 -10"
+          stroke="#3a3a3a" strokeWidth="1.5" fill="none" opacity="0.8" />
+        <path d="M 15 -10 Q 20 -6 26 -5 Q 32 -6 37 -10"
+          stroke="#3a3a3a" strokeWidth="1" fill="none" opacity="0.6" />
+
+        {/* Cils supérieurs */}
+        {Array.from({length: 8}).map((_, i) => {
+          const x = 17 + i * 2.8;
+          const startY = -10 - Math.abs(4 - i) * 1.2;
+          const endY = startY - 4 - Math.random() * 2;
+          const curvature = (i - 4) * 0.5;
           return (
-            <path
-              key={`left-lash-${i}`}
-              d={`M ${leftEyeX + Math.cos(angle - Math.PI / 2) * 11} ${eyeY + Math.sin(angle - Math.PI / 2) * 11} L ${leftEyeX + Math.cos(angle - Math.PI / 2) * 15} ${eyeY + Math.sin(angle - Math.PI / 2) * 15}`}
-              stroke="#2a2a2a"
-              strokeWidth="0.7"
-              opacity="0.7"
-            />
+            <path key={`right-lash-top-${i}`}
+              d={`M ${x} ${startY} Q ${x + curvature} ${endY - 1} ${x + curvature * 0.5} ${endY}`}
+              stroke="#1a1a1a" strokeWidth="0.6" fill="none" opacity="0.8"
+              strokeLinecap="round" />
           );
         })}
-        {Array.from({length: 6}).map((_, i) => {
-          const angle = (i - 2.5) * 0.5;
+
+        {/* Cils inférieurs */}
+        {Array.from({length: 5}).map((_, i) => {
+          const x = 19 + i * 3.5;
+          const startY = -10 + Math.abs(2 - i) * 0.8;
+          const endY = startY + 2 + Math.random();
           return (
-            <path
-              key={`right-lash-${i}`}
-              d={`M ${rightEyeX + Math.cos(angle - Math.PI / 2) * 11} ${eyeY + Math.sin(angle - Math.PI / 2) * 11} L ${rightEyeX + Math.cos(angle - Math.PI / 2) * 15} ${eyeY + Math.sin(angle - Math.PI / 2) * 15}`}
-              stroke="#2a2a2a"
-              strokeWidth="0.7"
-              opacity="0.7"
-            />
+            <path key={`right-lash-bottom-${i}`}
+              d={`M ${x} ${startY} L ${x + (i - 2) * 0.3} ${endY}`}
+              stroke="#1a1a1a" strokeWidth="0.4" fill="none" opacity="0.5"
+              strokeLinecap="round" />
           );
         })}
-      </>
-    )
-  };
-
-  return styles[eyeType] || styles['almond'];
+      </g>
+    </g>
+  );
 };
 
-// Bouche détaillée avec lèvres
-const renderMouth = (mouthType, skinTone, scale = 1) => {
+// Sourcils réalistes
+const renderEyebrows = (eyebrowType, hairColor) => {
+  const browColor = darkenColor(hairColor, 30);
+  const browDark = darkenColor(hairColor, 45);
+
+  return (
+    <g id="eyebrows">
+      {/* Sourcil gauche */}
+      <g id="leftBrow">
+        {/* Base du sourcil (ombre) */}
+        <path d="M -38 -21 Q -30 -24 -18 -21"
+          stroke={browColor} strokeWidth="4" strokeLinecap="round" opacity="0.4" filter="url(#softShadow)" />
+
+        {/* Couche principale */}
+        <path d="M -38 -21 Q -30 -24 -18 -21"
+          stroke={browColor} strokeWidth="3.5" strokeLinecap="round" opacity="0.7" />
+
+        {/* Poils individuels (couche 1 - base) */}
+        {Array.from({length: 12}).map((_, i) => {
+          const x = -38 + i * 1.8;
+          const baseY = -21 + (i < 6 ? (6 - i) * 0.5 : (i - 6) * 0.4);
+          const angle = (i - 6) * 5;
+          const length = 3 + Math.random() * 2;
+          return (
+            <path key={`left-hair-base-${i}`}
+              d={`M ${x} ${baseY} l ${Math.sin(angle * Math.PI / 180) * length} ${-Math.cos(angle * Math.PI / 180) * length}`}
+              stroke={browDark} strokeWidth="0.6" opacity="0.5" strokeLinecap="round" />
+          );
+        })}
+
+        {/* Poils individuels (couche 2 - détails) */}
+        {Array.from({length: 15}).map((_, i) => {
+          const x = -38 + i * 1.4;
+          const baseY = -21 + (i < 7 ? (7 - i) * 0.5 : (i - 7) * 0.4);
+          const angle = (i - 7) * 6 + (Math.random() - 0.5) * 10;
+          const length = 2.5 + Math.random() * 1.5;
+          return (
+            <path key={`left-hair-detail-${i}`}
+              d={`M ${x} ${baseY} l ${Math.sin(angle * Math.PI / 180) * length} ${-Math.cos(angle * Math.PI / 180) * length}`}
+              stroke={browColor} strokeWidth="0.5" opacity="0.7" strokeLinecap="round" />
+          );
+        })}
+      </g>
+
+      {/* Sourcil droit */}
+      <g id="rightBrow">
+        {/* Base du sourcil */}
+        <path d="M 18 -21 Q 30 -24 38 -21"
+          stroke={browColor} strokeWidth="4" strokeLinecap="round" opacity="0.4" filter="url(#softShadow)" />
+
+        <path d="M 18 -21 Q 30 -24 38 -21"
+          stroke={browColor} strokeWidth="3.5" strokeLinecap="round" opacity="0.7" />
+
+        {/* Poils individuels (couche 1) */}
+        {Array.from({length: 12}).map((_, i) => {
+          const x = 18 + i * 1.8;
+          const baseY = -21 + (i < 6 ? i * 0.4 : (12 - i) * 0.5);
+          const angle = (6 - i) * 5;
+          const length = 3 + Math.random() * 2;
+          return (
+            <path key={`right-hair-base-${i}`}
+              d={`M ${x} ${baseY} l ${Math.sin(angle * Math.PI / 180) * length} ${-Math.cos(angle * Math.PI / 180) * length}`}
+              stroke={browDark} strokeWidth="0.6" opacity="0.5" strokeLinecap="round" />
+          );
+        })}
+
+        {/* Poils individuels (couche 2) */}
+        {Array.from({length: 15}).map((_, i) => {
+          const x = 18 + i * 1.4;
+          const baseY = -21 + (i < 7 ? i * 0.4 : (14 - i) * 0.5);
+          const angle = (7 - i) * 6 + (Math.random() - 0.5) * 10;
+          const length = 2.5 + Math.random() * 1.5;
+          return (
+            <path key={`right-hair-detail-${i}`}
+              d={`M ${x} ${baseY} l ${Math.sin(angle * Math.PI / 180) * length} ${-Math.cos(angle * Math.PI / 180) * length}`}
+              stroke={browColor} strokeWidth="0.5" opacity="0.7" strokeLinecap="round" />
+          );
+        })}
+      </g>
+    </g>
+  );
+};
+
+// Bouche détaillée avec anatomie
+const renderMouth = (mouthType, skinTone) => {
   const lipColor = '#C88B8B';
-  const darkLip = darkenColor(lipColor, 15);
+  const lipDark = darkenColor(lipColor, 20);
+  const lipLight = lightenColor(lipColor, 15);
 
-  const styles = {
-    'neutral': (
-      <g>
-        {/* Lèvre inférieure */}
-        <path d="M -15 26 Q -8 28 0 28 Q 8 28 15 26" fill={lipColor} opacity="0.7" />
-        <path d="M -15 26 Q -8 28 0 28 Q 8 28 15 26" fill="none" stroke={darkLip} strokeWidth="1.2" />
-        {/* Lèvre supérieure */}
-        <path d="M -15 25 Q -10 23 -5 23.5 Q 0 22 5 23.5 Q 10 23 15 25" fill={lipColor} opacity="0.6" />
-        <path d="M -15 25 Q -10 23 -5 23.5 Q 0 22 5 23.5 Q 10 23 15 25" fill="none" stroke={darkLip} strokeWidth="1.2" />
-        {/* Arc de Cupidon */}
-        <path d="M -3 22 Q 0 21 3 22" fill="none" stroke={darkLip} strokeWidth="0.8" opacity="0.6" />
-        {/* Reflet sur lèvre inférieure */}
-        <ellipse cx="0" cy="27" rx="8" ry="1.5" fill="white" opacity="0.25" />
-      </g>
-    ),
-    'slight-smile': (
-      <g>
-        {/* Lèvre inférieure souriante */}
-        <path d="M -18 23 Q -10 27 0 28 Q 10 27 18 23" fill={lipColor} opacity="0.7" />
-        <path d="M -18 23 Q -10 27 0 28 Q 10 27 18 23" fill="none" stroke={darkLip} strokeWidth="1.2" />
-        {/* Lèvre supérieure */}
-        <path d="M -18 22 Q -12 20 -6 21 Q 0 19 6 21 Q 12 20 18 22" fill={lipColor} opacity="0.6" />
-        <path d="M -18 22 Q -12 20 -6 21 Q 0 19 6 21 Q 12 20 18 22" fill="none" stroke={darkLip} strokeWidth="1.2" />
-        {/* Arc de Cupidon */}
-        <path d="M -4 19 Q 0 18 4 19" fill="none" stroke={darkLip} strokeWidth="0.8" opacity="0.6" />
-        {/* Reflet */}
-        <ellipse cx="0" cy="26" rx="10" ry="1.8" fill="white" opacity="0.25" />
-        {/* Coins de la bouche relevés */}
-        <path d="M -18 22 Q -20 24 -19 25" fill="none" stroke={darkLip} strokeWidth="0.8" opacity="0.4" />
-        <path d="M 18 22 Q 20 24 19 25" fill="none" stroke={darkLip} strokeWidth="0.8" opacity="0.4" />
-      </g>
-    ),
-    'closed': (
-      <g>
-        {/* Bouche fermée simple */}
-        <path d="M -15 24 Q 0 25 15 24" fill="none" stroke={darkLip} strokeWidth="1.8" strokeLinecap="round" />
-        {/* Lèvres pressées */}
-        <path d="M -15 24 Q -8 23.5 0 23.5 Q 8 23.5 15 24" fill={lipColor} opacity="0.5" />
-        <path d="M -15 24 Q -8 24.5 0 24.5 Q 8 24.5 15 24" fill={lipColor} opacity="0.5" />
-      </g>
-    )
-  };
+  return (
+    <g id="mouth">
+      {/* Ombre sous la lèvre inférieure */}
+      <ellipse cx="0" cy="30" rx="16" ry="3" fill={darkenColor(skinTone, 10)} opacity="0.2" filter="url(#softShadow)" />
 
-  return styles[mouthType] || styles['neutral'];
+      {/* Lèvre inférieure - volume */}
+      <path d="M -16 25 Q -10 28 0 29 Q 10 28 16 25 Q 12 27 8 28 Q 4 28.5 0 28.5 Q -4 28.5 -8 28 Q -12 27 -16 25 Z"
+        fill="url(#lipGradient)" opacity="0.85" />
+
+      {/* Lèvre inférieure - contour */}
+      <path d="M -16 25 Q -10 28 0 29 Q 10 28 16 25"
+        stroke={lipDark} strokeWidth="1" fill="none" opacity="0.6" />
+
+      {/* Highlight lèvre inférieure (humidité) */}
+      <ellipse cx="0" cy="27.5" rx="10" ry="2" fill="white" opacity="0.35" />
+      <ellipse cx="-6" cy="27" rx="4" ry="1.5" fill="white" opacity="0.25" />
+      <ellipse cx="6" cy="27" rx="4" ry="1.5" fill="white" opacity="0.25" />
+
+      {/* Lèvre supérieure - forme */}
+      <path d="M -16 24 Q -12 22 -6 22.5 Q -3 21.5 0 21 Q 3 21.5 6 22.5 Q 12 22 16 24"
+        fill="url(#lipGradient)" opacity="0.75" />
+
+      {/* Lèvre supérieure - contour */}
+      <path d="M -16 24 Q -12 22 -6 22.5 Q -3 21.5 0 21 Q 3 21.5 6 22.5 Q 12 22 16 24"
+        stroke={lipDark} strokeWidth="1" fill="none" opacity="0.6" />
+
+      {/* Arc de Cupidon (détaillé) */}
+      <path d="M -4 21 Q -2 20 0 19.5 Q 2 20 4 21"
+        stroke={lipDark} strokeWidth="0.8" fill="none" opacity="0.5" />
+      <path d="M -3 21 L -3 20.5 M 3 21 L 3 20.5"
+        stroke={lipDark} strokeWidth="0.5" opacity="0.3" />
+
+      {/* Ligne centrale de la bouche */}
+      <path d="M -16 24.5 Q -8 25.5 0 26 Q 8 25.5 16 24.5"
+        stroke={lipDark} strokeWidth="1.2" fill="none" opacity="0.4" />
+
+      {/* Commissures (coins) de la bouche */}
+      <circle cx="-16" cy="24.5" r="1.2" fill={darkenColor(skinTone, 15)} opacity="0.3" />
+      <circle cx="16" cy="24.5" r="1.2" fill={darkenColor(skinTone, 15)} opacity="0.3" />
+
+      {/* Plis nasogéniens (sillons du sourire) subtils */}
+      <path d="M -12 10 Q -14 16 -15 22"
+        stroke={darkenColor(skinTone, 8)} strokeWidth="0.6" fill="none" opacity="0.08" />
+      <path d="M 12 10 Q 14 16 15 22"
+        stroke={darkenColor(skinTone, 8)} strokeWidth="0.6" fill="none" opacity="0.08" />
+    </g>
+  );
 };
 
-// Forme de visage avec détails et texture
-const renderFace = (faceShape, skinTone, scale = 1) => {
-  const shadowTone = darkenColor(skinTone, 8);
-  const highlightTone = skinTone + 'AA';
+// Cheveux ultra-détaillés avec texture réaliste
+const renderHair = (hairType, hairColor) => {
+  const hairDark = darkenColor(hairColor, 30);
+  const hairMid = darkenColor(hairColor, 15);
+  const hairLight = lightenColor(hairColor, 10);
 
-  const shapes = {
-    'oval': (
-      <>
-        {/* Ombre portée */}
-        <ellipse cx="0" cy="7" rx="63" ry="76" fill="#00000012" />
+  return (
+    <g id="hair">
+      <g filter="url(#depth)">
+        {/* Cheveux courts style réaliste */}
+        <ellipse cx="0" cy="-32" rx="70" ry="50" fill="url(#hairGradient)" />
+        <rect x="-70" y="-32" width="140" height="32" fill="url(#hairGradient)" />
 
-        {/* Base du visage */}
-        <ellipse cx="0" cy="5" rx="62" ry="75" fill={skinTone} />
+        {/* Mèches de cheveux individuelles (couche arrière) */}
+        {Array.from({length: 25}).map((_, i) => {
+          const x = -65 + (i * 5.5);
+          const startY = -50 - Math.random() * 15;
+          const controlY = -40 - Math.random() * 10;
+          const endY = -20 - Math.random() * 15;
+          const width = 2 + Math.random() * 2;
 
-        {/* Gradient subtil */}
-        <defs>
-          <radialGradient id="faceGradientOval" cx="50%" cy="30%">
-            <stop offset="0%" stopColor="white" stopOpacity="0.15" />
-            <stop offset="70%" stopColor="white" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        <ellipse cx="0" cy="5" rx="62" ry="75" fill="url(#faceGradientOval)" />
+          return (
+            <path key={`hair-back-${i}`}
+              d={`M ${x} ${startY} Q ${x + (Math.random() - 0.5) * 5} ${controlY} ${x + (Math.random() - 0.5) * 8} ${endY}`}
+              stroke={hairDark} strokeWidth={width} fill="none" opacity={0.6}
+              strokeLinecap="round" />
+          );
+        })}
 
-        {/* Contour du visage */}
-        <ellipse cx="0" cy="5" rx="62" ry="75" fill="none" stroke="#00000018" strokeWidth="1.5" />
+        {/* Mèches moyennes */}
+        {Array.from({length: 30}).map((_, i) => {
+          const x = -68 + (i * 4.6);
+          const startY = -55 - Math.random() * 12;
+          const controlY = -42 - Math.random() * 8;
+          const endY = -25 - Math.random() * 12;
+          const width = 1.5 + Math.random() * 1.5;
 
-        {/* Pommettes avec dégradé */}
-        <ellipse cx="-32" cy="15" rx="14" ry="20" fill={shadowTone} opacity="0.4" />
-        <ellipse cx="32" cy="15" rx="14" ry="20" fill={shadowTone} opacity="0.4" />
-        <ellipse cx="-30" cy="13" rx="10" ry="14" fill="#FF9999" opacity="0.15" />
-        <ellipse cx="30" cy="13" rx="10" ry="14" fill="#FF9999" opacity="0.15" />
+          return (
+            <path key={`hair-mid-${i}`}
+              d={`M ${x} ${startY} Q ${x + (Math.random() - 0.5) * 6} ${controlY} ${x + (Math.random() - 0.5) * 10} ${endY}`}
+              stroke={hairMid} strokeWidth={width} fill="none" opacity={0.7}
+              strokeLinecap="round" />
+          );
+        })}
 
-        {/* Ombre sous le nez */}
-        <ellipse cx="0" cy="12" rx="8" ry="4" fill={shadowTone} opacity="0.12" />
+        {/* Mèches avant (détails fins) */}
+        {Array.from({length: 35}).map((_, i) => {
+          const x = -70 + (i * 4);
+          const startY = -60 - Math.random() * 10;
+          const controlY = -45 - Math.random() * 7;
+          const endY = -30 - Math.random() * 10;
+          const width = 0.8 + Math.random();
 
-        {/* Ombre du menton */}
-        <ellipse cx="0" cy="55" rx="25" ry="18" fill={shadowTone} opacity="0.08" />
+          return (
+            <path key={`hair-front-${i}`}
+              d={`M ${x} ${startY} Q ${x + (Math.random() - 0.5) * 4} ${controlY} ${x + (Math.random() - 0.5) * 6} ${endY}`}
+              stroke={hairColor} strokeWidth={width} fill="none" opacity={0.8}
+              strokeLinecap="round" />
+          );
+        })}
 
-        {/* Ombre des yeux (orbites) */}
-        <ellipse cx="-25" cy="-8" rx="13" ry="8" fill={shadowTone} opacity="0.08" />
-        <ellipse cx="25" cy="-8" rx="13" ry="8" fill={shadowTone} opacity="0.08" />
+        {/* Reflets de lumière sur les cheveux */}
+        <ellipse cx="-25" cy="-48" rx="22" ry="12" fill="url(#hairShine)" opacity="0.5" />
+        <ellipse cx="18" cy="-50" rx="20" ry="10" fill="url(#hairShine)" opacity="0.45" />
+        <ellipse cx="0" cy="-55" rx="15" ry="8" fill="white" opacity="0.2" />
 
-        {/* Reflets sur le front et le nez */}
-        <ellipse cx="0" cy="-25" rx="20" ry="12" fill="white" opacity="0.12" />
-        <ellipse cx="0" cy="2" rx="4" ry="8" fill="white" opacity="0.1" />
-      </>
-    ),
-    'round': (
-      <>
-        {/* Ombre portée */}
-        <circle cx="0" cy="7" r="69" fill="#00000012" />
+        {/* Mèches fines au niveau du front */}
+        {Array.from({length: 12}).map((_, i) => {
+          const x = -30 + (i * 5);
+          const startY = -35;
+          const endY = -20 - Math.random() * 5;
 
-        {/* Base du visage */}
-        <circle cx="0" cy="5" r="68" fill={skinTone} />
-
-        {/* Gradient */}
-        <defs>
-          <radialGradient id="faceGradientRound" cx="50%" cy="35%">
-            <stop offset="0%" stopColor="white" stopOpacity="0.2" />
-            <stop offset="65%" stopColor="white" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        <circle cx="0" cy="5" r="68" fill="url(#faceGradientRound)" />
-
-        {/* Contour */}
-        <circle cx="0" cy="5" r="68" fill="none" stroke="#00000018" strokeWidth="1.5" />
-
-        {/* Pommettes rondes */}
-        <ellipse cx="-30" cy="18" rx="16" ry="22" fill={shadowTone} opacity="0.4" />
-        <ellipse cx="30" cy="18" rx="16" ry="22" fill={shadowTone} opacity="0.4" />
-        <circle cx="-28" cy="16" r="12" fill="#FF9999" opacity="0.18" />
-        <circle cx="28" cy="16" r="12" fill="#FF9999" opacity="0.18" />
-
-        {/* Autres détails */}
-        <ellipse cx="0" cy="12" rx="8" ry="4" fill={shadowTone} opacity="0.12" />
-        <circle cx="0" cy="50" r="22" fill={shadowTone} opacity="0.08" />
-        <ellipse cx="-25" cy="-7" rx="14" ry="9" fill={shadowTone} opacity="0.08" />
-        <ellipse cx="25" cy="-7" rx="14" ry="9" fill={shadowTone} opacity="0.08" />
-
-        {/* Reflets */}
-        <ellipse cx="0" cy="-22" rx="22" ry="14" fill="white" opacity="0.13" />
-        <ellipse cx="0" cy="2" rx="4" ry="8" fill="white" opacity="0.1" />
-      </>
-    ),
-    'square': (
-      <>
-        {/* Ombre portée */}
-        <rect x="-57" y="-58" width="116" height="130" rx="18" fill="#00000012" />
-
-        {/* Base du visage */}
-        <rect x="-58" y="-60" width="116" height="130" rx="18" fill={skinTone} />
-
-        {/* Gradient */}
-        <defs>
-          <radialGradient id="faceGradientSquare" cx="50%" cy="25%">
-            <stop offset="0%" stopColor="white" stopOpacity="0.15" />
-            <stop offset="75%" stopColor="white" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        <rect x="-58" y="-60" width="116" height="130" rx="18" fill="url(#faceGradientSquare)" />
-
-        {/* Contour */}
-        <rect x="-58" y="-60" width="116" height="130" rx="18" fill="none" stroke="#00000018" strokeWidth="1.5" />
-
-        {/* Pommettes angulaires */}
-        <ellipse cx="-28" cy="15" rx="14" ry="20" fill={shadowTone} opacity="0.4" />
-        <ellipse cx="28" cy="15" rx="14" ry="20" fill={shadowTone} opacity="0.4" />
-        <ellipse cx="-26" cy="13" rx="10" ry="14" fill="#FF9999" opacity="0.15" />
-        <ellipse cx="26" cy="13" rx="10" ry="14" fill="#FF9999" opacity="0.15" />
-
-        {/* Mâchoire définie */}
-        <path d="M -40 45 L -35 60 L -20 65 L 0 68 L 20 65 L 35 60 L 40 45"
-          fill="none" stroke={shadowTone} strokeWidth="1" opacity="0.15" />
-
-        {/* Autres détails */}
-        <ellipse cx="0" cy="12" rx="8" ry="4" fill={shadowTone} opacity="0.12" />
-        <ellipse cx="-25" cy="-8" rx="13" ry="8" fill={shadowTone} opacity="0.08" />
-        <ellipse cx="25" cy="-8" rx="13" ry="8" fill={shadowTone} opacity="0.08" />
-
-        {/* Reflets */}
-        <rect x="-18" y="-45" width="36" height="20" rx="5" fill="white" opacity="0.12" />
-        <ellipse cx="0" cy="2" rx="4" ry="8" fill="white" opacity="0.1" />
-      </>
-    )
-  };
-
-  return shapes[faceShape] || shapes['oval'];
+          return (
+            <path key={`hair-forehead-${i}`}
+              d={`M ${x} ${startY} Q ${x + (Math.random() - 0.5) * 3} ${(startY + endY) / 2} ${x + (Math.random() - 0.5) * 4} ${endY}`}
+              stroke={hairLight} strokeWidth={0.8} fill="none" opacity={0.7}
+              strokeLinecap="round" />
+          );
+        })}
+      </g>
+    </g>
+  );
 };
 
+// Composant principal Avatar
 export default function Avatar({ state, size = 200, animate = true }) {
   if (!state || !state.identity) {
     return (
@@ -582,44 +620,31 @@ export default function Avatar({ state, size = 200, animate = true }) {
       viewBox="0 0 200 200"
       style={{ overflow: 'visible' }}
     >
+      {/* Définitions SVG globales */}
+      <SVGDefs
+        skinTone={identity.skinTone}
+        hairColor={identity.hairColor}
+        eyeColor={identity.eyeColor}
+      />
+
       <g transform={`translate(100, 100) scale(${scale})`}>
-        {/* Cheveux arrière */}
-        <g opacity="0.95">
-          {renderHair(identity.hairType, identity.hairColor, scale)}
-        </g>
+        {/* Couche 1: Cheveux arrière */}
+        {renderHair(identity.hairType, identity.hairColor)}
 
-        {/* Visage avec détails */}
-        {renderFace(identity.faceShape, identity.skinTone, scale)}
+        {/* Couche 2: Visage avec anatomie détaillée */}
+        {renderFace(identity.faceShape, identity.skinTone)}
 
-        {/* Sourcils détaillés */}
-        {renderEyebrows(identity.eyebrowType, identity.hairColor, scale)}
+        {/* Couche 3: Sourcils */}
+        {renderEyebrows(identity.eyebrowType, identity.hairColor)}
 
-        {/* Yeux détaillés */}
-        {renderEyes(identity.eyeType, identity.eyeColor, scale)}
+        {/* Couche 4: Yeux ultra-détaillés */}
+        {renderEyes(identity.eyeType, identity.eyeColor)}
 
-        {/* Nez avec structure */}
-        <g opacity="0.6">
-          <ellipse cx="0" cy="8" rx="4" ry="7" fill="#00000010" />
-          <ellipse cx="-2" cy="12" rx="2.5" ry="3" fill="#00000008" />
-          <ellipse cx="2" cy="12" rx="2.5" ry="3" fill="#00000008" />
-        </g>
+        {/* Couche 5: Nez 3D */}
+        {renderNose(identity.skinTone)}
 
-        {/* Bouche détaillée */}
-        {renderMouth(identity.mouthType, identity.skinTone, scale)}
-
-        {/* Cheveux avant (frange si applicable) */}
-        {identity.hairType.includes('long') && (
-          <g>
-            <path d="M -40 -30 Q -30 -20 -20 -25 Q -10 -30 0 -25 Q 10 -30 20 -25 Q 30 -20 40 -30"
-              fill={identity.hairColor} opacity="0.9" />
-            {/* Mèches de frange */}
-            <path d="M -35 -28 L -33 -18" stroke={darkenColor(identity.hairColor, 20)} strokeWidth="1.5" opacity="0.6" />
-            <path d="M -20 -26 L -18 -16" stroke={darkenColor(identity.hairColor, 20)} strokeWidth="1.5" opacity="0.6" />
-            <path d="M 0 -27 L 0 -17" stroke={darkenColor(identity.hairColor, 20)} strokeWidth="1.5" opacity="0.6" />
-            <path d="M 20 -26 L 18 -16" stroke={darkenColor(identity.hairColor, 20)} strokeWidth="1.5" opacity="0.6" />
-            <path d="M 35 -28 L 33 -18" stroke={darkenColor(identity.hairColor, 20)} strokeWidth="1.5" opacity="0.6" />
-          </g>
-        )}
+        {/* Couche 6: Bouche détaillée */}
+        {renderMouth(identity.mouthType, identity.skinTone)}
       </g>
     </svg>
   );
