@@ -1,21 +1,34 @@
-import React from 'react';
-import TypographicAvatar from './TypographicAvatar';
-import { useAvatarEvolution } from '../../hooks/useAvatarEvolution';
-
 /**
- * Composant pour afficher l'avatar typographique d'un utilisateur
- * Remplace complètement l'ancien système d'images/avataaars
- *
- * @param {Object} user - L'utilisateur
- * @param {boolean} isOwn - Si c'est le profil de l'utilisateur actuel
- * @param {number} size - Taille de l'avatar en pixels
+ * Wrapper UserAvatar - Compatible avec l'interface existante de l'app
+ * Génère et affiche un avatar graphique
  */
-export default function UserAvatar({ user, isOwn = false, size = 50 }) {
-  // Calcule l'avatar typographique basé sur le comportement
-  const avatar = useAvatarEvolution(user);
 
-  // Détermine la taille relative
-  const sizeCategory = size < 60 ? 'small' : size > 100 ? 'large' : 'medium';
+import React, { useMemo } from 'react';
+import Avatar from './Avatar';
+import { createInitialState } from '../../lib/avatar/generator';
+
+export default function UserAvatar({ user, isOwn = false, size = 50 }) {
+  const avatarState = useMemo(() => {
+    if (!user) return null;
+    const userId = user.id || user.email || user.name || 'default';
+    return createInitialState(userId);
+  }, [user]);
+
+  if (!avatarState) {
+    return (
+      <div style={{
+        width: `${size}px`,
+        height: `${size}px`,
+        borderRadius: '50%',
+        background: '#E5E7EB',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <span style={{ fontSize: `${size * 0.4}px`, color: '#9CA3AF' }}>?</span>
+      </div>
+    );
+  }
 
   return (
     <div style={{
@@ -24,13 +37,9 @@ export default function UserAvatar({ user, isOwn = false, size = 50 }) {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      overflow: 'hidden',
+      overflow: 'hidden'
     }}>
-      <TypographicAvatar
-        avatar={avatar}
-        isOwn={isOwn}
-        size={sizeCategory}
-      />
+      <Avatar state={avatarState} size={size} animate={true} />
     </div>
   );
 }
