@@ -732,6 +732,12 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
               Accès réservé aux administrateurs et développeurs
             </p>
             <button
+              onClick={() => setScreen('avatar-test')}
+              style={{ width: '100%', padding: '15px', background: 'linear-gradient(135deg, #10b981, #059669)', border: 'none', color: 'white', borderRadius: '12px', cursor: 'pointer', fontWeight: '700', fontSize: '14px', marginBottom: '10px' }}
+            >
+              🎨 Test Avatars SVG
+            </button>
+            <button
               onClick={() => setShowAdminPanel?.(true)}
               style={{ width: '100%', padding: '15px', background: 'linear-gradient(135deg, #667eea, #764ba2)', border: 'none', color: 'white', borderRadius: '12px', cursor: 'pointer', fontWeight: '700', fontSize: '14px' }}
             >
