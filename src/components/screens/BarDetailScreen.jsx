@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import GiftSelector from '../gifts/GiftSelector';
 import MagicEffect from '../effects/MagicEffect';
 import MagicGiftsPanel from '../MagicGiftsPanel';
-import UserAvatar from '../avatar/UserAvatar';
+import UserAvatar from '../../avatar/UserAvatar';
 import {
   loadBarState,
   saveBarState,

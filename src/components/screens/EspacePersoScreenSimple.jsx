@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import UserAvatar from '../avatar/UserAvatar';
+import UserAvatar from '../../avatar/UserAvatar';
 import { allMagic, allGifts } from '../../data/magicGifts';
 
 export default function EspacePersoScreenSimple({

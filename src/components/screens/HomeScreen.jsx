@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { receivedOfferings } from '../../data/appData';
 import { useAdmin } from '../../contexts/AdminContext';
 import { getTitleFromPoints } from '../../config/gameConfig';
-import UserAvatar from '../avatar/UserAvatar';
+import UserAvatar from '../../avatar/UserAvatar';
 import MessageBottleModal from '../bottle/MessageBottleModal';
 import { getUnreadCount } from '../../utils/bottleSystem';
 

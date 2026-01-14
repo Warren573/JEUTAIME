@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getTitleFromPoints } from '../../config/gameConfig';
-import UserAvatar from '../avatar/UserAvatar';
+import UserAvatar from '../../avatar/UserAvatar';
 
 export default function RankingScreen({ currentUser, isEmbedded = false, onBack }) {
   const [rankings, setRankings] = useState([]);

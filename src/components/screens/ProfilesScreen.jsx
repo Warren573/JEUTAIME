@@ -3,7 +3,7 @@ import { profileBadges } from '../../data/appData';
 import { getAllUsers } from '../../utils/demoUsers';
 import QuestionGame from '../matching/QuestionGame';
 import { awardPoints, checkAndAwardBadge } from '../../utils/pointsSystem';
-import UserAvatar from '../avatar/UserAvatar';
+import UserAvatar from '../../avatar/UserAvatar';
 import GiftSelector from '../gifts/GiftSelector';
 import MagicEffect from '../effects/MagicEffect';
 import { getReceivedGifts } from '../../utils/giftsSystem';
