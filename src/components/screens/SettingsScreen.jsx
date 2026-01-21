@@ -203,7 +203,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
                 type="date"
                 value={profileData.birthDate}
                 onChange={(e) => setProfileData({ ...profileData, birthDate: e.target.value })}
-                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
+                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', boxSizing: 'border-box' }}
               />
             </div>
 
