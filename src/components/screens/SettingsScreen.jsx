@@ -136,7 +136,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
       {settingsTab === 'profile' && (
         <div>
           {/* Bio obligatoire */}
-          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid #E91E63' }}>
+          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid #E91E63', boxSizing: 'border-box' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
               <div style={{ fontSize: '24px' }}>✨</div>
               <h3 style={{ fontSize: '16px', margin: 0, fontWeight: '600', color: '#E91E63' }}>Bio (Obligatoire - Min 50 caractères)</h3>
@@ -157,7 +157,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
           </div>
 
           {/* Informations Personnelles */}
-          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid var(--color-gold)' }}>
+          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid var(--color-gold)', boxSizing: 'border-box' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
               <div style={{ fontSize: '24px' }}>👤</div>
               <h3 style={{ fontSize: '16px', margin: 0, fontWeight: '600', color: 'var(--color-gold-dark)' }}>Informations Personnelles</h3>
@@ -197,7 +197,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
               />
             </div>
 
-            <div style={{ marginBottom: '12px', overflow: 'hidden' }}>
+            <div style={{ marginBottom: '12px' }}>
               <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px', fontWeight: '600' }}>🎂 Date de naissance</label>
               <input
                 type="date"
@@ -224,7 +224,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
           </div>
 
           {/* Description physique */}
-          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid #FF6B9D' }}>
+          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid #FF6B9D', boxSizing: 'border-box' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
               <div style={{ fontSize: '24px' }}>😄</div>
               <h3 style={{ fontSize: '16px', margin: 0, fontWeight: '600', color: '#FF6B9D' }}>Description physique (avec humour)</h3>
@@ -279,7 +279,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
           </div>
 
           {/* Préférences de Rencontre */}
-          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid #9C27B0' }}>
+          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid #9C27B0', boxSizing: 'border-box' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
               <div style={{ fontSize: '24px' }}>💕</div>
               <h3 style={{ fontSize: '16px', margin: 0, fontWeight: '600', color: '#9C27B0' }}>Préférences de Rencontre</h3>
@@ -335,7 +335,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
           </div>
 
           {/* Tes 3 Questions */}
-          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid #667eea' }}>
+          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px', border: '2px solid #667eea', boxSizing: 'border-box' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
               <div style={{ fontSize: '24px' }}>🎯</div>
               <h3 style={{ fontSize: '16px', margin: 0, fontWeight: '600', color: '#667eea' }}>Tes 3 Questions</h3>
@@ -649,13 +649,13 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
 
           <h3 style={{ fontSize: '18px', margin: '0 0 15px 0', fontWeight: '600' }}>💰 Packs de pièces</h3>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '20px' }}>
-            <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', textAlign: 'center', border: '2px solid var(--color-brown-light)', cursor: 'pointer' }}>
+            <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', textAlign: 'center', border: '2px solid var(--color-brown-light)', cursor: 'pointer', boxSizing: 'border-box' }}>
               <div style={{ fontSize: '36px', marginBottom: '8px' }}>💰</div>
               <div style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '5px', color: '#FFD700' }}>1 000</div>
               <div style={{ fontSize: '12px', color: '#888', marginBottom: '10px' }}>pièces</div>
               <button style={{ width: '100%', padding: '8px', background: '#E91E63', border: 'none', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '13px', boxSizing: 'border-box' }}>2,99€</button>
             </div>
-            <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', textAlign: 'center', border: '2px solid #E91E63', cursor: 'pointer', position: 'relative' }}>
+            <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', textAlign: 'center', border: '2px solid #E91E63', cursor: 'pointer', position: 'relative', boxSizing: 'border-box' }}>
               <div style={{ position: 'absolute', top: '5px', right: '5px', background: '#E91E63', color: 'white', padding: '3px 8px', borderRadius: '5px', fontSize: '10px', fontWeight: 'bold' }}>+20%</div>
               <div style={{ fontSize: '36px', marginBottom: '8px' }}>💎</div>
               <div style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '5px', color: '#FFD700' }}>2 500</div>
@@ -710,7 +710,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
             </div>
           </div>
 
-          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px' }}>
+          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px', boxSizing: 'border-box' }}>
             <h3 style={{ fontSize: '16px', margin: '0 0 15px 0', fontWeight: '600' }}>Compte</h3>
 
             <button style={{ width: '100%', padding: '15px', background: '#dc3545', border: 'none', color: 'white', borderRadius: '12px', cursor: 'pointer', fontWeight: '600', fontSize: '14px', marginBottom: '10px', boxSizing: 'border-box' }}>
@@ -726,7 +726,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
           </div>
 
           {/* Admin Panel Access - Hidden section */}
-          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', border: '2px solid var(--color-brown-light)' }}>
+          <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', border: '2px solid var(--color-brown-light)', boxSizing: 'border-box' }}>
             <h3 style={{ fontSize: '16px', margin: '0 0 15px 0', fontWeight: '600', color: '#667eea' }}>🛠️ Développeur</h3>
             <p style={{ fontSize: '13px', color: '#888', marginBottom: '15px' }}>
               Accès réservé aux administrateurs et développeurs
