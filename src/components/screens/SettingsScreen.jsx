@@ -146,7 +146,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
               onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
               placeholder="Décrivez-vous de manière authentique. C'est la première chose que les autres verront..."
               maxLength={500}
-              style={{ width: '100%', padding: '12px', background: 'var(--color-beige)', border: `1px solid ${profileData.bio.length >= 50 ? '#4CAF50' : '#E91E63'}`, borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', minHeight: '100px', resize: 'vertical', fontFamily: 'inherit' }}
+              style={{ width: '100%', padding: '12px', background: 'var(--color-beige)', border: `1px solid ${profileData.bio.length >= 50 ? '#4CAF50' : '#E91E63'}`, borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', minHeight: '100px', resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box' }}
             />
             <div style={{ fontSize: '12px', color: profileData.bio.length >= 50 ? '#4CAF50' : '#888', marginTop: '8px' }}>
               {profileData.bio.length} / 500 caractères
@@ -170,7 +170,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
                 value={profileData.name}
                 onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
                 placeholder="Ex: Sophie Martin"
-                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
+                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', boxSizing: 'border-box' }}
               />
             </div>
 
@@ -182,7 +182,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
                 onChange={(e) => setProfileData({ ...profileData, postalCode: e.target.value })}
                 placeholder="75001"
                 maxLength={5}
-                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
+                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', boxSizing: 'border-box' }}
               />
             </div>
 
@@ -193,7 +193,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
                 value={profileData.city}
                 onChange={(e) => setProfileData({ ...profileData, city: e.target.value })}
                 placeholder="Paris"
-                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
+                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', boxSizing: 'border-box' }}
               />
             </div>
 
@@ -212,7 +212,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
               <select
                 value={profileData.gender}
                 onChange={(e) => setProfileData({ ...profileData, gender: e.target.value })}
-                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
+                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', boxSizing: 'border-box' }}
               >
                 <option value="">Sélectionnez votre genre</option>
                 <option value="Homme">Homme</option>
@@ -291,7 +291,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
               <select
                 value={profileData.interestedIn}
                 onChange={(e) => setProfileData({ ...profileData, interestedIn: e.target.value })}
-                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
+                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', boxSizing: 'border-box' }}
               >
                 <option value="">Sélectionnez...</option>
                 <option value="Femmes">Femmes</option>
@@ -305,7 +305,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
               <select
                 value={profileData.lookingFor}
                 onChange={(e) => setProfileData({ ...profileData, lookingFor: e.target.value })}
-                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
+                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', boxSizing: 'border-box' }}
               >
                 <option value="">Sélectionnez...</option>
                 <option value="Relation sérieuse">Relation sérieuse</option>
@@ -321,7 +321,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
               <select
                 value={profileData.children}
                 onChange={(e) => setProfileData({ ...profileData, children: e.target.value })}
-                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px' }}
+                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', boxSizing: 'border-box' }}
               >
                 <option value="">Sélectionnez...</option>
                 <option value="Je n'ai pas d'enfant">Je n'ai pas d'enfant</option>
@@ -350,33 +350,33 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
                 placeholder="Ex: Aimes-tu le fromage ?"
                 value={questions.question1.text}
                 onChange={(e) => setQuestions({ ...questions, question1: { ...questions.question1, text: e.target.value } })}
-                style={{ width: '100%', padding: '10px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', marginBottom: '10px' }}
+                style={{ width: '100%', padding: '10px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', marginBottom: '10px', boxSizing: 'border-box' }}
               />
               <input
                 type="text"
                 placeholder="A. Réponse A"
                 value={questions.question1.answerA}
                 onChange={(e) => setQuestions({ ...questions, question1: { ...questions.question1, answerA: e.target.value } })}
-                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px' }}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px', boxSizing: 'border-box' }}
               />
               <input
                 type="text"
                 placeholder="B. Réponse B"
                 value={questions.question1.answerB}
                 onChange={(e) => setQuestions({ ...questions, question1: { ...questions.question1, answerB: e.target.value } })}
-                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px' }}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px', boxSizing: 'border-box' }}
               />
               <input
                 type="text"
                 placeholder="C. Réponse C"
                 value={questions.question1.answerC}
                 onChange={(e) => setQuestions({ ...questions, question1: { ...questions.question1, answerC: e.target.value } })}
-                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px' }}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px', boxSizing: 'border-box' }}
               />
               <select
                 value={questions.question1.correctAnswer}
                 onChange={(e) => setQuestions({ ...questions, question1: { ...questions.question1, correctAnswer: e.target.value } })}
-                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px' }}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', boxSizing: 'border-box' }}
               >
                 <option value="">Bonne réponse ?</option>
                 <option value="A">A</option>
@@ -393,33 +393,33 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
                 placeholder="Ex: Préfères-tu la mer ou la montagne ?"
                 value={questions.question2.text}
                 onChange={(e) => setQuestions({ ...questions, question2: { ...questions.question2, text: e.target.value } })}
-                style={{ width: '100%', padding: '10px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', marginBottom: '10px' }}
+                style={{ width: '100%', padding: '10px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', marginBottom: '10px', boxSizing: 'border-box' }}
               />
               <input
                 type="text"
                 placeholder="A. Réponse A"
                 value={questions.question2.answerA}
                 onChange={(e) => setQuestions({ ...questions, question2: { ...questions.question2, answerA: e.target.value } })}
-                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px' }}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px', boxSizing: 'border-box' }}
               />
               <input
                 type="text"
                 placeholder="B. Réponse B"
                 value={questions.question2.answerB}
                 onChange={(e) => setQuestions({ ...questions, question2: { ...questions.question2, answerB: e.target.value } })}
-                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px' }}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px', boxSizing: 'border-box' }}
               />
               <input
                 type="text"
                 placeholder="C. Réponse C"
                 value={questions.question2.answerC}
                 onChange={(e) => setQuestions({ ...questions, question2: { ...questions.question2, answerC: e.target.value } })}
-                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px' }}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px', boxSizing: 'border-box' }}
               />
               <select
                 value={questions.question2.correctAnswer}
                 onChange={(e) => setQuestions({ ...questions, question2: { ...questions.question2, correctAnswer: e.target.value } })}
-                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px' }}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', boxSizing: 'border-box' }}
               >
                 <option value="">Bonne réponse ?</option>
                 <option value="A">A</option>
@@ -436,33 +436,33 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
                 placeholder="Ex: Quel est ton super-pouvoir idéal ?"
                 value={questions.question3.text}
                 onChange={(e) => setQuestions({ ...questions, question3: { ...questions.question3, text: e.target.value } })}
-                style={{ width: '100%', padding: '10px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', marginBottom: '10px' }}
+                style={{ width: '100%', padding: '10px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', marginBottom: '10px', boxSizing: 'border-box' }}
               />
               <input
                 type="text"
                 placeholder="A. Réponse A"
                 value={questions.question3.answerA}
                 onChange={(e) => setQuestions({ ...questions, question3: { ...questions.question3, answerA: e.target.value } })}
-                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px' }}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px', boxSizing: 'border-box' }}
               />
               <input
                 type="text"
                 placeholder="B. Réponse B"
                 value={questions.question3.answerB}
                 onChange={(e) => setQuestions({ ...questions, question3: { ...questions.question3, answerB: e.target.value } })}
-                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px' }}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px', boxSizing: 'border-box' }}
               />
               <input
                 type="text"
                 placeholder="C. Réponse C"
                 value={questions.question3.answerC}
                 onChange={(e) => setQuestions({ ...questions, question3: { ...questions.question3, answerC: e.target.value } })}
-                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px' }}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', marginBottom: '8px', boxSizing: 'border-box' }}
               />
               <select
                 value={questions.question3.correctAnswer}
                 onChange={(e) => setQuestions({ ...questions, question3: { ...questions.question3, correctAnswer: e.target.value } })}
-                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px' }}
+                style={{ width: '100%', padding: '8px', background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '6px', color: 'var(--color-text-primary)', fontSize: '13px', boxSizing: 'border-box' }}
               >
                 <option value="">Bonne réponse ?</option>
                 <option value="A">A</option>
@@ -653,14 +653,14 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
               <div style={{ fontSize: '36px', marginBottom: '8px' }}>💰</div>
               <div style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '5px', color: '#FFD700' }}>1 000</div>
               <div style={{ fontSize: '12px', color: '#888', marginBottom: '10px' }}>pièces</div>
-              <button style={{ width: '100%', padding: '8px', background: '#E91E63', border: 'none', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '13px' }}>2,99€</button>
+              <button style={{ width: '100%', padding: '8px', background: '#E91E63', border: 'none', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '13px', boxSizing: 'border-box' }}>2,99€</button>
             </div>
             <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', textAlign: 'center', border: '2px solid #E91E63', cursor: 'pointer', position: 'relative' }}>
               <div style={{ position: 'absolute', top: '5px', right: '5px', background: '#E91E63', color: 'white', padding: '3px 8px', borderRadius: '5px', fontSize: '10px', fontWeight: 'bold' }}>+20%</div>
               <div style={{ fontSize: '36px', marginBottom: '8px' }}>💎</div>
               <div style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '5px', color: '#FFD700' }}>2 500</div>
               <div style={{ fontSize: '12px', color: '#888', marginBottom: '10px' }}>pièces</div>
-              <button style={{ width: '100%', padding: '8px', background: '#E91E63', border: 'none', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '13px' }}>6,99€</button>
+              <button style={{ width: '100%', padding: '8px', background: '#E91E63', border: 'none', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '13px', boxSizing: 'border-box' }}>6,99€</button>
             </div>
           </div>
         </div>
@@ -713,7 +713,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
           <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px' }}>
             <h3 style={{ fontSize: '16px', margin: '0 0 15px 0', fontWeight: '600' }}>Compte</h3>
 
-            <button style={{ width: '100%', padding: '15px', background: '#dc3545', border: 'none', color: 'white', borderRadius: '12px', cursor: 'pointer', fontWeight: '600', fontSize: '14px', marginBottom: '10px' }}>
+            <button style={{ width: '100%', padding: '15px', background: '#dc3545', border: 'none', color: 'white', borderRadius: '12px', cursor: 'pointer', fontWeight: '600', fontSize: '14px', marginBottom: '10px', boxSizing: 'border-box' }}>
               🗑️ Supprimer mon compte
             </button>
 
@@ -733,7 +733,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
             </p>
             <button
               onClick={() => setScreen('avatar-test')}
-              style={{ width: '100%', padding: '15px', background: 'linear-gradient(135deg, #10b981, #059669)', border: 'none', color: 'white', borderRadius: '12px', cursor: 'pointer', fontWeight: '700', fontSize: '14px', marginBottom: '10px' }}
+              style={{ width: '100%', padding: '15px', background: 'linear-gradient(135deg, #10b981, #059669)', border: 'none', color: 'white', borderRadius: '12px', cursor: 'pointer', fontWeight: '700', fontSize: '14px', marginBottom: '10px', boxSizing: 'border-box' }}
             >
               🎨 Test Avatars SVG
             </button>
