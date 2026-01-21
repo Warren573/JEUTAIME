@@ -197,13 +197,13 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
               />
             </div>
 
-            <div style={{ marginBottom: '12px' }}>
+            <div style={{ marginBottom: '12px', overflow: 'hidden' }}>
               <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '5px', fontWeight: '600' }}>🎂 Date de naissance</label>
               <input
                 type="date"
                 value={profileData.birthDate}
                 onChange={(e) => setProfileData({ ...profileData, birthDate: e.target.value })}
-                style={{ width: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', boxSizing: 'border-box' }}
+                style={{ width: '100%', maxWidth: '100%', padding: '10px', background: 'var(--color-beige)', border: '2px solid var(--color-brown-light)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '14px', boxSizing: 'border-box' }}
               />
             </div>
 
