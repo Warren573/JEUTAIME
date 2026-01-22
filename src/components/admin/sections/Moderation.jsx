@@ -1,559 +1,540 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import {
+  getAllReports,
+  getPendingReports,
+  getReportsByStatus,
+  getReportStats,
+  resolveReport,
+  dismissReport
+} from '../../../services/moderationService';
+import { banUser, warnUser, restrictUser } from '../../../services/userService';
+import { logReportResolved, logReportDismissed, logUserBan, logUserWarn, logUserRestrict } from '../../../services/adminLogService';
 
 export default function Moderation() {
-  const [filterType, setFilterType] = useState('all');
-  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [filterStatus, setFilterStatus] = useState('pending');
+  const [reports, setReports] = useState([]);
+  const [stats, setStats] = useState({});
   const [selectedReport, setSelectedReport] = useState(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [actionInProgress, setActionInProgress] = useState(false);
 
-  const reports = [
-    {
-      id: 1,
-      type: 'harassment',
-      reportedUser: 'BadUser123',
-      reportedBy: 'Sophie_Paris',
-      reason: 'Messages inappropriés et insistants',
-      content: 'Envoie des messages répétitifs et dérangeants malgré les refus',
-      status: 'pending',
-      severity: 'high',
-      timestamp: '2024-10-25 14:23',
-      screenshots: 3
-    },
-    {
-      id: 2,
-      type: 'spam',
-      reportedUser: 'Promo_King',
-      reportedBy: 'MaxCoeur',
-      reason: 'Spam publicitaire',
-      content: 'Envoie des liens vers des sites externes de rencontre',
-      status: 'pending',
-      severity: 'medium',
-      timestamp: '2024-10-25 13:45',
-      screenshots: 1
-    },
-    {
-      id: 3,
-      type: 'inappropriate',
-      reportedUser: 'WeirdGuy',
-      reportedBy: 'Emma_Lyon',
-      reason: 'Contenu explicite non sollicité',
-      content: 'Photo de profil inappropriée',
-      status: 'pending',
-      severity: 'high',
-      timestamp: '2024-10-25 12:10',
-      screenshots: 2
-    },
-    {
-      id: 4,
-      type: 'fake',
-      reportedUser: 'FakeProfile99',
-      reportedBy: 'Thomas_92',
-      reason: 'Faux profil / Bot',
-      content: 'Profil suspect avec photos volées',
-      status: 'resolved',
-      severity: 'medium',
-      timestamp: '2024-10-25 10:30',
-      screenshots: 4,
-      action: 'banned',
-      resolvedBy: 'admin'
-    },
-    {
-      id: 5,
-      type: 'scam',
-      reportedUser: 'MoneyHunter',
-      reportedBy: 'LoveSeeker',
-      reason: 'Tentative d\'arnaque',
-      content: 'Demande d\'argent avec histoire inventée',
-      status: 'resolved',
-      severity: 'high',
-      timestamp: '2024-10-25 09:15',
-      screenshots: 5,
-      action: 'banned',
-      resolvedBy: 'admin'
-    },
-    {
-      id: 6,
-      type: 'harassment',
-      reportedUser: 'AnnoyingDude',
-      reportedBy: 'Julie_Nice',
-      reason: 'Harcèlement verbal',
-      content: 'Insultes dans le Salon Romantique',
-      status: 'investigating',
-      severity: 'medium',
-      timestamp: '2024-10-25 08:50',
-      screenshots: 2
-    }
-  ];
+  // Charger les données
+  useEffect(() => {
+    loadData();
+  }, [filterStatus]);
 
-  const stats = {
-    pending: reports.filter(r => r.status === 'pending').length,
-    investigating: reports.filter(r => r.status === 'investigating').length,
-    resolved: reports.filter(r => r.status === 'resolved').length,
-    total: reports.length
+  const loadData = () => {
+    const reportsData = getReportsByStatus(filterStatus);
+    const statsData = getReportStats();
+    setReports(reportsData);
+    setStats(statsData);
   };
 
-  const getTypeLabel = (type) => {
-    const labels = {
-      harassment: 'Harcèlement',
-      spam: 'Spam',
-      inappropriate: 'Contenu inapproprié',
-      fake: 'Faux profil',
-      scam: 'Arnaque'
-    };
-    return labels[type] || type;
-  };
-
-  const getTypeIcon = (type) => {
-    const icons = {
-      harassment: '⚠️',
-      spam: '📧',
-      inappropriate: '🔞',
-      fake: '🎭',
-      scam: '💸'
-    };
-    return icons[type] || '📝';
-  };
-
-  const getTypeColor = (type) => {
-    const colors = {
-      harassment: '#E91E63',
-      spam: '#FF9800',
-      inappropriate: '#dc3545',
-      fake: '#9C27B0',
-      scam: '#F44336'
-    };
-    return colors[type] || '#666';
-  };
-
-  const getSeverityColor = (severity) => {
-    switch(severity) {
-      case 'high': return '#dc3545';
-      case 'medium': return '#FF9800';
-      case 'low': return '#4CAF50';
-      default: return '#666';
-    }
-  };
-
-  const getStatusColor = (status) => {
-    switch(status) {
-      case 'pending': return '#FF9800';
-      case 'investigating': return '#2196F3';
-      case 'resolved': return '#4CAF50';
-      default: return '#666';
-    }
-  };
-
-  const getStatusLabel = (status) => {
-    const labels = {
-      pending: 'En attente',
-      investigating: 'En cours',
-      resolved: 'Résolu'
-    };
-    return labels[status] || status;
-  };
-
-  const handleViewDetails = (report) => {
+  const handleViewReport = (report) => {
     setSelectedReport(report);
     setShowDetailModal(true);
   };
 
-  const handleAction = (reportId, action) => {
-    console.log(`Action ${action} sur le rapport ${reportId}`);
+  const handleAction = async (action, duration = null, note = '') => {
+    if (!selectedReport || actionInProgress) return;
+
+    setActionInProgress(true);
+
+    try {
+      const report = selectedReport;
+
+      switch (action) {
+        case 'ban':
+          banUser(report.reportedUserId, report.reason, note);
+          resolveReport(report.id, 'banned', note);
+          logUserBan(report.reportedUserId, report.reportedUserName, report.reason);
+          logReportResolved(report.id, 'banned');
+          alert(`✅ ${report.reportedUserName} a été banni`);
+          break;
+
+        case 'restrict':
+          restrictUser(report.reportedUserId, report.reason, duration || 7, note);
+          resolveReport(report.id, 'restricted', note);
+          logUserRestrict(report.reportedUserId, report.reportedUserName, report.reason, duration || 7);
+          logReportResolved(report.id, 'restricted');
+          alert(`✅ ${report.reportedUserName} a été restreint pour ${duration || 7} jours`);
+          break;
+
+        case 'warn':
+          warnUser(report.reportedUserId, report.reason, note);
+          resolveReport(report.id, 'warned', note);
+          logUserWarn(report.reportedUserId, report.reportedUserName, report.reason);
+          logReportResolved(report.id, 'warned');
+          alert(`✅ ${report.reportedUserName} a reçu un avertissement`);
+          break;
+
+        case 'dismiss':
+          dismissReport(report.id, note);
+          logReportDismissed(report.id);
+          alert('✅ Signalement rejeté (aucune action prise)');
+          break;
+
+        default:
+          break;
+      }
+
+      setShowDetailModal(false);
+      setSelectedReport(null);
+      loadData();
+    } catch (error) {
+      alert('❌ Erreur lors de l\'action');
+      console.error(error);
+    } finally {
+      setActionInProgress(false);
+    }
   };
 
-  const filteredReports = filterType === 'all'
-    ? reports
-    : reports.filter(r => r.type === filterType);
+  const getSeverityColor = (severity) => {
+    switch (severity) {
+      case 'high': return '#dc3545';
+      case 'medium': return '#FF9800';
+      case 'low': return '#FFD700';
+      default: return '#888';
+    }
+  };
+
+  const getTypeLabel = (type) => {
+    const labels = {
+      harassment: '🚫 Harcèlement',
+      spam: '📧 Spam',
+      inappropriate: '🔞 Contenu inapproprié',
+      fake: '🤖 Faux profil',
+      scam: '💰 Arnaque',
+      other: '❓ Autre'
+    };
+    return labels[type] || type;
+  };
 
   return (
     <div style={{ padding: '30px' }}>
       {/* Header */}
       <div style={{ marginBottom: '30px' }}>
         <h1 style={{ fontSize: '32px', fontWeight: '700', margin: '0 0 8px 0' }}>Modération</h1>
-        <p style={{ color: '#888', fontSize: '14px', margin: 0 }}>Gérer les signalements et actions de modération</p>
+        <p style={{ color: '#888', fontSize: '14px', margin: 0 }}>Gérer les signalements et prendre des décisions</p>
       </div>
 
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '15px', marginBottom: '25px' }}>
         <div style={{ background: '#1a1a1a', borderRadius: '12px', padding: '15px', border: '1px solid #333' }}>
           <div style={{ fontSize: '11px', color: '#888', marginBottom: '4px' }}>Total signalements</div>
-          <div style={{ fontSize: '24px', fontWeight: '700', color: '#667eea' }}>{stats.total}</div>
+          <div style={{ fontSize: '24px', fontWeight: '700', color: '#FF9800' }}>{stats.total || 0}</div>
+        </div>
+        <div style={{ background: '#1a1a1a', borderRadius: '12px', padding: '15px', border: `2px solid ${stats.pending > 0 ? '#dc3545' : '#333'}` }}>
+          <div style={{ fontSize: '11px', color: '#888', marginBottom: '4px' }}>⏰ En attente</div>
+          <div style={{ fontSize: '24px', fontWeight: '700', color: '#dc3545' }}>{stats.pending || 0}</div>
         </div>
         <div style={{ background: '#1a1a1a', borderRadius: '12px', padding: '15px', border: '1px solid #333' }}>
-          <div style={{ fontSize: '11px', color: '#888', marginBottom: '4px' }}>En attente</div>
-          <div style={{ fontSize: '24px', fontWeight: '700', color: '#FF9800' }}>{stats.pending}</div>
+          <div style={{ fontSize: '11px', color: '#888', marginBottom: '4px' }}>🔴 Urgents</div>
+          <div style={{ fontSize: '24px', fontWeight: '700', color: '#FF4444' }}>{stats.high || 0}</div>
         </div>
         <div style={{ background: '#1a1a1a', borderRadius: '12px', padding: '15px', border: '1px solid #333' }}>
-          <div style={{ fontSize: '11px', color: '#888', marginBottom: '4px' }}>En cours</div>
-          <div style={{ fontSize: '24px', fontWeight: '700', color: '#2196F3' }}>{stats.investigating}</div>
-        </div>
-        <div style={{ background: '#1a1a1a', borderRadius: '12px', padding: '15px', border: '1px solid #333' }}>
-          <div style={{ fontSize: '11px', color: '#888', marginBottom: '4px' }}>Résolus</div>
-          <div style={{ fontSize: '24px', fontWeight: '700', color: '#4CAF50' }}>{stats.resolved}</div>
+          <div style={{ fontSize: '11px', color: '#888', marginBottom: '4px' }}>✅ Résolus</div>
+          <div style={{ fontSize: '24px', fontWeight: '700', color: '#4CAF50' }}>{stats.resolved || 0}</div>
         </div>
       </div>
 
-      {/* Filters */}
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '25px', flexWrap: 'wrap' }}>
-        <button
-          onClick={() => setFilterType('all')}
-          style={{
-            padding: '10px 20px',
-            background: filterType === 'all' ? '#667eea' : '#1a1a1a',
-            border: '1px solid #333',
-            borderRadius: '8px',
-            color: 'white',
-            fontSize: '13px',
-            fontWeight: '600',
-            cursor: 'pointer'
-          }}
-        >
-          Tous
-        </button>
-        <button
-          onClick={() => setFilterType('harassment')}
-          style={{
-            padding: '10px 20px',
-            background: filterType === 'harassment' ? '#E91E63' : '#1a1a1a',
-            border: '1px solid #333',
-            borderRadius: '8px',
-            color: 'white',
-            fontSize: '13px',
-            fontWeight: '600',
-            cursor: 'pointer'
-          }}
-        >
-          ⚠️ Harcèlement
-        </button>
-        <button
-          onClick={() => setFilterType('spam')}
-          style={{
-            padding: '10px 20px',
-            background: filterType === 'spam' ? '#FF9800' : '#1a1a1a',
-            border: '1px solid #333',
-            borderRadius: '8px',
-            color: 'white',
-            fontSize: '13px',
-            fontWeight: '600',
-            cursor: 'pointer'
-          }}
-        >
-          📧 Spam
-        </button>
-        <button
-          onClick={() => setFilterType('inappropriate')}
-          style={{
-            padding: '10px 20px',
-            background: filterType === 'inappropriate' ? '#dc3545' : '#1a1a1a',
-            border: '1px solid #333',
-            borderRadius: '8px',
-            color: 'white',
-            fontSize: '13px',
-            fontWeight: '600',
-            cursor: 'pointer'
-          }}
-        >
-          🔞 Inapproprié
-        </button>
-        <button
-          onClick={() => setFilterType('fake')}
-          style={{
-            padding: '10px 20px',
-            background: filterType === 'fake' ? '#9C27B0' : '#1a1a1a',
-            border: '1px solid #333',
-            borderRadius: '8px',
-            color: 'white',
-            fontSize: '13px',
-            fontWeight: '600',
-            cursor: 'pointer'
-          }}
-        >
-          🎭 Faux profil
-        </button>
-        <button
-          onClick={() => setFilterType('scam')}
-          style={{
-            padding: '10px 20px',
-            background: filterType === 'scam' ? '#F44336' : '#1a1a1a',
-            border: '1px solid #333',
-            borderRadius: '8px',
-            color: 'white',
-            fontSize: '13px',
-            fontWeight: '600',
-            cursor: 'pointer'
-          }}
-        >
-          💸 Arnaque
-        </button>
-      </div>
-
-      {/* Reports list */}
-      <div style={{ display: 'grid', gap: '15px' }}>
-        {filteredReports.map(report => (
-          <div key={report.id} style={{ background: '#1a1a1a', borderRadius: '12px', padding: '20px', border: '1px solid #333' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '15px' }}>
-              {/* Left side */}
-              <div style={{ flex: 1 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px' }}>
-                  <span style={{ fontSize: '24px' }}>{getTypeIcon(report.type)}</span>
-                  <div>
-                    <h3 style={{ fontSize: '16px', fontWeight: '700', margin: '0 0 4px 0' }}>
-                      {getTypeLabel(report.type)} - #{report.id}
-                    </h3>
-                    <p style={{ fontSize: '12px', color: '#888', margin: 0 }}>{report.timestamp}</p>
-                  </div>
-                </div>
-
-                <div style={{ marginBottom: '10px' }}>
-                  <div style={{ fontSize: '13px', color: '#ccc', marginBottom: '4px' }}>
-                    <span style={{ color: '#888' }}>Utilisateur signalé:</span>{' '}
-                    <span style={{ fontWeight: '600', color: '#E91E63' }}>{report.reportedUser}</span>
-                  </div>
-                  <div style={{ fontSize: '13px', color: '#ccc', marginBottom: '4px' }}>
-                    <span style={{ color: '#888' }}>Signalé par:</span>{' '}
-                    <span style={{ fontWeight: '600' }}>{report.reportedBy}</span>
-                  </div>
-                </div>
-
-                <div style={{ background: '#0a0a0a', borderRadius: '8px', padding: '12px', marginBottom: '10px' }}>
-                  <div style={{ fontSize: '12px', fontWeight: '600', color: '#ccc', marginBottom: '6px' }}>
-                    Raison:
-                  </div>
-                  <div style={{ fontSize: '13px', color: '#fff', marginBottom: '8px' }}>
-                    {report.reason}
-                  </div>
-                  <div style={{ fontSize: '12px', color: '#888' }}>
-                    {report.content}
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                  <span style={{
-                    padding: '4px 10px',
-                    borderRadius: '6px',
-                    fontSize: '11px',
-                    fontWeight: '600',
-                    background: `${getSeverityColor(report.severity)}22`,
-                    color: getSeverityColor(report.severity)
-                  }}>
-                    {report.severity === 'high' ? '🔴 Haute' : report.severity === 'medium' ? '🟠 Moyenne' : '🟢 Faible'}
-                  </span>
-                  <span style={{
-                    padding: '4px 10px',
-                    borderRadius: '6px',
-                    fontSize: '11px',
-                    fontWeight: '600',
-                    background: `${getStatusColor(report.status)}22`,
-                    color: getStatusColor(report.status)
-                  }}>
-                    {getStatusLabel(report.status)}
-                  </span>
-                  {report.screenshots > 0 && (
-                    <span style={{
-                      padding: '4px 10px',
-                      borderRadius: '6px',
-                      fontSize: '11px',
-                      fontWeight: '600',
-                      background: '#667eea22',
-                      color: '#667eea'
-                    }}>
-                      📸 {report.screenshots} capture{report.screenshots > 1 ? 's' : ''}
-                    </span>
-                  )}
-                </div>
-
-                {report.status === 'resolved' && report.action && (
-                  <div style={{ marginTop: '10px', fontSize: '12px', color: '#4CAF50' }}>
-                    ✓ Action prise: {report.action === 'banned' ? 'Utilisateur banni' : report.action} par {report.resolvedBy}
-                  </div>
-                )}
-              </div>
-
-              {/* Right side - Actions */}
-              {report.status === 'pending' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginLeft: '20px' }}>
-                  <button
-                    onClick={() => handleViewDetails(report)}
-                    style={{
-                      padding: '8px 16px',
-                      background: '#2196F3',
-                      border: 'none',
-                      borderRadius: '8px',
-                      color: 'white',
-                      fontSize: '12px',
-                      fontWeight: '600',
-                      cursor: 'pointer',
-                      whiteSpace: 'nowrap'
-                    }}
-                  >
-                    🔍 Détails
-                  </button>
-                  <button
-                    onClick={() => handleAction(report.id, 'investigate')}
-                    style={{
-                      padding: '8px 16px',
-                      background: '#FF9800',
-                      border: 'none',
-                      borderRadius: '8px',
-                      color: 'white',
-                      fontSize: '12px',
-                      fontWeight: '600',
-                      cursor: 'pointer',
-                      whiteSpace: 'nowrap'
-                    }}
-                  >
-                    🔎 Enquêter
-                  </button>
-                  <button
-                    onClick={() => handleAction(report.id, 'ban')}
-                    style={{
-                      padding: '8px 16px',
-                      background: '#dc3545',
-                      border: 'none',
-                      borderRadius: '8px',
-                      color: 'white',
-                      fontSize: '12px',
-                      fontWeight: '600',
-                      cursor: 'pointer',
-                      whiteSpace: 'nowrap'
-                    }}
-                  >
-                    🚫 Bannir
-                  </button>
-                  <button
-                    onClick={() => handleAction(report.id, 'dismiss')}
-                    style={{
-                      padding: '8px 16px',
-                      background: '#666',
-                      border: 'none',
-                      borderRadius: '8px',
-                      color: 'white',
-                      fontSize: '12px',
-                      fontWeight: '600',
-                      cursor: 'pointer',
-                      whiteSpace: 'nowrap'
-                    }}
-                  >
-                    ✗ Rejeter
-                  </button>
-                </div>
-              )}
-
-              {report.status === 'investigating' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginLeft: '20px' }}>
-                  <button
-                    onClick={() => handleViewDetails(report)}
-                    style={{
-                      padding: '8px 16px',
-                      background: '#2196F3',
-                      border: 'none',
-                      borderRadius: '8px',
-                      color: 'white',
-                      fontSize: '12px',
-                      fontWeight: '600',
-                      cursor: 'pointer',
-                      whiteSpace: 'nowrap'
-                    }}
-                  >
-                    🔍 Détails
-                  </button>
-                  <button
-                    onClick={() => handleAction(report.id, 'ban')}
-                    style={{
-                      padding: '8px 16px',
-                      background: '#dc3545',
-                      border: 'none',
-                      borderRadius: '8px',
-                      color: 'white',
-                      fontSize: '12px',
-                      fontWeight: '600',
-                      cursor: 'pointer',
-                      whiteSpace: 'nowrap'
-                    }}
-                  >
-                    🚫 Bannir
-                  </button>
-                  <button
-                    onClick={() => handleAction(report.id, 'resolve')}
-                    style={{
-                      padding: '8px 16px',
-                      background: '#4CAF50',
-                      border: 'none',
-                      borderRadius: '8px',
-                      color: 'white',
-                      fontSize: '12px',
-                      fontWeight: '600',
-                      cursor: 'pointer',
-                      whiteSpace: 'nowrap'
-                    }}
-                  >
-                    ✓ Résoudre
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
+      {/* Filtres */}
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
+        {['pending', 'resolved', 'dismissed', 'all'].map((status) => (
+          <button
+            key={status}
+            onClick={() => setFilterStatus(status)}
+            style={{
+              padding: '10px 20px',
+              background: filterStatus === status ? 'linear-gradient(135deg, #667eea, #764ba2)' : '#1a1a1a',
+              border: filterStatus === status ? '2px solid #667eea' : '1px solid #333',
+              borderRadius: '10px',
+              color: 'white',
+              cursor: 'pointer',
+              fontSize: '13px',
+              fontWeight: '600'
+            }}
+          >
+            {status === 'pending' ? '⏰ En attente' :
+             status === 'resolved' ? '✅ Résolus' :
+             status === 'dismissed' ? '❌ Rejetés' :
+             '📋 Tous'}
+          </button>
         ))}
       </div>
 
-      {/* Detail modal */}
-      {showDetailModal && selectedReport && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '20px' }}>
-          <div style={{ background: '#1a1a1a', borderRadius: '20px', padding: '30px', width: '100%', maxWidth: '600px', border: '1px solid #333', maxHeight: '90vh', overflowY: 'auto' }}>
-            <h2 style={{ fontSize: '24px', fontWeight: '700', margin: '0 0 20px 0' }}>
-              Détails du signalement #{selectedReport.id}
-            </h2>
-
-            <div style={{ marginBottom: '20px' }}>
-              <div style={{ fontSize: '13px', color: '#888', marginBottom: '8px' }}>Type</div>
-              <div style={{ fontSize: '16px', fontWeight: '600', color: getTypeColor(selectedReport.type) }}>
-                {getTypeIcon(selectedReport.type)} {getTypeLabel(selectedReport.type)}
-              </div>
-            </div>
-
-            <div style={{ marginBottom: '20px' }}>
-              <div style={{ fontSize: '13px', color: '#888', marginBottom: '8px' }}>Utilisateur signalé</div>
-              <div style={{ fontSize: '16px', fontWeight: '600', color: '#E91E63' }}>
-                {selectedReport.reportedUser}
-              </div>
-            </div>
-
-            <div style={{ marginBottom: '20px' }}>
-              <div style={{ fontSize: '13px', color: '#888', marginBottom: '8px' }}>Signalé par</div>
-              <div style={{ fontSize: '16px', fontWeight: '600' }}>
-                {selectedReport.reportedBy}
-              </div>
-            </div>
-
-            <div style={{ marginBottom: '20px' }}>
-              <div style={{ fontSize: '13px', color: '#888', marginBottom: '8px' }}>Raison</div>
-              <div style={{ fontSize: '14px', fontWeight: '600', marginBottom: '8px' }}>
-                {selectedReport.reason}
-              </div>
-              <div style={{ fontSize: '13px', color: '#ccc' }}>
-                {selectedReport.content}
-              </div>
-            </div>
-
-            <div style={{ marginBottom: '20px' }}>
-              <div style={{ fontSize: '13px', color: '#888', marginBottom: '8px' }}>Captures d'écran</div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
-                {Array(selectedReport.screenshots).fill(0).map((_, idx) => (
-                  <div key={idx} style={{ aspectRatio: '1', background: '#0a0a0a', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '32px', border: '1px solid #333' }}>
-                    📸
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <button
-              onClick={() => setShowDetailModal(false)}
-              style={{ width: '100%', padding: '12px', background: '#666', border: 'none', borderRadius: '10px', color: 'white', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}
+      {/* Liste des signalements */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+        {reports.length === 0 ? (
+          <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '40px', textAlign: 'center', border: '1px solid #333' }}>
+            <div style={{ fontSize: '48px', marginBottom: '15px' }}>✅</div>
+            <p style={{ fontSize: '16px', fontWeight: '600', marginBottom: '5px' }}>Aucun signalement</p>
+            <p style={{ fontSize: '13px', color: '#888', margin: 0 }}>Tout est calme pour le moment</p>
+          </div>
+        ) : (
+          reports.map((report) => (
+            <div
+              key={report.id}
+              style={{
+                background: '#1a1a1a',
+                borderRadius: '15px',
+                padding: '20px',
+                border: `2px solid ${report.severity === 'high' ? '#dc3545' : '#333'}`,
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+              onClick={() => handleViewReport(report)}
             >
-              Fermer
-            </button>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '15px' }}>
+                {/* Sévérité */}
+                <div style={{
+                  width: '60px',
+                  height: '60px',
+                  borderRadius: '12px',
+                  background: `${getSeverityColor(report.severity)}22`,
+                  border: `2px solid ${getSeverityColor(report.severity)}`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '24px',
+                  flexShrink: 0
+                }}>
+                  {report.severity === 'high' ? '🔴' : report.severity === 'medium' ? '🟠' : '🟡'}
+                </div>
+
+                {/* Contenu */}
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px', flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: '14px', fontWeight: '600' }}>{getTypeLabel(report.type)}</span>
+                    <span style={{
+                      padding: '4px 10px',
+                      background: '#0a0a0a',
+                      borderRadius: '6px',
+                      fontSize: '11px',
+                      color: '#888'
+                    }}>
+                      {report.reportedUserName}
+                    </span>
+                    <span style={{ fontSize: '11px', color: '#666' }}>
+                      signalé par {report.reportedByName}
+                    </span>
+                  </div>
+
+                  <p style={{ fontSize: '13px', margin: '0 0 10px 0', color: '#ccc' }}>
+                    <strong>Raison :</strong> {report.reason}
+                  </p>
+
+                  <p style={{ fontSize: '12px', margin: '0 0 10px 0', color: '#888' }}>
+                    {report.content}
+                  </p>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '15px', fontSize: '11px', color: '#666' }}>
+                    <span>📅 {new Date(report.timestamp).toLocaleString('fr-FR')}</span>
+                    {report.screenshots > 0 && <span>📸 {report.screenshots} captures</span>}
+                    {report.messageContext && <span>💬 {report.messageContext.length} messages</span>}
+                  </div>
+                </div>
+
+                {/* Badge statut */}
+                {report.status !== 'pending' && (
+                  <div style={{
+                    padding: '6px 12px',
+                    borderRadius: '8px',
+                    background: report.status === 'resolved' ? '#4CAF5022' : '#88888822',
+                    border: report.status === 'resolved' ? '1px solid #4CAF50' : '1px solid #888',
+                    fontSize: '11px',
+                    fontWeight: '600',
+                    color: report.status === 'resolved' ? '#4CAF50' : '#888'
+                  }}>
+                    {report.status === 'resolved' ? '✅ Résolu' : '❌ Rejeté'}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Modal de détail */}
+      {showDetailModal && selectedReport && (
+        <ReportDetailModal
+          report={selectedReport}
+          onClose={() => {
+            setShowDetailModal(false);
+            setSelectedReport(null);
+          }}
+          onAction={handleAction}
+          actionInProgress={actionInProgress}
+        />
+      )}
+    </div>
+  );
+}
+
+/**
+ * Modal de détail du signalement
+ */
+function ReportDetailModal({ report, onClose, onAction, actionInProgress }) {
+  const [note, setNote] = useState('');
+  const [restrictDays, setRestrictDays] = useState(7);
+
+  return (
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: 'rgba(0,0,0,0.8)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 1000,
+      padding: '20px'
+    }}>
+      <div style={{
+        background: '#1a1a1a',
+        borderRadius: '20px',
+        padding: '30px',
+        maxWidth: '800px',
+        width: '100%',
+        maxHeight: '90vh',
+        overflowY: 'auto',
+        border: '2px solid #333'
+      }}>
+        {/* Header */}
+        <div style={{ marginBottom: '25px', paddingBottom: '20px', borderBottom: '1px solid #333' }}>
+          <h2 style={{ fontSize: '24px', fontWeight: '700', margin: '0 0 10px 0' }}>
+            📋 Détails du signalement #{report.id}
+          </h2>
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            <span style={{
+              padding: '6px 12px',
+              background: report.severity === 'high' ? '#dc354522' : report.severity === 'medium' ? '#FF980022' : '#FFD70022',
+              border: `1px solid ${report.severity === 'high' ? '#dc3545' : report.severity === 'medium' ? '#FF9800' : '#FFD700'}`,
+              borderRadius: '8px',
+              fontSize: '12px',
+              fontWeight: '600',
+              color: report.severity === 'high' ? '#dc3545' : report.severity === 'medium' ? '#FF9800' : '#FFD700'
+            }}>
+              {report.severity === 'high' ? '🔴 URGENT' : report.severity === 'medium' ? '🟠 Moyen' : '🟡 Faible'}
+            </span>
+            <span style={{ fontSize: '12px', color: '#888' }}>
+              {new Date(report.timestamp).toLocaleString('fr-FR')}
+            </span>
           </div>
         </div>
-      )}
+
+        {/* Info */}
+        <div style={{ marginBottom: '25px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
+            <div>
+              <div style={{ fontSize: '11px', color: '#888', marginBottom: '4px' }}>Utilisateur signalé</div>
+              <div style={{ fontSize: '15px', fontWeight: '600' }}>{report.reportedUserName}</div>
+            </div>
+            <div>
+              <div style={{ fontSize: '11px', color: '#888', marginBottom: '4px' }}>Signalé par</div>
+              <div style={{ fontSize: '15px', fontWeight: '600' }}>{report.reportedByName}</div>
+            </div>
+          </div>
+
+          <div style={{ marginBottom: '15px' }}>
+            <div style={{ fontSize: '11px', color: '#888', marginBottom: '4px' }}>Raison</div>
+            <div style={{ fontSize: '14px' }}>{report.reason}</div>
+          </div>
+
+          <div>
+            <div style={{ fontSize: '11px', color: '#888', marginBottom: '4px' }}>Description</div>
+            <div style={{ fontSize: '13px', color: '#ccc' }}>{report.content}</div>
+          </div>
+        </div>
+
+        {/* Contexte messages */}
+        {report.messageContext && report.messageContext.length > 0 && (
+          <div style={{ marginBottom: '25px' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '15px' }}>💬 Contexte de conversation</h3>
+            <div style={{ background: '#0a0a0a', borderRadius: '10px', padding: '15px', maxHeight: '250px', overflowY: 'auto' }}>
+              {report.messageContext.map((msg, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    marginBottom: '10px',
+                    padding: '10px',
+                    background: msg.from === report.reportedUserName ? '#dc354511' : '#33333311',
+                    borderRadius: '8px',
+                    borderLeft: msg.from === report.reportedUserName ? '3px solid #dc3545' : '3px solid #666'
+                  }}
+                >
+                  <div style={{ fontSize: '11px', color: '#888', marginBottom: '4px' }}>
+                    <strong>{msg.from}</strong> · {msg.timestamp}
+                  </div>
+                  <div style={{ fontSize: '13px' }}>{msg.text}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Note admin */}
+        {report.status === 'pending' && (
+          <div style={{ marginBottom: '25px' }}>
+            <label style={{ fontSize: '12px', color: '#888', display: 'block', marginBottom: '8px' }}>
+              📝 Note interne (optionnel)
+            </label>
+            <textarea
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="Ajoutez une note pour justifier votre décision..."
+              style={{
+                width: '100%',
+                padding: '12px',
+                background: '#0a0a0a',
+                border: '1px solid #333',
+                borderRadius: '10px',
+                color: 'white',
+                fontSize: '13px',
+                minHeight: '80px',
+                resize: 'vertical',
+                fontFamily: 'inherit',
+                boxSizing: 'border-box'
+              }}
+            />
+          </div>
+        )}
+
+        {/* Actions */}
+        {report.status === 'pending' ? (
+          <div>
+            <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '15px' }}>⚖️ Décision</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '15px' }}>
+              <button
+                onClick={() => onAction('ban', null, note)}
+                disabled={actionInProgress}
+                style={{
+                  padding: '15px',
+                  background: 'linear-gradient(135deg, #dc3545, #b02a37)',
+                  border: 'none',
+                  borderRadius: '12px',
+                  color: 'white',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  cursor: actionInProgress ? 'not-allowed' : 'pointer',
+                  opacity: actionInProgress ? 0.5 : 1
+                }}
+              >
+                🚫 Bannir (permanent)
+              </button>
+
+              <div style={{ position: 'relative' }}>
+                <button
+                  onClick={() => onAction('restrict', restrictDays, note)}
+                  disabled={actionInProgress}
+                  style={{
+                    width: '100%',
+                    padding: '15px',
+                    background: 'linear-gradient(135deg, #FF9800, #F57C00)',
+                    border: 'none',
+                    borderRadius: '12px',
+                    color: 'white',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    cursor: actionInProgress ? 'not-allowed' : 'pointer',
+                    opacity: actionInProgress ? 0.5 : 1
+                  }}
+                >
+                  ⏸️ Restreindre ({restrictDays}j)
+                </button>
+                <input
+                  type="number"
+                  value={restrictDays}
+                  onChange={(e) => setRestrictDays(Math.max(1, parseInt(e.target.value) || 1))}
+                  min="1"
+                  max="365"
+                  style={{
+                    position: 'absolute',
+                    bottom: '-25px',
+                    left: 0,
+                    right: 0,
+                    padding: '4px 8px',
+                    background: '#0a0a0a',
+                    border: '1px solid #333',
+                    borderRadius: '6px',
+                    color: 'white',
+                    fontSize: '11px',
+                    textAlign: 'center'
+                  }}
+                />
+              </div>
+
+              <button
+                onClick={() => onAction('warn', null, note)}
+                disabled={actionInProgress}
+                style={{
+                  padding: '15px',
+                  background: 'linear-gradient(135deg, #FFD700, #FFA500)',
+                  border: 'none',
+                  borderRadius: '12px',
+                  color: '#000',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  cursor: actionInProgress ? 'not-allowed' : 'pointer',
+                  opacity: actionInProgress ? 0.5 : 1
+                }}
+              >
+                ⚠️ Avertir
+              </button>
+
+              <button
+                onClick={() => onAction('dismiss', null, note)}
+                disabled={actionInProgress}
+                style={{
+                  padding: '15px',
+                  background: '#0a0a0a',
+                  border: '2px solid #666',
+                  borderRadius: '12px',
+                  color: 'white',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  cursor: actionInProgress ? 'not-allowed' : 'pointer',
+                  opacity: actionInProgress ? 0.5 : 1
+                }}
+              >
+                ❌ Rejeter
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div style={{ background: '#0a0a0a', padding: '20px', borderRadius: '12px', textAlign: 'center' }}>
+            <p style={{ fontSize: '14px', margin: 0 }}>
+              {report.status === 'resolved' ? '✅ Ce signalement a été résolu' : '❌ Ce signalement a été rejeté'}
+            </p>
+            {report.adminNote && (
+              <p style={{ fontSize: '12px', color: '#888', marginTop: '10px' }}>
+                Note : {report.adminNote}
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* Bouton fermer */}
+        <button
+          onClick={onClose}
+          style={{
+            width: '100%',
+            padding: '12px',
+            marginTop: '20px',
+            background: '#333',
+            border: 'none',
+            borderRadius: '10px',
+            color: 'white',
+            fontSize: '14px',
+            fontWeight: '600',
+            cursor: 'pointer'
+          }}
+        >
+          Fermer
+        </button>
+      </div>
     </div>
   );
 }
