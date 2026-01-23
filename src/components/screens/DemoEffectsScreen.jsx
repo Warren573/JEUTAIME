@@ -162,20 +162,45 @@ export default function DemoEffectsScreen({ currentUser, onBack }) {
           marginTop: '20px'
         }}>
           <div style={{ position: 'relative', width: '120px', height: '120px' }}>
-            {/* Image avatar personnalisée */}
-            <img
-              key={refreshKey}
-              src="/demo-avatar.png"
-              alt="Avatar démo"
-              style={{
-                width: '120px',
-                height: '120px',
-                borderRadius: '50%',
-                objectFit: 'cover',
-                border: '3px solid white',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
-              }}
-            />
+            {/* Image avatar personnalisée avec fallback */}
+            <div style={{
+              width: '120px',
+              height: '120px',
+              borderRadius: '50%',
+              border: '3px solid white',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+              overflow: 'hidden',
+              background: 'linear-gradient(135deg, #667eea, #764ba2)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '64px',
+              position: 'relative'
+            }}>
+              <img
+                key={refreshKey}
+                src="/demo-avatar.png"
+                alt="Avatar démo"
+                onError={(e) => {
+                  // Si l'image n'existe pas, afficher un emoji
+                  e.target.style.display = 'none';
+                }}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0
+                }}
+              />
+              {/* Fallback emoji si pas d'image */}
+              <span style={{
+                position: 'relative',
+                zIndex: 1,
+                pointerEvents: 'none'
+              }}>👤</span>
+            </div>
             {/* Couche d'effets visuels par-dessus */}
             <AvatarEffectsLayer userId={userId} />
 
@@ -203,6 +228,21 @@ export default function DemoEffectsScreen({ currentUser, onBack }) {
               </div>
             )}
           </div>
+        </div>
+
+        {/* Instructions pour ajouter l'image */}
+        <div style={{
+          marginTop: '15px',
+          padding: '12px',
+          background: 'rgba(255,215,0,0.2)',
+          borderRadius: '10px',
+          fontSize: '0.75rem',
+          color: 'white',
+          textAlign: 'center',
+          border: '1px solid rgba(255,215,0,0.4)'
+        }}>
+          💡 <strong>Pour voir votre avatar personnalisé :</strong><br/>
+          Copiez votre image dans <code style={{ background: 'rgba(0,0,0,0.3)', padding: '2px 6px', borderRadius: '4px' }}>/public/demo-avatar.png</code>
         </div>
       </div>
 
