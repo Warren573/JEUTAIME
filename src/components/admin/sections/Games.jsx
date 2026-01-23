@@ -12,18 +12,19 @@ export default function Games() {
     category: ''
   });
 
+  // LES 6 JEUX RÉELS DE L'APP (correspondance exacte avec App.jsx)
   const games = [
     {
       id: 1,
-      icon: '🦸',
-      name: 'HeroLove Quest',
-      desc: 'RPG avec système de stats',
-      plays: 15234,
-      avgCoins: 45,
-      minCoins: 20,
-      maxCoins: 100,
-      difficulty: 'hard',
-      category: 'rpg',
+      icon: '🏓',
+      name: 'Pong',
+      desc: 'Classique du jeu vidéo',
+      plays: 9876,
+      avgCoins: 25,
+      minCoins: 10,
+      maxCoins: 50,
+      difficulty: 'easy',
+      category: 'arcade',
       active: true,
       created: '01/09/2024'
     },
@@ -43,48 +44,6 @@ export default function Games() {
     },
     {
       id: 3,
-      icon: '🏓',
-      name: 'Pong',
-      desc: 'Classique du jeu vidéo',
-      plays: 9876,
-      avgCoins: 25,
-      minCoins: 10,
-      maxCoins: 50,
-      difficulty: 'easy',
-      category: 'arcade',
-      active: true,
-      created: '01/09/2024'
-    },
-    {
-      id: 4,
-      icon: '🎴',
-      name: 'Jeu des Cartes',
-      desc: 'Mémoire et stratégie',
-      plays: 8234,
-      avgCoins: 52,
-      minCoins: 25,
-      maxCoins: 120,
-      difficulty: 'hard',
-      category: 'puzzle',
-      active: true,
-      created: '15/09/2024'
-    },
-    {
-      id: 5,
-      icon: '❌',
-      name: 'Morpion',
-      desc: 'Stratégie contre IA',
-      plays: 5432,
-      avgCoins: 18,
-      minCoins: 5,
-      maxCoins: 40,
-      difficulty: 'medium',
-      category: 'puzzle',
-      active: true,
-      created: '01/09/2024'
-    },
-    {
-      id: 6,
       icon: '🧱',
       name: 'Casse-Briques',
       desc: 'Détruire tous les blocs',
@@ -98,7 +57,35 @@ export default function Games() {
       created: '10/09/2024'
     },
     {
-      id: 7,
+      id: 4,
+      icon: '❌',
+      name: 'Morpion',
+      desc: 'Stratégie contre IA',
+      plays: 5432,
+      avgCoins: 18,
+      minCoins: 5,
+      maxCoins: 40,
+      difficulty: 'medium',
+      category: 'puzzle',
+      active: true,
+      created: '01/09/2024'
+    },
+    {
+      id: 5,
+      icon: '🎴',
+      name: 'Jeu des Cartes',
+      desc: 'Mémoire et stratégie',
+      plays: 8234,
+      avgCoins: 52,
+      minCoins: 25,
+      maxCoins: 120,
+      difficulty: 'hard',
+      category: 'puzzle',
+      active: true,
+      created: '15/09/2024'
+    },
+    {
+      id: 6,
       icon: '📖',
       name: 'StoryTime',
       desc: 'Histoire interactive',
@@ -108,7 +95,7 @@ export default function Games() {
       maxCoins: 150,
       difficulty: 'easy',
       category: 'story',
-      active: false,
+      active: true,
       created: '20/09/2024'
     }
   ];

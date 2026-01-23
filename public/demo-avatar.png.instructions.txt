@@ -1,0 +1,10 @@
+INSTRUCTIONS - Comment ajouter l'avatar de démo :
+
+1. Téléchargez l'image de l'avatar sur votre ordinateur
+2. Renommez-la exactement en : demo-avatar.png
+3. Copiez-la dans ce dossier : /home/user/JEUTAIME/public/
+
+OU via terminal :
+cp /chemin/vers/votre/image.png /home/user/JEUTAIME/public/demo-avatar.png
+
+Puis rechargez l'app.

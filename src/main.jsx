@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './styles/index.css'
 import './styles/layout-rules.css'
+import './components/effects/effects.css'
 
 // Enregistrer le Service Worker pour PWA
 if ('serviceWorker' in navigator) {

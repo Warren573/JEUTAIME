@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import UserAvatar from '../avatar/UserAvatar';
+import UserAvatar from '../../avatar/UserAvatar';
 import ReceivedGifts from '../personal/ReceivedGifts';
 import SocialStats from '../personal/SocialStats';
 import MagicInventory from '../magic/MagicInventory';

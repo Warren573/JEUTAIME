@@ -14,7 +14,7 @@ import BarDetailScreen from './components/screens/BarDetailScreen';
 import RankingScreen from './components/screens/RankingScreen';
 import BarsScreen from './components/screens/BarsScreen';
 import ReferralScreen from './components/screens/ReferralScreen';
-import AvatarTestScreen from './components/screens/AvatarTestScreen';
+import DemoEffectsScreen from './components/screens/DemoEffectsScreen';
 
 // Games
 import PongGame from './components/games/PongGame';
@@ -47,6 +47,9 @@ import { getUserDay, isFeatureUnlocked, getOnboardingMessage } from './utils/onb
 
 // Data
 import { salons } from './data/appData';
+
+// Effect Engine - Auto-cleanup
+import { startAutoCleanup } from './engine/EffectEngine';
 
 function MainApp() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -145,6 +148,12 @@ function MainApp() {
       console.log(`📅 Jour d'onboarding: ${day}`);
     }
   }, [currentUser]);
+
+  // Auto-cleanup des effets expirés (EffectEngine)
+  useEffect(() => {
+    const cleanup = startAutoCleanup();
+    return cleanup; // Cleanup on unmount
+  }, []);
 
   // Reset selectedSalon when screen changes (to allow navigation)
   useEffect(() => {
@@ -309,8 +318,8 @@ function MainApp() {
       {screen === 'referral' && !gameScreen && !selectedSalon && <ReferralScreen currentUser={currentUser} />}
       {screen === 'letters' && !gameScreen && !selectedSalon && <LettersScreen currentUser={currentUser} />}
       {screen === 'journal' && !gameScreen && !selectedSalon && <JournalScreen {...appState} />}
-      {screen === 'settings' && !gameScreen && !selectedSalon && <SettingsScreen {...appState} />}
-      {screen === 'avatar-test' && !gameScreen && !selectedSalon && <AvatarTestScreen />}
+      {screen === 'settings' && !gameScreen && !selectedSalon && <SettingsScreen {...appState} setScreen={setScreen} />}
+      {screen === 'demo-effects' && !gameScreen && !selectedSalon && <DemoEffectsScreen currentUser={currentUser} onBack={() => setScreen('settings')} />}
 
       {gameScreen === 'pong' && <PongGame {...appState} currentUser={currentUser} />}
       {gameScreen === 'reactivity' && <WhackAMoleGame {...appState} currentUser={currentUser} />}
