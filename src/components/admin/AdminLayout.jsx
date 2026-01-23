@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAdmin } from '../../contexts/AdminContext';
 import Dashboard from './sections/Dashboard';
 import Users from './sections/Users';
-import Bars from './sections/Bars';
+import Salons from './sections/Salons';
 import Games from './sections/Games';
 import Moderation from './sections/Moderation';
 import Settings from './sections/Settings';
@@ -15,7 +15,7 @@ export default function AdminLayout({ onExit }) {
   const menuItems = [
     { id: 'dashboard', icon: '📊', label: 'Dashboard', color: '#667eea' },
     { id: 'users', icon: '👥', label: 'Utilisateurs', color: '#4CAF50' },
-    { id: 'bars', icon: '🍸', label: 'Bars', color: '#E91E63' },
+    { id: 'salons', icon: '🏊', label: 'Salons', color: '#E91E63' },
     { id: 'games', icon: '🎮', label: 'Jeux', color: '#9C27B0' },
     { id: 'moderation', icon: '🛡️', label: 'Modération', color: '#FF9800' },
     { id: 'settings', icon: '⚙️', label: 'Paramètres', color: '#607D8B' }
@@ -129,7 +129,7 @@ export default function AdminLayout({ onExit }) {
       <div style={{ flex: 1, overflowY: 'auto' }}>
         {currentSection === 'dashboard' && <Dashboard />}
         {currentSection === 'users' && <Users />}
-        {currentSection === 'bars' && <Bars />}
+        {currentSection === 'salons' && <Salons />}
         {currentSection === 'games' && <Games />}
         {currentSection === 'moderation' && <Moderation />}
         {currentSection === 'settings' && <Settings />}

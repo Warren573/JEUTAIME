@@ -436,6 +436,7 @@ export default function Users() {
                   <h2 style={{ fontSize: '24px', fontWeight: '700', margin: '0 0 8px 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
                     {selectedUser.name || 'Sans nom'}
                     {selectedUser.premium && <span style={{ padding: '4px 10px', background: '#FFD700', color: '#000', borderRadius: '6px', fontSize: '12px', fontWeight: '700' }}>👑 PREMIUM</span>}
+                    {selectedUser.isBot && <span style={{ padding: '4px 10px', background: '#607D8B', color: '#fff', borderRadius: '6px', fontSize: '12px', fontWeight: '700' }}>🤖 BOT</span>}
                   </h2>
                   <div style={{ fontSize: '13px', color: '#888' }}>{selectedUser.email}</div>
                   <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>ID: {selectedUser.id || selectedUser.email}</div>
@@ -456,6 +457,55 @@ export default function Users() {
                   ×
                 </button>
               </div>
+
+              {/* Infos utilisateur */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '15px', marginBottom: '15px' }}>
+                <div style={{ background: '#0a0a0a', padding: '10px', borderRadius: '8px' }}>
+                  <div style={{ fontSize: '10px', color: '#888', marginBottom: '4px' }}>Genre</div>
+                  <div style={{ fontSize: '13px', fontWeight: '600' }}>{selectedUser.gender || 'N/A'}</div>
+                </div>
+                <div style={{ background: '#0a0a0a', padding: '10px', borderRadius: '8px' }}>
+                  <div style={{ fontSize: '10px', color: '#888', marginBottom: '4px' }}>Âge</div>
+                  <div style={{ fontSize: '13px', fontWeight: '600' }}>{selectedUser.age || 'N/A'} ans</div>
+                </div>
+                <div style={{ background: '#0a0a0a', padding: '10px', borderRadius: '8px' }}>
+                  <div style={{ fontSize: '10px', color: '#888', marginBottom: '4px' }}>Ville</div>
+                  <div style={{ fontSize: '13px', fontWeight: '600' }}>{selectedUser.city || 'N/A'}</div>
+                </div>
+                <div style={{ background: '#0a0a0a', padding: '10px', borderRadius: '8px' }}>
+                  <div style={{ fontSize: '10px', color: '#888', marginBottom: '4px' }}>Pièces</div>
+                  <div style={{ fontSize: '13px', fontWeight: '600', color: '#FFD700' }}>{selectedUser.coins || 0} 🪙</div>
+                </div>
+              </div>
+
+              {/* Préférences de rencontre */}
+              {(selectedUser.interestedIn || selectedUser.lookingFor || selectedUser.children) && (
+                <div style={{ background: '#667eea11', padding: '12px', borderRadius: '10px', marginBottom: '15px', border: '1px solid #667eea33' }}>
+                  <div style={{ fontSize: '11px', fontWeight: '700', color: '#667eea', marginBottom: '8px' }}>💝 Préférences de rencontre</div>
+                  <div style={{ display: 'grid', gap: '6px' }}>
+                    {selectedUser.interestedIn && (
+                      <div style={{ fontSize: '12px', color: '#ccc' }}>
+                        <span style={{ color: '#888' }}>Intéressé(e) par:</span> {selectedUser.interestedIn}
+                      </div>
+                    )}
+                    {selectedUser.lookingFor && (
+                      <div style={{ fontSize: '12px', color: '#ccc' }}>
+                        <span style={{ color: '#888' }}>Recherche:</span> {selectedUser.lookingFor}
+                      </div>
+                    )}
+                    {selectedUser.children && (
+                      <div style={{ fontSize: '12px', color: '#ccc' }}>
+                        <span style={{ color: '#888' }}>Enfants:</span> {selectedUser.children}
+                      </div>
+                    )}
+                    {selectedUser.physicalDescription && (
+                      <div style={{ fontSize: '12px', color: '#ccc' }}>
+                        <span style={{ color: '#888' }}>Description physique:</span> {selectedUser.physicalDescription}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Statut actuel */}
               <div style={{ marginTop: '15px' }}>
