@@ -710,6 +710,38 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
             </div>
           </div>
 
+          {/* Démo Effets Visuels */}
+          <div
+            onClick={() => setScreen('demo-effects')}
+            style={{
+              background: 'linear-gradient(135deg, #9C27B0, #7B1FA2)',
+              borderRadius: '15px',
+              padding: '20px',
+              marginBottom: '15px',
+              cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(156, 39, 176, 0.3)',
+              transition: 'transform 0.2s',
+              border: '2px solid #BA68C8'
+            }}
+            onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.98)'}
+            onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <span style={{ fontSize: '28px' }}>🎨</span>
+                <div>
+                  <h3 style={{ fontSize: '16px', margin: '0 0 4px 0', fontWeight: '700', color: 'white' }}>
+                    Démo Effets Visuels
+                  </h3>
+                  <p style={{ fontSize: '13px', margin: 0, color: 'rgba(255,255,255,0.9)' }}>
+                    Testez l'EffectEngine et le ThemeEngine
+                  </p>
+                </div>
+              </div>
+              <div style={{ fontSize: '20px', color: 'white' }}>→</div>
+            </div>
+          </div>
+
           <div style={{ background: 'var(--color-cream)', borderRadius: '15px', padding: '20px', marginBottom: '15px', boxSizing: 'border-box' }}>
             <h3 style={{ fontSize: '16px', margin: '0 0 15px 0', fontWeight: '600' }}>Compte</h3>
 

@@ -14,6 +14,7 @@ import BarDetailScreen from './components/screens/BarDetailScreen';
 import RankingScreen from './components/screens/RankingScreen';
 import BarsScreen from './components/screens/BarsScreen';
 import ReferralScreen from './components/screens/ReferralScreen';
+import DemoEffectsScreen from './components/screens/DemoEffectsScreen';
 
 // Games
 import PongGame from './components/games/PongGame';
@@ -317,7 +318,8 @@ function MainApp() {
       {screen === 'referral' && !gameScreen && !selectedSalon && <ReferralScreen currentUser={currentUser} />}
       {screen === 'letters' && !gameScreen && !selectedSalon && <LettersScreen currentUser={currentUser} />}
       {screen === 'journal' && !gameScreen && !selectedSalon && <JournalScreen {...appState} />}
-      {screen === 'settings' && !gameScreen && !selectedSalon && <SettingsScreen {...appState} />}
+      {screen === 'settings' && !gameScreen && !selectedSalon && <SettingsScreen {...appState} setScreen={setScreen} />}
+      {screen === 'demo-effects' && !gameScreen && !selectedSalon && <DemoEffectsScreen currentUser={currentUser} onBack={() => setScreen('settings')} />}
 
       {gameScreen === 'pong' && <PongGame {...appState} currentUser={currentUser} />}
       {gameScreen === 'reactivity' && <WhackAMoleGame {...appState} currentUser={currentUser} />}
