@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import UserAvatar from '../../avatar/UserAvatar';
+import AvatarEffectsLayer from '../effects/AvatarEffectsLayer';
 import {
   activateEffect,
   deactivateEffect,
@@ -161,12 +161,24 @@ export default function DemoEffectsScreen({ currentUser, onBack }) {
           justifyContent: 'center',
           marginTop: '20px'
         }}>
-          <div style={{ position: 'relative' }}>
-            <UserAvatar
+          <div style={{ position: 'relative', width: '120px', height: '120px' }}>
+            {/* Image avatar personnalisée */}
+            <img
               key={refreshKey}
-              user={{ id: userId, email: userId }}
-              size={120}
+              src="/demo-avatar.png"
+              alt="Avatar démo"
+              style={{
+                width: '120px',
+                height: '120px',
+                borderRadius: '50%',
+                objectFit: 'cover',
+                border: '3px solid white',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+              }}
             />
+            {/* Couche d'effets visuels par-dessus */}
+            <AvatarEffectsLayer userId={userId} />
+
             {/* Indicateur effets actifs */}
             {activeEffects.length > 0 && (
               <div style={{
@@ -184,7 +196,8 @@ export default function DemoEffectsScreen({ currentUser, onBack }) {
                 fontWeight: '700',
                 fontSize: '0.9rem',
                 border: '3px solid white',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
+                boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                zIndex: 20
               }}>
                 {activeEffects.length}
               </div>
