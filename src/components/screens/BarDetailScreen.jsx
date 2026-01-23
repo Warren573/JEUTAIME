@@ -13,6 +13,7 @@ import {
   completeStory
 } from '../../utils/barsSystem';
 import { sendMagicToSalon, sendGiftToUser, canAfford, deductCoins } from '../../utils/magic';
+import { applyTheme } from '../../engine/ThemeEngine';
 
 export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }) {
   const [barTab, setBarTab] = useState('discuss');
@@ -26,6 +27,13 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
 
   // Système Magie & Offrandes
   const [showMagicGiftsPanel, setShowMagicGiftsPanel] = useState(false);
+
+  // Theme Engine - Responsive background
+  const salonId = salon?.id || salon?.type || 'default';
+  const themeStyles = applyTheme(salonId, {
+    // Override with salon's gradient if available
+    ...(salon?.gradient || salon?.bgGradient ? { bgGradient: salon.gradient || salon.bgGradient } : {})
+  });
 
   // Chat discussion - Charger depuis localStorage
   const [messages, setMessages] = useState(() => {
@@ -332,13 +340,13 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
     }}>
       {/* En-tête du salon */}
       <div style={{
-        background: salon?.gradient || 'linear-gradient(135deg, #667eea, #764ba2)',
+        ...themeStyles,
         padding: 'var(--spacing-lg)',
         paddingTop: 'calc(var(--spacing-lg) + env(safe-area-inset-top))',
         boxShadow: 'var(--shadow-md)',
         borderBottom: '4px solid rgba(0,0,0,0.2)',
         position: 'relative'
-      }}>
+      }} className="theme-transition">
         {/* Bouton retour */}
         <button
           onClick={() => setSelectedSalon(null)}

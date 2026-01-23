@@ -47,6 +47,9 @@ import { getUserDay, isFeatureUnlocked, getOnboardingMessage } from './utils/onb
 // Data
 import { salons } from './data/appData';
 
+// Effect Engine - Auto-cleanup
+import { startAutoCleanup } from './engine/EffectEngine';
+
 function MainApp() {
   const [currentUser, setCurrentUser] = useState(null);
   const [authMode, setAuthMode] = useState(null); // null, 'signup-profile'
@@ -144,6 +147,12 @@ function MainApp() {
       console.log(`📅 Jour d'onboarding: ${day}`);
     }
   }, [currentUser]);
+
+  // Auto-cleanup des effets expirés (EffectEngine)
+  useEffect(() => {
+    const cleanup = startAutoCleanup();
+    return cleanup; // Cleanup on unmount
+  }, []);
 
   // Reset selectedSalon when screen changes (to allow navigation)
   useEffect(() => {

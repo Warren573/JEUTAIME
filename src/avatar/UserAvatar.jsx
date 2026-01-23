@@ -8,6 +8,7 @@
 import React, { useMemo } from 'react';
 import AvatarRenderer from './AvatarRenderer.jsx';
 import { createInitialAvatarState } from './avatar.generator.js';
+import AvatarEffectsLayer from '../components/effects/AvatarEffectsLayer.jsx';
 
 /**
  * Wrapper d'avatar pour l'application
@@ -36,12 +37,19 @@ export default function UserAvatar({
   // Utilise l'état personnalisé si fourni, sinon l'état généré
   const finalState = avatarState || generatedState;
 
+  // ID utilisateur pour les effets (préférer email si disponible pour cohérence)
+  const userId = user?.email || user?.id;
+
   return (
-    <AvatarRenderer
-      avatarState={finalState}
-      size={size}
-      className={className}
-      style={style}
-    />
+    <div style={{ position: 'relative', display: 'inline-block', width: size, height: size }}>
+      <AvatarRenderer
+        avatarState={finalState}
+        size={size}
+        className={className}
+        style={style}
+      />
+      {/* Couche d'effets visuels (invisibilité, lueur, etc.) */}
+      {userId && <AvatarEffectsLayer userId={userId} />}
+    </div>
   );
 }

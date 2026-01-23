@@ -1,0 +1,233 @@
+/**
+ * Effects Animations - Mobile-first & performant
+ *
+ * Toutes les animations sont optimisées pour mobile :
+ * - Utilisation de transform et opacity (GPU-accelerated)
+ * - Pas de width/height animations (cause reflow)
+ * - will-change sur animations actives uniquement
+ */
+
+/* ============================================================================
+   AVATAR EFFECTS
+   ============================================================================ */
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+/* ============================================================================
+   SCREEN EFFECTS (confetti, rain, etc.)
+   ============================================================================ */
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-100vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes hearts-float {
+  0% {
+    transform: translateY(100vh) scale(0.5);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-20vh) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes rain-drop {
+  0% {
+    transform: translateY(-100vh);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+/* ============================================================================
+   TRANSITION EFFECTS
+   ============================================================================ */
+
+.theme-transition {
+  transition: background 0.5s ease-in-out,
+              backdrop-filter 0.3s ease;
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+.fade-out {
+  animation: fadeOut 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* ============================================================================
+   BADGE EFFECTS
+   ============================================================================ */
+
+.badge-appear {
+  animation: badgeAppear 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes badgeAppear {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.badge-pulse {
+  animation: badgePulse 2s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(102, 126, 234, 0);
+  }
+}
+
+/* ============================================================================
+   RESPONSIVE - Réduire animations sur petits écrans si nécessaire
+   ============================================================================ */
+
+@media (max-width: 375px) {
+  /* Sur très petits écrans, réduire l'intensité des animations */
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px); /* Réduit de 10px à 5px */
+    }
+  }
+
+  @keyframes shake {
+    0%, 100% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-3px); /* Réduit de 5px à 3px */
+    }
+    75% {
+      transform: translateX(3px);
+    }
+  }
+}
+
+/* ============================================================================
+   PREFERS-REDUCED-MOTION (accessibilité)
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Si l'utilisateur a activé "réduire les animations" dans son OS */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================================
+   PERFORMANCE HINTS
+   ============================================================================ */
+
+/* Éléments avec animations actives */
+.avatar-effect-sparkle,
+.avatar-effect-pulse,
+.avatar-effect-rotate,
+.avatar-effect-bounce,
+.avatar-effect-shake {
+  will-change: transform, opacity;
+}
+
+/* Retirer will-change après animation (via JS si possible) */
+.avatar-effect-done {
+  will-change: auto;
+}
