@@ -1,9 +1,198 @@
 {
-  "face": [],
-  "eyes": [],
-  "mouth": [],
-  "hairBack": [],
-  "hairFront": [],
-  "beard": [],
-  "accessory": []
+  "version": "avatar_v1_minimal",
+  "size": 512,
+  "face": [
+    {
+      "id": "face_01_round",
+      "name": "Round",
+      "path": "/src/avatar/assets/face/face_01_round.svg"
+    },
+    {
+      "id": "face_02_oval",
+      "name": "Oval",
+      "path": "/src/avatar/assets/face/face_02_oval.svg"
+    },
+    {
+      "id": "face_03_squareish",
+      "name": "Squareish",
+      "path": "/src/avatar/assets/face/face_03_squareish.svg"
+    }
+  ],
+  "eyes": [
+    {
+      "id": "eyes_01_dots",
+      "name": "Dots",
+      "path": "/src/avatar/assets/eyes/eyes_01_dots.svg"
+    },
+    {
+      "id": "eyes_02_soft",
+      "name": "Soft",
+      "path": "/src/avatar/assets/eyes/eyes_02_soft.svg"
+    },
+    {
+      "id": "eyes_03_smile",
+      "name": "Smile",
+      "path": "/src/avatar/assets/eyes/eyes_03_smile.svg"
+    },
+    {
+      "id": "eyes_04_round",
+      "name": "Round",
+      "path": "/src/avatar/assets/eyes/eyes_04_round.svg"
+    },
+    {
+      "id": "eyes_05_angrylight",
+      "name": "Angry Light",
+      "path": "/src/avatar/assets/eyes/eyes_05_angrylight.svg"
+    },
+    {
+      "id": "eyes_06_glasses",
+      "name": "Glasses",
+      "path": "/src/avatar/assets/eyes/eyes_06_glasses.svg"
+    }
+  ],
+  "mouth": [
+    {
+      "id": "nose_01_dot",
+      "name": "Dot Nose",
+      "path": "/src/avatar/assets/mouth/nose_01_dot.svg"
+    },
+    {
+      "id": "nose_02_curve",
+      "name": "Curve Nose",
+      "path": "/src/avatar/assets/mouth/nose_02_curve.svg"
+    },
+    {
+      "id": "nose_03_triangle",
+      "name": "Triangle Nose",
+      "path": "/src/avatar/assets/mouth/nose_03_triangle.svg"
+    },
+    {
+      "id": "mouth_01_smile",
+      "name": "Smile",
+      "path": "/src/avatar/assets/mouth/mouth_01_smile.svg"
+    },
+    {
+      "id": "mouth_02_neutral",
+      "name": "Neutral",
+      "path": "/src/avatar/assets/mouth/mouth_02_neutral.svg"
+    },
+    {
+      "id": "mouth_03_grin",
+      "name": "Grin",
+      "path": "/src/avatar/assets/mouth/mouth_03_grin.svg"
+    },
+    {
+      "id": "mouth_04_open",
+      "name": "Open",
+      "path": "/src/avatar/assets/mouth/mouth_04_open.svg"
+    },
+    {
+      "id": "mouth_05_smirk",
+      "name": "Smirk",
+      "path": "/src/avatar/assets/mouth/mouth_05_smirk.svg"
+    },
+    {
+      "id": "mouth_06_bigsmile",
+      "name": "Big Smile",
+      "path": "/src/avatar/assets/mouth/mouth_06_bigsmile.svg"
+    }
+  ],
+  "hairBack": [
+    {
+      "id": "hair_back_01_buzz",
+      "name": "Buzz",
+      "path": "/src/avatar/assets/hair/back/hair_back_01_buzz.svg"
+    },
+    {
+      "id": "hair_back_02_short",
+      "name": "Short",
+      "path": "/src/avatar/assets/hair/back/hair_back_02_short.svg"
+    },
+    {
+      "id": "hair_back_03_side_sweep",
+      "name": "Side Sweep",
+      "path": "/src/avatar/assets/hair/back/hair_back_03_side_sweep.svg"
+    },
+    {
+      "id": "hair_back_04_parted",
+      "name": "Parted",
+      "path": "/src/avatar/assets/hair/back/hair_back_04_parted.svg"
+    },
+    {
+      "id": "hair_back_05_curly",
+      "name": "Curly",
+      "path": "/src/avatar/assets/hair/back/hair_back_05_curly.svg"
+    },
+    {
+      "id": "hair_back_06_afro_small",
+      "name": "Afro Small",
+      "path": "/src/avatar/assets/hair/back/hair_back_06_afro_small.svg"
+    }
+  ],
+  "hairFront": [
+    {
+      "id": "hair_front_01_buzz",
+      "name": "Buzz",
+      "path": "/src/avatar/assets/hair/front/hair_front_01_buzz.svg"
+    },
+    {
+      "id": "hair_front_02_short",
+      "name": "Short",
+      "path": "/src/avatar/assets/hair/front/hair_front_02_short.svg"
+    },
+    {
+      "id": "hair_front_03_side_sweep",
+      "name": "Side Sweep",
+      "path": "/src/avatar/assets/hair/front/hair_front_03_side_sweep.svg"
+    },
+    {
+      "id": "hair_front_04_parted",
+      "name": "Parted",
+      "path": "/src/avatar/assets/hair/front/hair_front_04_parted.svg"
+    },
+    {
+      "id": "hair_front_05_curly",
+      "name": "Curly",
+      "path": "/src/avatar/assets/hair/front/hair_front_05_curly.svg"
+    },
+    {
+      "id": "hair_front_06_afro_small",
+      "name": "Afro Small",
+      "path": "/src/avatar/assets/hair/front/hair_front_06_afro_small.svg"
+    }
+  ],
+  "beard": [
+    {
+      "id": "beard_01_stubble",
+      "name": "Stubble",
+      "path": "/src/avatar/assets/beard/beard_01_stubble.svg"
+    },
+    {
+      "id": "beard_02_beard",
+      "name": "Beard",
+      "path": "/src/avatar/assets/beard/beard_02_beard.svg"
+    },
+    {
+      "id": "beard_03_goatee",
+      "name": "Goatee",
+      "path": "/src/avatar/assets/beard/beard_03_goatee.svg"
+    }
+  ],
+  "accessory": [
+    {
+      "id": "acc_01_earrings",
+      "name": "Earrings",
+      "path": "/src/avatar/assets/accessories/acc_01_earrings.svg"
+    },
+    {
+      "id": "acc_02_hat",
+      "name": "Hat",
+      "path": "/src/avatar/assets/accessories/acc_02_hat.svg"
+    },
+    {
+      "id": "acc_03_mustache",
+      "name": "Mustache",
+      "path": "/src/avatar/assets/accessories/acc_03_mustache.svg"
+    }
+  ]
 }

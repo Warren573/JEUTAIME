@@ -710,6 +710,38 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
             </div>
           </div>
 
+          {/* Éditeur d'Avatar */}
+          <div
+            onClick={() => setScreen('avatar-editor')}
+            style={{
+              background: 'linear-gradient(135deg, #667eea, #764ba2)',
+              borderRadius: '15px',
+              padding: '20px',
+              marginBottom: '15px',
+              cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(102, 126, 234, 0.3)',
+              transition: 'transform 0.2s',
+              border: '2px solid #8B9FEE'
+            }}
+            onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.98)'}
+            onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <span style={{ fontSize: '28px' }}>👤</span>
+                <div>
+                  <h3 style={{ fontSize: '16px', margin: '0 0 4px 0', fontWeight: '700', color: 'white' }}>
+                    Éditeur d'Avatar
+                  </h3>
+                  <p style={{ fontSize: '13px', margin: 0, color: 'rgba(255,255,255,0.9)' }}>
+                    Créez votre avatar personnalisé modulaire
+                  </p>
+                </div>
+              </div>
+              <div style={{ fontSize: '20px', color: 'white' }}>→</div>
+            </div>
+          </div>
+
           {/* Démo Effets Visuels */}
           <div
             onClick={() => setScreen('demo-effects')}
