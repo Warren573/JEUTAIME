@@ -16,6 +16,7 @@ import BarsScreen from './components/screens/BarsScreen';
 import ReferralScreen from './components/screens/ReferralScreen';
 import DemoEffectsScreen from './components/screens/DemoEffectsScreen';
 import AvatarEditor from './avatar/AvatarEditor';
+import AvatarMakerPage from './avatar/AvatarMakerPage.tsx';
 
 // Games
 import PongGame from './components/games/PongGame';
@@ -244,6 +245,7 @@ function MainApp() {
     { icon: '🔍', label: 'Profils', id: 'profiles' },
     { icon: '👥', label: 'Social', id: 'social' },
     { icon: '💌', label: 'Lettres', id: 'letters' },
+    { icon: '🎨', label: 'Avatar', id: 'avatar' },
     { icon: '⚙️', label: 'Plus', id: 'settings' }
   ];
 
@@ -320,6 +322,7 @@ function MainApp() {
       {screen === 'letters' && !gameScreen && !selectedSalon && <LettersScreen currentUser={currentUser} />}
       {screen === 'journal' && !gameScreen && !selectedSalon && <JournalScreen {...appState} />}
       {screen === 'settings' && !gameScreen && !selectedSalon && <SettingsScreen {...appState} setScreen={setScreen} />}
+      {screen === 'avatar' && !gameScreen && !selectedSalon && <AvatarMakerPage onBack={() => setScreen('settings')} />}
       {screen === 'demo-effects' && !gameScreen && !selectedSalon && <DemoEffectsScreen currentUser={currentUser} onBack={() => setScreen('settings')} />}
       {screen === 'avatar-editor' && !gameScreen && !selectedSalon && <AvatarEditor currentUser={currentUser} onBack={() => setScreen('settings')} />}
 
