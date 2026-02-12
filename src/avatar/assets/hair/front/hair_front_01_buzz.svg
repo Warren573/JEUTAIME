@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <!-- Minimal front hairline -->
+  <path d="M 100 150 Q 120 130 150 120" fill="none" stroke="#111" stroke-width="12" stroke-linecap="round"/>
+  <path d="M 412 150 Q 392 130 362 120" fill="none" stroke="#111" stroke-width="12" stroke-linecap="round"/>
+</svg>
