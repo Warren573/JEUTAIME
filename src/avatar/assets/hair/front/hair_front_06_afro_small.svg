@@ -1,4 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-  <!-- Front part of afro (minimal) -->
-  <path d="M 126 140 Q 150 100 200 85 Q 256 75 312 85 Q 362 100 386 140" fill="none" stroke="#111" stroke-width="18" stroke-linecap="round"/>
+  <!-- Front part of afro -->
+  <path d="M160 180 Q 200 140, 256 135
+           Q 312 140, 352 180"
+        fill="none" stroke="#111" stroke-width="18" stroke-linecap="round"/>
 </svg>
