@@ -1,0 +1,118 @@
+.avatar-maker-page {
+  min-height: 100dvh;
+  background: linear-gradient(180deg, #1d1f2a 0%, #27293b 100%);
+  color: #f8f8f8;
+  padding: 18px 16px 110px;
+}
+.avatar-maker-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.avatar-maker-header h2 {
+  margin: 0;
+  color: #fff;
+}
+.avatar-maker-preview-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+.avatar-maker-toolbar {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.avatar-maker-round {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+}
+.avatar-maker-round.active {
+  border-color: #7da8ff;
+  box-shadow: 0 0 0 3px rgba(125,168,255,0.35);
+}
+.avatar-maker-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.avatar-maker-btn {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.24);
+  background: #ffffff;
+  color: #111;
+  font-weight: 700;
+}
+.avatar-maker-feedback {
+  text-align: center;
+  margin-top: 10px;
+  color: #d9e6ff;
+}
+.avatar-maker-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.25);
+  z-index: 1500;
+}
+.avatar-maker-popover {
+  position: fixed;
+  width: 300px;
+  max-width: calc(100vw - 24px);
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 16px 32px rgba(0,0,0,0.2);
+  padding: 12px;
+  z-index: 1600;
+}
+.avatar-maker-popover-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  color: #111;
+}
+.avatar-maker-close {
+  border: 0;
+  background: transparent;
+  color: #111;
+  font-size: 16px;
+  padding: 2px 6px;
+}
+.avatar-maker-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.avatar-maker-option {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #f8f8f8;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+}
+.avatar-maker-option.active {
+  border-color: #4f79ff;
+  box-shadow: 0 0 0 2px rgba(79,121,255,0.25);
+}
+.avatar-maker-option img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

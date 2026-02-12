@@ -1,0 +1,22 @@
+{
+  "version": "avatar_v1_minimal",
+  "size": 512,
+  "order": [
+    "01_head",
+    "02_eyes",
+    "03_nose",
+    "04_mouth",
+    "05_hair",
+    "06_beard",
+    "07_accessories"
+  ],
+  "categories": {
+    "head": ["head_01_round", "head_02_oval", "head_03_squareish"],
+    "eyes": ["eyes_01_dots", "eyes_02_soft", "eyes_03_smile", "eyes_04_round", "eyes_05_angrylight", "eyes_06_glasses"],
+    "nose": ["nose_01_dot", "nose_02_curve", "nose_03_triangle"],
+    "mouth": ["mouth_01_smile", "mouth_02_neutral", "mouth_03_grin", "mouth_04_open", "mouth_05_smirk", "mouth_06_bigsmile"],
+    "hair": ["hair_01_buzz", "hair_02_short", "hair_03_side_sweep", "hair_04_parted", "hair_05_curly", "hair_06_afro_small"],
+    "beard": ["beard_01_stubble", "beard_02_beard", "beard_03_goatee"],
+    "accessories": ["acc_01_earrings", "acc_02_hat", "acc_03_mustache"]
+  }
+}
