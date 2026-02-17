@@ -18,9 +18,16 @@ import manifest from './assets/manifest.json';
  * @returns {string|null} Chemin vers l'asset ou null
  */
 function getAssetPath(assetId) {
-  if (!assetId) return null;
+  console.log('[getAssetPath] Appelé avec assetId:', assetId);
+  if (!assetId) {
+    console.warn('[getAssetPath] ❌ assetId est null/undefined');
+    return null;
+  }
   const asset = getAssetById(assetId);
-  return asset ? asset.path : null;
+  console.log('[getAssetPath] Résultat getAssetById:', asset);
+  const path = asset ? asset.path : null;
+  console.log('[getAssetPath] Path retourné:', path);
+  return path;
 }
 
 /**
@@ -112,41 +119,67 @@ export default function AvatarRenderer({ avatarState, size = 100, className, sty
   const { identity, extensions } = avatarState;
   const layers = [];
 
+  console.log('[AvatarRenderer] Début rendu layers...');
+
   // Rendu des couches principales selon Z-ORDER
   // hairBack (0)
   if (identity.hairBack) {
-    layers.push(renderAssetLayer(identity.hairBack, 0, size));
+    console.log('[AvatarRenderer] Ajout hairBack:', identity.hairBack);
+    const layer = renderAssetLayer(identity.hairBack, 0, size);
+    console.log('[AvatarRenderer] Layer hairBack créé:', layer);
+    layers.push(layer);
   }
 
   // face (1)
   if (identity.face) {
-    layers.push(renderAssetLayer(identity.face, 1, size));
+    console.log('[AvatarRenderer] Ajout face:', identity.face);
+    const layer = renderAssetLayer(identity.face, 1, size);
+    console.log('[AvatarRenderer] Layer face créé:', layer);
+    layers.push(layer);
   }
 
   // eyes (2)
   if (identity.eyes) {
-    layers.push(renderAssetLayer(identity.eyes, 2, size));
+    console.log('[AvatarRenderer] Ajout eyes:', identity.eyes);
+    const layer = renderAssetLayer(identity.eyes, 2, size);
+    console.log('[AvatarRenderer] Layer eyes créé:', layer);
+    layers.push(layer);
   }
 
   // mouth (3)
   if (identity.mouth) {
-    layers.push(renderAssetLayer(identity.mouth, 3, size));
+    console.log('[AvatarRenderer] Ajout mouth:', identity.mouth);
+    const layer = renderAssetLayer(identity.mouth, 3, size);
+    console.log('[AvatarRenderer] Layer mouth créé:', layer);
+    layers.push(layer);
   }
 
   // beard (4)
   if (identity.beard) {
-    layers.push(renderAssetLayer(identity.beard, 4, size));
+    console.log('[AvatarRenderer] Ajout beard:', identity.beard);
+    const layer = renderAssetLayer(identity.beard, 4, size);
+    console.log('[AvatarRenderer] Layer beard créé:', layer);
+    layers.push(layer);
   }
 
   // hairFront (5)
   if (identity.hairFront) {
-    layers.push(renderAssetLayer(identity.hairFront, 5, size));
+    console.log('[AvatarRenderer] Ajout hairFront:', identity.hairFront);
+    const layer = renderAssetLayer(identity.hairFront, 5, size);
+    console.log('[AvatarRenderer] Layer hairFront créé:', layer);
+    layers.push(layer);
   }
 
   // accessory (6)
   if (identity.accessory) {
-    layers.push(renderAssetLayer(identity.accessory, 6, size));
+    console.log('[AvatarRenderer] Ajout accessory:', identity.accessory);
+    const layer = renderAssetLayer(identity.accessory, 6, size);
+    console.log('[AvatarRenderer] Layer accessory créé:', layer);
+    layers.push(layer);
   }
+
+  console.log('[AvatarRenderer] Fin rendu. Total layers:', layers.length);
+  console.log('[AvatarRenderer] Layers:', layers);
 
   // Extensions (7-9) - Pour l'instant vides
   // expression (7)
