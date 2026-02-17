@@ -52,6 +52,9 @@ import { salons } from './data/appData';
 // Effect Engine - Auto-cleanup
 import { startAutoCleanup } from './engine/EffectEngine';
 
+// Debug
+import LogOverlay from './components/debug/LogOverlay';
+
 function MainApp() {
   const [currentUser, setCurrentUser] = useState(null);
   const [authMode, setAuthMode] = useState(null); // null, 'signup-profile'
@@ -377,6 +380,9 @@ function MainApp() {
           {adminMode ? '🛡️' : '🔒'}
         </button>
       )}
+
+      {/* Debug Log Overlay */}
+      <LogOverlay />
     </div>
   );
 }
