@@ -79,7 +79,11 @@ function renderAssetLayer(assetId, index, size) {
  * @param {Object} [props.style] - Styles inline optionnels
  */
 export default function AvatarRenderer({ avatarState, size = 100, className, style }) {
+  console.log('[AvatarRenderer] Called with:', { avatarState, size });
+
   if (!avatarState || !avatarState.identity) {
+    console.warn('[AvatarRenderer] ❌ Pas d\'avatarState ou pas d\'identity, affichage placeholder');
+    console.log('[AvatarRenderer] avatarState:', avatarState);
     // Avatar vide par défaut (placeholder)
     return (
       <div
@@ -102,6 +106,8 @@ export default function AvatarRenderer({ avatarState, size = 100, className, sty
       </div>
     );
   }
+
+  console.log('[AvatarRenderer] ✅ Identity:', avatarState.identity);
 
   const { identity, extensions } = avatarState;
   const layers = [];

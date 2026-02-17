@@ -57,6 +57,8 @@ export default function UserAvatar({
   const debugIdentity = finalState?.identity ?
     `${finalState.identity.eyes?.substring(0, 10) || 'no-eyes'}/${finalState.identity.mouth?.substring(0, 10) || 'no-mouth'}` :
     'NULL_STATE';
+  const debugHasFinalState = finalState ? 'YES' : 'NO';
+  const debugHasIdentity = finalState?.identity ? 'YES' : 'NO';
 
   // ID utilisateur pour les effets (préférer email si disponible pour cohérence)
   const userId = user?.email || user?.id;
@@ -66,22 +68,24 @@ export default function UserAvatar({
       {/* DEBUG: Afficher l'ID en overlay */}
       <div style={{
         position: 'absolute',
-        bottom: -35,
+        bottom: -45,
         left: -10,
         right: -10,
         textAlign: 'center',
-        fontSize: '8px',
+        fontSize: '7px',
         color: '#ff0000',
         fontWeight: 'bold',
         zIndex: 999,
         backgroundColor: 'rgba(255,255,255,0.95)',
         padding: '4px',
         border: '2px solid red',
-        borderRadius: '4px'
+        borderRadius: '4px',
+        lineHeight: '1.3'
       }}>
         ID:{debugId}<br/>
         {debugEmail}<br/>
-        {debugIdentity}
+        {debugIdentity}<br/>
+        State:{debugHasFinalState} Id:{debugHasIdentity}
       </div>
 
       <AvatarRenderer
