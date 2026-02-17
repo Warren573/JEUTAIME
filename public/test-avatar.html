@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test Avatar SVG</title>
+  <style>
+    body { font-family: monospace; padding: 20px; background: #f0f0f0; }
+    .avatar { width: 200px; height: 200px; border: 2px solid #333; margin: 10px; display: inline-block; position: relative; background: white; }
+    img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+    .error { color: red; font-size: 12px; margin-top: 5px; }
+  </style>
+</head>
+<body>
+  <h1>🧪 Test de chargement SVG Avatars</h1>
+
+  <h2>Test 1: Face (head)</h2>
+  <div class="avatar" id="test1">
+    <img src="/avatar_v1/layers/01_head/head_01_round.svg" onerror="document.getElementById('err1').innerText='❌ Erreur de chargement'" onload="document.getElementById('err1').innerText='✅ Chargé!'">
+  </div>
+  <div id="err1" class="error">Loading...</div>
+
+  <h2>Test 2: Eyes (glasses)</h2>
+  <div class="avatar" id="test2">
+    <img src="/avatar_v1/layers/02_eyes/eyes_06_glasses.svg" onerror="document.getElementById('err2').innerText='❌ Erreur de chargement'" onload="document.getElementById('err2').innerText='✅ Chargé!'">
+  </div>
+  <div id="err2" class="error">Loading...</div>
+
+  <h2>Test 3: Mouth</h2>
+  <div class="avatar" id="test3">
+    <img src="/avatar_v1/layers/04_mouth/mouth_01_smile.svg" onerror="document.getElementById('err3').innerText='❌ Erreur de chargement'" onload="document.getElementById('err3').innerText='✅ Chargé!'">
+  </div>
+  <div id="err3" class="error">Loading...</div>
+
+  <h2>Test 4: Avatar complet superposé</h2>
+  <div class="avatar" id="test4">
+    <img src="/avatar_v1/layers/01_head/head_01_round.svg">
+    <img src="/avatar_v1/layers/02_eyes/eyes_06_glasses.svg">
+    <img src="/avatar_v1/layers/04_mouth/mouth_01_smile.svg">
+  </div>
+
+  <hr>
+  <p><strong>Instructions:</strong> Ouvrez cette page sur <code>https://jeutaime.vercel.app/test-avatar.html</code></p>
+  <p>Si vous voyez ❌, les SVG ne se chargent pas sur Vercel</p>
+  <p>Si vous voyez ✅, le problème est ailleurs (génération aléatoire)</p>
+</body>
+</html>
