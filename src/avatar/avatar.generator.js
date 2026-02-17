@@ -106,7 +106,10 @@ export function createInitialAvatarState(userId) {
 export function getAssetById(assetId) {
   if (!assetId) return null;
 
-  for (const category of Object.keys(manifest)) {
+  // Filtrer seulement les catégories qui sont des tableaux (pas "version" ou "size")
+  const categories = Object.keys(manifest).filter(key => Array.isArray(manifest[key]));
+
+  for (const category of categories) {
     const asset = manifest[category].find(a => a.id === assetId);
     if (asset) return asset;
   }
