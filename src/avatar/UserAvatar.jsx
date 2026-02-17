@@ -28,6 +28,9 @@ export default function UserAvatar({
   style,
   avatarState
 }) {
+  // DEBUG: Afficher l'ID utilisateur
+  const debugId = user?.id || 'NO_ID';
+
   // Génère l'état de l'avatar de manière déterministe depuis le userId
   const generatedState = useMemo(() => {
     console.log('[UserAvatar] Génération avatar pour user:', user);
@@ -49,6 +52,23 @@ export default function UserAvatar({
 
   return (
     <div style={{ position: 'relative', display: 'inline-block', width: size, height: size }}>
+      {/* DEBUG: Afficher l'ID en overlay */}
+      <div style={{
+        position: 'absolute',
+        bottom: -15,
+        left: 0,
+        right: 0,
+        textAlign: 'center',
+        fontSize: '9px',
+        color: '#ff0000',
+        fontWeight: 'bold',
+        zIndex: 999,
+        backgroundColor: 'rgba(255,255,255,0.8)',
+        padding: '2px'
+      }}>
+        ID:{debugId}
+      </div>
+
       <AvatarRenderer
         avatarState={finalState}
         size={size}
