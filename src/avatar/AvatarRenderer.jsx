@@ -44,13 +44,18 @@ function getExtensionPath(extensionCategory, value) {
  */
 function renderAssetLayer(assetId, index, size) {
   const path = getAssetPath(assetId);
-  if (!path) return null;
+  if (!path) {
+    console.warn(`[Avatar] Pas de path pour assetId=${assetId}`);
+    return null;
+  }
 
   return (
     <img
       key={`layer-${index}`}
       src={path}
       alt=""
+      onError={(e) => console.error('[Avatar] Erreur chargement:', path)}
+      onLoad={() => console.log('[Avatar] Image chargée:', path)}
       style={{
         position: 'absolute',
         top: 0,
