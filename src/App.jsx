@@ -86,10 +86,12 @@ function MainApp() {
     // Initialiser les animaux de démo pour tester
     initializeDemoPets();
 
-    // Ajouter les préférences par défaut à tous les utilisateurs existants
+    // MIGRATION: Ajouter les préférences et IDs manquants
     const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
     let updated = false;
-    users.forEach(user => {
+
+    users.forEach((user, index) => {
+      // Migration 1: Ajouter les préférences par défaut
       if (!user.interestedIn && !user.isBot) {
         user.interestedIn = user.gender === 'Homme' ? 'Femmes' : user.gender === 'Femme' ? 'Hommes' : 'Tout le monde';
         user.lookingFor = 'Advienne que pourra';
@@ -97,10 +99,22 @@ function MainApp() {
         user.physicalDescription = 'moyenne';
         updated = true;
       }
+
+      // Migration 2: Ajouter un ID unique si manquant
+      if (!user.id) {
+        // Générer un ID déterministe basé sur l'email + index
+        const hash = user.email.split('').reduce((acc, char) => {
+          return ((acc << 5) - acc) + char.charCodeAt(0);
+        }, 0);
+        user.id = Math.abs(hash) + index;
+        console.log(`🔧 Migration: ID ${user.id} assigné à ${user.pseudo || user.email}`);
+        updated = true;
+      }
     });
+
     if (updated) {
       localStorage.setItem('jeutaime_users', JSON.stringify(users));
-      console.log('✅ Préférences par défaut ajoutées aux profils existants');
+      console.log('✅ Migrations complétées (préférences + IDs)');
     }
 
     const savedUser = localStorage.getItem('jeutaime_current_user');
