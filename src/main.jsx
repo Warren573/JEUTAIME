@@ -5,29 +5,16 @@ import './styles/index.css'
 import './styles/layout-rules.css'
 import './components/effects/effects.css'
 
-// Enregistrer le Service Worker pour PWA
+// Service Worker désactivé temporairement pour déboguer l'écran blanc
+// Désinscrire tous les Service Workers existants
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker
-      .register('/sw.js')
-      .then((registration) => {
-        console.log('✅ Service Worker enregistré:', registration.scope);
-
-        // Vérifier les mises à jour
-        registration.addEventListener('updatefound', () => {
-          const newWorker = registration.installing;
-          newWorker.addEventListener('statechange', () => {
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              // Nouvelle version disponible
-              console.log('🔄 Nouvelle version disponible');
-              // Tu peux afficher une notification ici pour rafraîchir
-            }
-          });
-        });
-      })
-      .catch((error) => {
-        console.log('❌ Erreur Service Worker:', error);
-      });
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (const registration of registrations) {
+        registration.unregister();
+        console.log('🗑️ Service Worker désinscrit:', registration.scope);
+      }
+    });
   });
 }
 
