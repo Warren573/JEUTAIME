@@ -28,24 +28,35 @@ export default function UserAvatar({
   style,
   avatarState
 }) {
-  // DEBUG: Afficher l'ID utilisateur
-  const debugId = user?.id || 'NO_ID';
-
   // Génère l'état de l'avatar de manière déterministe depuis le userId
   const generatedState = useMemo(() => {
-    console.log('[UserAvatar] Génération avatar pour user:', user);
+    console.log('[UserAvatar] =================================');
+    console.log('[UserAvatar] User complet:', JSON.stringify(user, null, 2));
+    console.log('[UserAvatar] user.id =', user?.id);
+    console.log('[UserAvatar] user.email =', user?.email);
+    console.log('[UserAvatar] user.pseudo =', user?.pseudo);
+
     if (!user || !user.id) {
-      console.warn('[UserAvatar] Pas de user.id, retour null');
+      console.warn('[UserAvatar] ❌ PAS DE USER.ID ! user:', user);
       return null;
     }
+
+    console.log('[UserAvatar] ✅ Génération avec ID:', user.id);
     const state = createInitialAvatarState(user.id);
-    console.log('[UserAvatar] State généré:', state);
+    console.log('[UserAvatar] State identity:', state?.identity);
     return state;
   }, [user?.id]);
 
   // Utilise l'état personnalisé si fourni, sinon l'état généré
   const finalState = avatarState || generatedState;
   console.log('[UserAvatar] Final state:', finalState);
+
+  // DEBUG: Variables pour l'overlay
+  const debugId = user?.id !== undefined ? user.id : 'NO_ID';
+  const debugEmail = user?.email ? user.email.substring(0, 10) : 'NO_EMAIL';
+  const debugIdentity = finalState?.identity ?
+    `${finalState.identity.eyes?.substring(0, 10) || 'no-eyes'}/${finalState.identity.mouth?.substring(0, 10) || 'no-mouth'}` :
+    'NULL_STATE';
 
   // ID utilisateur pour les effets (préférer email si disponible pour cohérence)
   const userId = user?.email || user?.id;
@@ -55,18 +66,22 @@ export default function UserAvatar({
       {/* DEBUG: Afficher l'ID en overlay */}
       <div style={{
         position: 'absolute',
-        bottom: -15,
-        left: 0,
-        right: 0,
+        bottom: -35,
+        left: -10,
+        right: -10,
         textAlign: 'center',
-        fontSize: '9px',
+        fontSize: '8px',
         color: '#ff0000',
         fontWeight: 'bold',
         zIndex: 999,
-        backgroundColor: 'rgba(255,255,255,0.8)',
-        padding: '2px'
+        backgroundColor: 'rgba(255,255,255,0.95)',
+        padding: '4px',
+        border: '2px solid red',
+        borderRadius: '4px'
       }}>
-        ID:{debugId}
+        ID:{debugId}<br/>
+        {debugEmail}<br/>
+        {debugIdentity}
       </div>
 
       <AvatarRenderer
