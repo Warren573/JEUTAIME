@@ -1,9 +1,8 @@
 // Service Worker pour JeuTaime
-const CACHE_NAME = 'jeutaime-v1.2';
+const CACHE_NAME = 'jeutaime-v2.0.1';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/src/main.jsx',
   '/heart.svg'
 ];
 

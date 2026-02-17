@@ -3,7 +3,7 @@
 **JeuTaime** est une application de rencontres innovante qui privilégie la personnalité sur l'apparence. Découvrez les personnes en profondeur avant de voir leurs photos grâce à un système de points, de jeux et d'échanges épistolaires.
 
 🌐 **Site web** : [jeutaime.vercel.app](https://jeutaime.vercel.app)
-📦 **Version** : 2.0.0
+📦 **Version** : 2.0.1
 ⚛️ **Stack** : React 18 + Vite
 
 ---
@@ -411,6 +411,11 @@ Accédez à `https://jeutaime.vercel.app/version.txt`
 ---
 
 ## 📝 Changelog
+
+### v2.0.1 (2026-02-17)
+- 🐛 **FIX CRITIQUE** : Correction du Service Worker causant un écran blanc sur Vercel
+- 🔧 Retrait de `/src/main.jsx` des URLs à cacher (fichier inexistant en production)
+- ⚡ Mise à jour du cache vers v2.0.1
 
 ### v2.0.0 (2025-01-05)
 - ✨ Ajout des préférences de rencontre (Intéressé•e par, Recherche, Enfants)
