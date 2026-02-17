@@ -30,12 +30,19 @@ export default function UserAvatar({
 }) {
   // Génère l'état de l'avatar de manière déterministe depuis le userId
   const generatedState = useMemo(() => {
-    if (!user || !user.id) return null;
-    return createInitialAvatarState(user.id);
+    console.log('[UserAvatar] Génération avatar pour user:', user);
+    if (!user || !user.id) {
+      console.warn('[UserAvatar] Pas de user.id, retour null');
+      return null;
+    }
+    const state = createInitialAvatarState(user.id);
+    console.log('[UserAvatar] State généré:', state);
+    return state;
   }, [user?.id]);
 
   // Utilise l'état personnalisé si fourni, sinon l'état généré
   const finalState = avatarState || generatedState;
+  console.log('[UserAvatar] Final state:', finalState);
 
   // ID utilisateur pour les effets (préférer email si disponible pour cohérence)
   const userId = user?.email || user?.id;
