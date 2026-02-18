@@ -71,6 +71,10 @@ export default function AvatarEditor({ currentUser, onSave, onBack }) {
   });
   console.log('[AvatarEditor] identity state:', identity);
 
+  // State d'erreur pour debugging
+  const [debugError, setDebugError] = useState(null);
+  const [debugInfo, setDebugInfo] = useState('Initialisation...');
+
   // State du picker sheet
   const [pickerState, setPickerState] = useState({
     isOpen: false,
@@ -82,19 +86,34 @@ export default function AvatarEditor({ currentUser, onSave, onBack }) {
   // Chargement de l'avatar sauvegardé au mount
   useEffect(() => {
     console.log('[AvatarEditor] useEffect - Chargement avatar pour userId:', userId);
+    setDebugInfo('Chargement avatar...');
     try {
       const savedState = loadAvatarState(userId);
       console.log('[AvatarEditor] savedState chargé:', savedState);
       if (savedState && savedState.identity) {
         console.log('[AvatarEditor] ✅ Avatar existant trouvé, chargement...');
+        setDebugInfo('Avatar existant chargé');
         setIdentity(savedState.identity);
       } else {
         console.log('[AvatarEditor] ⚠️ Pas d\'avatar sauvegardé, génération aléatoire...');
+        setDebugInfo('Génération avatar aléatoire...');
         // Génère un avatar aléatoire par défaut
-        handleRandomize();
+        const newIdentity = {
+          face: randomAsset('face'),
+          eyes: randomAsset('eyes'),
+          mouth: randomAsset('mouth'),
+          hairBack: randomAsset('hairBack'),
+          hairFront: randomAsset('hairFront'),
+          beard: randomAsset('beard', true),
+          accessory: randomAsset('accessory', true)
+        };
+        setIdentity(newIdentity);
+        setDebugInfo('Avatar généré avec succès');
       }
     } catch (error) {
       console.error('[AvatarEditor] ❌ ERREUR dans useEffect:', error);
+      setDebugError(error.message || String(error));
+      setDebugInfo('ERREUR: ' + (error.message || String(error)));
     }
   }, [userId]);
 
@@ -140,6 +159,7 @@ export default function AvatarEditor({ currentUser, onSave, onBack }) {
    */
   const handleRandomize = () => {
     console.log('[AvatarEditor] 🎲 handleRandomize appelé');
+    setDebugInfo('Génération aléatoire...');
     try {
       const newIdentity = {
         face: randomAsset('face'),
@@ -152,9 +172,12 @@ export default function AvatarEditor({ currentUser, onSave, onBack }) {
       };
       console.log('[AvatarEditor] newIdentity générée:', newIdentity);
       setIdentity(newIdentity);
+      setDebugInfo('Nouveau avatar généré');
       console.log('[AvatarEditor] ✅ setIdentity appelé');
     } catch (error) {
       console.error('[AvatarEditor] ❌ ERREUR dans handleRandomize:', error);
+      setDebugError(error.message || String(error));
+      setDebugInfo('ERREUR: ' + (error.message || String(error)));
     }
   };
 
@@ -231,6 +254,27 @@ export default function AvatarEditor({ currentUser, onSave, onBack }) {
         <h1 style={{ margin: 0, fontSize: '24px', fontWeight: '600' }}>
           Éditeur d'Avatar
         </h1>
+      </div>
+
+      {/* Debug Info - Visible à l'écran */}
+      <div
+        style={{
+          background: debugError ? '#ff0000' : '#00ff00',
+          color: '#000',
+          padding: '10px',
+          borderRadius: '8px',
+          marginBottom: '20px',
+          fontFamily: 'monospace',
+          fontSize: '12px',
+          fontWeight: 'bold'
+        }}
+      >
+        {debugInfo}
+        {debugError && (
+          <div style={{ marginTop: '8px', color: '#fff' }}>
+            Erreur: {debugError}
+          </div>
+        )}
       </div>
 
       {/* Preview Avatar */}
