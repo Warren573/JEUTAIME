@@ -261,7 +261,7 @@ function MainApp() {
     { icon: '🔍', label: 'Profils', id: 'profiles' },
     { icon: '👥', label: 'Social', id: 'social' },
     { icon: '💌', label: 'Lettres', id: 'letters' },
-    { icon: '🎨', label: 'Avatar', id: 'avatar' },
+    { icon: '🎨', label: 'Avatar', id: 'avatar-editor' },
     { icon: '⚙️', label: 'Plus', id: 'settings' }
   ];
 
@@ -339,7 +339,7 @@ function MainApp() {
       {screen === 'journal' && !gameScreen && !selectedSalon && <JournalScreen {...appState} />}
       {screen === 'settings' && !gameScreen && !selectedSalon && <SettingsScreen {...appState} setScreen={setScreen} />}
       {screen === 'demo-effects' && !gameScreen && !selectedSalon && <DemoEffectsScreen currentUser={currentUser} onBack={() => setScreen('settings')} />}
-      {screen === 'avatar-editor' && !gameScreen && !selectedSalon && <AvatarEditor currentUser={currentUser} onBack={() => setScreen('settings')} />}
+      {screen === 'avatar-editor' && !gameScreen && !selectedSalon && <AvatarEditor currentUser={currentUser} onBack={() => setScreen('home')} />}
 
       {gameScreen === 'pong' && <PongGame {...appState} currentUser={currentUser} />}
       {gameScreen === 'reactivity' && <WhackAMoleGame {...appState} currentUser={currentUser} />}
