@@ -482,7 +482,10 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
                     : '0 4px 8px rgba(0,0,0,0.2)',
                   transition: 'all 0.3s',
                   position: 'relative',
-                  zIndex: 1
+                  zIndex: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
                 }}>
                   <UserAvatar
                     user={member}
