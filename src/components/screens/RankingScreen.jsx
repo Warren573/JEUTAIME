@@ -293,7 +293,9 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
                   </div>
 
                   {/* Avatar */}
-                  <UserAvatar user={user} size={50} emoji="😊" />
+                  <div style={{ width: '50px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <UserAvatar user={user} size={50} emoji="😊" />
+                  </div>
 
                   {/* Infos */}
                   <div style={{ flex: 1 }}>
