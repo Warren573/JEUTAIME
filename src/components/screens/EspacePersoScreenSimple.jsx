@@ -50,11 +50,11 @@ export default function EspacePersoScreenSimple({
             width: '100px',
             height: '100px',
             borderRadius: '50%',
-            overflow: 'hidden',
             border: '4px solid var(--color-gold)',
             boxShadow: 'var(--shadow-lg)',
             flexShrink: 0,
             background: 'white',
+            position: 'relative',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'
@@ -62,7 +62,7 @@ export default function EspacePersoScreenSimple({
             <UserAvatar
               user={currentUser}
               isOwn={true}
-              size={100}
+              size={92}
             />
           </div>
 
