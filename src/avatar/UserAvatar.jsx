@@ -43,7 +43,7 @@ export default function UserAvatar({
   const userId = user?.email || user?.id;
 
   return (
-    <div style={{ position: 'relative', display: 'inline-block', width: size, height: size }}>
+    <div style={{ position: 'relative', display: 'block', width: size, height: size, margin: '0 auto' }}>
       <AvatarRenderer
         avatarState={finalState}
         size={size}
