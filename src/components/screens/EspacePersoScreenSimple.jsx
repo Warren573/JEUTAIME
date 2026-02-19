@@ -58,9 +58,12 @@ export default function EspacePersoScreenSimple({
             alignItems: 'center',
             justifyContent: 'center'
           }}>
+            {/* Debug temporaire */}
+            <div style={{position: 'absolute', top: 0, left: 0, fontSize: '10px', background: 'red', color: 'white', padding: '2px', zIndex: 9999}}>
+              ID: {currentUser?.id || 'NULL'}
+            </div>
             <UserAvatar
               user={currentUser}
-              isOwn={true}
               size={92}
             />
           </div>
