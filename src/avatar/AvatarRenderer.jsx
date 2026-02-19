@@ -196,6 +196,7 @@ export default function AvatarRenderer({ avatarState, size = 100, className, sty
         borderRadius: '50%',
         overflow: 'hidden',
         backgroundColor: '#F5F5F5',
+        margin: '0 auto',
         ...style
       }}
     >
