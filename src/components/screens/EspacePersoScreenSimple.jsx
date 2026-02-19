@@ -54,7 +54,10 @@ export default function EspacePersoScreenSimple({
             border: '4px solid var(--color-gold)',
             boxShadow: 'var(--shadow-lg)',
             flexShrink: 0,
-            background: 'white'
+            background: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
           }}>
             <UserAvatar
               user={currentUser}
