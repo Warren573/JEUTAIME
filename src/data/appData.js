@@ -108,8 +108,7 @@ export const salons = [
     participants: [
       { name: 'Maxime', gender: 'M', age: 29, online: true },
       { name: 'Laura', gender: 'F', age: 27, online: true },
-      { name: 'Thomas', gender: 'M', age: 31, online: false },
-      { name: 'Chloé', gender: 'F', age: 26, online: true }
+      { name: 'Thomas', gender: 'M', age: 31, online: false }
     ]
   }
 ];
