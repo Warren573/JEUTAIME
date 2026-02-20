@@ -59,6 +59,17 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedSalon,
       gradient: 'linear-gradient(135deg, #5C6BC0, #3949AB)',
       textColor: 'white',
       action: () => setSelectedSalon({ type: 'weekly', name: 'Salon Hebdomadaire', emoji: '📅' })
+    },
+    {
+      id: 'metal',
+      name: 'Métal',
+      emoji: '🤘',
+      description: 'Faut battre le fer tant qu\'il est chaud',
+      currentMembers: 2,
+      maxMembers: 4,
+      gradient: 'linear-gradient(135deg, #424242, #000000)',
+      textColor: 'white',
+      action: () => setSelectedSalon({ type: 'metal', name: 'Métal', emoji: '🤘' })
     }
   ];
 
