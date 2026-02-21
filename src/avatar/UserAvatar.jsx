@@ -43,12 +43,24 @@ export default function UserAvatar({
   const userId = user?.email || user?.id;
 
   return (
-    <div style={{ position: 'relative', width: size, height: size }}>
+    <div
+      className={className}
+      style={{
+        position: 'relative',
+        width: size,
+        height: size,
+        borderRadius: '50%',
+        overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexShrink: 0,
+        ...style
+      }}
+    >
       <AvatarRenderer
         avatarState={finalState}
         size={size}
-        className={className}
-        style={style}
       />
       {/* Couche d'effets visuels (invisibilité, lueur, etc.) */}
       {userId && <AvatarEffectsLayer userId={userId} />}

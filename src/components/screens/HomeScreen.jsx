@@ -176,7 +176,6 @@ export default function HomeScreen({ setScreen, myLetters, joinedSalons, setCurr
             <UserAvatar
               user={currentUser}
               size={80}
-              emoji="😊"
             />
             <div style={{ flex: 1 }}>
               <h2 style={{
