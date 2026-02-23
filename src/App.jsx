@@ -52,6 +52,9 @@ import { salons } from './data/appData';
 // Effect Engine - Auto-cleanup
 import { startAutoCleanup } from './engine/EffectEngine';
 
+// Debug
+import LogOverlay from './components/debug/LogOverlay';
+
 function MainApp() {
   const [currentUser, setCurrentUser] = useState(null);
   const [authMode, setAuthMode] = useState(null); // null, 'signup-profile'
@@ -86,10 +89,12 @@ function MainApp() {
     // Initialiser les animaux de démo pour tester
     initializeDemoPets();
 
-    // Ajouter les préférences par défaut à tous les utilisateurs existants
+    // MIGRATION: Ajouter les préférences et IDs manquants
     const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
     let updated = false;
-    users.forEach(user => {
+
+    users.forEach((user, index) => {
+      // Migration 1: Ajouter les préférences par défaut
       if (!user.interestedIn && !user.isBot) {
         user.interestedIn = user.gender === 'Homme' ? 'Femmes' : user.gender === 'Femme' ? 'Hommes' : 'Tout le monde';
         user.lookingFor = 'Advienne que pourra';
@@ -97,10 +102,22 @@ function MainApp() {
         user.physicalDescription = 'moyenne';
         updated = true;
       }
+
+      // Migration 2: Ajouter un ID unique si manquant
+      if (!user.id) {
+        // Générer un ID déterministe basé sur l'email + index
+        const hash = user.email.split('').reduce((acc, char) => {
+          return ((acc << 5) - acc) + char.charCodeAt(0);
+        }, 0);
+        user.id = Math.abs(hash) + index;
+        console.log(`🔧 Migration: ID ${user.id} assigné à ${user.pseudo || user.email}`);
+        updated = true;
+      }
     });
+
     if (updated) {
       localStorage.setItem('jeutaime_users', JSON.stringify(users));
-      console.log('✅ Préférences par défaut ajoutées aux profils existants');
+      console.log('✅ Migrations complétées (préférences + IDs)');
     }
 
     const savedUser = localStorage.getItem('jeutaime_current_user');
@@ -244,7 +261,7 @@ function MainApp() {
     { icon: '🔍', label: 'Profils', id: 'profiles' },
     { icon: '👥', label: 'Social', id: 'social' },
     { icon: '💌', label: 'Lettres', id: 'letters' },
-    { icon: '🎨', label: 'Avatar', id: 'avatar' },
+    { icon: '🎨', label: 'Avatar', id: 'avatar-editor' },
     { icon: '⚙️', label: 'Plus', id: 'settings' }
   ];
 
@@ -322,7 +339,7 @@ function MainApp() {
       {screen === 'journal' && !gameScreen && !selectedSalon && <JournalScreen {...appState} />}
       {screen === 'settings' && !gameScreen && !selectedSalon && <SettingsScreen {...appState} setScreen={setScreen} />}
       {screen === 'demo-effects' && !gameScreen && !selectedSalon && <DemoEffectsScreen currentUser={currentUser} onBack={() => setScreen('settings')} />}
-      {screen === 'avatar-editor' && !gameScreen && !selectedSalon && <AvatarEditor currentUser={currentUser} onBack={() => setScreen('settings')} />}
+      {screen === 'avatar-editor' && !gameScreen && !selectedSalon && <AvatarEditor currentUser={currentUser} onBack={() => setScreen('home')} />}
 
       {gameScreen === 'pong' && <PongGame {...appState} currentUser={currentUser} />}
       {gameScreen === 'reactivity' && <WhackAMoleGame {...appState} currentUser={currentUser} />}
@@ -363,6 +380,9 @@ function MainApp() {
           {adminMode ? '🛡️' : '🔒'}
         </button>
       )}
+
+      {/* Debug Log Overlay */}
+      <LogOverlay />
     </div>
   );
 }

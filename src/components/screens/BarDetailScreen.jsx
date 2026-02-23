@@ -469,27 +469,21 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
                     }} />
                   </>
                 )}
-                <div style={{
-                  width: '100px',
-                  height: '100px',
-                  borderRadius: '50%',
-                  overflow: 'hidden',
-                  border: giftReceiverEffect === member.id
-                    ? '3px solid #FFD700'
-                    : '3px solid rgba(255,255,255,0.3)',
-                  boxShadow: giftReceiverEffect === member.id
-                    ? '0 0 20px rgba(255,215,0,0.8), 0 4px 8px rgba(0,0,0,0.2)'
-                    : '0 4px 8px rgba(0,0,0,0.2)',
-                  transition: 'all 0.3s',
-                  position: 'relative',
-                  zIndex: 1
-                }}>
-                  <UserAvatar
-                    user={member}
-                    isOwn={member.isPatron}
-                    size={100}
-                  />
-                </div>
+                <UserAvatar
+                  user={member}
+                  size={100}
+                  style={{
+                    border: giftReceiverEffect === member.id
+                      ? '3px solid #FFD700'
+                      : '3px solid rgba(255,255,255,0.3)',
+                    boxShadow: giftReceiverEffect === member.id
+                      ? '0 0 20px rgba(255,215,0,0.8), 0 4px 8px rgba(0,0,0,0.2)'
+                      : '0 4px 8px rgba(0,0,0,0.2)',
+                    transition: 'all 0.3s',
+                    position: 'relative',
+                    zIndex: 1
+                  }}
+                />
                 {/* Indicateur en ligne */}
                 {member.online !== false && (
                   <div style={{

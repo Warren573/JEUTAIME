@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debug - Données Utilisateurs</title>
+  <style>
+    body {
+      font-family: monospace;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #00ff00;
+    }
+    .user-card {
+      background: #2a2a2a;
+      border: 2px solid #00ff00;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+    }
+    .user-card.no-id {
+      border-color: #ff0000;
+      background: #3a1a1a;
+    }
+    .id { color: #ffff00; font-weight: bold; font-size: 18px; }
+    .email { color: #00aaff; }
+    .pseudo { color: #ff00ff; font-size: 16px; }
+    h1 { color: #ffffff; }
+    .stats {
+      background: #1a3a1a;
+      padding: 10px;
+      margin-top: 20px;
+      border-left: 4px solid #00ff00;
+    }
+    .error {
+      background: #3a1a1a;
+      border-left: 4px solid #ff0000;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔍 DIAGNOSTIC - Données Utilisateurs</h1>
+  <div id="output"></div>
+
+  <script>
+    const output = document.getElementById('output');
+
+    try {
+      const usersRaw = localStorage.getItem('jeutaime_users');
+
+      if (!usersRaw) {
+        output.innerHTML = '<div class="error">❌ Aucun utilisateur trouvé dans localStorage</div>';
+      } else {
+        const users = JSON.parse(usersRaw);
+
+        let html = `<div class="stats">
+          📊 TOTAL: ${users.length} utilisateurs<br>
+          🤖 Bots: ${users.filter(u => u.isBot).length}<br>
+          👤 Réels: ${users.filter(u => !u.isBot).length}<br>
+          ❌ SANS ID: ${users.filter(u => !u.id).length}<br>
+          ✅ AVEC ID: ${users.filter(u => u.id).length}
+        </div>`;
+
+        // Afficher les 10 premiers utilisateurs
+        users.slice(0, 10).forEach((user, index) => {
+          const hasId = user.id !== undefined;
+          html += `
+            <div class="user-card ${!hasId ? 'no-id' : ''}">
+              <div class="pseudo">${index + 1}. ${user.pseudo || 'Sans pseudo'}</div>
+              <div class="email">📧 ${user.email}</div>
+              <div class="id">🆔 ID: ${user.id !== undefined ? user.id : '❌ MANQUANT'}</div>
+              <div>🤖 Bot: ${user.isBot ? 'OUI' : 'NON'}</div>
+              ${!hasId ? '<div style="color: #ff0000; font-weight: bold;">⚠️ CET UTILISATEUR N\'A PAS D\'ID !</div>' : ''}
+            </div>
+          `;
+        });
+
+        if (users.length > 10) {
+          html += `<div class="stats">... et ${users.length - 10} autres utilisateurs</div>`;
+        }
+
+        // Utilisateur actuel
+        const currentUserRaw = localStorage.getItem('jeutaime_current_user');
+        if (currentUserRaw) {
+          const currentUser = JSON.parse(currentUserRaw);
+          html += `
+            <div class="stats" style="margin-top: 30px; border-color: #ffff00;">
+              <h2 style="color: #ffff00;">👤 UTILISATEUR ACTUEL</h2>
+              Pseudo: ${currentUser.pseudo}<br>
+              Email: ${currentUser.email}<br>
+              ID: ${currentUser.id !== undefined ? currentUser.id : '❌ MANQUANT'}<br>
+              ${!currentUser.id ? '<div style="color: #ff0000; font-weight: bold; margin-top: 10px;">⚠️ L\'UTILISATEUR ACTUEL N\'A PAS D\'ID !</div>' : ''}
+            </div>
+          `;
+        }
+
+        output.innerHTML = html;
+      }
+    } catch (e) {
+      output.innerHTML = `<div class="error">❌ ERREUR: ${e.message}</div>`;
+    }
+  </script>
+</body>
+</html>

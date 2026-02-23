@@ -92,6 +92,24 @@ export const salons = [
       { name: 'Victoria', gender: 'F', age: 28, online: true },
       { name: 'Xavier', gender: 'M', age: 35, online: false }
     ]
+  },
+  {
+    id: 6,
+    icon: '🤘',
+    name: 'Métal',
+    desc: '2H/2F - Faut battre le fer tant qu\'il est chaud',
+    bgGradient: 'linear-gradient(180deg, #424242 0%, #000000 100%)',
+    magicAction: {
+      name: 'Lancer un solo',
+      emoji: '🎸',
+      animation: 'guitar',
+      message: 'Solo de guitare dévastateur! 🎸🔥 La foule est en délire!'
+    },
+    participants: [
+      { name: 'Maxime', gender: 'M', age: 29, online: true },
+      { name: 'Laura', gender: 'F', age: 27, online: true },
+      { name: 'Thomas', gender: 'M', age: 31, online: false }
+    ]
   }
 ];
 

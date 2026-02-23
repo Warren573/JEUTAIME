@@ -7,6 +7,33 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
   const [referralStats, setReferralStats] = useState(null);
   const [copiedCode, setCopiedCode] = useState(false);
 
+  // Fonction de diagnostic
+  const forceMigration = () => {
+    const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+    let migrated = 0;
+
+    users.forEach((user, index) => {
+      if (!user.id) {
+        const hash = user.email.split('').reduce((acc, char) => {
+          return ((acc << 5) - acc) + char.charCodeAt(0);
+        }, 0);
+        user.id = Math.abs(hash) + index;
+        migrated++;
+      }
+    });
+
+    localStorage.setItem('jeutaime_users', JSON.stringify(users));
+
+    // Mettre à jour currentUser aussi
+    const updatedCurrent = users.find(u => u.email === currentUser.email);
+    if (updatedCurrent) {
+      localStorage.setItem('jeutaime_current_user', JSON.stringify(updatedCurrent));
+    }
+
+    alert(`✅ Migration forcée : ${migrated} utilisateur(s) ont reçu un ID.\n\nL'application va se recharger.`);
+    window.location.reload();
+  };
+
   // Profile state for editing
   const [profileData, setProfileData] = useState({
     name: currentUser?.name || '',
@@ -107,7 +134,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
           marginBottom: 'var(--spacing-lg)',
           justifyContent: 'center'
         }}>
-          {['profile', 'referral', 'shop', 'notifications', 'privacy', 'account'].map((tab) => (
+          {['profile', 'referral', 'diagnostic', 'shop', 'notifications', 'privacy', 'account'].map((tab) => (
             <button
               key={tab}
               onClick={() => setSettingsTab(tab)}
@@ -127,7 +154,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
                 minWidth: 'fit-content'
               }}
             >
-              {tab === 'profile' ? '👤 Profil' : tab === 'referral' ? '🎁 Parrainage' : tab === 'shop' ? '🛍️ Boutique' : tab === 'notifications' ? '🔔 Notifs' : tab === 'privacy' ? '🔒 Confidentialité' : '⚙️ Compte'}
+              {tab === 'profile' ? '👤 Profil' : tab === 'referral' ? '🎁 Parrainage' : tab === 'diagnostic' ? '🔧 Diagnostic' : tab === 'shop' ? '🛍️ Boutique' : tab === 'notifications' ? '🔔 Notifs' : tab === 'privacy' ? '🔒 Confidentialité' : '⚙️ Compte'}
             </button>
           ))}
         </div>
@@ -628,6 +655,104 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* DIAGNOSTIC AVATARS */}
+      {settingsTab === 'diagnostic' && (
+        <div>
+          <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '20px', marginBottom: '15px', color: '#00ff00', fontFamily: 'monospace', fontSize: '13px', border: '3px solid #00ff00' }}>
+            <h3 style={{ color: '#ffffff', marginTop: 0 }}>🔍 DIAGNOSTIC AVATARS</h3>
+
+            <div style={{ background: '#2a2a2a', padding: '15px', borderRadius: '10px', marginBottom: '15px', borderLeft: '4px solid #ffff00' }}>
+              <strong style={{ color: '#ffff00' }}>👤 UTILISATEUR ACTUEL</strong><br />
+              <div style={{ marginTop: '10px' }}>
+                Pseudo: {currentUser?.pseudo || 'N/A'}<br />
+                Email: {currentUser?.email || 'N/A'}<br />
+                <span style={{ fontSize: '16px', color: currentUser?.id ? '#00ff00' : '#ff0000' }}>
+                  ID: {currentUser?.id !== undefined ? currentUser.id : '❌ MANQUANT'}
+                </span>
+              </div>
+            </div>
+
+            {(() => {
+              const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+              const withoutId = users.filter(u => !u.id).length;
+              const withId = users.filter(u => u.id).length;
+              const bots = users.filter(u => u.isBot).length;
+              const real = users.filter(u => !u.isBot).length;
+
+              return (
+                <>
+                  <div style={{ background: '#1a3a1a', padding: '15px', borderRadius: '10px', marginBottom: '15px', borderLeft: '4px solid #00ff00' }}>
+                    <strong>📊 STATISTIQUES</strong><br />
+                    <div style={{ marginTop: '10px' }}>
+                      Total: {users.length} utilisateurs<br />
+                      🤖 Bots: {bots}<br />
+                      👤 Réels: {real}<br />
+                      ✅ Avec ID: {withId}<br />
+                      <span style={{ color: withoutId > 0 ? '#ff0000' : '#00ff00', fontWeight: 'bold' }}>
+                        ❌ Sans ID: {withoutId}
+                      </span>
+                    </div>
+                  </div>
+
+                  {withoutId > 0 && (
+                    <div style={{ background: '#3a1a1a', padding: '15px', borderRadius: '10px', marginBottom: '15px', borderLeft: '4px solid #ff0000' }}>
+                      <strong style={{ color: '#ff0000' }}>⚠️ PROBLÈME DÉTECTÉ</strong><br />
+                      <div style={{ marginTop: '10px', color: '#ffffff' }}>
+                        {withoutId} utilisateur(s) n'ont pas d'ID.<br />
+                        Cela cause des avatars identiques.<br /><br />
+                        <button
+                          onClick={forceMigration}
+                          style={{
+                            background: '#ff6b6b',
+                            color: 'white',
+                            border: 'none',
+                            padding: '14px 20px',
+                            borderRadius: '10px',
+                            cursor: 'pointer',
+                            fontWeight: 'bold',
+                            fontSize: '15px',
+                            width: '100%',
+                            fontFamily: 'inherit'
+                          }}
+                        >
+                          🔧 FORCER LA MIGRATION
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {withoutId === 0 && (
+                    <div style={{ background: '#1a3a1a', padding: '15px', borderRadius: '10px', marginBottom: '15px', borderLeft: '4px solid #00ff00' }}>
+                      <strong style={{ color: '#00ff00' }}>✅ TOUT EST OK</strong><br />
+                      <div style={{ marginTop: '10px', color: '#ffffff' }}>
+                        Tous les utilisateurs ont un ID unique.<br />
+                        Les avatars devraient être différents.
+                      </div>
+                    </div>
+                  )}
+
+                  <div style={{ background: '#2a2a2a', padding: '15px', borderRadius: '10px' }}>
+                    <strong>👥 PREMIERS UTILISATEURS</strong><br />
+                    <div style={{ marginTop: '10px', fontSize: '11px' }}>
+                      {users.slice(0, 5).map((u, i) => (
+                        <div key={i} style={{
+                          marginBottom: '8px',
+                          paddingBottom: '8px',
+                          borderBottom: i < 4 ? '1px solid #3a3a3a' : 'none',
+                          color: u.id ? '#00ff00' : '#ff0000'
+                        }}>
+                          {i+1}. {u.pseudo} - ID: {u.id !== undefined ? u.id : '❌'}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              );
+            })()}
+          </div>
         </div>
       )}
 

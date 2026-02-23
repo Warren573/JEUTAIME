@@ -576,24 +576,15 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
               paddingBottom: '140px' // Espace pour les infos en bas
             }}>
               {/* AVATAR TYPOGRAPHIQUE */}
-              <div style={{
-                width: '200px',
-                height: '200px',
-                borderRadius: '50%',
-                background: 'var(--color-cream)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: '4px solid var(--color-gold)',
-                margin: '0 auto',
-                overflow: 'hidden'
-              }}>
-                <UserAvatar
-                  user={currentProfileData}
-                  isOwn={false}
-                  size={200}
-                />
-              </div>
+              <UserAvatar
+                user={currentProfileData}
+                size={200}
+                style={{
+                  background: 'var(--color-cream)',
+                  border: '4px solid var(--color-gold)',
+                  margin: '0 auto'
+                }}
+              />
 
               {/* Message photo verrouillée - AU CENTRE */}
               <div style={{
@@ -647,24 +638,15 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
               paddingBottom: '140px' // Espace pour les infos en bas
             }}>
               {/* AVATAR TYPOGRAPHIQUE */}
-              <div style={{
-                width: '200px',
-                height: '200px',
-                borderRadius: '50%',
-                background: 'var(--color-cream)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: '4px solid var(--color-gold)',
-                margin: '0 auto',
-                overflow: 'hidden'
-              }}>
-                <UserAvatar
-                  user={currentProfileData}
-                  isOwn={false}
-                  size={200}
-                />
-              </div>
+              <UserAvatar
+                user={currentProfileData}
+                size={200}
+                style={{
+                  background: 'var(--color-cream)',
+                  border: '4px solid var(--color-gold)',
+                  margin: '0 auto'
+                }}
+              />
 
               {/* Message photo spécifique verrouillée */}
               <div style={{

@@ -10,7 +10,29 @@ export default function HomeScreen({ setScreen, myLetters, joinedSalons, setCurr
   const { adminLogin } = useAdmin();
   const [selectedOffering, setSelectedOffering] = useState(null);
   const [showBottleModal, setShowBottleModal] = useState(false);
+  const [showDiagnostic, setShowDiagnostic] = useState(false);
   const unreadBottles = getUnreadCount(currentUser?.email);
+
+  // Fonction de diagnostic
+  const forceMigration = () => {
+    const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+    let migrated = 0;
+
+    users.forEach((user, index) => {
+      if (!user.id) {
+        const hash = user.email.split('').reduce((acc, char) => {
+          return ((acc << 5) - acc) + char.charCodeAt(0);
+        }, 0);
+        user.id = Math.abs(hash) + index;
+        migrated++;
+      }
+    });
+
+    localStorage.setItem('jeutaime_users', JSON.stringify(users));
+    alert(`✅ Migration forcée : ${migrated} utilisateur(s) ont reçu un ID`);
+    setShowDiagnostic(false);
+    window.location.reload();
+  };
 
   const handleAdminTest = () => {
     // Auto-login as admin
@@ -154,7 +176,6 @@ export default function HomeScreen({ setScreen, myLetters, joinedSalons, setCurr
             <UserAvatar
               user={currentUser}
               size={80}
-              emoji="😊"
             />
             <div style={{ flex: 1 }}>
               <h2 style={{
@@ -632,6 +653,159 @@ export default function HomeScreen({ setScreen, myLetters, joinedSalons, setCurr
         </div>
       </div>
       </div>
+
+      {/* Bouton flottant de diagnostic */}
+      <button
+        onClick={() => setShowDiagnostic(true)}
+        style={{
+          position: 'fixed',
+          top: '80px',
+          right: '20px',
+          width: '50px',
+          height: '50px',
+          borderRadius: '50%',
+          background: 'linear-gradient(135deg, #ff6b6b, #ee5a24)',
+          border: '3px solid white',
+          color: 'white',
+          fontSize: '24px',
+          cursor: 'pointer',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+          zIndex: 999,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        🔧
+      </button>
+
+      {/* Modal de diagnostic */}
+      {showDiagnostic && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.8)',
+          zIndex: 10000,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '20px'
+        }}>
+          <div style={{
+            background: '#1a1a1a',
+            borderRadius: '20px',
+            padding: '25px',
+            maxWidth: '500px',
+            width: '100%',
+            maxHeight: '80vh',
+            overflowY: 'auto',
+            color: '#00ff00',
+            fontFamily: 'monospace',
+            fontSize: '13px',
+            border: '3px solid #00ff00'
+          }}>
+            <h2 style={{ color: '#ffffff', marginTop: 0 }}>🔍 DIAGNOSTIC AVATARS</h2>
+
+            <div style={{ background: '#2a2a2a', padding: '15px', borderRadius: '10px', marginBottom: '15px', borderLeft: '4px solid #ffff00' }}>
+              <strong style={{ color: '#ffff00' }}>👤 UTILISATEUR ACTUEL</strong><br />
+              <div style={{ marginTop: '10px' }}>
+                Pseudo: {currentUser?.pseudo || 'N/A'}<br />
+                Email: {currentUser?.email || 'N/A'}<br />
+                <span style={{ fontSize: '16px', color: currentUser?.id ? '#00ff00' : '#ff0000' }}>
+                  ID: {currentUser?.id !== undefined ? currentUser.id : '❌ MANQUANT'}
+                </span>
+              </div>
+            </div>
+
+            {(() => {
+              const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+              const withoutId = users.filter(u => !u.id).length;
+              const withId = users.filter(u => u.id).length;
+              const bots = users.filter(u => u.isBot).length;
+              const real = users.filter(u => !u.isBot).length;
+
+              return (
+                <>
+                  <div style={{ background: '#1a3a1a', padding: '15px', borderRadius: '10px', marginBottom: '15px', borderLeft: '4px solid #00ff00' }}>
+                    <strong>📊 STATISTIQUES</strong><br />
+                    <div style={{ marginTop: '10px' }}>
+                      Total: {users.length} utilisateurs<br />
+                      🤖 Bots: {bots}<br />
+                      👤 Réels: {real}<br />
+                      ✅ Avec ID: {withId}<br />
+                      <span style={{ color: withoutId > 0 ? '#ff0000' : '#00ff00', fontWeight: 'bold' }}>
+                        ❌ Sans ID: {withoutId}
+                      </span>
+                    </div>
+                  </div>
+
+                  {withoutId > 0 && (
+                    <div style={{ background: '#3a1a1a', padding: '15px', borderRadius: '10px', marginBottom: '15px', borderLeft: '4px solid #ff0000' }}>
+                      <strong style={{ color: '#ff0000' }}>⚠️ PROBLÈME DÉTECTÉ</strong><br />
+                      <div style={{ marginTop: '10px' }}>
+                        {withoutId} utilisateur(s) n'ont pas d'ID.<br />
+                        Cela cause des avatars identiques.<br /><br />
+                        <button
+                          onClick={forceMigration}
+                          style={{
+                            background: '#ff6b6b',
+                            color: 'white',
+                            border: 'none',
+                            padding: '12px 20px',
+                            borderRadius: '10px',
+                            cursor: 'pointer',
+                            fontWeight: 'bold',
+                            fontSize: '14px',
+                            width: '100%'
+                          }}
+                        >
+                          🔧 FORCER LA MIGRATION
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  <div style={{ background: '#2a2a2a', padding: '15px', borderRadius: '10px', marginBottom: '15px' }}>
+                    <strong>👥 PREMIERS UTILISATEURS</strong><br />
+                    <div style={{ marginTop: '10px', fontSize: '11px' }}>
+                      {users.slice(0, 5).map((u, i) => (
+                        <div key={i} style={{
+                          marginBottom: '8px',
+                          paddingBottom: '8px',
+                          borderBottom: i < 4 ? '1px solid #3a3a3a' : 'none',
+                          color: u.id ? '#00ff00' : '#ff0000'
+                        }}>
+                          {i+1}. {u.pseudo} - ID: {u.id !== undefined ? u.id : '❌'}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              );
+            })()}
+
+            <button
+              onClick={() => setShowDiagnostic(false)}
+              style={{
+                background: '#4a4a4a',
+                color: 'white',
+                border: 'none',
+                padding: '12px 20px',
+                borderRadius: '10px',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                fontSize: '14px',
+                width: '100%'
+              }}
+            >
+              ❌ Fermer
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Modal Bouteille à la mer */}
       {showBottleModal && (

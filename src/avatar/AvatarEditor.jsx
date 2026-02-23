@@ -83,7 +83,16 @@ export default function AvatarEditor({ currentUser, onSave, onBack }) {
       setIdentity(savedState.identity);
     } else {
       // Génère un avatar aléatoire par défaut
-      handleRandomize();
+      const newIdentity = {
+        face: randomAsset('face'),
+        eyes: randomAsset('eyes'),
+        mouth: randomAsset('mouth'),
+        hairBack: randomAsset('hairBack'),
+        hairFront: randomAsset('hairFront'),
+        beard: randomAsset('beard', true),
+        accessory: randomAsset('accessory', true)
+      };
+      setIdentity(newIdentity);
     }
   }, [userId]);
 
@@ -229,10 +238,13 @@ export default function AvatarEditor({ currentUser, onSave, onBack }) {
             background: '#FFF',
             borderRadius: '50%',
             padding: '20px',
-            boxShadow: '0 10px 40px rgba(0, 0, 0, 0.2)'
+            boxShadow: '0 10px 40px rgba(0, 0, 0, 0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
           }}
         >
-          <AvatarRenderer avatarState={avatarState} size={240} />
+          <AvatarRenderer avatarState={avatarState} size={200} />
         </div>
       </div>
 

@@ -244,7 +244,7 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
               filter: `blur(${Math.max(0, 10 - (photoOpacity * 10))}px)`,
               opacity: photoOpacity
             }}>
-              <UserAvatar user={matchedUser} size={60} emoji="😊" />
+              <UserAvatar user={matchedUser} size={60} />
             </div>
             {!isPhotoRevealed() && (
               <div style={{

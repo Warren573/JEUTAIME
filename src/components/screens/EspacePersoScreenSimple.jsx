@@ -46,22 +46,15 @@ export default function EspacePersoScreenSimple({
           gap: '20px',
           marginBottom: '20px'
         }}>
-          <div style={{
-            width: '100px',
-            height: '100px',
-            borderRadius: '50%',
-            overflow: 'hidden',
-            border: '4px solid var(--color-gold)',
-            boxShadow: 'var(--shadow-lg)',
-            flexShrink: 0,
-            background: 'white'
-          }}>
-            <UserAvatar
-              user={currentUser}
-              isOwn={true}
-              size={100}
-            />
-          </div>
+          <UserAvatar
+            user={currentUser}
+            size={100}
+            style={{
+              border: '4px solid var(--color-gold)',
+              boxShadow: 'var(--shadow-lg)',
+              background: 'white'
+            }}
+          />
 
           <div style={{ flex: 1 }}>
             <h1 style={{
