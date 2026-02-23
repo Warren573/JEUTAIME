@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Avatar Direct</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: monospace;
+            background: #f0f0f0;
+        }
+        .test {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border: 2px solid #333;
+        }
+        .avatar-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid #FFD700;
+            background: white;
+            margin: 20px auto;
+        }
+        .avatar-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        .info {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>TEST DIRECT AVATARS - Layers SVG</h1>
+
+    <div class="test">
+        <h2>Test 1: Face seule</h2>
+        <div class="avatar-container">
+            <img class="avatar-layer" src="/avatar_v1/layers/01_head/head_01_round.svg">
+        </div>
+        <div class="info">Juste le visage</div>
+    </div>
+
+    <div class="test">
+        <h2>Test 2: Face + Eyes</h2>
+        <div class="avatar-container">
+            <img class="avatar-layer" src="/avatar_v1/layers/01_head/head_01_round.svg">
+            <img class="avatar-layer" src="/avatar_v1/layers/02_eyes/eyes_01_dots.svg">
+        </div>
+        <div class="info">Visage + Yeux</div>
+    </div>
+
+    <div class="test">
+        <h2>Test 3: Face + Eyes + Nose + Mouth</h2>
+        <div class="avatar-container">
+            <img class="avatar-layer" src="/avatar_v1/layers/01_head/head_01_round.svg">
+            <img class="avatar-layer" src="/avatar_v1/layers/02_eyes/eyes_01_dots.svg">
+            <img class="avatar-layer" src="/avatar_v1/layers/03_nose/nose_01_dot.svg">
+            <img class="avatar-layer" src="/avatar_v1/layers/04_mouth/mouth_01_smile.svg">
+        </div>
+        <div class="info">Complet sans cheveux</div>
+    </div>
+
+    <div class="test">
+        <h2>Test 4: Avatar complet</h2>
+        <div class="avatar-container">
+            <img class="avatar-layer" src="/avatar_v1/layers/01_head/head_01_round.svg">
+            <img class="avatar-layer" src="/avatar_v1/layers/02_eyes/eyes_01_dots.svg">
+            <img class="avatar-layer" src="/avatar_v1/layers/03_nose/nose_01_dot.svg">
+            <img class="avatar-layer" src="/avatar_v1/layers/04_mouth/mouth_01_smile.svg">
+            <img class="avatar-layer" src="/avatar_v1/layers/05_hair/hair_01_buzz.svg">
+        </div>
+        <div class="info">Complet avec cheveux</div>
+    </div>
+
+    <div class="test">
+        <h2>Test 5: Changement dynamique (clic pour changer yeux)</h2>
+        <div class="avatar-container" id="dynamic">
+            <img class="avatar-layer" src="/avatar_v1/layers/01_head/head_01_round.svg">
+            <img class="avatar-layer" id="dynamic-eyes" src="/avatar_v1/layers/02_eyes/eyes_01_dots.svg">
+            <img class="avatar-layer" src="/avatar_v1/layers/03_nose/nose_01_dot.svg">
+            <img class="avatar-layer" src="/avatar_v1/layers/04_mouth/mouth_01_smile.svg">
+        </div>
+        <button onclick="changeEyes()">Changer yeux</button>
+        <div class="info" id="eyes-info">eyes_01_dots</div>
+    </div>
+
+    <script>
+        const eyesOptions = [
+            'eyes_01_dots',
+            'eyes_02_soft',
+            'eyes_03_smile',
+            'eyes_04_round',
+            'eyes_05_angrylight',
+            'eyes_06_glasses'
+        ];
+        let currentEyesIndex = 0;
+
+        function changeEyes() {
+            currentEyesIndex = (currentEyesIndex + 1) % eyesOptions.length;
+            const eyesId = eyesOptions[currentEyesIndex];
+            const img = document.getElementById('dynamic-eyes');
+            img.src = `/avatar_v1/layers/02_eyes/${eyesId}.svg`;
+            document.getElementById('eyes-info').textContent = eyesId;
+        }
+    </script>
+</body>
+</html>
