@@ -18,16 +18,9 @@ import manifest from './assets/manifest.json';
  * @returns {string|null} Chemin vers l'asset ou null
  */
 function getAssetPath(assetId) {
-  console.log('[getAssetPath] Appelé avec assetId:', assetId);
-  if (!assetId) {
-    console.warn('[getAssetPath] ❌ assetId est null/undefined');
-    return null;
-  }
+  if (!assetId) return null;
   const asset = getAssetById(assetId);
-  console.log('[getAssetPath] Résultat getAssetById:', asset);
-  const path = asset ? asset.path : null;
-  console.log('[getAssetPath] Path retourné:', path);
-  return path;
+  return asset ? asset.path : null;
 }
 
 /**
@@ -61,16 +54,13 @@ function renderAssetLayer(assetId, index, size) {
       key={`${assetId}-${index}`}
       src={path}
       alt=""
-      onError={(e) => console.error('[Avatar] Erreur chargement:', path)}
-      onLoad={() => console.log('[Avatar] Image chargée:', path)}
       style={{
         position: 'absolute',
         top: 0,
         left: 0,
         width: size,
         height: size,
-        objectFit: 'cover',
-        objectPosition: 'center',
+        display: 'block',
         pointerEvents: 'none'
       }}
     />
@@ -87,105 +77,31 @@ function renderAssetLayer(assetId, index, size) {
  * @param {Object} [props.style] - Styles inline optionnels
  */
 export default function AvatarRenderer({ avatarState, size = 100, className, style }) {
-  console.log('[AvatarRenderer] Called with:', { avatarState, size });
-
   if (!avatarState || !avatarState.identity) {
-    console.warn('[AvatarRenderer] ❌ Pas d\'avatarState ou pas d\'identity, affichage placeholder');
-    console.log('[AvatarRenderer] avatarState:', avatarState);
-    // Avatar vide par défaut (placeholder)
     return (
       <div
         className={className}
         style={{
           width: size,
           height: size,
-          borderRadius: '50%',
           backgroundColor: '#E0E0E0',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#9E9E9E',
-          fontSize: size * 0.4,
-          fontWeight: 'bold',
           ...style
         }}
-      >
-        ?
-      </div>
+      />
     );
   }
 
-  console.log('[AvatarRenderer] ✅ Identity:', avatarState.identity);
-
-  const { identity, extensions } = avatarState;
+  const { identity } = avatarState;
   const layers = [];
 
-  console.log('[AvatarRenderer] Début rendu layers...');
-
-  // Rendu des couches principales selon Z-ORDER
-  // hairBack (0)
-  if (identity.hairBack) {
-    console.log('[AvatarRenderer] Ajout hairBack:', identity.hairBack);
-    const layer = renderAssetLayer(identity.hairBack, 0, size);
-    console.log('[AvatarRenderer] Layer hairBack créé:', layer);
-    layers.push(layer);
-  }
-
-  // face (1)
-  if (identity.face) {
-    console.log('[AvatarRenderer] Ajout face:', identity.face);
-    const layer = renderAssetLayer(identity.face, 1, size);
-    console.log('[AvatarRenderer] Layer face créé:', layer);
-    layers.push(layer);
-  }
-
-  // eyes (2)
-  if (identity.eyes) {
-    console.log('[AvatarRenderer] Ajout eyes:', identity.eyes);
-    const layer = renderAssetLayer(identity.eyes, 2, size);
-    console.log('[AvatarRenderer] Layer eyes créé:', layer);
-    layers.push(layer);
-  }
-
-  // mouth (3)
-  if (identity.mouth) {
-    console.log('[AvatarRenderer] Ajout mouth:', identity.mouth);
-    const layer = renderAssetLayer(identity.mouth, 3, size);
-    console.log('[AvatarRenderer] Layer mouth créé:', layer);
-    layers.push(layer);
-  }
-
-  // beard (4)
-  if (identity.beard) {
-    console.log('[AvatarRenderer] Ajout beard:', identity.beard);
-    const layer = renderAssetLayer(identity.beard, 4, size);
-    console.log('[AvatarRenderer] Layer beard créé:', layer);
-    layers.push(layer);
-  }
-
-  // hairFront (5)
-  if (identity.hairFront) {
-    console.log('[AvatarRenderer] Ajout hairFront:', identity.hairFront);
-    const layer = renderAssetLayer(identity.hairFront, 5, size);
-    console.log('[AvatarRenderer] Layer hairFront créé:', layer);
-    layers.push(layer);
-  }
-
-  // accessory (6)
-  if (identity.accessory) {
-    console.log('[AvatarRenderer] Ajout accessory:', identity.accessory);
-    const layer = renderAssetLayer(identity.accessory, 6, size);
-    console.log('[AvatarRenderer] Layer accessory créé:', layer);
-    layers.push(layer);
-  }
-
-  console.log('[AvatarRenderer] Fin rendu. Total layers:', layers.length);
-  console.log('[AvatarRenderer] Layers:', layers);
-
-  // Extensions (7-9) - Pour l'instant vides
-  // expression (7)
-  // aging (8)
-  // emotion (9)
+  // Z-ORDER : hairBack → face → eyes → mouth → beard → hairFront → accessory
+  // Note: hairBack et hairFront pointent vers les mêmes SVG → on utilise hairFront uniquement
+  if (identity.face)      layers.push(renderAssetLayer(identity.face,      0, size));
+  if (identity.eyes)      layers.push(renderAssetLayer(identity.eyes,      1, size));
+  if (identity.mouth)     layers.push(renderAssetLayer(identity.mouth,     2, size));
+  if (identity.beard)     layers.push(renderAssetLayer(identity.beard,     3, size));
+  if (identity.hairFront) layers.push(renderAssetLayer(identity.hairFront, 4, size));
+  if (identity.accessory) layers.push(renderAssetLayer(identity.accessory, 5, size));
 
   return (
     <div
@@ -194,7 +110,6 @@ export default function AvatarRenderer({ avatarState, size = 100, className, sty
         position: 'relative',
         width: size,
         height: size,
-        backgroundColor: '#F5F5F5',
         ...style
       }}
     >
