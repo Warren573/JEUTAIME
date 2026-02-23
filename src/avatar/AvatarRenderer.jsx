@@ -20,7 +20,7 @@ function getAssetPath(assetId) {
 /**
  * Rend UNE couche d'asset avec key stable basée sur le slot
  */
-function renderSlot(slotName, assetId, size) {
+function renderSlot(slotName, assetId) {
   if (!assetId) return null;
 
   const path = getAssetPath(assetId);
@@ -31,12 +31,13 @@ function renderSlot(slotName, assetId, size) {
       key={`slot-${slotName}`}
       src={path}
       alt=""
+      draggable={false}
       style={{
         position: 'absolute',
-        inset: 0,
+        top: 0,
+        left: 0,
         width: '100%',
         height: '100%',
-        objectFit: 'contain',
         pointerEvents: 'none'
       }}
     />
@@ -72,18 +73,15 @@ export default function AvatarRenderer({ avatarState, size = 100, className, sty
         position: 'relative',
         width: size,
         height: size,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
         ...style
       }}
     >
-      {renderSlot('face', identity.face, size)}
-      {renderSlot('eyes', identity.eyes, size)}
-      {renderSlot('mouth', identity.mouth, size)}
-      {renderSlot('beard', identity.beard, size)}
-      {renderSlot('hairFront', identity.hairFront, size)}
-      {renderSlot('accessory', identity.accessory, size)}
+      {renderSlot('face', identity.face)}
+      {renderSlot('eyes', identity.eyes)}
+      {renderSlot('mouth', identity.mouth)}
+      {renderSlot('beard', identity.beard)}
+      {renderSlot('hairFront', identity.hairFront)}
+      {renderSlot('accessory', identity.accessory)}
     </div>
   );
 }
