@@ -2,20 +2,14 @@
  * AVATAR RENDERER
  *
  * Composant de rendu qui superpose des images selon le Z-ORDER.
- * Ne contient AUCUNE logique métier, AUCUN dessin, AUCUNE génération.
- *
- * Rôle unique : afficher des images dans le bon ordre.
+ * Ordre fixe par slots, keys stables, remplacement strict.
  */
 
 import React from 'react';
-import { Z_ORDER } from './avatar.types.js';
 import { getAssetById } from './avatar.generator.js';
-import manifest from './assets/manifest.json';
 
 /**
  * Charge le chemin d'un asset depuis le manifest
- * @param {string} assetId - ID de l'asset
- * @returns {string|null} Chemin vers l'asset ou null
  */
 function getAssetPath(assetId) {
   if (!assetId) return null;
@@ -24,43 +18,25 @@ function getAssetPath(assetId) {
 }
 
 /**
- * Charge le chemin d'une extension
- * @param {string} extensionCategory - Catégorie (expressions/emotions/aging)
- * @param {string} value - Valeur spécifique (ex: "smile", "calm")
- * @returns {string|null} Chemin vers l'overlay ou null
+ * Rend UNE couche d'asset avec key stable basée sur le slot
  */
-function getExtensionPath(extensionCategory, value) {
-  // Pour l'instant, le manifest des extensions n'existe pas encore
-  // Cette fonction sera étendue quand les extensions seront ajoutées
-  return null;
-}
+function renderSlot(slotName, assetId, size) {
+  if (!assetId) return null;
 
-/**
- * Rend une couche d'asset (image)
- * @param {string} assetId - ID de l'asset à rendre
- * @param {number} index - Index de la couche (pour key)
- * @param {number} size - Taille de l'avatar
- * @returns {JSX.Element|null} Image ou null
- */
-function renderAssetLayer(assetId, index, size) {
   const path = getAssetPath(assetId);
-  if (!path) {
-    console.warn(`[Avatar] Pas de path pour assetId=${assetId}`);
-    return null;
-  }
+  if (!path) return null;
 
   return (
     <img
-      key={`${assetId}-${index}`}
+      key={`slot-${slotName}`}
       src={path}
       alt=""
       style={{
         position: 'absolute',
-        top: 0,
-        left: 0,
-        width: size,
-        height: size,
-        display: 'block',
+        inset: 0,
+        width: '100%',
+        height: '100%',
+        objectFit: 'contain',
         pointerEvents: 'none'
       }}
     />
@@ -69,12 +45,7 @@ function renderAssetLayer(assetId, index, size) {
 
 /**
  * Composant principal de rendu d'avatar
- *
- * @param {Object} props
- * @param {Object} props.avatarState - État complet de l'avatar
- * @param {number} [props.size=100] - Taille en pixels
- * @param {string} [props.className] - Classe CSS optionnelle
- * @param {Object} [props.style] - Styles inline optionnels
+ * Ordre fixe: face → eyes → mouth → beard → hairFront → accessory
  */
 export default function AvatarRenderer({ avatarState, size = 100, className, style }) {
   if (!avatarState || !avatarState.identity) {
@@ -85,6 +56,7 @@ export default function AvatarRenderer({ avatarState, size = 100, className, sty
           width: size,
           height: size,
           backgroundColor: '#E0E0E0',
+          borderRadius: '50%',
           ...style
         }}
       />
@@ -92,16 +64,6 @@ export default function AvatarRenderer({ avatarState, size = 100, className, sty
   }
 
   const { identity } = avatarState;
-  const layers = [];
-
-  // Z-ORDER : hairBack → face → eyes → mouth → beard → hairFront → accessory
-  // Note: hairBack et hairFront pointent vers les mêmes SVG → on utilise hairFront uniquement
-  if (identity.face)      layers.push(renderAssetLayer(identity.face,      0, size));
-  if (identity.eyes)      layers.push(renderAssetLayer(identity.eyes,      1, size));
-  if (identity.mouth)     layers.push(renderAssetLayer(identity.mouth,     2, size));
-  if (identity.beard)     layers.push(renderAssetLayer(identity.beard,     3, size));
-  if (identity.hairFront) layers.push(renderAssetLayer(identity.hairFront, 4, size));
-  if (identity.accessory) layers.push(renderAssetLayer(identity.accessory, 5, size));
 
   return (
     <div
@@ -110,10 +72,18 @@ export default function AvatarRenderer({ avatarState, size = 100, className, sty
         position: 'relative',
         width: size,
         height: size,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         ...style
       }}
     >
-      {layers}
+      {renderSlot('face', identity.face, size)}
+      {renderSlot('eyes', identity.eyes, size)}
+      {renderSlot('mouth', identity.mouth, size)}
+      {renderSlot('beard', identity.beard, size)}
+      {renderSlot('hairFront', identity.hairFront, size)}
+      {renderSlot('accessory', identity.accessory, size)}
     </div>
   );
 }

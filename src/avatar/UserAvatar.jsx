@@ -12,14 +12,6 @@ import AvatarEffectsLayer from '../components/effects/AvatarEffectsLayer.jsx';
 
 /**
  * Wrapper d'avatar pour l'application
- *
- * @param {Object} props
- * @param {Object} props.user - Objet utilisateur
- * @param {string} props.user.id - ID unique de l'utilisateur
- * @param {number} [props.size=50] - Taille en pixels
- * @param {string} [props.className] - Classe CSS optionnelle
- * @param {Object} [props.style] - Styles inline optionnels
- * @param {Object} [props.avatarState] - État d'avatar personnalisé (optionnel)
  */
 export default function UserAvatar({
   user,
@@ -53,6 +45,9 @@ export default function UserAvatar({
         height: size,
         borderRadius: '50%',
         overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         flexShrink: 0,
         ...style
       }}
@@ -61,7 +56,6 @@ export default function UserAvatar({
         avatarState={finalState}
         size={size}
       />
-      {/* Couche d'effets visuels (invisibilité, lueur, etc.) */}
       {userId && <AvatarEffectsLayer userId={userId} />}
     </div>
   );
