@@ -30,11 +30,13 @@ export default function UserAvatar({
 }) {
   // Génère l'état de l'avatar de manière déterministe depuis le userId
   const generatedState = useMemo(() => {
-    if (!user || !user.id) {
+    if (!user) {
       return null;
     }
-    return createInitialAvatarState(user.id);
-  }, [user?.id]);
+    // Utiliser id ou email comme identifiant
+    const userId = user.id || user.email || 'default';
+    return createInitialAvatarState(userId);
+  }, [user?.id, user?.email]);
 
   // Utilise l'état personnalisé si fourni, sinon l'état généré
   const finalState = avatarState || generatedState;
@@ -51,9 +53,6 @@ export default function UserAvatar({
         height: size,
         borderRadius: '50%',
         overflow: 'hidden',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
         flexShrink: 0,
         ...style
       }}

@@ -70,6 +70,7 @@ function renderAssetLayer(assetId, index, size) {
         width: size,
         height: size,
         objectFit: 'cover',
+        objectPosition: 'center',
         pointerEvents: 'none'
       }}
     />
