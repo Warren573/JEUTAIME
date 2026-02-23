@@ -58,7 +58,7 @@ function renderAssetLayer(assetId, index, size) {
 
   return (
     <img
-      key={`layer-${index}`}
+      key={`${assetId}-${index}`}
       src={path}
       alt=""
       onError={(e) => console.error('[Avatar] Erreur chargement:', path)}
@@ -69,7 +69,7 @@ function renderAssetLayer(assetId, index, size) {
         left: 0,
         width: size,
         height: size,
-        objectFit: 'contain',
+        objectFit: 'cover',
         pointerEvents: 'none'
       }}
     />
