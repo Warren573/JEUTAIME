@@ -344,7 +344,7 @@ function MainApp() {
       {screen === 'social' && !gameScreen && !selectedSalon && <SocialScreen {...appState} currentUser={currentUser} />}
       {screen === 'bars' && !gameScreen && !selectedSalon && <BarsScreen setScreen={setScreen} setGameScreen={setGameScreen} setSelectedSalon={setSelectedSalon} currentUser={currentUser} />}
       {screen === 'referral' && !gameScreen && !selectedSalon && <ReferralScreen currentUser={currentUser} />}
-      {screen === 'letters' && !gameScreen && !selectedSalon && <LettersScreen currentUser={currentUser} />}
+      {screen === 'letters' && !gameScreen && !selectedSalon && <LettersScreen currentUser={currentUser} setCurrentUser={setCurrentUser} setScreen={setScreen} />}
       {screen === 'journal' && !gameScreen && !selectedSalon && <JournalScreen {...appState} />}
       {screen === 'settings' && !gameScreen && !selectedSalon && <SettingsScreen {...appState} setScreen={setScreen} />}
       {screen === 'demo-effects' && !gameScreen && !selectedSalon && <DemoEffectsScreen currentUser={currentUser} onBack={() => setScreen('settings')} />}

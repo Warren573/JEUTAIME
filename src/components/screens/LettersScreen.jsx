@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { getAllUsers } from '../../utils/demoUsers';
 import ChatScreen from './ChatScreen';
+import MemoryBoxScreen from './MemoryBoxScreen';
 import ScreenHeader from '../common/ScreenHeader';
 
-export default function LettersScreen({ currentUser, setScreen }) {
+export default function LettersScreen({ currentUser, setScreen, setCurrentUser }) {
+  const [activeTab, setActiveTab] = useState('conversations');
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [showGifts, setShowGifts] = useState(false);
@@ -116,20 +118,76 @@ export default function LettersScreen({ currentUser, setScreen }) {
         onBack={() => setScreen('home')}
       />
 
-      {/* Message si pas de conversations */}
-      <div style={{ padding: '0 var(--spacing-sm)' }}>
-        <p style={{
-          textAlign: 'center',
-          fontSize: '0.9rem',
-          color: 'var(--color-brown)',
-          margin: 0,
-          fontStyle: 'italic'
+      {/* Tabs */}
+      <div style={{ padding: '0 var(--spacing-sm)', marginBottom: 'var(--spacing-md)' }}>
+        <div style={{
+          display: 'flex',
+          gap: 'var(--spacing-sm)',
+          background: 'var(--color-cream)',
+          padding: 'var(--spacing-xs)',
+          borderRadius: 'var(--border-radius-lg)',
+          border: '2px solid var(--color-brown-light)'
         }}>
-          {conversations.length} conversation{conversations.length !== 1 ? 's' : ''}
-        </p>
+          <button
+            onClick={() => setActiveTab('conversations')}
+            style={{
+              flex: 1,
+              padding: 'var(--spacing-sm) var(--spacing-md)',
+              background: activeTab === 'conversations'
+                ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))'
+                : 'transparent',
+              border: 'none',
+              borderRadius: 'var(--border-radius-md)',
+              color: activeTab === 'conversations' ? 'var(--color-brown-dark)' : 'var(--color-text-secondary)',
+              fontWeight: '700',
+              fontSize: '1rem',
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+              boxShadow: activeTab === 'conversations' ? 'var(--shadow-md)' : 'none'
+            }}
+          >
+            💬 Conversations
+          </button>
+          <button
+            onClick={() => setActiveTab('memories')}
+            style={{
+              flex: 1,
+              padding: 'var(--spacing-sm) var(--spacing-md)',
+              background: activeTab === 'memories'
+                ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))'
+                : 'transparent',
+              border: 'none',
+              borderRadius: 'var(--border-radius-md)',
+              color: activeTab === 'memories' ? 'var(--color-brown-dark)' : 'var(--color-text-secondary)',
+              fontWeight: '700',
+              fontSize: '1rem',
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+              boxShadow: activeTab === 'memories' ? 'var(--shadow-md)' : 'none'
+            }}
+          >
+            🎁 Souvenirs
+          </button>
+        </div>
       </div>
 
-      {conversations.length === 0 ? (
+      {/* Message si pas de conversations */}
+      {activeTab === 'conversations' && (
+        <div style={{ padding: '0 var(--spacing-sm)' }}>
+          <p style={{
+            textAlign: 'center',
+            fontSize: '0.9rem',
+            color: 'var(--color-brown)',
+            margin: 0,
+            fontStyle: 'italic'
+          }}>
+            {conversations.length} conversation{conversations.length !== 1 ? 's' : ''}
+          </p>
+        </div>
+      )}
+
+      {/* Tab Conversations */}
+      {activeTab === 'conversations' && conversations.length === 0 ? (
         <div style={{
           textAlign: 'center',
           padding: '60px 20px',
@@ -158,7 +216,7 @@ export default function LettersScreen({ currentUser, setScreen }) {
             pour commencer des conversations !
           </p>
         </div>
-      ) : (
+      ) : activeTab === 'conversations' && (
         <div style={{ padding: '0 var(--spacing-lg)' }}>
           {conversations.map((convo, index) => {
             const isPhotoRevealed = (convo.letterCount.user >= 10 && convo.letterCount.matched >= 10) || currentUser.premium;
@@ -357,7 +415,8 @@ export default function LettersScreen({ currentUser, setScreen }) {
       )}
 
       {/* Section Offrandes - Thème vintage */}
-      <div style={{ padding: '0 var(--spacing-lg)', marginTop: 'var(--spacing-xl)' }}>
+      {activeTab === 'conversations' && (
+        <div style={{ padding: '0 var(--spacing-lg)', marginTop: 'var(--spacing-xl)' }}>
         <button
           onClick={() => setShowGifts(!showGifts)}
           className="btn-primary"
@@ -485,7 +544,15 @@ export default function LettersScreen({ currentUser, setScreen }) {
             </div>
           </div>
         )}
-      </div>
+        </div>
+      )}
+
+      {/* Tab Boîte à Souvenirs */}
+      {activeTab === 'memories' && (
+        <div style={{ padding: '0 var(--spacing-sm)' }}>
+          <MemoryBoxScreen currentUser={currentUser} setCurrentUser={setCurrentUser} />
+        </div>
+      )}
 
       {/* Modal Profil */}
       {selectedProfile && (
