@@ -244,11 +244,8 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
       {/* Liste complète du classement */}
       <div style={{
         background: 'white',
-        borderRadius: '20px',
-        padding: '20px',
-        boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
-        maxWidth: '900px',
-        margin: '0 auto',
+        borderRadius: '0',
+        padding: '20px 0',
         width: '100%',
         boxSizing: 'border-box'
       }}>
@@ -272,19 +269,21 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '15px',
-                    padding: '15px',
+                    gap: '16px',
+                    padding: '16px 20px',
                     background: isCurrentUser
                       ? 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))'
                       : '#f8f9fa',
-                    borderRadius: '12px',
+                    borderRadius: '0',
+                    borderBottom: '1px solid rgba(0,0,0,0.05)',
                     border: isCurrentUser ? '2px solid #667eea' : 'none'
                   }}
                 >
                   {/* Rang */}
                   <div style={{
-                    width: '50px',
-                    fontSize: '20px',
+                    width: '60px',
+                    flexShrink: 0,
+                    fontSize: '22px',
                     fontWeight: '700',
                     textAlign: 'center',
                     color: rank <= 3 ? '#667eea' : '#666'
@@ -293,10 +292,12 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
                   </div>
 
                   {/* Avatar */}
-                  <UserAvatar user={user} size={50} />
+                  <div style={{ flexShrink: 0 }}>
+                    <UserAvatar user={user} size={60} />
+                  </div>
 
                   {/* Infos */}
-                  <div style={{ flex: 1 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: '16px', fontWeight: '700', color: '#333', marginBottom: '3px' }}>
                       {user.pseudo}
                       {isCurrentUser && (
@@ -320,8 +321,10 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
 
                   {/* Points */}
                   <div style={{
+                    minWidth: '100px',
+                    flexShrink: 0,
                     textAlign: 'right',
-                    fontSize: '18px',
+                    fontSize: '19px',
                     fontWeight: '700',
                     color: '#667eea'
                   }}>
