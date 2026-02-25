@@ -1,7 +1,5 @@
 /**
  * AVATAR RENDERER
- *
- * Utilise un seul SVG parent pour garantir alignement parfait.
  */
 
 import React from 'react';
@@ -25,7 +23,6 @@ export default function AvatarRenderer({ avatarState, size = 100, className, sty
 
   const { identity } = avatarState;
 
-  // Récupère les chemins
   const face = identity.face ? getAssetById(identity.face)?.path : null;
   const eyes = identity.eyes ? getAssetById(identity.eyes)?.path : null;
   const mouth = identity.mouth ? getAssetById(identity.mouth)?.path : null;
@@ -36,7 +33,7 @@ export default function AvatarRenderer({ avatarState, size = 100, className, sty
   return (
     <svg
       className={className}
-      viewBox="0 0 512 512"
+      viewBox="80 80 352 352"
       width={size}
       height={size}
       style={{
@@ -44,12 +41,12 @@ export default function AvatarRenderer({ avatarState, size = 100, className, sty
         ...style
       }}
     >
-      {face && <image href={face} width="512" height="512" />}
-      {eyes && <image href={eyes} width="512" height="512" />}
-      {mouth && <image href={mouth} width="512" height="512" />}
-      {beard && <image href={beard} width="512" height="512" />}
-      {hair && <image href={hair} width="512" height="512" />}
-      {accessory && <image href={accessory} width="512" height="512" />}
+      {face && <image href={face} x="0" y="0" width="512" height="512" />}
+      {eyes && <image href={eyes} x="0" y="0" width="512" height="512" />}
+      {mouth && <image href={mouth} x="0" y="0" width="512" height="512" />}
+      {beard && <image href={beard} x="0" y="0" width="512" height="512" />}
+      {hair && <image href={hair} x="0" y="0" width="512" height="512" />}
+      {accessory && <image href={accessory} x="0" y="0" width="512" height="512" />}
     </svg>
   );
 }
