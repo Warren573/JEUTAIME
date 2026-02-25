@@ -273,44 +273,68 @@ export default function MemoryBoxScreen({ currentUser, setCurrentUser }) {
       </div>
 
       {/* Filtres */}
-      <div style={{
-        display: 'flex',
-        gap: 'var(--spacing-xs)',
-        marginBottom: 'var(--spacing-lg)',
-        overflowX: 'auto',
-        padding: '0 2px'
-      }}>
-        {[
-          { id: 'all', label: 'Tous', icon: '📦' },
-          { id: MEMORY_TYPES.CONVERSATION_PRIVATE, label: 'Convos', icon: '💬' },
-          { id: MEMORY_TYPES.CONVERSATION_SALON, label: 'Salons', icon: '🍸' },
-          { id: MEMORY_TYPES.PHOTO, label: 'Photos', icon: '📸' },
-          { id: MEMORY_TYPES.MESSAGE, label: 'Messages', icon: '💌' },
-          { id: MEMORY_TYPES.MOMENT, label: 'Moments', icon: '✨' }
-        ].map(filter => (
-          <button
-            key={filter.id}
-            onClick={() => setFilterType(filter.id)}
-            style={{
-              width: '48px',
-              height: '48px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: filterType === filter.id
-                ? 'var(--color-brown)'
-                : 'var(--color-beige)',
-              border: `2px solid ${filterType === filter.id ? 'var(--color-brown-dark)' : 'var(--color-brown-light)'}`,
-              borderRadius: '50%',
-              fontSize: '1.5rem',
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-              flexShrink: 0
-            }}
-          >
-            {filter.icon}
-          </button>
-        ))}
+      <div style={{ marginBottom: 'var(--spacing-lg)' }}>
+        {/* Titre du filtre actif */}
+        <div style={{
+          textAlign: 'center',
+          fontSize: '1rem',
+          fontWeight: '700',
+          color: 'var(--color-text-primary)',
+          marginBottom: 'var(--spacing-md)'
+        }}>
+          {filterType === 'all' ? '📦 Tous les souvenirs' :
+           filterType === MEMORY_TYPES.CONVERSATION_PRIVATE ? '💬 Conversations privées' :
+           filterType === MEMORY_TYPES.CONVERSATION_SALON ? '🍸 Discussions de salons' :
+           filterType === MEMORY_TYPES.PHOTO ? '📸 Photos débloquées' :
+           filterType === MEMORY_TYPES.MESSAGE ? '💌 Messages importants' :
+           '✨ Moments marquants'}
+        </div>
+
+        {/* Boutons de filtres */}
+        <div style={{
+          display: 'flex',
+          gap: 'var(--spacing-sm)',
+          justifyContent: 'center',
+          overflowX: 'auto',
+          padding: '0 var(--spacing-sm)'
+        }}>
+          {[
+            { id: 'all', label: 'Tous', icon: '📦' },
+            { id: MEMORY_TYPES.CONVERSATION_PRIVATE, label: 'Conversations', icon: '💬' },
+            { id: MEMORY_TYPES.CONVERSATION_SALON, label: 'Salons', icon: '🍸' },
+            { id: MEMORY_TYPES.PHOTO, label: 'Photos', icon: '📸' },
+            { id: MEMORY_TYPES.MESSAGE, label: 'Messages', icon: '💌' },
+            { id: MEMORY_TYPES.MOMENT, label: 'Moments', icon: '✨' }
+          ].map(filter => (
+            <button
+              key={filter.id}
+              onClick={() => setFilterType(filter.id)}
+              title={filter.label}
+              style={{
+                width: '56px',
+                height: '56px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: filterType === filter.id
+                  ? 'var(--color-brown)'
+                  : 'var(--color-beige)',
+                border: `3px solid ${filterType === filter.id ? 'var(--color-brown-dark)' : 'var(--color-brown-light)'}`,
+                borderRadius: '50%',
+                fontSize: '2rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                flexShrink: 0,
+                boxShadow: filterType === filter.id ? 'var(--shadow-md)' : 'var(--shadow-sm)'
+              }}
+              onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.9)'}
+              onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            >
+              {filter.icon}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* État vide */}
