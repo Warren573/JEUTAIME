@@ -1,56 +1,59 @@
 /**
  * AVATAR RENDERER
  *
- * Composant de rendu qui superpose des images selon le Z-ORDER.
- * Ordre fixe par slots, keys stables, remplacement strict.
+ * Composant de rendu qui superpose des SVG dans un seul élément SVG.
+ * Garantit un alignement parfait de tous les layers.
  */
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { getAssetById } from './avatar.generator.js';
 
 /**
- * Charge le chemin d'un asset depuis le manifest
+ * Charge le contenu SVG d'un asset
  */
-function getAssetPath(assetId) {
-  if (!assetId) return null;
-  const asset = getAssetById(assetId);
-  return asset ? asset.path : null;
+async function fetchSVGContent(path) {
+  try {
+    const response = await fetch(path);
+    const text = await response.text();
+    // Extraire le contenu entre les balises <svg>
+    const match = text.match(/<svg[^>]*>(.*?)<\/svg>/s);
+    return match ? match[1] : '';
+  } catch (error) {
+    console.error('Erreur chargement SVG:', path, error);
+    return '';
+  }
 }
 
 /**
- * Rend UNE couche d'asset avec key stable basée sur le slot
+ * Composant de rendu d'un slot avec fetch du SVG
  */
-function renderSlot(slotName, assetId) {
-  if (!assetId) return null;
+function SVGLayer({ assetId, onLoad }) {
+  const [content, setContent] = useState('');
 
-  const path = getAssetPath(assetId);
-  if (!path) return null;
+  useEffect(() => {
+    if (!assetId) {
+      setContent('');
+      return;
+    }
 
-  return (
-    <img
-      key={`slot-${slotName}`}
-      src={path}
-      alt=""
-      draggable={false}
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        objectFit: 'fill',
-        display: 'block',
-        maxWidth: 'none',
-        maxHeight: 'none',
-        pointerEvents: 'none'
-      }}
-    />
-  );
+    const asset = getAssetById(assetId);
+    if (!asset) {
+      setContent('');
+      return;
+    }
+
+    fetchSVGContent(asset.path).then(svgContent => {
+      setContent(svgContent);
+      if (onLoad) onLoad();
+    });
+  }, [assetId, onLoad]);
+
+  return <g dangerouslySetInnerHTML={{ __html: content }} />;
 }
 
 /**
  * Composant principal de rendu d'avatar
- * Ordre fixe: face → eyes → mouth → beard → hairFront → accessory
+ * Tous les SVG sont combinés dans un seul élément SVG pour alignement parfait
  */
 export default function AvatarRenderer({ avatarState, size = 100, className, style }) {
   if (!avatarState || !avatarState.identity) {
@@ -71,21 +74,22 @@ export default function AvatarRenderer({ avatarState, size = 100, className, sty
   const { identity } = avatarState;
 
   return (
-    <div
+    <svg
       className={className}
+      viewBox="0 0 512 512"
+      width={size}
+      height={size}
       style={{
-        position: 'relative',
-        width: size,
-        height: size,
+        display: 'block',
         ...style
       }}
     >
-      {renderSlot('face', identity.face)}
-      {renderSlot('eyes', identity.eyes)}
-      {renderSlot('mouth', identity.mouth)}
-      {renderSlot('beard', identity.beard)}
-      {renderSlot('hairFront', identity.hairFront)}
-      {renderSlot('accessory', identity.accessory)}
-    </div>
+      <SVGLayer key="face" assetId={identity.face} />
+      <SVGLayer key="eyes" assetId={identity.eyes} />
+      <SVGLayer key="mouth" assetId={identity.mouth} />
+      <SVGLayer key="beard" assetId={identity.beard} />
+      <SVGLayer key="hairFront" assetId={identity.hairFront} />
+      <SVGLayer key="accessory" assetId={identity.accessory} />
+    </svg>
   );
 }
