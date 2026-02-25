@@ -1,33 +1,11 @@
 /**
  * AVATAR RENDERER
+ *
+ * Utilise un seul SVG parent pour garantir alignement parfait.
  */
 
 import React from 'react';
 import { getAssetById } from './avatar.generator.js';
-
-function renderSlot(slotName, assetId) {
-  if (!assetId) return null;
-  const asset = getAssetById(assetId);
-  if (!asset) return null;
-
-  return (
-    <img
-      key={`slot-${slotName}`}
-      src={asset.path}
-      alt=""
-      draggable={false}
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        objectFit: 'fill',
-        display: 'block'
-      }}
-    />
-  );
-}
 
 export default function AvatarRenderer({ avatarState, size = 100, className, style }) {
   if (!avatarState || !avatarState.identity) {
@@ -47,24 +25,31 @@ export default function AvatarRenderer({ avatarState, size = 100, className, sty
 
   const { identity } = avatarState;
 
+  // Récupère les chemins
+  const face = identity.face ? getAssetById(identity.face)?.path : null;
+  const eyes = identity.eyes ? getAssetById(identity.eyes)?.path : null;
+  const mouth = identity.mouth ? getAssetById(identity.mouth)?.path : null;
+  const beard = identity.beard ? getAssetById(identity.beard)?.path : null;
+  const hair = identity.hairFront ? getAssetById(identity.hairFront)?.path : null;
+  const accessory = identity.accessory ? getAssetById(identity.accessory)?.path : null;
+
   return (
-    <div
+    <svg
       className={className}
+      viewBox="0 0 512 512"
+      width={size}
+      height={size}
       style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: size,
-        height: size,
+        display: 'block',
         ...style
       }}
     >
-      {renderSlot('face', identity.face)}
-      {renderSlot('eyes', identity.eyes)}
-      {renderSlot('mouth', identity.mouth)}
-      {renderSlot('beard', identity.beard)}
-      {renderSlot('hairFront', identity.hairFront)}
-      {renderSlot('accessory', identity.accessory)}
-    </div>
+      {face && <image href={face} width="512" height="512" />}
+      {eyes && <image href={eyes} width="512" height="512" />}
+      {mouth && <image href={mouth} width="512" height="512" />}
+      {beard && <image href={beard} width="512" height="512" />}
+      {hair && <image href={hair} width="512" height="512" />}
+      {accessory && <image href={accessory} width="512" height="512" />}
+    </svg>
   );
 }
