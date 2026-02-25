@@ -117,20 +117,20 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
         </p>
       </div>
 
-      <div style={{ padding: '0 var(--spacing-lg)', width: '100%', boxSizing: 'border-box' }}>
-        {/* Header avec stats personnelles */}
-        <div style={{
-          background: 'var(--color-cream)',
-          border: '3px solid var(--color-gold)',
-          borderRadius: 'var(--border-radius-lg)',
-          padding: 'var(--spacing-lg)',
-          color: 'var(--color-text-primary)',
-          marginBottom: 'var(--spacing-lg)',
-          textAlign: 'center',
-          boxShadow: 'var(--shadow-lg)',
-          maxWidth: '900px',
-          margin: '0 auto var(--spacing-lg) auto'
-        }}>
+      {/* Header avec stats personnelles */}
+      <div style={{
+        background: 'var(--color-cream)',
+        border: 'none',
+        borderTop: '3px solid var(--color-gold)',
+        borderBottom: '3px solid var(--color-gold)',
+        borderRadius: '0',
+        padding: 'var(--spacing-lg)',
+        color: 'var(--color-text-primary)',
+        marginBottom: 'var(--spacing-lg)',
+        textAlign: 'center',
+        width: '100%',
+        boxSizing: 'border-box'
+      }}>
 
         {/* Mes stats */}
         <div style={{
@@ -159,23 +159,23 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'flex-end',
-          gap: '10px',
-          marginBottom: '30px',
-          maxWidth: '900px',
-          margin: '0 auto 30px auto'
+          gap: '0',
+          marginBottom: 'var(--spacing-lg)',
+          width: '100%',
+          boxSizing: 'border-box'
         }}>
           {/* 2ème place */}
           <div style={{
             flex: 1,
             textAlign: 'center',
             background: 'linear-gradient(135deg, #E5E5E5, #C0C0C0)',
-            borderRadius: '15px 15px 0 0',
+            borderRadius: '0',
+            borderRight: '1px solid rgba(0,0,0,0.1)',
             padding: '20px 10px',
             height: '160px',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
-            boxShadow: '0 5px 15px rgba(0,0,0,0.1)'
+            justifyContent: 'center'
           }}>
             <div style={{ fontSize: '40px', marginBottom: '5px' }}>🥈</div>
             <div style={{ fontSize: '16px', fontWeight: '700', color: '#333', marginBottom: '3px' }}>
@@ -194,13 +194,13 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
             flex: 1,
             textAlign: 'center',
             background: 'linear-gradient(135deg, #FFD700, #FFA500)',
-            borderRadius: '15px 15px 0 0',
+            borderRadius: '0',
+            borderRight: '1px solid rgba(0,0,0,0.1)',
             padding: '20px 10px',
             height: '200px',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
-            boxShadow: '0 10px 25px rgba(255,215,0,0.3)'
+            justifyContent: 'center'
           }}>
             <div style={{ fontSize: '50px', marginBottom: '5px' }}>🥇</div>
             <div style={{ fontSize: '18px', fontWeight: '700', color: '#333', marginBottom: '3px' }}>
@@ -219,13 +219,12 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
             flex: 1,
             textAlign: 'center',
             background: 'linear-gradient(135deg, #CD7F32, #8B4513)',
-            borderRadius: '15px 15px 0 0',
+            borderRadius: '0',
             padding: '20px 10px',
             height: '140px',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
-            boxShadow: '0 5px 15px rgba(0,0,0,0.1)'
+            justifyContent: 'center'
           }}>
             <div style={{ fontSize: '36px', marginBottom: '5px' }}>🥉</div>
             <div style={{ fontSize: '15px', fontWeight: '700', color: 'white', marginBottom: '3px' }}>
@@ -339,12 +338,10 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
 
       {/* Info sur les points */}
       <div style={{
-        marginTop: '25px',
+        marginTop: 'var(--spacing-lg)',
         background: '#f8f9fa',
-        borderRadius: '15px',
-        padding: '20px',
-        maxWidth: '900px',
-        margin: '25px auto 0 auto',
+        borderRadius: '0',
+        padding: 'var(--spacing-lg)',
         width: '100%',
         boxSizing: 'border-box'
       }}>
