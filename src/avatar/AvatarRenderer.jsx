@@ -33,7 +33,7 @@ export default function AvatarRenderer({ avatarState, size = 100, className, sty
   return (
     <svg
       className={className}
-      viewBox="80 80 352 352"
+      viewBox="0 0 512 512"
       width={size}
       height={size}
       style={{
@@ -41,12 +41,12 @@ export default function AvatarRenderer({ avatarState, size = 100, className, sty
         ...style
       }}
     >
-      {face && <image href={face} x="0" y="0" width="512" height="512" />}
-      {eyes && <image href={eyes} x="0" y="0" width="512" height="512" />}
-      {mouth && <image href={mouth} x="0" y="0" width="512" height="512" />}
-      {beard && <image href={beard} x="0" y="0" width="512" height="512" />}
-      {hair && <image href={hair} x="0" y="0" width="512" height="512" />}
-      {accessory && <image href={accessory} x="0" y="0" width="512" height="512" />}
+      {face && <image href={face} width="512" height="512" />}
+      {eyes && <image href={eyes} width="512" height="512" />}
+      {mouth && <image href={mouth} width="512" height="512" />}
+      {beard && <image href={beard} width="512" height="512" />}
+      {hair && <image href={hair} width="512" height="512" />}
+      {accessory && <image href={accessory} width="512" height="512" />}
     </svg>
   );
 }

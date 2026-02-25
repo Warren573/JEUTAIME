@@ -284,6 +284,7 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
                   {/* Rang */}
                   <div style={{
                     width: '50px',
+                    flexShrink: 0,
                     fontSize: '20px',
                     fontWeight: '700',
                     textAlign: 'center',
@@ -293,7 +294,9 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
                   </div>
 
                   {/* Avatar */}
-                  <UserAvatar user={user} size={50} />
+                  <div style={{ flexShrink: 0 }}>
+                    <UserAvatar user={user} size={50} />
+                  </div>
 
                   {/* Infos */}
                   <div style={{ flex: 1 }}>
@@ -320,6 +323,8 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
 
                   {/* Points */}
                   <div style={{
+                    minWidth: '80px',
+                    flexShrink: 0,
                     textAlign: 'right',
                     fontSize: '18px',
                     fontWeight: '700',
