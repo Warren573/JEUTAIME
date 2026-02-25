@@ -93,7 +93,6 @@ export const ASSET_CATEGORIES = [
   'face',
   'eyes',
   'mouth',
-  'hairBack',
   'hairFront',
   'beard',
   'accessory'
@@ -104,16 +103,15 @@ export const ASSET_CATEGORIES = [
  * Ordre de rendu des couches (de l'arrière vers l'avant)
  */
 export const Z_ORDER = [
-  'hairBack',        // 0 - Cheveux arrière
-  'face',            // 1 - Visage
-  'eyes',            // 2 - Yeux
-  'mouth',           // 3 - Bouche
-  'beard',           // 4 - Barbe
-  'hairFront',       // 5 - Cheveux avant
-  'accessory',       // 6 - Accessoires
-  'expression',      // 7 - Expression (extension)
-  'aging',           // 8 - Vieillissement (extension)
-  'emotion'          // 9 - Émotion (extension)
+  'face',            // 0 - Visage
+  'eyes',            // 1 - Yeux
+  'mouth',           // 2 - Bouche
+  'beard',           // 3 - Barbe
+  'hairFront',       // 4 - Cheveux
+  'accessory',       // 5 - Accessoires
+  'expression',      // 6 - Expression (extension)
+  'aging',           // 7 - Vieillissement (extension)
+  'emotion'          // 8 - Émotion (extension)
 ];
 
 /**
