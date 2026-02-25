@@ -21,8 +21,7 @@ const CATEGORIES = [
   { key: 'face', label: '👤 Visage', icon: '👤' },
   { key: 'eyes', label: '👁️ Yeux', icon: '👁️' },
   { key: 'mouth', label: '👄 Bouche/Nez', icon: '👄' },
-  { key: 'hairBack', label: '💇 Cheveux Fond', icon: '💇' },
-  { key: 'hairFront', label: '🦱 Cheveux Devant', icon: '🦱' },
+  { key: 'hairFront', label: '💇 Cheveux', icon: '💇' },
   { key: 'beard', label: '🧔 Barbe', icon: '🧔', allowNull: true },
   { key: 'accessory', label: '🎩 Accessoires', icon: '🎩', allowNull: true }
 ];
@@ -62,7 +61,6 @@ export default function AvatarEditor({ currentUser, onSave, onBack }) {
     face: null,
     eyes: null,
     mouth: null,
-    hairBack: null,
     hairFront: null,
     beard: null,
     accessory: null
@@ -87,7 +85,6 @@ export default function AvatarEditor({ currentUser, onSave, onBack }) {
         face: randomAsset('face'),
         eyes: randomAsset('eyes'),
         mouth: randomAsset('mouth'),
-        hairBack: randomAsset('hairBack'),
         hairFront: randomAsset('hairFront'),
         beard: randomAsset('beard', true),
         accessory: randomAsset('accessory', true)
@@ -141,7 +138,6 @@ export default function AvatarEditor({ currentUser, onSave, onBack }) {
       face: randomAsset('face'),
       eyes: randomAsset('eyes'),
       mouth: randomAsset('mouth'),
-      hairBack: randomAsset('hairBack'),
       hairFront: randomAsset('hairFront'),
       beard: randomAsset('beard', true),
       accessory: randomAsset('accessory', true)

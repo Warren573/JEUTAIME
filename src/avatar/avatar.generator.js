@@ -53,7 +53,6 @@ export function generateAvatarIdentity(userId) {
   const faceAsset = selectRandom(manifest.face, random);
   const eyesAsset = selectRandom(manifest.eyes, random);
   const mouthAsset = selectRandom(manifest.mouth, random);
-  const hairBackAsset = selectRandom(manifest.hairBack, random);
   const hairFrontAsset = selectRandom(manifest.hairFront, random);
 
   // Assets optionnels (50% de chance)
@@ -65,7 +64,6 @@ export function generateAvatarIdentity(userId) {
     face: faceAsset ? faceAsset.id : null,
     eyes: eyesAsset ? eyesAsset.id : null,
     mouth: mouthAsset ? mouthAsset.id : null,
-    hairBack: hairBackAsset ? hairBackAsset.id : null,
     hairFront: hairFrontAsset ? hairFrontAsset.id : null,
     beard: beardAsset ? beardAsset.id : null,
     accessory: accessoryAsset ? accessoryAsset.id : null
