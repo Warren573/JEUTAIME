@@ -117,19 +117,17 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
         </p>
       </div>
 
-      <div style={{ padding: '0 var(--spacing-lg)', width: '100%', boxSizing: 'border-box' }}>
+      <div style={{ padding: '0', width: '100%', boxSizing: 'border-box' }}>
         {/* Header avec stats personnelles */}
         <div style={{
           background: 'var(--color-cream)',
           border: '3px solid var(--color-gold)',
-          borderRadius: 'var(--border-radius-lg)',
-          padding: 'var(--spacing-lg)',
+          borderRadius: '0',
+          padding: '20px',
           color: 'var(--color-text-primary)',
-          marginBottom: 'var(--spacing-lg)',
+          marginBottom: '0',
           textAlign: 'center',
-          boxShadow: 'var(--shadow-lg)',
-          maxWidth: '900px',
-          margin: '0 auto var(--spacing-lg) auto'
+          width: '100%'
         }}>
 
         {/* Mes stats */}
@@ -160,9 +158,10 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
           justifyContent: 'center',
           alignItems: 'flex-end',
           gap: '10px',
-          marginBottom: '30px',
-          maxWidth: '900px',
-          margin: '0 auto 30px auto'
+          padding: '20px',
+          marginBottom: '0',
+          width: '100%',
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
         }}>
           {/* 2ème place */}
           <div style={{
@@ -244,15 +243,12 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
       {/* Liste complète du classement */}
       <div style={{
         background: 'white',
-        borderRadius: '20px',
-        padding: '20px',
-        boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
-        maxWidth: '900px',
-        margin: '0 auto',
+        borderRadius: '0',
+        padding: '20px 0',
         width: '100%',
         boxSizing: 'border-box'
       }}>
-        <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '20px', color: '#333' }}>
+        <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '20px', color: '#333', padding: '0 20px' }}>
           Classement Général
         </h2>
 
@@ -273,12 +269,13 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
                     display: 'flex',
                     alignItems: 'center',
                     gap: '16px',
-                    padding: '16px 18px',
+                    padding: '16px 20px',
                     background: isCurrentUser
                       ? 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))'
                       : '#f8f9fa',
-                    borderRadius: '12px',
-                    border: isCurrentUser ? '2px solid #667eea' : 'none'
+                    borderRadius: '0',
+                    borderTop: '1px solid #e0e0e0',
+                    borderLeft: isCurrentUser ? '4px solid #667eea' : 'none'
                   }}
                 >
                   {/* Rang */}
@@ -341,12 +338,10 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
 
       {/* Info sur les points */}
       <div style={{
-        marginTop: '25px',
+        marginTop: '0',
         background: '#f8f9fa',
-        borderRadius: '15px',
+        borderRadius: '0',
         padding: '20px',
-        maxWidth: '900px',
-        margin: '25px auto 0 auto',
         width: '100%',
         boxSizing: 'border-box'
       }}>
