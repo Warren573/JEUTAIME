@@ -292,21 +292,23 @@ export default function MemoryBoxScreen({ currentUser, setCurrentUser }) {
             key={filter.id}
             onClick={() => setFilterType(filter.id)}
             style={{
-              padding: 'var(--spacing-xs) var(--spacing-sm)',
+              width: '48px',
+              height: '48px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               background: filterType === filter.id
                 ? 'var(--color-brown)'
                 : 'var(--color-beige)',
               border: `2px solid ${filterType === filter.id ? 'var(--color-brown-dark)' : 'var(--color-brown-light)'}`,
-              borderRadius: 'var(--border-radius-sm)',
-              color: filterType === filter.id ? 'white' : 'var(--color-text-primary)',
-              fontWeight: '600',
-              fontSize: '0.8rem',
+              borderRadius: '50%',
+              fontSize: '1.5rem',
               cursor: 'pointer',
-              whiteSpace: 'nowrap',
-              transition: 'all 0.2s'
+              transition: 'all 0.2s',
+              flexShrink: 0
             }}
           >
-            {filter.icon} {filter.label}
+            {filter.icon}
           </button>
         ))}
       </div>
