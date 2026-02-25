@@ -272,8 +272,8 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '15px',
-                    padding: '15px',
+                    gap: '16px',
+                    padding: '16px 18px',
                     background: isCurrentUser
                       ? 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))'
                       : '#f8f9fa',
@@ -283,9 +283,9 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
                 >
                   {/* Rang */}
                   <div style={{
-                    width: '50px',
+                    width: '60px',
                     flexShrink: 0,
-                    fontSize: '20px',
+                    fontSize: '22px',
                     fontWeight: '700',
                     textAlign: 'center',
                     color: rank <= 3 ? '#667eea' : '#666'
@@ -295,12 +295,12 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
 
                   {/* Avatar */}
                   <div style={{ flexShrink: 0 }}>
-                    <UserAvatar user={user} size={50} />
+                    <UserAvatar user={user} size={60} />
                   </div>
 
                   {/* Infos */}
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: '16px', fontWeight: '700', color: '#333', marginBottom: '3px' }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: '17px', fontWeight: '700', color: '#333', marginBottom: '4px' }}>
                       {user.pseudo}
                       {isCurrentUser && (
                         <span style={{
@@ -316,17 +316,17 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
                         </span>
                       )}
                     </div>
-                    <div style={{ fontSize: '13px', color: '#666' }}>
+                    <div style={{ fontSize: '14px', color: '#666' }}>
                       {user.titleInfo.emoji} {user.titleInfo.title}
                     </div>
                   </div>
 
                   {/* Points */}
                   <div style={{
-                    minWidth: '80px',
+                    minWidth: '100px',
                     flexShrink: 0,
                     textAlign: 'right',
-                    fontSize: '18px',
+                    fontSize: '19px',
                     fontWeight: '700',
                     color: '#667eea'
                   }}>
