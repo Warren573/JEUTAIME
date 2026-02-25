@@ -134,7 +134,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
           marginBottom: 'var(--spacing-lg)',
           justifyContent: 'center'
         }}>
-          {['profile', 'referral', 'diagnostic', 'shop', 'notifications', 'privacy', 'account'].map((tab) => (
+          {['profile', 'avatar', 'referral', 'diagnostic', 'shop', 'notifications', 'privacy', 'account'].map((tab) => (
             <button
               key={tab}
               onClick={() => setSettingsTab(tab)}
@@ -154,7 +154,7 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
                 minWidth: 'fit-content'
               }}
             >
-              {tab === 'profile' ? '👤 Profil' : tab === 'referral' ? '🎁 Parrainage' : tab === 'diagnostic' ? '🔧 Diagnostic' : tab === 'shop' ? '🛍️ Boutique' : tab === 'notifications' ? '🔔 Notifs' : tab === 'privacy' ? '🔒 Confidentialité' : '⚙️ Compte'}
+              {tab === 'profile' ? '👤 Profil' : tab === 'avatar' ? '🎨 Avatar' : tab === 'referral' ? '🎁 Parrainage' : tab === 'diagnostic' ? '🔧 Diagnostic' : tab === 'shop' ? '🛍️ Boutique' : tab === 'notifications' ? '🔔 Notifs' : tab === 'privacy' ? '🔒 Confidentialité' : '⚙️ Compte'}
             </button>
           ))}
         </div>
@@ -518,6 +518,46 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
         </div>
       )}
 
+      {/* AVATAR */}
+      {settingsTab === 'avatar' && (
+        <div>
+          <div style={{
+            background: 'linear-gradient(135deg, #667eea, #764ba2)',
+            borderRadius: '15px',
+            padding: '25px',
+            textAlign: 'center',
+            marginBottom: '20px'
+          }}>
+            <div style={{ fontSize: '60px', marginBottom: '15px' }}>🎨</div>
+            <h2 style={{ fontSize: '22px', fontWeight: '700', margin: '0 0 10px 0', color: 'white' }}>
+              Créateur d'Avatar
+            </h2>
+            <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.9)', margin: '0 0 20px 0' }}>
+              Crée ton avatar personnalisé modulaire
+            </p>
+            <button
+              onClick={() => setScreen('avatar-editor')}
+              style={{
+                background: 'white',
+                color: '#667eea',
+                border: 'none',
+                padding: '16px 32px',
+                borderRadius: '12px',
+                fontSize: '16px',
+                fontWeight: '700',
+                cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                transition: 'transform 0.2s'
+              }}
+              onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
+              onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            >
+              🚀 Ouvrir l'éditeur
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* PARRAINAGE */}
       {settingsTab === 'referral' && (
         <div>
@@ -832,38 +872,6 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
                 </div>
               </div>
               <div style={{ fontSize: '20px', color: 'var(--color-text-primary)' }}>→</div>
-            </div>
-          </div>
-
-          {/* Éditeur d'Avatar */}
-          <div
-            onClick={() => setScreen('avatar-editor')}
-            style={{
-              background: 'linear-gradient(135deg, #667eea, #764ba2)',
-              borderRadius: '15px',
-              padding: '20px',
-              marginBottom: '15px',
-              cursor: 'pointer',
-              boxShadow: '0 4px 12px rgba(102, 126, 234, 0.3)',
-              transition: 'transform 0.2s',
-              border: '2px solid #8B9FEE'
-            }}
-            onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.98)'}
-            onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <span style={{ fontSize: '28px' }}>👤</span>
-                <div>
-                  <h3 style={{ fontSize: '16px', margin: '0 0 4px 0', fontWeight: '700', color: 'white' }}>
-                    Éditeur d'Avatar
-                  </h3>
-                  <p style={{ fontSize: '13px', margin: 0, color: 'rgba(255,255,255,0.9)' }}>
-                    Créez votre avatar personnalisé modulaire
-                  </p>
-                </div>
-              </div>
-              <div style={{ fontSize: '20px', color: 'white' }}>→</div>
             </div>
           </div>
 
