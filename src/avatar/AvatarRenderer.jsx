@@ -30,6 +30,29 @@ export default function AvatarRenderer({ avatarState, size = 100, className, sty
   const hair = identity.hairFront ? getAssetById(identity.hairFront)?.path : null;
   const accessory = identity.accessory ? getAssetById(identity.accessory)?.path : null;
 
+  // Si aucun asset n'est trouvé, afficher un placeholder
+  const hasAnyAsset = face || eyes || mouth || beard || hair || accessory;
+  if (!hasAnyAsset) {
+    return (
+      <div
+        className={className}
+        style={{
+          width: size,
+          height: size,
+          backgroundColor: '#E0E0E0',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: size * 0.5,
+          ...style
+        }}
+      >
+        👤
+      </div>
+    );
+  }
+
   return (
     <svg
       className={className}
