@@ -38,6 +38,10 @@ function renderSlot(slotName, assetId) {
         left: 0,
         width: '100%',
         height: '100%',
+        objectFit: 'fill',
+        display: 'block',
+        maxWidth: 'none',
+        maxHeight: 'none',
         pointerEvents: 'none'
       }}
     />
