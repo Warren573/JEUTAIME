@@ -358,7 +358,6 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
           • Connexion quotidienne : <strong>+10 pts</strong>
         </div>
       </div>
-      </div>
     </>
   );
 
