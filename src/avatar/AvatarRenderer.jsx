@@ -1,60 +1,12 @@
 /**
  * AVATAR RENDERER
  *
- * Composant de rendu qui superpose des SVG dans un seul élément SVG.
- * Garantit un alignement parfait de tous les layers.
+ * Utilise un seul SVG parent pour garantir alignement parfait.
  */
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { getAssetById } from './avatar.generator.js';
 
-/**
- * Charge le contenu SVG d'un asset
- */
-async function fetchSVGContent(path) {
-  try {
-    const response = await fetch(path);
-    const text = await response.text();
-    // Extraire le contenu entre les balises <svg>
-    const match = text.match(/<svg[^>]*>(.*?)<\/svg>/s);
-    return match ? match[1] : '';
-  } catch (error) {
-    console.error('Erreur chargement SVG:', path, error);
-    return '';
-  }
-}
-
-/**
- * Composant de rendu d'un slot avec fetch du SVG
- */
-function SVGLayer({ assetId, onLoad }) {
-  const [content, setContent] = useState('');
-
-  useEffect(() => {
-    if (!assetId) {
-      setContent('');
-      return;
-    }
-
-    const asset = getAssetById(assetId);
-    if (!asset) {
-      setContent('');
-      return;
-    }
-
-    fetchSVGContent(asset.path).then(svgContent => {
-      setContent(svgContent);
-      if (onLoad) onLoad();
-    });
-  }, [assetId, onLoad]);
-
-  return <g dangerouslySetInnerHTML={{ __html: content }} />;
-}
-
-/**
- * Composant principal de rendu d'avatar
- * Tous les SVG sont combinés dans un seul élément SVG pour alignement parfait
- */
 export default function AvatarRenderer({ avatarState, size = 100, className, style }) {
   if (!avatarState || !avatarState.identity) {
     return (
@@ -73,6 +25,14 @@ export default function AvatarRenderer({ avatarState, size = 100, className, sty
 
   const { identity } = avatarState;
 
+  // Récupère les chemins
+  const face = identity.face ? getAssetById(identity.face)?.path : null;
+  const eyes = identity.eyes ? getAssetById(identity.eyes)?.path : null;
+  const mouth = identity.mouth ? getAssetById(identity.mouth)?.path : null;
+  const beard = identity.beard ? getAssetById(identity.beard)?.path : null;
+  const hair = identity.hairFront ? getAssetById(identity.hairFront)?.path : null;
+  const accessory = identity.accessory ? getAssetById(identity.accessory)?.path : null;
+
   return (
     <svg
       className={className}
@@ -84,12 +44,12 @@ export default function AvatarRenderer({ avatarState, size = 100, className, sty
         ...style
       }}
     >
-      <SVGLayer key="face" assetId={identity.face} />
-      <SVGLayer key="eyes" assetId={identity.eyes} />
-      <SVGLayer key="mouth" assetId={identity.mouth} />
-      <SVGLayer key="beard" assetId={identity.beard} />
-      <SVGLayer key="hairFront" assetId={identity.hairFront} />
-      <SVGLayer key="accessory" assetId={identity.accessory} />
+      {face && <image href={face} width="512" height="512" />}
+      {eyes && <image href={eyes} width="512" height="512" />}
+      {mouth && <image href={mouth} width="512" height="512" />}
+      {beard && <image href={beard} width="512" height="512" />}
+      {hair && <image href={hair} width="512" height="512" />}
+      {accessory && <image href={accessory} width="512" height="512" />}
     </svg>
   );
 }
