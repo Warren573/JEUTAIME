@@ -1,34 +1,99 @@
-import React from 'react';
-import { journalNews } from '../../data/appData';
+import React, { useState, useEffect } from 'react';
 import ScreenHeader from '../common/ScreenHeader';
 
 export default function JournalScreen({ currentUser, setScreen }) {
-  // Données simulées pour les différentes sections
-  const activities = [
-    { text: 'Dix nouveaux contenus ajoutés', icon: '📝' },
-    { text: 'Cinq couples formés', icon: '💑' },
-    { text: 'Nouveau salon "Aventuriers" ouvert', icon: '🍸' }
-  ];
+  const [activeTab, setActiveTab] = useState('perso');
 
-  const tournament = [
-    { name: 'Les inscriptions continuent', status: '⏰' }
-  ];
+  // Récupérer les événements personnels depuis localStorage
+  const getPersonalEvents = () => {
+    const events = JSON.parse(localStorage.getItem(`jeutaime_events_${currentUser?.email}`) || '[]');
+    return events.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).slice(0, 20);
+  };
 
-  const goodVibes = [
-    { from: 'Marie', to: 'Pierre', text: 'Merci pour tes jolies phrases', icon: '💬' },
-    { from: 'Julien', to: 'Emma', text: 'Tu es géniale', icon: '❤️' }
-  ];
+  // Récupérer les événements globaux depuis localStorage
+  const getGlobalEvents = () => {
+    const events = JSON.parse(localStorage.getItem('jeutaime_global_events') || '[]');
+    return events.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).slice(0, 20);
+  };
 
-  const giftsOfDay = [
-    { who: 'Émilie', what: 'reçoit 5 good vibes récemment', icon: '🎁' },
-    { who: 'Marie', what: 'reçoit 3 good vibes', icon: '🎁' }
-  ];
+  const [personalEvents, setPersonalEvents] = useState(getPersonalEvents());
+  const [globalEvents, setGlobalEvents] = useState(getGlobalEvents());
 
-  const topProfiles = [
-    { name: 'Sophie', points: '1,850 pts', rank: '1', icon: '👩' },
-    { name: 'Marc', points: '1,720 pts', rank: '2', icon: '👨' },
-    { name: 'Julie', points: '1,580 pts', rank: '3', icon: '👩' }
-  ];
+  // Rafraîchir les événements toutes les 30 secondes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPersonalEvents(getPersonalEvents());
+      setGlobalEvents(getGlobalEvents());
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [currentUser]);
+
+  // Fonction pour formater l'heure relative
+  const getRelativeTime = (timestamp) => {
+    const now = new Date();
+    const eventTime = new Date(timestamp);
+    const diffMs = now - eventTime;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return "À l'instant";
+    if (diffMins < 60) return `Il y a ${diffMins}min`;
+    if (diffHours < 24) return `Il y a ${diffHours}h`;
+    if (diffDays === 1) return "Hier";
+    if (diffDays < 7) return `Il y a ${diffDays}j`;
+    return eventTime.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+  };
+
+  // Fonction pour obtenir l'icône selon le type d'événement
+  const getEventIcon = (type) => {
+    const icons = {
+      // Événements personnels
+      'points': '⭐',
+      'smile': '😊',
+      'message': '💌',
+      'game': '🎮',
+      'badge': '🏆',
+      'salon': '🍸',
+      'letter': '✉️',
+      'login': '👋',
+      'profile': '👤',
+      'match': '💕',
+      'photo': '📸',
+
+      // Événements globaux
+      'couple': '💑',
+      'new_member': '🎉',
+      'record': '🔥',
+      'achievement': '🌟',
+      'event': '🎊'
+    };
+    return icons[type] || '📰';
+  };
+
+  // Fonction pour obtenir la couleur de la bordure selon le type
+  const getEventColor = (type) => {
+    const colors = {
+      'points': '#FFD700',
+      'smile': '#FF69B4',
+      'message': '#E91E63',
+      'game': '#9C27B0',
+      'badge': '#FF9800',
+      'salon': '#667eea',
+      'letter': '#E91E63',
+      'login': '#4CAF50',
+      'profile': '#2196F3',
+      'match': '#E91E63',
+      'photo': '#00BCD4',
+      'couple': '#E91E63',
+      'new_member': '#4CAF50',
+      'record': '#FF5722',
+      'achievement': '#FFD700',
+      'event': '#9C27B0'
+    };
+    return colors[type] || 'var(--color-brown)';
+  };
 
   return (
     <div style={{
@@ -44,288 +109,249 @@ export default function JournalScreen({ currentUser, setScreen }) {
       <ScreenHeader
         icon="📰"
         title="JOURNAL"
-        subtitle="Actualités de la communauté"
+        subtitle="Ton activité et celle de la communauté"
         onBack={() => setScreen('home')}
       />
 
-      {/* Grille de sections style journal */}
       <div style={{ padding: '0 var(--spacing-sm)' }}>
+        {/* Tabs */}
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr',
-          gap: 'var(--spacing-md)'
+          display: 'flex',
+          gap: 'var(--spacing-sm)',
+          marginBottom: 'var(--spacing-lg)',
+          background: 'var(--color-cream)',
+          padding: 'var(--spacing-xs)',
+          borderRadius: 'var(--border-radius-lg)',
+          border: '2px solid var(--color-brown-light)'
         }}>
-          {/* Section Dernières Actions */}
-          <div className="card" style={{
-            background: 'var(--color-cream)',
-            border: '2px solid var(--color-brown)',
-            padding: 'var(--spacing-md)'
-          }}>
-            <h2 style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: '1.25rem',
-              color: 'var(--color-text-primary)',
-              marginBottom: 'var(--spacing-sm)',
-              borderBottom: '2px solid var(--color-text-primary)',
-              paddingBottom: 'var(--spacing-xs)',
-              textTransform: 'uppercase'
-            }}>
-              Dernières Actions
-            </h2>
-            {activities.map((activity, idx) => (
-              <div key={idx} style={{
-                padding: 'var(--spacing-sm) 0',
-                borderBottom: idx < activities.length - 1 ? '1px dashed var(--color-tan)' : 'none',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 'var(--spacing-sm)'
+          <button
+            onClick={() => setActiveTab('perso')}
+            style={{
+              flex: 1,
+              padding: 'var(--spacing-sm) var(--spacing-md)',
+              background: activeTab === 'perso'
+                ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))'
+                : 'transparent',
+              border: 'none',
+              borderRadius: 'var(--border-radius-md)',
+              color: activeTab === 'perso' ? 'var(--color-brown-dark)' : 'var(--color-text-secondary)',
+              fontWeight: '700',
+              fontSize: '1rem',
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+              boxShadow: activeTab === 'perso' ? 'var(--shadow-md)' : 'none'
+            }}
+          >
+            👤 Mon Journal
+          </button>
+          <button
+            onClick={() => setActiveTab('global')}
+            style={{
+              flex: 1,
+              padding: 'var(--spacing-sm) var(--spacing-md)',
+              background: activeTab === 'global'
+                ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))'
+                : 'transparent',
+              border: 'none',
+              borderRadius: 'var(--border-radius-md)',
+              color: activeTab === 'global' ? 'var(--color-brown-dark)' : 'var(--color-text-secondary)',
+              fontWeight: '700',
+              fontSize: '1rem',
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+              boxShadow: activeTab === 'global' ? 'var(--shadow-md)' : 'none'
+            }}
+          >
+            🌍 Communauté
+          </button>
+        </div>
+
+        {/* Journal Perso */}
+        {activeTab === 'perso' && (
+          <div>
+            {personalEvents.length === 0 ? (
+              <div style={{
+                background: 'var(--color-cream)',
+                borderRadius: 'var(--border-radius-lg)',
+                padding: 'var(--spacing-xl)',
+                textAlign: 'center',
+                border: '2px solid var(--color-brown-light)'
               }}>
-                <span style={{ fontSize: '1.25rem' }}>{activity.icon}</span>
-                <span style={{
+                <div style={{ fontSize: '4rem', marginBottom: 'var(--spacing-md)' }}>📝</div>
+                <h3 style={{
+                  fontSize: '1.25rem',
+                  fontWeight: '700',
+                  color: 'var(--color-text-primary)',
+                  marginBottom: 'var(--spacing-sm)'
+                }}>
+                  Ton journal est vide
+                </h3>
+                <p style={{
                   fontSize: '0.95rem',
                   color: 'var(--color-text-secondary)',
-                  lineHeight: '1.4'
+                  lineHeight: '1.5'
                 }}>
-                  {activity.text}
-                </span>
+                  Commence à explorer JeuTaime ! Chaque action que tu fais sera enregistrée ici :
+                  sourires envoyés, points gagnés, jeux joués, badges débloqués...
+                </p>
               </div>
-            ))}
-          </div>
-
-          {/* Section Tournoi + Good vibes côte à côte */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: 'var(--spacing-md)'
-          }}>
-            {/* Tournoi de Scrabble */}
-            <div className="card" style={{
-              background: 'var(--color-beige)',
-              border: '2px solid var(--color-brown-light)',
-              padding: 'var(--spacing-md)'
-            }}>
-              <h3 style={{
-                fontFamily: 'var(--font-heading)',
-                color: 'var(--color-text-primary)',
-                marginBottom: 'var(--spacing-sm)',
-                borderBottom: '1px solid var(--color-text-primary)',
-                paddingBottom: 'var(--spacing-xs)',
-                textTransform: 'uppercase',
-                fontSize: '0.9rem'
-              }}>
-                Tournoi de Scrabble
-              </h3>
-              {tournament.map((item, idx) => (
-                <div key={idx} style={{
-                  fontSize: '0.85rem',
-                  color: 'var(--color-text-secondary)',
-                  lineHeight: '1.4'
-                }}>
-                  {item.status} {item.name}
-                </div>
-              ))}
-            </div>
-
-            {/* Good vibes */}
-            <div className="card" style={{
-              background: 'var(--color-beige)',
-              border: '2px solid var(--color-brown-light)',
-              padding: 'var(--spacing-md)'
-            }}>
-              <h3 style={{
-                fontFamily: 'var(--font-heading)',
-                color: 'var(--color-text-primary)',
-                marginBottom: 'var(--spacing-sm)',
-                borderBottom: '1px solid var(--color-text-primary)',
-                paddingBottom: 'var(--spacing-xs)',
-                textTransform: 'uppercase',
-                fontSize: '0.9rem'
-              }}>
-                {' '} Good vibes
-              </h3>
-              {goodVibes.slice(0, 2).map((comp, idx) => (
-                <div key={idx} style={{
-                  fontSize: '0.85rem',
-                  color: 'var(--color-text-secondary)',
-                  marginBottom: 'var(--spacing-xs)',
-                  lineHeight: '1.3'
-                }}>
-                  {comp.icon} <strong>{comp.from}</strong> à <strong>{comp.to}</strong>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Section Les Cadeaux du Jour */}
-          <div className="card" style={{
-            background: 'var(--color-cream)',
-            border: '2px solid var(--color-brown)',
-            padding: 'var(--spacing-md)'
-          }}>
-            <h2 style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: '1.25rem',
-              color: 'var(--color-text-primary)',
-              marginBottom: 'var(--spacing-sm)',
-              borderBottom: '2px solid var(--color-text-primary)',
-              paddingBottom: 'var(--spacing-xs)',
-              textTransform: 'uppercase'
-            }}>
-              Les Cadeaux du Jour
-            </h2>
-            {giftsOfDay.map((gift, idx) => (
-              <div key={idx} style={{
-                padding: 'var(--spacing-sm) 0',
-                borderBottom: idx < giftsOfDay.length - 1 ? '1px dashed var(--color-tan)' : 'none',
+            ) : (
+              <div style={{
                 display: 'flex',
-                alignItems: 'center',
+                flexDirection: 'column',
                 gap: 'var(--spacing-sm)'
               }}>
-                <span style={{ fontSize: '1.25rem' }}>{gift.icon}</span>
-                <span style={{
-                  fontSize: '0.9rem',
-                  color: 'var(--color-text-secondary)'
-                }}>
-                  <strong>{gift.who}</strong> {gift.what}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          {/* Section Top Profils */}
-          <div className="card" style={{
-            background: 'var(--color-cream)',
-            border: '2px solid var(--color-brown)',
-            padding: 'var(--spacing-md)'
-          }}>
-            <h2 style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: '1.25rem',
-              color: 'var(--color-text-primary)',
-              marginBottom: 'var(--spacing-sm)',
-              borderBottom: '2px solid var(--color-text-primary)',
-              paddingBottom: 'var(--spacing-xs)',
-              textTransform: 'uppercase'
-            }}>
-              Top Profils
-            </h2>
-            {topProfiles.map((profile, idx) => (
-              <div key={idx} style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 'var(--spacing-md)',
-                padding: 'var(--spacing-sm)',
-                background: idx === 0 ? 'var(--color-gold-light)' : 'var(--color-beige)',
-                borderRadius: 'var(--border-radius-sm)',
-                marginBottom: 'var(--spacing-xs)',
-                border: '1px solid var(--color-tan)'
-              }}>
-                <div style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '50%',
-                  background: 'var(--color-brown)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '1.25rem'
-                }}>
-                  {profile.icon}
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{
-                    fontSize: '1rem',
-                    fontWeight: '700',
-                    color: 'var(--color-text-primary)'
-                  }}>
-                    {profile.rank}. {profile.name}
-                  </div>
-                  <div style={{
-                    fontSize: '0.85rem',
-                    color: 'var(--color-text-light)'
-                  }}>
-                    {profile.points}
-                  </div>
-                </div>
-                {idx < 3 && (
-                  <div style={{ fontSize: '1.5rem' }}>
-                    {idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* Actualités de journalNews */}
-          <div className="card" style={{
-            background: 'var(--color-cream)',
-            border: '2px solid var(--color-brown)',
-            padding: 'var(--spacing-md)'
-          }}>
-            <h2 style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: '1.25rem',
-              color: 'var(--color-text-primary)',
-              marginBottom: 'var(--spacing-sm)',
-              borderBottom: '2px solid var(--color-text-primary)',
-              paddingBottom: 'var(--spacing-xs)',
-              textTransform: 'uppercase'
-            }}>
-              📰 Fil d'actualités
-            </h2>
-            {journalNews.map((news) => (
-              <div
-                key={news.id}
-                style={{
-                  padding: 'var(--spacing-md)',
-                  marginBottom: 'var(--spacing-sm)',
-                  background: 'var(--color-beige)',
-                  borderLeft: '4px solid var(--color-romantic)',
-                  borderRadius: 'var(--border-radius-sm)',
-                  boxShadow: 'var(--shadow-sm)'
-                }}
-              >
-                <div style={{
-                  display: 'flex',
-                  gap: 'var(--spacing-sm)',
-                  alignItems: 'flex-start'
-                }}>
-                  <div style={{ fontSize: '1.75rem' }}>{news.icon}</div>
-                  <div style={{ flex: 1 }}>
-                    <h3 style={{
-                      fontSize: '1rem',
-                      margin: '0 0 var(--spacing-xs) 0',
-                      fontWeight: '700',
-                      color: 'var(--color-text-primary)',
-                      fontFamily: 'var(--font-heading)'
-                    }}>
-                      {news.title}
-                    </h3>
-                    <p style={{
-                      fontSize: '0.9rem',
-                      color: 'var(--color-text-secondary)',
-                      margin: '0 0 var(--spacing-xs) 0',
-                      lineHeight: '1.4'
-                    }}>
-                      {news.desc}
-                    </p>
+                {personalEvents.map((event, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      background: 'var(--color-cream)',
+                      borderRadius: 'var(--border-radius-md)',
+                      padding: 'var(--spacing-md)',
+                      borderLeft: `4px solid ${getEventColor(event.type)}`,
+                      boxShadow: 'var(--shadow-sm)',
+                      transition: 'transform 0.2s',
+                      cursor: 'pointer'
+                    }}
+                    onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.98)'}
+                    onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                    onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                  >
                     <div style={{
-                      fontSize: '0.8rem',
-                      color: 'var(--color-text-light)',
                       display: 'flex',
-                      alignItems: 'center',
-                      gap: 'var(--spacing-sm)'
+                      gap: 'var(--spacing-md)',
+                      alignItems: 'flex-start'
                     }}>
-                      <span>{news.time}</span>
-                      <span>•</span>
-                      <span>❤️ {news.reactions}</span>
+                      <div style={{
+                        fontSize: '2rem',
+                        flexShrink: 0
+                      }}>
+                        {getEventIcon(event.type)}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <p style={{
+                          fontSize: '0.95rem',
+                          color: 'var(--color-text-primary)',
+                          margin: '0 0 var(--spacing-xs) 0',
+                          lineHeight: '1.4',
+                          fontWeight: '500'
+                        }}>
+                          {event.message}
+                        </p>
+                        <div style={{
+                          fontSize: '0.8rem',
+                          color: 'var(--color-text-light)'
+                        }}>
+                          {getRelativeTime(event.timestamp)}
+                        </div>
+                      </div>
+                      {event.points && (
+                        <div style={{
+                          background: 'linear-gradient(135deg, #FFD700, #FFA500)',
+                          color: '#000',
+                          padding: '4px 10px',
+                          borderRadius: 'var(--border-radius-sm)',
+                          fontSize: '0.85rem',
+                          fontWeight: '700',
+                          whiteSpace: 'nowrap'
+                        }}>
+                          +{event.points} pts
+                        </div>
+                      )}
                     </div>
                   </div>
-                </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
-        </div>
+        )}
+
+        {/* Journal Global */}
+        {activeTab === 'global' && (
+          <div>
+            {globalEvents.length === 0 ? (
+              <div style={{
+                background: 'var(--color-cream)',
+                borderRadius: 'var(--border-radius-lg)',
+                padding: 'var(--spacing-xl)',
+                textAlign: 'center',
+                border: '2px solid var(--color-brown-light)'
+              }}>
+                <div style={{ fontSize: '4rem', marginBottom: 'var(--spacing-md)' }}>🌍</div>
+                <h3 style={{
+                  fontSize: '1.25rem',
+                  fontWeight: '700',
+                  color: 'var(--color-text-primary)',
+                  marginBottom: 'var(--spacing-sm)'
+                }}>
+                  Aucune actualité pour le moment
+                </h3>
+                <p style={{
+                  fontSize: '0.95rem',
+                  color: 'var(--color-text-secondary)',
+                  lineHeight: '1.5'
+                }}>
+                  Les événements de la communauté apparaîtront ici : nouveaux couples,
+                  records battus, membres populaires...
+                </p>
+              </div>
+            ) : (
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 'var(--spacing-sm)'
+              }}>
+                {globalEvents.map((event, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      background: 'var(--color-cream)',
+                      borderRadius: 'var(--border-radius-md)',
+                      padding: 'var(--spacing-md)',
+                      borderLeft: `4px solid ${getEventColor(event.type)}`,
+                      boxShadow: 'var(--shadow-sm)',
+                      transition: 'transform 0.2s',
+                      cursor: 'pointer'
+                    }}
+                    onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.98)'}
+                    onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                    onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                  >
+                    <div style={{
+                      display: 'flex',
+                      gap: 'var(--spacing-md)',
+                      alignItems: 'flex-start'
+                    }}>
+                      <div style={{
+                        fontSize: '2rem',
+                        flexShrink: 0
+                      }}>
+                        {getEventIcon(event.type)}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <p style={{
+                          fontSize: '0.95rem',
+                          color: 'var(--color-text-primary)',
+                          margin: '0 0 var(--spacing-xs) 0',
+                          lineHeight: '1.4',
+                          fontWeight: '500'
+                        }}>
+                          {event.message}
+                        </p>
+                        <div style={{
+                          fontSize: '0.8rem',
+                          color: 'var(--color-text-light)'
+                        }}>
+                          {getRelativeTime(event.timestamp)}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -46,6 +46,9 @@ import { initializeDemoPets } from './utils/petsSystem';
 // Onboarding progressif
 import { getUserDay, isFeatureUnlocked, getOnboardingMessage } from './utils/onboarding';
 
+// Event tracking
+import { initDemoEvents, trackLogin } from './utils/eventTracker';
+
 // Data
 import { salons } from './data/appData';
 
@@ -147,6 +150,12 @@ function MainApp() {
           setCurrentUser(updatedUser);
         }
       }
+
+      // Initialiser les événements de démo si nécessaire
+      initDemoEvents(user.email);
+
+      // Tracker la connexion
+      trackLogin(user.email, user.pseudo || user.name);
     }
   }, []);
 
@@ -261,6 +270,7 @@ function MainApp() {
     { icon: '🔍', label: 'Profils', id: 'profiles' },
     { icon: '👥', label: 'Social', id: 'social' },
     { icon: '💌', label: 'Lettres', id: 'letters' },
+    { icon: '📰', label: 'Journal', id: 'journal' },
     { icon: '⚙️', label: 'Plus', id: 'settings' }
   ];
 
