@@ -270,7 +270,7 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
                     display: 'flex',
                     alignItems: 'center',
                     gap: '16px',
-                    padding: '16px 20px',
+                    padding: '16px 20px 16px 12px',
                     background: isCurrentUser
                       ? 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))'
                       : '#f8f9fa',
@@ -281,11 +281,11 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
                 >
                   {/* Rang */}
                   <div style={{
-                    width: '60px',
+                    width: '45px',
                     flexShrink: 0,
-                    fontSize: '22px',
+                    fontSize: '18px',
                     fontWeight: '700',
-                    textAlign: 'center',
+                    textAlign: 'left',
                     color: rank <= 3 ? '#667eea' : '#666'
                   }}>
                     {getMedalEmoji(rank)}
