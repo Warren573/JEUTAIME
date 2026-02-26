@@ -124,7 +124,7 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
         borderTop: '3px solid var(--color-gold)',
         borderBottom: '3px solid var(--color-gold)',
         borderRadius: '0',
-        padding: 'var(--spacing-lg)',
+        padding: 'var(--spacing-lg) 16px',
         color: 'var(--color-text-primary)',
         marginBottom: 'var(--spacing-lg)',
         textAlign: 'center',
@@ -244,11 +244,11 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
       <div style={{
         background: 'white',
         borderRadius: '0',
-        padding: '20px 0',
+        padding: '20px 16px',
         width: '100%',
         boxSizing: 'border-box'
       }}>
-        <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '20px', color: '#333' }}>
+        <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '20px', color: '#333', paddingLeft: '4px' }}>
           Classement Général
         </h2>
 
@@ -269,7 +269,7 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
                     display: 'flex',
                     alignItems: 'center',
                     gap: '16px',
-                    padding: '16px 20px 16px 12px',
+                    padding: '16px 12px',
                     background: isCurrentUser
                       ? 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))'
                       : '#f8f9fa',
@@ -341,7 +341,7 @@ export default function RankingScreen({ currentUser, isEmbedded = false, onBack 
         marginTop: 'var(--spacing-lg)',
         background: '#f8f9fa',
         borderRadius: '0',
-        padding: 'var(--spacing-lg)',
+        padding: 'var(--spacing-lg) 20px',
         width: '100%',
         boxSizing: 'border-box'
       }}>
