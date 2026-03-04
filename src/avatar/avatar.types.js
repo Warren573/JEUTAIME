@@ -9,14 +9,12 @@
  * @typedef {'face'} AssetCategory_Face
  * @typedef {'eyes'} AssetCategory_Eyes
  * @typedef {'mouth'} AssetCategory_Mouth
- * @typedef {'hairBack'} AssetCategory_HairBack
- * @typedef {'hairFront'} AssetCategory_HairFront
+ * @typedef {'hair'} AssetCategory_Hair
  * @typedef {'beard'} AssetCategory_Beard
  * @typedef {'accessory'} AssetCategory_Accessory
  *
  * @typedef {AssetCategory_Face | AssetCategory_Eyes | AssetCategory_Mouth |
- *           AssetCategory_HairBack | AssetCategory_HairFront |
- *           AssetCategory_Beard | AssetCategory_Accessory} AssetCategory
+ *           AssetCategory_Hair | AssetCategory_Beard | AssetCategory_Accessory} AssetCategory
  */
 
 /**
@@ -28,8 +26,7 @@
  * @property {string|null} face - ID de l'asset face (ex: "face_01")
  * @property {string|null} eyes - ID de l'asset eyes (ex: "eyes_almond_blue")
  * @property {string|null} mouth - ID de l'asset mouth (ex: "mouth_neutral")
- * @property {string|null} hairBack - ID de l'asset cheveux arrière
- * @property {string|null} hairFront - ID de l'asset cheveux avant
+ * @property {string|null} hair - ID de l'asset cheveux (ex: "hair_01_buzz")
  * @property {string|null} beard - ID de l'asset barbe (optionnel)
  * @property {string|null} accessory - ID de l'asset accessoire (optionnel)
  */
@@ -83,8 +80,7 @@
  * @property {AssetDefinition[]} face - Assets de visage
  * @property {AssetDefinition[]} eyes - Assets d'yeux
  * @property {AssetDefinition[]} mouth - Assets de bouche
- * @property {AssetDefinition[]} hairBack - Assets cheveux arrière
- * @property {AssetDefinition[]} hairFront - Assets cheveux avant
+ * @property {AssetDefinition[]} hair - Assets cheveux
  * @property {AssetDefinition[]} beard - Assets de barbe
  * @property {AssetDefinition[]} accessory - Assets d'accessoires
  */
@@ -93,8 +89,7 @@ export const ASSET_CATEGORIES = [
   'face',
   'eyes',
   'mouth',
-  'hairBack',
-  'hairFront',
+  'hair',
   'beard',
   'accessory'
 ];
@@ -104,16 +99,15 @@ export const ASSET_CATEGORIES = [
  * Ordre de rendu des couches (de l'arrière vers l'avant)
  */
 export const Z_ORDER = [
-  'hairBack',        // 0 - Cheveux arrière
+  'hair',            // 0 - Cheveux (arrière-plan)
   'face',            // 1 - Visage
   'eyes',            // 2 - Yeux
-  'mouth',           // 3 - Bouche
+  'mouth',           // 3 - Bouche/Nez
   'beard',           // 4 - Barbe
-  'hairFront',       // 5 - Cheveux avant
-  'accessory',       // 6 - Accessoires
-  'expression',      // 7 - Expression (extension)
-  'aging',           // 8 - Vieillissement (extension)
-  'emotion'          // 9 - Émotion (extension)
+  'accessory',       // 5 - Accessoires
+  'expression',      // 6 - Expression (extension)
+  'aging',           // 7 - Vieillissement (extension)
+  'emotion'          // 8 - Émotion (extension)
 ];
 
 /**

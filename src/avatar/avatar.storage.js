@@ -3,7 +3,10 @@
  *
  * Gestion de la persistance des avatars dans localStorage.
  * Compatible avec la migration future vers backend.
+ * Includes automatic migration from legacy hairBack/hairFront to unified hair model.
  */
+
+import { migrateLegacyAvatarState, needsMigration } from './avatar.migration.js';
 
 const STORAGE_KEY = 'jeutaime_avatar_state';
 
@@ -29,13 +32,24 @@ export function saveAvatarState(userId, avatarState) {
 
 /**
  * Charge l'état de l'avatar depuis localStorage
+ * Automatically migrates legacy data (hairBack/hairFront) to unified model (hair)
  * @param {string} userId - ID de l'utilisateur
  * @returns {Object|null} État de l'avatar ou null
  */
 export function loadAvatarState(userId) {
   try {
     const allAvatars = getAllAvatars();
-    return allAvatars[userId] || null;
+    let avatarState = allAvatars[userId] || null;
+
+    // Auto-migrate if needed
+    if (avatarState && avatarState.identity && needsMigration(avatarState.identity)) {
+      console.log(`[Avatar Migration] Migrating avatar for user: ${userId}`);
+      avatarState = migrateLegacyAvatarState(avatarState);
+      // Save migrated state back to localStorage
+      saveAvatarState(userId, avatarState);
+    }
+
+    return avatarState;
   } catch (error) {
     console.error('Erreur chargement avatar:', error);
     return null;

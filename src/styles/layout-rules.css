@@ -100,18 +100,16 @@ button, .btn {
   box-sizing: border-box;
 }
 
-/* Card responsive avec shadow */
-.card {
-  background: #fff;
-  border-radius: 14px;
-  padding: 16px;
-  margin: 12px 0;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+/* Card base layout rules (use .card-base for layout, not .card) */
+/* Note: .card is defined in index.css for theme consistency */
+.card-base {
   overflow: hidden;
   width: 100%;
   box-sizing: border-box;
-  min-height: 100px;
 }
+
+/* DEPRECATED: Do not use - conflicts with index.css .card definition */
+/* Use .card from index.css for themed cards, or .card-base for layout only */
 
 /* ═══════════════════════════════════════════════════════════
    SAFE AREA - Support iPhone notch/home indicator
