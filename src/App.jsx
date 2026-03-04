@@ -337,7 +337,8 @@ function MainApp() {
       minHeight: '100dvh',
       color: 'white',
       fontFamily: '-apple-system, sans-serif',
-      overflow: 'hidden'
+      overflowX: 'hidden',
+      overflowY: 'auto'
     }}>
       {screen === 'home' && !gameScreen && !selectedSalon && <EspacePersoScreenSimple {...appState} />}
       {screen === 'profiles' && !gameScreen && !selectedSalon && <ProfilesScreen {...appState} />}

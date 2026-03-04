@@ -560,7 +560,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
         boxShadow: 'none'
       }}>
         {/* Avatar ou Photos carousel */}
-        <div style={{ position: 'relative', height: '400px', background: 'var(--color-beige-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ position: 'relative', minHeight: '320px', height: 'auto', maxHeight: '400px', background: 'var(--color-beige-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           {selectedPhoto === -1 ? (
             // Afficher l'avatar si photo non débloquée
             <div style={{
@@ -573,7 +573,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              paddingBottom: '140px' // Espace pour les infos en bas
+              paddingBottom: '80px' // Espace pour les infos en bas
             }}>
               {/* AVATAR TYPOGRAPHIQUE */}
               <UserAvatar
@@ -635,7 +635,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              paddingBottom: '140px' // Espace pour les infos en bas
+              paddingBottom: '80px' // Espace pour les infos en bas
             }}>
               {/* AVATAR TYPOGRAPHIQUE */}
               <UserAvatar

@@ -8,8 +8,8 @@ export default function BackButton({ onClick, noSafeArea = false, absolute = fal
         position: absolute ? 'absolute' : 'sticky',
         top: noSafeArea ? '10px' : 'calc(env(safe-area-inset-top) + 10px)',
         left: '10px',
-        width: '40px',
-        height: '40px',
+        width: '44px',
+        height: '44px',
         background: 'var(--color-cream)',
         border: '2px solid var(--color-brown-light)',
         borderRadius: '50%',
@@ -24,14 +24,6 @@ export default function BackButton({ onClick, noSafeArea = false, absolute = fal
         margin: '0',
         marginTop: '-60px',
         flexShrink: 0
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'scale(1.1)';
-        e.currentTarget.style.background = 'var(--color-brown-light)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'scale(1)';
-        e.currentTarget.style.background = 'var(--color-cream)';
       }}
     >
       ←

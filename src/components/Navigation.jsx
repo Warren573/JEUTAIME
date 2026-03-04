@@ -7,8 +7,7 @@ export default function Navigation({ navItems, screen, setScreen }) {
       bottom: 0,
       left: 0,
       right: 0,
-      maxWidth: '430px',
-      margin: '0 auto',
+      width: '100%',
       background: 'var(--color-brown-dark)',
       borderTop: '2px solid var(--color-gold)',
       padding: '5px 4px env(safe-area-inset-bottom)',
@@ -44,18 +43,6 @@ export default function Navigation({ navItems, screen, setScreen }) {
               transition: 'all var(--transition-normal)',
               transform: isActive ? 'scale(1.02)' : 'scale(1)',
               boxShadow: isActive ? 'var(--shadow-sm)' : 'none'
-            }}
-            onMouseEnter={(e) => {
-              if (!isActive) {
-                e.currentTarget.style.background = 'rgba(218, 165, 32, 0.2)';
-                e.currentTarget.style.color = 'var(--color-gold-light)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!isActive) {
-                e.currentTarget.style.background = 'transparent';
-                e.currentTarget.style.color = 'var(--color-tan)';
-              }
             }}
           >
             <div style={{
