@@ -669,60 +669,257 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
-          padding: '0 var(--spacing-sm)',
           boxSizing: 'border-box'
         }}>
-          <div style={{ flexShrink: 0 }}>
-            <ScreenHeader
-              icon="🎮"
-              title="JEUX"
-              subtitle="Joue et gagne des pièces !"
-              onBack={() => setSocialTab(null)}
-            />
+          {/* En-tête compact */}
+          <div style={{
+            background: 'var(--color-cream)',
+            borderBottom: '3px solid var(--color-brown-dark)',
+            padding: 'var(--spacing-sm) var(--spacing-md)',
+            boxShadow: 'var(--shadow-sm)',
+            position: 'relative',
+            flexShrink: 0
+          }}>
+            {/* Bouton retour */}
+            <button
+              onClick={() => setSocialTab(null)}
+              style={{
+                position: 'absolute',
+                top: '8px',
+                left: '8px',
+                width: '32px',
+                height: '32px',
+                borderRadius: '50%',
+                border: '2px solid var(--color-brown-dark)',
+                background: 'white',
+                color: 'var(--color-brown-dark)',
+                fontSize: '16px',
+                fontWeight: 'bold',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                zIndex: 100,
+                boxShadow: 'var(--shadow-sm)',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'var(--color-gold)';
+                e.currentTarget.style.transform = 'scale(1.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'white';
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            >
+              ←
+            </button>
+
+            <div style={{
+              textAlign: 'center',
+              padding: '0 40px'
+            }}>
+              <h1 style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: '1.5rem',
+                margin: '0 0 var(--spacing-xs) 0',
+                color: 'var(--color-brown-dark)',
+                textTransform: 'uppercase',
+                letterSpacing: '1px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
+              }}>
+                <span style={{ fontSize: '1.5rem' }}>🎮</span>
+                <span>JEUX</span>
+              </h1>
+              <p style={{
+                textAlign: 'center',
+                color: 'var(--color-text-secondary)',
+                fontSize: '0.85rem',
+                fontStyle: 'italic',
+                margin: 0
+              }}>
+                Joue et gagne des pièces !
+              </p>
+            </div>
           </div>
 
+          {/* Grille de jeux - Sans scroll */}
           <div style={{
             flex: 1,
-            overflow: 'auto',
-            paddingBottom: 'var(--spacing-sm)'
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 'var(--spacing-sm) var(--spacing-md)',
+            overflow: 'hidden'
           }}>
             <div style={{
               display: 'grid',
               gridTemplateColumns: '1fr 1fr',
-              gap: '12px',
+              gap: '8px',
               width: '100%',
+              maxWidth: '500px',
               boxSizing: 'border-box'
             }}>
-            <div onClick={() => setGameScreen('reactivity')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
-              <div style={{ fontSize: '36px', marginBottom: '8px' }}>⚡</div>
-              <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Tape Taupe</h4>
-              <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo</p>
-            </div>
-            <div onClick={() => setGameScreen('pong')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
-              <div style={{ fontSize: '36px', marginBottom: '8px' }}>🎮</div>
-              <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Pong</h4>
-              <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>2 joueurs</p>
-            </div>
-            <div onClick={() => setGameScreen('brickbreaker')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
-              <div style={{ fontSize: '36px', marginBottom: '8px' }}>🧱</div>
-              <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Casse Brique</h4>
-              <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo</p>
-            </div>
-            <div onClick={() => setGameScreen('morpion')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
-              <div style={{ fontSize: '36px', marginBottom: '8px' }}>⭕</div>
-              <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Morpion</h4>
-              <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>2 joueurs</p>
-            </div>
-            <div onClick={() => setGameScreen('storytime')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer', gridColumn: '1 / -1' }}>
-              <div style={{ fontSize: '36px', marginBottom: '8px' }}>📖</div>
-              <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Continue l'histoire</h4>
-              <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo, 2 joueurs ou multijoueurs</p>
-            </div>
-            <div onClick={() => setGameScreen('cards')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer', gridColumn: '1 / -1' }}>
-              <div style={{ fontSize: '36px', marginBottom: '8px' }}>🎴</div>
-              <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Jeu des Cartes</h4>
-              <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo - Gagne des pièces!</p>
-            </div>
+              <div
+                onClick={() => setGameScreen('reactivity')}
+                style={{
+                  background: 'var(--color-cream)',
+                  border: '2px solid var(--color-brown-light)',
+                  borderRadius: 'var(--border-radius-md)',
+                  padding: '10px',
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  boxShadow: 'var(--shadow-sm)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                }}
+              >
+                <div style={{ fontSize: '28px', marginBottom: '4px' }}>⚡</div>
+                <h4 style={{ fontSize: '12px', margin: '0 0 2px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Tape Taupe</h4>
+                <p style={{ fontSize: '10px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo</p>
+              </div>
+
+              <div
+                onClick={() => setGameScreen('pong')}
+                style={{
+                  background: 'var(--color-cream)',
+                  border: '2px solid var(--color-brown-light)',
+                  borderRadius: 'var(--border-radius-md)',
+                  padding: '10px',
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  boxShadow: 'var(--shadow-sm)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                }}
+              >
+                <div style={{ fontSize: '28px', marginBottom: '4px' }}>🎮</div>
+                <h4 style={{ fontSize: '12px', margin: '0 0 2px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Pong</h4>
+                <p style={{ fontSize: '10px', color: 'var(--color-text-secondary)', margin: 0 }}>2 joueurs</p>
+              </div>
+
+              <div
+                onClick={() => setGameScreen('brickbreaker')}
+                style={{
+                  background: 'var(--color-cream)',
+                  border: '2px solid var(--color-brown-light)',
+                  borderRadius: 'var(--border-radius-md)',
+                  padding: '10px',
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  boxShadow: 'var(--shadow-sm)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                }}
+              >
+                <div style={{ fontSize: '28px', marginBottom: '4px' }}>🧱</div>
+                <h4 style={{ fontSize: '12px', margin: '0 0 2px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Casse Brique</h4>
+                <p style={{ fontSize: '10px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo</p>
+              </div>
+
+              <div
+                onClick={() => setGameScreen('morpion')}
+                style={{
+                  background: 'var(--color-cream)',
+                  border: '2px solid var(--color-brown-light)',
+                  borderRadius: 'var(--border-radius-md)',
+                  padding: '10px',
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  boxShadow: 'var(--shadow-sm)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                }}
+              >
+                <div style={{ fontSize: '28px', marginBottom: '4px' }}>⭕</div>
+                <h4 style={{ fontSize: '12px', margin: '0 0 2px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Morpion</h4>
+                <p style={{ fontSize: '10px', color: 'var(--color-text-secondary)', margin: 0 }}>2 joueurs</p>
+              </div>
+
+              <div
+                onClick={() => setGameScreen('storytime')}
+                style={{
+                  background: 'var(--color-cream)',
+                  border: '2px solid var(--color-brown-light)',
+                  borderRadius: 'var(--border-radius-md)',
+                  padding: '10px',
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  gridColumn: '1 / -1',
+                  transition: 'all 0.2s',
+                  boxShadow: 'var(--shadow-sm)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                }}
+              >
+                <div style={{ fontSize: '28px', marginBottom: '4px' }}>📖</div>
+                <h4 style={{ fontSize: '12px', margin: '0 0 2px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Continue l'histoire</h4>
+                <p style={{ fontSize: '10px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo, 2 joueurs ou multijoueurs</p>
+              </div>
+
+              <div
+                onClick={() => setGameScreen('cards')}
+                style={{
+                  background: 'var(--color-cream)',
+                  border: '2px solid var(--color-brown-light)',
+                  borderRadius: 'var(--border-radius-md)',
+                  padding: '10px',
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  gridColumn: '1 / -1',
+                  transition: 'all 0.2s',
+                  boxShadow: 'var(--shadow-sm)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                }}
+              >
+                <div style={{ fontSize: '28px', marginBottom: '4px' }}>🎴</div>
+                <h4 style={{ fontSize: '12px', margin: '0 0 2px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Jeu des Cartes</h4>
+                <p style={{ fontSize: '10px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo - Gagne des pièces!</p>
+              </div>
             </div>
           </div>
         </div>
