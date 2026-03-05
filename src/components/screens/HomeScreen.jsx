@@ -404,7 +404,7 @@ export default function HomeScreen({ setScreen, myLetters, joinedSalons, setCurr
           {/* Grille des offrandes */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(280px, 100%), 1fr))',
             gap: 'var(--spacing-md)',
             maxWidth: '900px',
             margin: '0 auto',

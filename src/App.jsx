@@ -30,6 +30,9 @@ import { AdminProvider, useAdmin } from './contexts/AdminContext';
 import AdminLogin from './components/admin/AdminLogin';
 import AdminLayout from './components/admin/AdminLayout';
 
+// AppShell
+import AppShell from './components/AppShell';
+
 // Auth
 import AuthScreen from './components/auth/AuthScreen';
 import ProfileCreation from './components/auth/ProfileCreation';
@@ -319,16 +322,7 @@ function MainApp() {
   }
 
   return (
-    <div style={{
-      width: '100%',
-      maxWidth: '100vw',
-      margin: '0 auto',
-      background: '#000',
-      minHeight: '100dvh',
-      color: 'white',
-      fontFamily: '-apple-system, sans-serif',
-      overflow: 'hidden'
-    }}>
+    <AppShell navItems={navItems} screen={screen} setScreen={setScreen}>
       {screen === 'home' && !gameScreen && !selectedSalon && <EspacePersoScreenSimple {...appState} />}
       {screen === 'profiles' && !gameScreen && !selectedSalon && <ProfilesScreen {...appState} />}
       {screen === 'social' && !gameScreen && !selectedSalon && <SocialScreen {...appState} currentUser={currentUser} />}
@@ -348,8 +342,6 @@ function MainApp() {
       {gameScreen === 'storytime' && <StoryTimeGame {...appState} currentUser={currentUser} />}
 
       {selectedSalon && <BarDetailScreen {...appState} salon={salons.find(s => s.id === selectedSalon)} />}
-
-      <Navigation navItems={navItems} screen={screen} setScreen={setScreen} />
 
       {/* Admin Mode Toggle - Floating Button */}
       {isAdminAuthenticated && (
@@ -382,7 +374,7 @@ function MainApp() {
 
       {/* Debug Log Overlay */}
       <LogOverlay />
-    </div>
+    </AppShell>
   );
 }
 
