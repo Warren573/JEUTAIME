@@ -294,9 +294,12 @@ export default function MemoryBoxScreen({ currentUser, setCurrentUser }) {
         <div style={{
           display: 'flex',
           gap: 'var(--spacing-sm)',
-          justifyContent: 'center',
           overflowX: 'auto',
-          padding: '0 var(--spacing-sm)'
+          padding: '0 var(--spacing-sm)',
+          WebkitOverflowScrolling: 'touch',
+          scrollbarWidth: 'thin',
+          justifyContent: 'flex-start',
+          maxWidth: '100%'
         }}>
           {[
             { id: 'all', label: 'Tous', icon: '📦' },
