@@ -381,7 +381,9 @@ export default function MemoryBoxScreen({ currentUser, setCurrentUser }) {
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(2, 1fr)',
-          gap: 'var(--spacing-md)'
+          gap: 'var(--spacing-md)',
+          maxWidth: '100%',
+          boxSizing: 'border-box'
         }}>
           {filteredMemories.map(memory => (
             <div
@@ -394,7 +396,10 @@ export default function MemoryBoxScreen({ currentUser, setCurrentUser }) {
                 border: `3px solid ${getMemoryColor(memory.type)}`,
                 cursor: 'pointer',
                 transition: 'transform 0.2s',
-                position: 'relative'
+                position: 'relative',
+                overflow: 'hidden',
+                boxSizing: 'border-box',
+                maxWidth: '100%'
               }}
               onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
               onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
@@ -425,7 +430,8 @@ export default function MemoryBoxScreen({ currentUser, setCurrentUser }) {
                 textAlign: 'center',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap'
+                whiteSpace: 'nowrap',
+                maxWidth: '100%'
               }}>
                 {memory.title}
               </h4>
@@ -438,7 +444,11 @@ export default function MemoryBoxScreen({ currentUser, setCurrentUser }) {
                 textOverflow: 'ellipsis',
                 display: '-webkit-box',
                 WebkitLineClamp: 2,
-                WebkitBoxOrient: 'vertical'
+                WebkitBoxOrient: 'vertical',
+                wordBreak: 'break-word',
+                overflowWrap: 'break-word',
+                maxWidth: '100%',
+                lineHeight: '1.3'
               }}>
                 {memory.description}
               </p>
