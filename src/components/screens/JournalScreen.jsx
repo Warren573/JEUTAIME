@@ -58,17 +58,16 @@ export default function JournalScreen({ currentUser, setScreen }) {
           {/* Section Dernières Actions */}
           <div className="card" style={{
             background: 'var(--color-cream)',
-            border: '2px solid var(--color-brown)',
+            border: '2px solid var(--color-tan)',
             padding: 'var(--spacing-md)'
           }}>
             <h2 style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: '1.25rem',
-              color: 'var(--color-text-primary)',
+              fontSize: '1.1rem',
+              color: 'var(--color-brown-dark)',
               marginBottom: 'var(--spacing-sm)',
-              borderBottom: '2px solid var(--color-text-primary)',
+              borderBottom: '2px solid var(--color-tan)',
               paddingBottom: 'var(--spacing-xs)',
-              textTransform: 'uppercase'
             }}>
               Dernières Actions
             </h2>
@@ -101,16 +100,15 @@ export default function JournalScreen({ currentUser, setScreen }) {
             {/* Tournoi de Scrabble */}
             <div className="card" style={{
               background: 'var(--color-beige)',
-              border: '2px solid var(--color-brown-light)',
+              border: '2px solid var(--color-tan)',
               padding: 'var(--spacing-md)'
             }}>
               <h3 style={{
                 fontFamily: 'var(--font-heading)',
-                color: 'var(--color-text-primary)',
+                color: 'var(--color-brown-dark)',
                 marginBottom: 'var(--spacing-sm)',
-                borderBottom: '1px solid var(--color-text-primary)',
+                borderBottom: '1px solid var(--color-tan)',
                 paddingBottom: 'var(--spacing-xs)',
-                textTransform: 'uppercase',
                 fontSize: '0.9rem'
               }}>
                 Tournoi de Scrabble
@@ -129,16 +127,15 @@ export default function JournalScreen({ currentUser, setScreen }) {
             {/* Good vibes */}
             <div className="card" style={{
               background: 'var(--color-beige)',
-              border: '2px solid var(--color-brown-light)',
+              border: '2px solid var(--color-tan)',
               padding: 'var(--spacing-md)'
             }}>
               <h3 style={{
                 fontFamily: 'var(--font-heading)',
-                color: 'var(--color-text-primary)',
+                color: 'var(--color-brown-dark)',
                 marginBottom: 'var(--spacing-sm)',
-                borderBottom: '1px solid var(--color-text-primary)',
+                borderBottom: '1px solid var(--color-tan)',
                 paddingBottom: 'var(--spacing-xs)',
-                textTransform: 'uppercase',
                 fontSize: '0.9rem'
               }}>
                 {' '} Good vibes
@@ -159,17 +156,16 @@ export default function JournalScreen({ currentUser, setScreen }) {
           {/* Section Les Cadeaux du Jour */}
           <div className="card" style={{
             background: 'var(--color-cream)',
-            border: '2px solid var(--color-brown)',
+            border: '2px solid var(--color-tan)',
             padding: 'var(--spacing-md)'
           }}>
             <h2 style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: '1.25rem',
-              color: 'var(--color-text-primary)',
+              fontSize: '1.1rem',
+              color: 'var(--color-brown-dark)',
               marginBottom: 'var(--spacing-sm)',
-              borderBottom: '2px solid var(--color-text-primary)',
+              borderBottom: '2px solid var(--color-tan)',
               paddingBottom: 'var(--spacing-xs)',
-              textTransform: 'uppercase'
             }}>
               Les Cadeaux du Jour
             </h2>
@@ -195,17 +191,16 @@ export default function JournalScreen({ currentUser, setScreen }) {
           {/* Section Top Profils */}
           <div className="card" style={{
             background: 'var(--color-cream)',
-            border: '2px solid var(--color-brown)',
+            border: '2px solid var(--color-tan)',
             padding: 'var(--spacing-md)'
           }}>
             <h2 style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: '1.25rem',
-              color: 'var(--color-text-primary)',
+              fontSize: '1.1rem',
+              color: 'var(--color-brown-dark)',
               marginBottom: 'var(--spacing-sm)',
-              borderBottom: '2px solid var(--color-text-primary)',
+              borderBottom: '2px solid var(--color-tan)',
               paddingBottom: 'var(--spacing-xs)',
-              textTransform: 'uppercase'
             }}>
               Top Profils
             </h2>
@@ -259,17 +254,16 @@ export default function JournalScreen({ currentUser, setScreen }) {
           {/* Actualités de journalNews */}
           <div className="card" style={{
             background: 'var(--color-cream)',
-            border: '2px solid var(--color-brown)',
+            border: '2px solid var(--color-tan)',
             padding: 'var(--spacing-md)'
           }}>
             <h2 style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: '1.25rem',
-              color: 'var(--color-text-primary)',
+              fontSize: '1.1rem',
+              color: 'var(--color-brown-dark)',
               marginBottom: 'var(--spacing-sm)',
-              borderBottom: '2px solid var(--color-text-primary)',
+              borderBottom: '2px solid var(--color-tan)',
               paddingBottom: 'var(--spacing-xs)',
-              textTransform: 'uppercase'
             }}>
               📰 Fil d'actualités
             </h2>
