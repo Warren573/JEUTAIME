@@ -104,11 +104,11 @@ export default function MorpionGame({ setGameScreen, morpionBoard, setMorpionBoa
         overflow: 'auto',
         padding: '0 var(--spacing-md) var(--spacing-md) var(--spacing-md)'
       }}>
-        <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '30px', textAlign: 'center' }}>
+        <div style={{ background: '#1a1a1a', borderRadius: '15px', padding: '16px', textAlign: 'center' }}>
           <p style={{ fontSize: '16px', marginBottom: '20px', fontWeight: '600' }}>Joueur: {morpionTurn}</p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 80px)', gap: '5px', margin: '0 auto 30px', width: 'fit-content' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '5px', margin: '0 auto 30px', maxWidth: '240px' }}>
             {morpionBoard.map((val, idx) => (
-              <button key={idx} onClick={() => handleMorpionClick(idx)} style={{ width: '80px', height: '80px', fontSize: '32px', background: '#0a0a0a', border: '2px solid #333', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', color: val === 'X' ? '#E91E63' : '#2196F3' }}>
+              <button key={idx} onClick={() => handleMorpionClick(idx)} style={{ aspectRatio: '1', fontSize: '32px', background: '#0a0a0a', border: '2px solid #333', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', color: val === 'X' ? '#E91E63' : '#2196F3' }}>
                 {val}
               </button>
             ))}
