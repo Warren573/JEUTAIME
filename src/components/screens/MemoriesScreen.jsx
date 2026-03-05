@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function MemoriesScreen({ currentUser }) {
+export default function MemoriesScreen({ currentUser, setScreen }) {
   const [selectedMemory, setSelectedMemory] = useState(null);
 
   // Souvenirs - certains verrouillés, d'autres débloqués
@@ -198,8 +198,27 @@ export default function MemoriesScreen({ currentUser }) {
         padding: 'var(--spacing-xl)',
         marginBottom: 'var(--spacing-lg)',
         textAlign: 'center',
-        boxShadow: 'var(--shadow-lg)'
+        boxShadow: 'var(--shadow-lg)',
+        position: 'relative'
       }}>
+        {setScreen && (
+          <button
+            onClick={() => setScreen('letters')}
+            style={{
+              position: 'absolute',
+              top: 'var(--spacing-md)',
+              left: 'var(--spacing-md)',
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--color-cream)',
+              fontSize: '22px',
+              cursor: 'pointer',
+              padding: '4px 8px',
+            }}
+          >
+            ←
+          </button>
+        )}
         <div style={{
           fontSize: '3rem',
           marginBottom: 'var(--spacing-md)',
