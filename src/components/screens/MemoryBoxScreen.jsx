@@ -303,7 +303,7 @@ export default function MemoryBoxScreen({ currentUser, setCurrentUser }) {
         {/* Boutons de filtres */}
         <div style={{
           display: 'flex',
-          gap: '6px',
+          gap: '4px',
           justifyContent: 'center',
           maxWidth: '100%',
           boxSizing: 'border-box'
@@ -321,8 +321,8 @@ export default function MemoryBoxScreen({ currentUser, setCurrentUser }) {
               onClick={() => setFilterType(filter.id)}
               title={filter.label}
               style={{
-                width: '44px',
-                height: '44px',
+                width: '40px',
+                height: '40px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -331,7 +331,7 @@ export default function MemoryBoxScreen({ currentUser, setCurrentUser }) {
                   : 'var(--color-beige)',
                 border: `2px solid ${filterType === filter.id ? 'var(--color-brown-dark)' : 'var(--color-brown-light)'}`,
                 borderRadius: '50%',
-                fontSize: '1.4rem',
+                fontSize: '1.3rem',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
                 flexShrink: 0,
