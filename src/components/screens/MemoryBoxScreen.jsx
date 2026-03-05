@@ -105,7 +105,11 @@ export default function MemoryBoxScreen({ currentUser, setCurrentUser }) {
   if (!stats) return null;
 
   return (
-    <div>
+    <div style={{
+      maxWidth: '100%',
+      boxSizing: 'border-box',
+      overflow: 'hidden'
+    }}>
       {/* En-tête avec stats */}
       <div style={{
         background: 'linear-gradient(135deg, #667eea, #764ba2)',
@@ -300,9 +304,9 @@ export default function MemoryBoxScreen({ currentUser, setCurrentUser }) {
         <div style={{
           display: 'flex',
           gap: '6px',
-          padding: '0 var(--spacing-sm)',
           justifyContent: 'center',
-          maxWidth: '100%'
+          maxWidth: '100%',
+          boxSizing: 'border-box'
         }}>
           {[
             { id: 'all', label: 'Tous', icon: '📦' },
@@ -317,8 +321,8 @@ export default function MemoryBoxScreen({ currentUser, setCurrentUser }) {
               onClick={() => setFilterType(filter.id)}
               title={filter.label}
               style={{
-                width: '48px',
-                height: '48px',
+                width: '44px',
+                height: '44px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -327,7 +331,7 @@ export default function MemoryBoxScreen({ currentUser, setCurrentUser }) {
                   : 'var(--color-beige)',
                 border: `2px solid ${filterType === filter.id ? 'var(--color-brown-dark)' : 'var(--color-brown-light)'}`,
                 borderRadius: '50%',
-                fontSize: '1.5rem',
+                fontSize: '1.4rem',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
                 flexShrink: 0,
