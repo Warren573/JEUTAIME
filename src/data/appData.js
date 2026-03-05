@@ -94,6 +94,24 @@ export const salons = [
     ]
   },
   {
+    id: 7,
+    icon: '🛋️',
+    name: 'Cabinet du Psy',
+    desc: '2H/2F - On y sert aussi des mojitos',
+    bgGradient: 'linear-gradient(180deg, #B2DFDB 0%, #00695C 100%)',
+    magicAction: {
+      name: 'Allonger sur le divan',
+      emoji: '🛋️',
+      animation: 'relax',
+      message: 'Séance gratuite! Tu te sens déjà mieux... 🧠✨'
+    },
+    participants: [
+      { name: 'Camille', gender: 'F', age: 29, online: true },
+      { name: 'Noémie', gender: 'F', age: 32, online: true },
+      { name: 'Raphaël', gender: 'M', age: 34, online: true }
+    ]
+  },
+  {
     id: 6,
     icon: '🤘',
     name: 'Métal',
