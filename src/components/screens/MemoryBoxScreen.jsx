@@ -293,12 +293,10 @@ export default function MemoryBoxScreen({ currentUser, setCurrentUser }) {
         {/* Boutons de filtres */}
         <div style={{
           display: 'flex',
+          flexWrap: 'wrap',
           gap: 'var(--spacing-sm)',
-          overflowX: 'auto',
           padding: '0 var(--spacing-sm)',
-          WebkitOverflowScrolling: 'touch',
-          scrollbarWidth: 'thin',
-          justifyContent: 'flex-start',
+          justifyContent: 'center',
           maxWidth: '100%'
         }}>
           {[
