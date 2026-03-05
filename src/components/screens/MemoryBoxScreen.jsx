@@ -225,9 +225,11 @@ export default function MemoryBoxScreen({ currentUser, setCurrentUser }) {
             borderRadius: 'var(--border-radius-md)',
             color: viewMode === 'gallery' ? 'var(--color-brown-dark)' : 'var(--color-text-secondary)',
             fontWeight: '700',
-            fontSize: '0.85rem',
+            fontSize: '0.8rem',
             cursor: 'pointer',
-            transition: 'all 0.2s'
+            transition: 'all 0.2s',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden'
           }}
         >
           🖼️ Galerie
@@ -244,9 +246,11 @@ export default function MemoryBoxScreen({ currentUser, setCurrentUser }) {
             borderRadius: 'var(--border-radius-md)',
             color: viewMode === 'timeline' ? 'var(--color-brown-dark)' : 'var(--color-text-secondary)',
             fontWeight: '700',
-            fontSize: '0.85rem',
+            fontSize: '0.8rem',
             cursor: 'pointer',
-            transition: 'all 0.2s'
+            transition: 'all 0.2s',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden'
           }}
         >
           📅 Timeline
@@ -263,9 +267,11 @@ export default function MemoryBoxScreen({ currentUser, setCurrentUser }) {
             borderRadius: 'var(--border-radius-md)',
             color: viewMode === 'chest' ? 'var(--color-brown-dark)' : 'var(--color-text-secondary)',
             fontWeight: '700',
-            fontSize: '0.85rem',
+            fontSize: '0.8rem',
             cursor: 'pointer',
-            transition: 'all 0.2s'
+            transition: 'all 0.2s',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden'
           }}
         >
           📦 Coffre
@@ -464,14 +470,15 @@ export default function MemoryBoxScreen({ currentUser, setCurrentUser }) {
               onClick={() => setSelectedMemory(memory)}
               style={{
                 marginBottom: 'var(--spacing-lg)',
-                marginLeft: '50px',
-                position: 'relative'
+                marginLeft: '40px',
+                position: 'relative',
+                maxWidth: 'calc(100% - 40px)'
               }}
             >
               {/* Point sur la timeline */}
               <div style={{
                 position: 'absolute',
-                left: '-42px',
+                left: '-32px',
                 top: '10px',
                 width: '16px',
                 height: '16px',
@@ -544,8 +551,9 @@ export default function MemoryBoxScreen({ currentUser, setCurrentUser }) {
       {viewMode === 'chest' && filteredMemories.length > 0 && (
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: 'var(--spacing-sm)'
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: 'var(--spacing-sm)',
+          maxWidth: '100%'
         }}>
           {filteredMemories.map(memory => (
             <div
