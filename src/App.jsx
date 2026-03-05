@@ -264,6 +264,7 @@ function MainApp() {
     { icon: '🔍', label: 'Profils', id: 'profiles' },
     { icon: '👥', label: 'Social', id: 'social' },
     { icon: '💌', label: 'Lettres', id: 'letters' },
+    { icon: '📰', label: 'Journal', id: 'journal' },
     { icon: '⚙️', label: 'Plus', id: 'settings' }
   ];
 

@@ -45,7 +45,7 @@ export default function JournalScreen({ currentUser, setScreen }) {
         icon="📰"
         title="JOURNAL"
         subtitle="Actualités de la communauté"
-        onBack={() => setScreen('letters')}
+        onBack={() => setScreen('home')}
       />
 
       {/* Grille de sections style journal */}
