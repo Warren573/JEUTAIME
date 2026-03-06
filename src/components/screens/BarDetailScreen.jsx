@@ -18,10 +18,8 @@ import { applyTheme } from '../../engine/ThemeEngine';
 export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }) {
   const [barTab, setBarTab] = useState('discuss');
   const messagesEndRef = useRef(null);
+  const containerRef = useRef(null);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
-  const [viewportHeight, setViewportHeight] = useState(
-    window.visualViewport?.height || window.innerHeight
-  );
 
   const [showGiftSelector, setShowGiftSelector] = useState(false);
   const [selectedMember, setSelectedMember] = useState(null);
@@ -89,8 +87,9 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
     const vv = window.visualViewport;
     if (!vv) return;
     const update = () => {
-      setViewportHeight(vv.height);
-      const isOpen = vv.height < window.innerHeight * 0.75;
+      const keyboardH = window.innerHeight - vv.height;
+      if (containerRef.current) containerRef.current.style.bottom = `${keyboardH}px`;
+      const isOpen = keyboardH > 100;
       setKeyboardOpen(isOpen);
       if (isOpen) setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'instant' }), 100);
     };
@@ -239,9 +238,12 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
   ];
 
   return (
-    <div style={{
-      width: '100%',
-      height: `${viewportHeight}px`,
+    <div ref={containerRef} style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
       display: 'flex',
       flexDirection: 'column',
       background: '#f7f3ef',
