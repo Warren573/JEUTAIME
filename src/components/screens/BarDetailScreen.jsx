@@ -87,14 +87,20 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
     const vv = window.visualViewport;
     if (!vv) return;
     const update = () => {
-      const keyboardH = window.innerHeight - vv.height;
-      if (containerRef.current) containerRef.current.style.bottom = `${keyboardH}px`;
-      const isOpen = keyboardH > 100;
+      if (containerRef.current) {
+        containerRef.current.style.top = `${vv.offsetTop}px`;
+        containerRef.current.style.height = `${vv.height}px`;
+      }
+      const isOpen = vv.height < window.innerHeight * 0.75;
       setKeyboardOpen(isOpen);
       if (isOpen) setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'instant' }), 100);
     };
     vv.addEventListener('resize', update);
-    return () => vv.removeEventListener('resize', update);
+    vv.addEventListener('scroll', update);
+    return () => {
+      vv.removeEventListener('resize', update);
+      vv.removeEventListener('scroll', update);
+    };
   }, []);
 
   useEffect(() => {
@@ -243,7 +249,7 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
       top: 0,
       left: 0,
       right: 0,
-      bottom: 0,
+      height: '100dvh',
       display: 'flex',
       flexDirection: 'column',
       background: '#f7f3ef',
@@ -421,7 +427,7 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
                 style={{
                   flex: 1, padding: '10px 14px',
                   border: '1.5px solid #ddd', borderRadius: '22px',
-                  fontSize: '0.9rem', outline: 'none', background: '#f5f5f5'
+                  fontSize: '16px', outline: 'none', background: '#f5f5f5'
                 }}
               />
               <button
