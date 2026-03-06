@@ -70,6 +70,17 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedSalon,
       gradient: 'linear-gradient(135deg, #424242, #000000)',
       textColor: 'white',
       action: () => setSelectedSalon({ type: 'metal', name: 'Métal', emoji: '🤘' })
+    },
+    {
+      id: 'psy',
+      name: 'Cabinet du Psy',
+      emoji: '🛋️',
+      description: 'On y sert aussi des mojitos',
+      currentMembers: 2,
+      maxMembers: 4,
+      gradient: 'linear-gradient(135deg, #B2DFDB, #00695C)',
+      textColor: 'white',
+      action: () => setSelectedSalon({ type: 'psy', name: 'Cabinet du Psy', emoji: '🛋️' })
     }
   ];
 
@@ -145,38 +156,42 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedSalon,
             style={{
               background: salon.gradient,
               border: salon.border || 'none',
-              borderRadius: '0',
-              padding: 'var(--spacing-md)',
-              marginBottom: 'var(--spacing-xs)',
-              boxShadow: 'none',
+              borderRadius: '16px',
+              padding: '16px',
+              marginBottom: '12px',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.18)',
               width: '100%',
               boxSizing: 'border-box',
-              borderBottom: '1px solid rgba(0,0,0,0.1)'
             }}
           >
             {/* En-tête de la carte */}
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '10px',
-              marginBottom: '10px'
+              justifyContent: 'space-between',
+              marginBottom: '8px'
             }}>
-              <h3 style={{
-                color: salon.textColor,
-                margin: 0,
-                fontSize: '1.4rem',
-                fontWeight: '700'
-              }}>
-                {salon.emoji} {salon.name}
-              </h3>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '1.8rem', lineHeight: 1 }}>{salon.emoji}</span>
+                <h3 style={{
+                  color: salon.textColor,
+                  margin: 0,
+                  fontSize: '1.1rem',
+                  fontWeight: '700',
+                  lineHeight: 1.2
+                }}>
+                  {salon.name}
+                </h3>
+              </div>
               {salon.badge && (
                 <span style={{
                   background: '#FFD700',
                   color: '#000',
-                  padding: '4px 10px',
-                  borderRadius: '12px',
-                  fontSize: '0.7rem',
-                  fontWeight: 'bold'
+                  padding: '3px 8px',
+                  borderRadius: '10px',
+                  fontSize: '0.65rem',
+                  fontWeight: 'bold',
+                  flexShrink: 0
                 }}>
                   {salon.badge}
                 </span>
@@ -185,9 +200,9 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedSalon,
 
             {/* Description */}
             <p style={{
-              color: salon.textColor === '#1a1a1a' ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.9)',
-              margin: '10px 0',
-              fontSize: '0.95rem',
+              color: salon.textColor === '#1a1a1a' ? 'rgba(0,0,0,0.75)' : 'rgba(255,255,255,0.85)',
+              margin: '0 0 12px 0',
+              fontSize: '0.88rem',
               lineHeight: '1.4'
             }}>
               {salon.description}
@@ -198,15 +213,14 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedSalon,
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              marginTop: '15px',
-              flexWrap: 'wrap',
               gap: '10px'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <span style={{
                   color: salon.textColor,
-                  fontSize: '0.9rem',
-                  fontWeight: '600'
+                  fontSize: '0.85rem',
+                  fontWeight: '600',
+                  opacity: 0.9
                 }}>
                   👥 {salon.currentMembers}/{salon.maxMembers}
                 </span>
@@ -214,9 +228,9 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedSalon,
                   <span style={{
                     background: '#E91E63',
                     color: 'white',
-                    padding: '3px 8px',
+                    padding: '2px 7px',
                     borderRadius: '8px',
-                    fontSize: '0.7rem',
+                    fontSize: '0.65rem',
                     fontWeight: 'bold'
                   }}>
                     COMPLET
@@ -227,23 +241,25 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedSalon,
                 onClick={salon.action}
                 disabled={salon.currentMembers === salon.maxMembers}
                 style={{
-                  padding: '10px 20px',
-                  minHeight: '48px',
+                  padding: '10px 22px',
+                  minHeight: '44px',
                   background: salon.currentMembers === salon.maxMembers
-                    ? '#666'
-                    : (salon.buttonStyle || 'var(--color-gold)'),
-                  border: 'none',
-                  borderRadius: '10px',
+                    ? 'rgba(0,0,0,0.3)'
+                    : 'rgba(255,255,255,0.25)',
+                  border: salon.currentMembers === salon.maxMembers
+                    ? 'none'
+                    : '1.5px solid rgba(255,255,255,0.6)',
+                  borderRadius: '12px',
                   color: salon.currentMembers === salon.maxMembers
-                    ? '#aaa'
-                    : (salon.buttonStyle ? '#fff' : 'var(--color-brown-dark)'),
+                    ? 'rgba(255,255,255,0.4)'
+                    : 'white',
                   fontWeight: '700',
                   fontSize: '0.9rem',
                   cursor: salon.currentMembers === salon.maxMembers ? 'not-allowed' : 'pointer',
-                  boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
-                  transition: 'transform 0.2s',
+                  backdropFilter: 'blur(4px)',
+                  transition: 'transform 0.15s, opacity 0.15s',
                   whiteSpace: 'nowrap',
-                  opacity: salon.currentMembers === salon.maxMembers ? 0.5 : 1
+                  flexShrink: 0
                 }}
                 onMouseDown={(e) => {
                   if (salon.currentMembers !== salon.maxMembers) {
@@ -251,8 +267,14 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedSalon,
                   }
                 }}
                 onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
+                onTouchStart={(e) => {
+                  if (salon.currentMembers !== salon.maxMembers) {
+                    e.target.style.transform = 'scale(0.95)';
+                  }
+                }}
+                onTouchEnd={(e) => e.target.style.transform = 'scale(1)'}
               >
-                {salon.currentMembers === salon.maxMembers ? 'Complet' : 'Rejoindre'}
+                {salon.currentMembers === salon.maxMembers ? 'Complet' : 'Rejoindre →'}
               </button>
             </div>
           </div>
