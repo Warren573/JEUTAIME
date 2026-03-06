@@ -79,8 +79,14 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
   const isPatron = members.find(m => m.name === (currentUser?.name || 'Vous'))?.isPatron;
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'instant' });
   }, [messages]);
+
+  useEffect(() => {
+    if (keyboardOpen) {
+      setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'instant' }), 300);
+    }
+  }, [keyboardOpen]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -326,7 +332,9 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
         {/* TAB : DISCUSSION */}
         {barTab === 'discuss' && (
           <>
-            <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ flex: 1 }} />
+              <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {messages.map((msg) => {
                 const isOwn = msg.username === (currentUser?.name || 'Vous');
                 const isSystem = msg.isSystem || msg.username === 'Système';
@@ -364,6 +372,7 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
                 );
               })}
               <div ref={messagesEndRef} />
+              </div>
             </div>
 
             {/* Pouvoirs patron */}
@@ -396,10 +405,7 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
                 value={messageInput}
                 onChange={(e) => setMessageInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-                onFocus={() => {
-                  setKeyboardOpen(true);
-                  setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
-                }}
+                onFocus={() => setKeyboardOpen(true)}
                 onBlur={() => setKeyboardOpen(false)}
                 style={{
                   flex: 1, padding: '10px 14px',
