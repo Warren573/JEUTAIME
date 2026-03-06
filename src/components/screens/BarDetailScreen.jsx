@@ -18,6 +18,22 @@ import { applyTheme } from '../../engine/ThemeEngine';
 export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }) {
   const [barTab, setBarTab] = useState('discuss');
   const messagesEndRef = useRef(null);
+  const [keyboardOffset, setKeyboardOffset] = useState(0);
+
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const handler = () => {
+      const offset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+      setKeyboardOffset(offset);
+    };
+    vv.addEventListener('resize', handler);
+    vv.addEventListener('scroll', handler);
+    return () => {
+      vv.removeEventListener('resize', handler);
+      vv.removeEventListener('scroll', handler);
+    };
+  }, []);
 
   const [showGiftSelector, setShowGiftSelector] = useState(false);
   const [selectedMember, setSelectedMember] = useState(null);
@@ -224,7 +240,7 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
   return (
     <div style={{
       position: 'fixed',
-      top: 0, left: 0, right: 0, bottom: 0,
+      top: 0, left: 0, right: 0, bottom: keyboardOffset,
       zIndex: 1001,
       display: 'flex',
       flexDirection: 'column',
@@ -371,24 +387,19 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
             {/* Pouvoirs patron */}
             {isPatron && (
               <div style={{
-                background: 'linear-gradient(135deg, #FFD700, #FFA500)',
-                padding: '8px 12px', display: 'flex', gap: '8px', flexShrink: 0, overflowX: 'auto'
+                background: 'rgba(255,193,7,0.15)',
+                borderTop: '1px solid rgba(255,193,7,0.3)',
+                padding: '5px 10px', display: 'flex', gap: '6px', flexShrink: 0, alignItems: 'center'
               }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#000', display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0 }}>
-                  👑 Patron :
-                </span>
+                <span style={{ fontSize: '0.7rem', fontWeight: '700', color: '#856404', flexShrink: 0 }}>👑</span>
                 <button
                   onClick={() => { const id = prompt('ID du membre à expulser (1-4):'); if (id) handleExpelMember(parseInt(id)); }}
-                  style={{ padding: '5px 10px', background: '#E91E63', border: 'none', color: 'white', borderRadius: '8px', cursor: 'pointer', fontSize: '0.75rem', fontWeight: '600', flexShrink: 0 }}
-                >
-                  👤 Expulser
-                </button>
+                  style={{ padding: '3px 8px', background: '#E91E63', border: 'none', color: 'white', borderRadius: '6px', cursor: 'pointer', fontSize: '0.7rem', fontWeight: '600', flexShrink: 0 }}
+                >Expulser</button>
                 <button
                   onClick={() => alert('🔒 Fermeture du salon en développement')}
-                  style={{ padding: '5px 10px', background: '#000', border: 'none', color: '#FFD700', borderRadius: '8px', cursor: 'pointer', fontSize: '0.75rem', fontWeight: '600', flexShrink: 0 }}
-                >
-                  🔒 Fermer
-                </button>
+                  style={{ padding: '3px 8px', background: '#333', border: 'none', color: '#FFD700', borderRadius: '6px', cursor: 'pointer', fontSize: '0.7rem', fontWeight: '600', flexShrink: 0 }}
+                >🔒 Fermer</button>
               </div>
             )}
 
