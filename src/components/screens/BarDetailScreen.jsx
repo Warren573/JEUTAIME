@@ -20,16 +20,6 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
   const messagesEndRef = useRef(null);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
 
-  useEffect(() => {
-    const vv = window.visualViewport;
-    if (!vv) return;
-    const handler = () => {
-      setKeyboardOpen(vv.height < window.innerHeight * 0.75);
-    };
-    vv.addEventListener('resize', handler);
-    return () => vv.removeEventListener('resize', handler);
-  }, []);
-
   const [showGiftSelector, setShowGiftSelector] = useState(false);
   const [selectedMember, setSelectedMember] = useState(null);
   const [magicEffect, setMagicEffect] = useState(null);
@@ -234,15 +224,11 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
 
   return (
     <div style={{
-      position: 'fixed',
-      top: 0, left: 0, right: 0,
+      width: '100%',
       height: '100dvh',
-      zIndex: 1001,
       display: 'flex',
       flexDirection: 'column',
       background: '#f7f3ef',
-      maxWidth: '430px',
-      margin: '0 auto',
       overflow: 'hidden'
     }}>
 
@@ -410,6 +396,11 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
                 value={messageInput}
                 onChange={(e) => setMessageInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                onFocus={() => {
+                  setKeyboardOpen(true);
+                  setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
+                }}
+                onBlur={() => setKeyboardOpen(false)}
                 style={{
                   flex: 1, padding: '10px 14px',
                   border: '1.5px solid #ddd', borderRadius: '22px',

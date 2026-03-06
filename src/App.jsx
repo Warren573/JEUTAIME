@@ -323,7 +323,7 @@ function MainApp() {
   }
 
   return (
-    <AppShell navItems={navItems} screen={screen} setScreen={setScreen}>
+    <AppShell navItems={navItems} screen={screen} setScreen={setScreen} hideNav={!!selectedSalon}>
       {screen === 'home' && !gameScreen && !selectedSalon && <EspacePersoScreenSimple {...appState} />}
       {screen === 'profiles' && !gameScreen && !selectedSalon && <ProfilesScreen {...appState} />}
       {screen === 'social' && !gameScreen && !selectedSalon && <SocialScreen {...appState} currentUser={currentUser} />}

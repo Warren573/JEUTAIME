@@ -1,7 +1,7 @@
 import React from 'react';
 import Navigation from './Navigation';
 
-export default function AppShell({ children, navItems, screen, setScreen }) {
+export default function AppShell({ children, navItems, screen, setScreen, hideNav }) {
   return (
     <div style={{
       width: '100%',
@@ -14,7 +14,7 @@ export default function AppShell({ children, navItems, screen, setScreen }) {
       position: 'relative',
     }}>
       {children}
-      <Navigation navItems={navItems} screen={screen} setScreen={setScreen} />
+      {!hideNav && <Navigation navItems={navItems} screen={screen} setScreen={setScreen} />}
     </div>
   );
 }
