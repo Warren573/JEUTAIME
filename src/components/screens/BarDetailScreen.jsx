@@ -18,21 +18,16 @@ import { applyTheme } from '../../engine/ThemeEngine';
 export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }) {
   const [barTab, setBarTab] = useState('discuss');
   const messagesEndRef = useRef(null);
-  const [keyboardOffset, setKeyboardOffset] = useState(0);
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
 
   useEffect(() => {
     const vv = window.visualViewport;
     if (!vv) return;
     const handler = () => {
-      const offset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
-      setKeyboardOffset(offset);
+      setKeyboardOpen(vv.height < window.innerHeight * 0.75);
     };
     vv.addEventListener('resize', handler);
-    vv.addEventListener('scroll', handler);
-    return () => {
-      vv.removeEventListener('resize', handler);
-      vv.removeEventListener('scroll', handler);
-    };
+    return () => vv.removeEventListener('resize', handler);
   }, []);
 
   const [showGiftSelector, setShowGiftSelector] = useState(false);
@@ -240,7 +235,8 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
   return (
     <div style={{
       position: 'fixed',
-      top: 0, left: 0, right: 0, bottom: keyboardOffset,
+      top: 0, left: 0, right: 0,
+      height: '100dvh',
       zIndex: 1001,
       display: 'flex',
       flexDirection: 'column',
@@ -286,8 +282,8 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
           )}
         </div>
 
-        {/* Membres en bande horizontale - répartis sur toute la largeur */}
-        <div style={{
+        {/* Membres en bande horizontale - cachée quand clavier ouvert */}
+        {!keyboardOpen && <div style={{
           display: 'flex',
           justifyContent: members.length <= 6 ? 'space-around' : 'flex-start',
           overflowX: members.length > 6 ? 'auto' : 'visible',
@@ -335,7 +331,7 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
               </div>
             </div>
           ))}
-        </div>
+        </div>}
       </div>
 
       {/* ── CONTENU PRINCIPAL ── */}
@@ -385,7 +381,7 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
             </div>
 
             {/* Pouvoirs patron */}
-            {isPatron && (
+            {isPatron && !keyboardOpen && (
               <div style={{
                 background: 'rgba(255,193,7,0.15)',
                 borderTop: '1px solid rgba(255,193,7,0.3)',
@@ -582,8 +578,8 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
         )}
       </div>
 
-      {/* ── BARRE D'ONGLETS EN BAS ── */}
-      <div style={{
+      {/* ── BARRE D'ONGLETS EN BAS ── (cachée si clavier ouvert) */}
+      {!keyboardOpen && <div style={{
         display: 'flex',
         background: 'white',
         borderTop: '1px solid #eee',
@@ -628,7 +624,7 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
             </button>
           );
         })}
-      </div>
+      </div>}
 
       {/* ── MODALES ── */}
       {showGiftSelector && selectedMember && (
