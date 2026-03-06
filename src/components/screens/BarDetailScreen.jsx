@@ -223,10 +223,14 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
 
   return (
     <div style={{
-      height: '100dvh',
+      position: 'fixed',
+      top: 0, left: 0, right: 0, bottom: 0,
+      zIndex: 1001,
       display: 'flex',
       flexDirection: 'column',
       background: '#f7f3ef',
+      maxWidth: '430px',
+      margin: '0 auto',
       overflow: 'hidden'
     }}>
 
@@ -266,10 +270,12 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
           )}
         </div>
 
-        {/* Membres en bande horizontale */}
+        {/* Membres en bande horizontale - répartis sur toute la largeur */}
         <div style={{
-          display: 'flex', gap: '10px', overflowX: 'auto',
-          padding: '4px 14px 10px',
+          display: 'flex',
+          justifyContent: members.length <= 6 ? 'space-around' : 'flex-start',
+          overflowX: members.length > 6 ? 'auto' : 'visible',
+          padding: '4px 8px 10px',
           scrollbarWidth: 'none'
         }}>
           {members.map((member) => (
@@ -317,12 +323,12 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
       </div>
 
       {/* ── CONTENU PRINCIPAL ── */}
-      <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
 
         {/* TAB : DISCUSSION */}
         {barTab === 'discuss' && (
           <>
-            <div style={{ flex: 1, overflowY: 'auto', padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {messages.map((msg) => {
                 const isOwn = msg.username === (currentUser?.name || 'Vous');
                 const isSystem = msg.isSystem || msg.username === 'Système';
@@ -429,7 +435,7 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
               Tour de {currentPlayer?.name}
             </div>
 
-            <div style={{ flex: 1, overflowY: 'auto', padding: '12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {story.length === 0 ? (
                 <p style={{ color: '#888', fontStyle: 'italic', textAlign: 'center', padding: '40px 20px' }}>
                   L'histoire n'a pas encore commencé...
@@ -519,7 +525,7 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
 
         {/* TAB : MEMBRES */}
         {barTab === 'members' && (
-          <div style={{ flex: 1, overflowY: 'auto', padding: '12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {members.map((member) => (
               <div key={member.id} style={{
                 background: 'white', borderRadius: '14px', padding: '12px 14px',
