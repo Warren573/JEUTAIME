@@ -19,6 +19,9 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
   const [barTab, setBarTab] = useState('discuss');
   const messagesEndRef = useRef(null);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
+  const [viewportHeight, setViewportHeight] = useState(
+    window.visualViewport?.height || window.innerHeight
+  );
 
   const [showGiftSelector, setShowGiftSelector] = useState(false);
   const [selectedMember, setSelectedMember] = useState(null);
@@ -83,10 +86,17 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
   }, [messages]);
 
   useEffect(() => {
-    if (keyboardOpen) {
-      setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'instant' }), 300);
-    }
-  }, [keyboardOpen]);
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const update = () => {
+      setViewportHeight(vv.height);
+      const isOpen = vv.height < window.innerHeight * 0.75;
+      setKeyboardOpen(isOpen);
+      if (isOpen) setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'instant' }), 100);
+    };
+    vv.addEventListener('resize', update);
+    return () => vv.removeEventListener('resize', update);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -231,7 +241,7 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
   return (
     <div style={{
       width: '100%',
-      height: '100dvh',
+      height: `${viewportHeight}px`,
       display: 'flex',
       flexDirection: 'column',
       background: '#f7f3ef',
@@ -405,8 +415,7 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
                 value={messageInput}
                 onChange={(e) => setMessageInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-                onFocus={() => setKeyboardOpen(true)}
-                onBlur={() => setKeyboardOpen(false)}
+
                 style={{
                   flex: 1, padding: '10px 14px',
                   border: '1.5px solid #ddd', borderRadius: '22px',
