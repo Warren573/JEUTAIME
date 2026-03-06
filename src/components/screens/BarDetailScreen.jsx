@@ -96,11 +96,7 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
       if (isOpen) setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'instant' }), 100);
     };
     vv.addEventListener('resize', update);
-    vv.addEventListener('scroll', update);
-    return () => {
-      vv.removeEventListener('resize', update);
-      vv.removeEventListener('scroll', update);
-    };
+    return () => vv.removeEventListener('resize', update);
   }, []);
 
   useEffect(() => {
