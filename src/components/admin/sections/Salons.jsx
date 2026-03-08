@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { salons as defaultSalons } from '../../../data/appData';
+import { SALON_BACKGROUNDS, getSalonBackground, setSalonBackground, getBackgroundStyle } from '../../../data/salonBackgrounds';
+import SalonBackgroundPicker from '../../salon/SalonBackgroundPicker';
 
 const SALONS_KEY = 'jeutaime_salons';
 
@@ -36,6 +38,14 @@ export default function Salons() {
   const [salons, setSalons] = useState([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingSalon, setEditingSalon] = useState(null);
+  const [bgPickerSalonId, setBgPickerSalonId] = useState(null);
+  const [salonBgs, setSalonBgs] = useState({});
+
+  useEffect(() => {
+    const bgs = {};
+    getSalons().forEach(s => { bgs[s.id] = getSalonBackground(s.id); });
+    setSalonBgs(bgs);
+  }, [salons]);
   const [newSalon, setNewSalon] = useState({
     name: '',
     desc: '',
@@ -290,6 +300,13 @@ export default function Salons() {
                     {isActive ? '⏸️ Désactiver' : '▶️ Activer'}
                   </button>
                   <button
+                    onClick={() => setBgPickerSalonId(salon.id)}
+                    style={{ padding: '10px 12px', background: '#667eea', border: 'none', borderRadius: '8px', color: 'white', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}
+                    title="Changer l'arrière-plan"
+                  >
+                    🖼️
+                  </button>
+                  <button
                     onClick={() => handleDeleteSalon(salon.id)}
                     style={{ padding: '10px 15px', background: '#dc3545', border: 'none', borderRadius: '8px', color: 'white', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}
                   >
@@ -428,6 +445,15 @@ export default function Salons() {
             </div>
           </div>
         </div>
+      )}
+
+      {bgPickerSalonId && (
+        <SalonBackgroundPicker
+          salonId={bgPickerSalonId}
+          currentBgId={salonBgs[bgPickerSalonId]}
+          onSelect={(bgId) => setSalonBgs(prev => ({ ...prev, [bgPickerSalonId]: bgId }))}
+          onClose={() => setBgPickerSalonId(null)}
+        />
       )}
     </div>
   );

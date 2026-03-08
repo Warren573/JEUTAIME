@@ -14,6 +14,8 @@ import {
 } from '../../utils/barsSystem';
 import { sendMagicToSalon, sendGiftToUser, canAfford, deductCoins } from '../../utils/magic';
 import { applyTheme } from '../../engine/ThemeEngine';
+import { getSalonBackground, getBackgroundStyle } from '../../data/salonBackgrounds';
+import SalonBackgroundPicker from '../salon/SalonBackgroundPicker';
 
 export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }) {
   const [barTab, setBarTab] = useState('discuss');
@@ -26,6 +28,8 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
   const [magicEffect, setMagicEffect] = useState(null);
   const [giftReceiverEffect, setGiftReceiverEffect] = useState(null);
   const [showMagicGiftsPanel, setShowMagicGiftsPanel] = useState(false);
+  const [showBgPicker, setShowBgPicker] = useState(false);
+  const [currentBgId, setCurrentBgId] = useState(null);
 
   const salonId = salon?.id || salon?.type || 'default';
   const themeStyles = applyTheme(salonId, {
@@ -78,6 +82,10 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
   const currentPlayer = members[currentTurnIndex];
   const isMyTurn = currentPlayer?.name === (currentUser?.name || 'Vous');
   const isPatron = members.find(m => m.name === (currentUser?.name || 'Vous'))?.isPatron;
+
+  useEffect(() => {
+    setCurrentBgId(getSalonBackground(salonId));
+  }, [salonId]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'instant' });
@@ -346,7 +354,7 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
         {/* TAB : DISCUSSION */}
         {barTab === 'discuss' && (
           <>
-            <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', ...getBackgroundStyle(currentBgId) }}>
               <div style={{ flex: 1 }} />
               <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {messages.map((msg) => {
@@ -405,6 +413,10 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
                   onClick={() => alert('🔒 Fermeture du salon en développement')}
                   style={{ padding: '3px 8px', background: '#333', border: 'none', color: '#FFD700', borderRadius: '6px', cursor: 'pointer', fontSize: '0.7rem', fontWeight: '600', flexShrink: 0 }}
                 >🔒 Fermer</button>
+                <button
+                  onClick={() => setShowBgPicker(true)}
+                  style={{ padding: '3px 8px', background: '#667eea', border: 'none', color: 'white', borderRadius: '6px', cursor: 'pointer', fontSize: '0.7rem', fontWeight: '600', flexShrink: 0, marginLeft: 'auto' }}
+                >🖼️ Fond</button>
               </div>
             )}
 
@@ -653,6 +665,15 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
           salonMembers={members.filter(m => !m.isPatron)}
           onUseMagic={handleUseMagic}
           onSendGift={handleSendGift}
+        />
+      )}
+
+      {showBgPicker && (
+        <SalonBackgroundPicker
+          salonId={salonId}
+          currentBgId={currentBgId}
+          onSelect={setCurrentBgId}
+          onClose={() => setShowBgPicker(false)}
         />
       )}
     </div>
