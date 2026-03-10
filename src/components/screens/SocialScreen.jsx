@@ -271,43 +271,6 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
             onBack={() => setSocialTab(null)}
           />
 
-          {/* Bouton vers liste complète des salons magiques */}
-          <button
-            onClick={() => setScreen('bars')}
-            style={{
-              width: '100%',
-              padding: 'var(--spacing-md)',
-              marginBottom: 'var(--spacing-lg)',
-              background: 'linear-gradient(135deg, #7B1FA2, #4A148C)',
-              border: '3px solid #FFD700',
-              borderRadius: 'var(--border-radius-lg)',
-              color: '#FFD700',
-              fontSize: '1.1rem',
-              fontWeight: '700',
-              cursor: 'pointer',
-              boxShadow: '0 6px 16px rgba(123, 31, 162, 0.4)',
-              transition: 'transform 0.2s',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '10px',
-              boxSizing: 'border-box'
-            }}
-            onMouseDown={(e) => e.target.style.transform = 'scale(0.98)'}
-            onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
-          >
-            <span style={{ fontSize: '1.5rem' }}>✨</span>
-            Voir tous les Salons Magiques
-            <span style={{
-              background: '#FFD700',
-              color: '#000',
-              padding: '3px 8px',
-              borderRadius: '12px',
-              fontSize: '0.7rem',
-              fontWeight: 'bold'
-            }}>NOUVEAU</span>
-          </button>
-
           {/* Titre section */}
           <div style={{
             textAlign: 'center',
@@ -558,8 +521,8 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                           <div
                             key={idx}
                             style={{
-                              width: '32px',
-                              height: '32px',
+                              width: '42px',
+                              height: '42px',
                               borderRadius: '50%',
                               background: p.online
                                 ? 'linear-gradient(135deg, var(--color-friendly-light), var(--color-friendly))'
@@ -567,7 +530,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
-                              fontSize: '1rem',
+                              fontSize: '1.25rem',
                               border: '2px solid var(--color-cream)',
                               boxShadow: 'var(--shadow-sm)'
                             }}
