@@ -117,10 +117,11 @@ export default function LettersScreen({ currentUser, setScreen }) {
       />
 
 
-      {/* Onglets Lettres / Souvenirs */}
+      {/* Onglets Lettres / Journal / Souvenirs */}
       <div style={{ display: 'flex', gap: '8px', padding: '0 var(--spacing-sm)', marginBottom: 'var(--spacing-sm)' }}>
         {[
           { id: 'lettres', icon: '💌', label: 'Lettres' },
+          { id: 'journal', icon: '📰', label: 'Journal' },
           { id: 'memories', icon: '📦', label: 'Souvenirs' },
         ].map(tab => (
           <button

@@ -8,6 +8,8 @@ import GiftSelector from '../gifts/GiftSelector';
 import MagicEffect from '../effects/MagicEffect';
 import { getReceivedGifts } from '../../utils/giftsSystem';
 import ScreenHeader from '../common/ScreenHeader';
+import ProfileViewTabs from '../matching/ProfileViewTabs';
+import ProfileSmileActions from '../matching/ProfileSmileActions';
 
 export default function ProfilesScreen({ currentProfile, setCurrentProfile, adminMode, isAdminAuthenticated, currentUser, setScreen }) {
   const [viewMode, setViewMode] = useState('discover');
@@ -273,61 +275,12 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
         onBack={() => setScreen('home')}
       />
 
-      {/* Tabs */}
-      <div style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: 'var(--spacing-xs)',
-        marginBottom: 'var(--spacing-lg)',
-        padding: '0 var(--spacing-md)',
-        justifyContent: 'center'
-      }}>
-        <button onClick={() => setViewMode('discover')} style={{
-          padding: 'var(--spacing-sm) var(--spacing-md)',
-          background: viewMode === 'discover' ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))' : 'var(--color-brown)',
-          border: viewMode === 'discover' ? '2px solid var(--color-gold-light)' : '2px solid var(--color-brown-dark)',
-          color: viewMode === 'discover' ? 'var(--color-brown-dark)' : 'var(--color-cream)',
-          borderRadius: 'var(--border-radius-md)',
-          cursor: 'pointer',
-          fontWeight: '600',
-          fontSize: '0.875rem',
-          minWidth: 'fit-content',
-          transition: 'all var(--transition-normal)',
-          boxShadow: viewMode === 'discover' ? 'var(--shadow-md)' : 'var(--shadow-sm)'
-        }}>
-          🔍 Découvrir
-        </button>
-        <button onClick={() => setViewMode('matches')} style={{
-          padding: 'var(--spacing-sm) var(--spacing-md)',
-          background: viewMode === 'matches' ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))' : 'var(--color-brown)',
-          border: viewMode === 'matches' ? '2px solid var(--color-gold-light)' : '2px solid var(--color-brown-dark)',
-          color: viewMode === 'matches' ? 'var(--color-brown-dark)' : 'var(--color-cream)',
-          borderRadius: 'var(--border-radius-md)',
-          cursor: 'pointer',
-          fontWeight: '600',
-          fontSize: '0.875rem',
-          minWidth: 'fit-content',
-          transition: 'all var(--transition-normal)',
-          boxShadow: viewMode === 'matches' ? 'var(--shadow-md)' : 'var(--shadow-sm)'
-        }}>
-          💕 Matches ({getMatches().length})
-        </button>
-        <button onClick={() => setViewMode('smiles')} style={{
-          padding: 'var(--spacing-sm) var(--spacing-md)',
-          background: viewMode === 'smiles' ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))' : 'var(--color-brown)',
-          border: viewMode === 'smiles' ? '2px solid var(--color-gold-light)' : '2px solid var(--color-brown-dark)',
-          color: viewMode === 'smiles' ? 'var(--color-brown-dark)' : 'var(--color-cream)',
-          borderRadius: 'var(--border-radius-md)',
-          cursor: 'pointer',
-          fontWeight: '600',
-          fontSize: '0.875rem',
-          minWidth: 'fit-content',
-          transition: 'all var(--transition-normal)',
-          boxShadow: viewMode === 'smiles' ? 'var(--shadow-md)' : 'var(--shadow-sm)'
-        }}>
-          😊 Sourires reçus ({getReceivedSmiles().length})
-        </button>
-      </div>
+      <ProfileViewTabs
+        viewMode={viewMode}
+        onChangeView={setViewMode}
+        matchCount={getMatches().length}
+        smileCount={getReceivedSmiles().length}
+      />
 
       {/* MODE: Matches */}
       {viewMode === 'matches' && (
@@ -868,86 +821,12 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
           </div>
 
           {/* Actions - Sourire / Grimace / Cadeau */}
-          <div style={{ display: 'flex', gap: 'var(--spacing-md)', justifyContent: 'center', marginBottom: 'var(--spacing-sm)' }}>
-            <button
-              onClick={handleGrimace}
-              style={{
-                flex: 1,
-                padding: 'var(--spacing-lg)',
-                background: 'linear-gradient(135deg, var(--color-romantic), var(--color-romantic-light))',
-                border: '3px solid var(--color-brown)',
-                color: 'white',
-                borderRadius: 'var(--border-radius-xl)',
-                cursor: 'pointer',
-                fontSize: '2.5rem',
-                boxShadow: 'var(--shadow-lg)',
-                transition: 'transform 0.2s'
-              }}
-              onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
-              onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
-            >
-              😝
-            </button>
-            <button
-              onClick={handleSmile}
-              style={{
-                flex: 1,
-                padding: 'var(--spacing-lg)',
-                background: 'linear-gradient(135deg, var(--color-friendly), var(--color-friendly-light))',
-                border: '3px solid var(--color-brown)',
-                color: 'white',
-                borderRadius: 'var(--border-radius-xl)',
-                cursor: 'pointer',
-                fontSize: '2.5rem',
-                boxShadow: 'var(--shadow-lg)',
-                transition: 'transform 0.2s'
-              }}
-              onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
-              onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
-            >
-              😊
-            </button>
-          </div>
-
-          {/* Bouton Envoyer un Cadeau Magique */}
-          <button
-            onClick={handleSendGift}
-            style={{
-              width: '100%',
-              padding: 'var(--spacing-md)',
-              background: 'linear-gradient(135deg, #FFD700, #FFA500)',
-              border: '3px solid var(--color-brown)',
-              color: '#000',
-              borderRadius: 'var(--border-radius-lg)',
-              cursor: 'pointer',
-              fontSize: '1.1rem',
-              fontWeight: '700',
-              boxShadow: '0 6px 16px rgba(255,215,0,0.4)',
-              transition: 'all 0.2s',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 8px 20px rgba(255,215,0,0.6)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 6px 16px rgba(255,215,0,0.4)';
-            }}
-          >
-            <span style={{ fontSize: '1.5rem' }}>🎁</span>
-            Envoyer un Cadeau Magique
-            <span style={{ fontSize: '1.5rem' }}>✨</span>
-          </button>
-
-          {/* Legend */}
-          <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: '12px', fontSize: '13px', color: '#888' }}>
-            <div>😝 = Grimace (non)</div>
-            <div>😊 = Sourire (oui)</div>
-          </div>
+          <ProfileSmileActions
+            onSmile={handleSmile}
+            onGrimace={handleGrimace}
+            onGift={handleSendGift}
+            disabled={!currentProfileData}
+          />
 
           {/* Admin Actions */}
           {adminMode && isAdminAuthenticated && (

@@ -10,6 +10,9 @@ import {
   getPetStatus,
   getPetInteraction
 } from '../../utils/petsSystem';
+import PetAdoptCard from '../pets/PetAdoptCard';
+import PetIncarnateCard from '../pets/PetIncarnateCard';
+import StatBar from '../pets/StatBar';
 
 export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, setCurrentUser, isEmbedded = false, onBack }) {
   const [adoptionTab, setAdoptionTab] = useState('adopt'); // 'adopt', 'incarnate'
@@ -152,35 +155,7 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
     }
   };
 
-  // Barre de stat stylée
-  const StatBar = ({ label, value, color, icon }) => (
-    <div style={{ marginBottom: 'var(--spacing-sm)' }}>
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        marginBottom: '4px',
-        fontSize: '0.85rem',
-        fontWeight: '600'
-      }}>
-        <span>{icon} {label}</span>
-        <span style={{ color: color }}>{Math.round(value)}%</span>
-      </div>
-      <div style={{
-        background: 'var(--color-tan)',
-        borderRadius: '10px',
-        height: '12px',
-        overflow: 'hidden',
-        border: '2px solid var(--color-brown-light)'
-      }}>
-        <div style={{
-          width: `${value}%`,
-          height: '100%',
-          background: `linear-gradient(90deg, ${color}, ${color}dd)`,
-          transition: 'width 0.3s ease'
-        }} />
-      </div>
-    </div>
-  );
+  // StatBar est importé depuis ../pets/StatBar
 
   const getPetData = (petType) => {
     return Object.values(PETS).find(p => p.id === petType);
@@ -741,137 +716,13 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
               boxSizing: 'border-box'
             }}>
               {Object.values(PETS).filter(pet => !myPets.find(p => p.type === pet.id)).map((pet) => (
-                <div
+                <PetAdoptCard
                   key={pet.id}
-                  style={{
-                    background: 'var(--color-cream)',
-                    borderRadius: 'var(--border-radius-xl)',
-                    padding: 'var(--spacing-lg)',
-                    border: pet.rarity === 'legendary'
-                      ? '3px solid #FFD700'
-                      : pet.rarity === 'rare'
-                      ? '3px solid #9C27B0'
-                      : pet.rarity === 'uncommon'
-                      ? '3px solid #2196F3'
-                      : '3px solid var(--color-brown)',
-                    boxShadow: 'var(--shadow-lg)',
-                    position: 'relative',
-                    textAlign: 'center'
-                  }}
-                >
-                  {/* Badge rareté */}
-                  <div style={{
-                    position: 'absolute',
-                    top: '10px',
-                    right: '10px',
-                    background: pet.rarity === 'legendary'
-                      ? '#FFD700'
-                      : pet.rarity === 'rare'
-                      ? '#9C27B0'
-                      : pet.rarity === 'uncommon'
-                      ? '#2196F3'
-                      : '#757575',
-                    color: 'white',
-                    padding: '4px 10px',
-                    borderRadius: '12px',
-                    fontSize: '0.7rem',
-                    fontWeight: '600',
-                    textTransform: 'uppercase'
-                  }}>
-                    {pet.rarity === 'legendary' ? '✨ Légendaire' :
-                     pet.rarity === 'rare' ? '💎 Rare' :
-                     pet.rarity === 'uncommon' ? '⭐ Peu commun' :
-                     '🌟 Commun'}
-                  </div>
-
-                  <div style={{ fontSize: '100px', marginBottom: 'var(--spacing-sm)' }}>
-                    {pet.emoji}
-                  </div>
-                  <h3 style={{
-                    fontSize: '1.5rem',
-                    margin: '0 0 var(--spacing-xs) 0',
-                    color: 'var(--color-brown-dark)'
-                  }}>
-                    {pet.name}
-                  </h3>
-                  <p style={{
-                    color: 'var(--color-text-primary)',
-                    fontSize: '0.9rem',
-                    marginBottom: 'var(--spacing-sm)',
-                    fontStyle: 'italic'
-                  }}>
-                    {pet.description}
-                  </p>
-                  <div style={{
-                    background: 'var(--color-beige-light)',
-                    padding: 'var(--spacing-sm)',
-                    borderRadius: 'var(--border-radius-md)',
-                    marginBottom: 'var(--spacing-md)',
-                    textAlign: 'left',
-                    fontSize: '0.85rem',
-                    color: 'var(--color-brown-dark)'
-                  }}>
-                    <p style={{ margin: '6px 0', color: 'var(--color-brown-dark)' }}>
-                      <strong style={{ color: 'var(--color-brown-darker)' }}>Personnalité:</strong> {pet.personality}
-                    </p>
-                    <p style={{ margin: '6px 0', color: 'var(--color-brown-dark)' }}>
-                      <strong style={{ color: 'var(--color-brown-darker)' }}>Nourriture préférée:</strong> {pet.favoriteFood}
-                    </p>
-                  </div>
-
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 'var(--spacing-sm)',
-                    marginBottom: 'var(--spacing-md)',
-                    fontSize: '1.2rem',
-                    fontWeight: '700',
-                    color: 'var(--color-gold-dark)'
-                  }}>
-                    <span className="currency-icon" style={{
-                      width: '28px',
-                      height: '28px',
-                      background: 'var(--color-gold)',
-                      borderRadius: '50%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: 'var(--color-cream)',
-                      fontSize: '0.9rem',
-                      fontWeight: '700'
-                    }}>
-                      J
-                    </span>
-                    {pet.adoptionCost} coins
-                  </div>
-
-                  <button
-                    onClick={() => handleAdopt(pet.id)}
-                    disabled={myPets.length >= 3}
-                    style={{
-                      width: '100%',
-                      padding: 'var(--spacing-md)',
-                      background: myPets.length >= 3
-                        ? '#ccc'
-                        : 'linear-gradient(135deg, #4CAF50, #2E7D32)',
-                      border: 'none',
-                      borderRadius: 'var(--border-radius-lg)',
-                      color: 'white',
-                      fontSize: '1rem',
-                      fontWeight: '600',
-                      cursor: myPets.length >= 3 ? 'not-allowed' : 'pointer',
-                      boxShadow: 'var(--shadow-md)',
-                      transition: 'transform 0.2s'
-                    }}
-                    onMouseDown={(e) => {
-                      if (myPets.length < 3) e.currentTarget.style.transform = 'scale(0.95)';
-                    }}
-                    onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                  >
-                    {myPets.length >= 3 ? '❌ Maximum atteint' : '🐾 Adopter'}
-                  </button>
-                </div>
+                  pet={pet}
+                  onAdopt={handleAdopt}
+                  canAdopt={myPets.length < 3}
+                  userCoins={userCoins}
+                />
               ))}
             </div>
           </>
@@ -919,133 +770,12 @@ export default function AdoptionScreen({ currentUser, userCoins, setUserCoins, s
               boxSizing: 'border-box'
             }}>
               {Object.values(PETS).map((pet) => (
-                <div
+                <PetIncarnateCard
                   key={pet.id}
-                  style={{
-                    background: 'var(--color-cream)',
-                    borderRadius: 'var(--border-radius-xl)',
-                    padding: 'var(--spacing-lg)',
-                    border: currentUser?.incarnatedAs?.petId === pet.id
-                      ? '4px solid #f093fb'
-                      : pet.rarity === 'legendary'
-                      ? '3px solid #FFD700'
-                      : pet.rarity === 'rare'
-                      ? '3px solid #9C27B0'
-                      : pet.rarity === 'uncommon'
-                      ? '3px solid #2196F3'
-                      : '3px solid var(--color-brown)',
-                    boxShadow: currentUser?.incarnatedAs?.petId === pet.id
-                      ? '0 0 20px rgba(240, 147, 251, 0.5)'
-                      : 'var(--shadow-lg)',
-                    position: 'relative',
-                    textAlign: 'center'
-                  }}
-                >
-                  {currentUser?.incarnatedAs?.petId === pet.id && (
-                    <div style={{
-                      position: 'absolute',
-                      top: '-10px',
-                      left: '50%',
-                      transform: 'translateX(-50%)',
-                      background: '#f093fb',
-                      color: 'white',
-                      padding: '6px 16px',
-                      borderRadius: '20px',
-                      fontSize: '0.75rem',
-                      fontWeight: '700',
-                      textTransform: 'uppercase',
-                      boxShadow: 'var(--shadow-md)'
-                    }}>
-                      ✨ Forme actuelle
-                    </div>
-                  )}
-
-                  {/* Badge rareté */}
-                  <div style={{
-                    position: 'absolute',
-                    top: '10px',
-                    right: '10px',
-                    background: pet.rarity === 'legendary'
-                      ? '#FFD700'
-                      : pet.rarity === 'rare'
-                      ? '#9C27B0'
-                      : pet.rarity === 'uncommon'
-                      ? '#2196F3'
-                      : '#757575',
-                    color: 'white',
-                    padding: '4px 10px',
-                    borderRadius: '12px',
-                    fontSize: '0.7rem',
-                    fontWeight: '600',
-                    textTransform: 'uppercase'
-                  }}>
-                    {pet.rarity === 'legendary' ? '✨ Légendaire' :
-                     pet.rarity === 'rare' ? '💎 Rare' :
-                     pet.rarity === 'uncommon' ? '⭐ Peu commun' :
-                     '🌟 Commun'}
-                  </div>
-
-                  <div style={{ fontSize: '100px', marginBottom: 'var(--spacing-sm)' }}>
-                    {pet.emoji}
-                  </div>
-                  <h3 style={{
-                    fontSize: '1.5rem',
-                    margin: '0 0 var(--spacing-xs) 0',
-                    color: 'var(--color-brown-dark)'
-                  }}>
-                    {pet.name}
-                  </h3>
-                  <p style={{
-                    color: 'var(--color-text-primary)',
-                    fontSize: '0.9rem',
-                    marginBottom: 'var(--spacing-sm)',
-                    fontStyle: 'italic'
-                  }}>
-                    {pet.description}
-                  </p>
-                  <div style={{
-                    background: 'var(--color-beige-light)',
-                    padding: 'var(--spacing-sm)',
-                    borderRadius: 'var(--border-radius-md)',
-                    marginBottom: 'var(--spacing-md)',
-                    textAlign: 'left',
-                    fontSize: '0.85rem',
-                    color: 'var(--color-brown-dark)'
-                  }}>
-                    <p style={{ margin: '6px 0', color: 'var(--color-brown-dark)' }}>
-                      <strong style={{ color: 'var(--color-brown-darker)' }}>Personnalité:</strong> {pet.personality}
-                    </p>
-                    <p style={{ margin: '6px 0', color: 'var(--color-brown-dark)' }}>
-                      <strong style={{ color: 'var(--color-brown-darker)' }}>Nourriture préférée:</strong> {pet.favoriteFood}
-                    </p>
-                  </div>
-
-                  <button
-                    onClick={() => handleIncarnate(pet.id)}
-                    style={{
-                      width: '100%',
-                      padding: 'var(--spacing-md)',
-                      background: currentUser?.incarnatedAs?.petId === pet.id
-                        ? 'linear-gradient(135deg, #666, #888)'
-                        : 'linear-gradient(135deg, #f093fb, #f5576c)',
-                      border: 'none',
-                      borderRadius: 'var(--border-radius-lg)',
-                      color: 'white',
-                      fontSize: '1rem',
-                      fontWeight: '600',
-                      cursor: currentUser?.incarnatedAs?.petId === pet.id ? 'default' : 'pointer',
-                      boxShadow: 'var(--shadow-md)',
-                      transition: 'transform 0.2s',
-                      opacity: currentUser?.incarnatedAs?.petId === pet.id ? 0.7 : 1
-                    }}
-                    onMouseDown={(e) => {
-                      if (currentUser?.incarnatedAs?.petId !== pet.id) e.currentTarget.style.transform = 'scale(0.95)';
-                    }}
-                    onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                  >
-                    {currentUser?.incarnatedAs?.petId === pet.id ? '✓ Forme actuelle' : '🎭 Incarner'}
-                  </button>
-                </div>
+                  pet={pet}
+                  onIncarnate={handleIncarnate}
+                  isCurrentForm={currentUser?.incarnatedAs?.petId === pet.id}
+                />
               ))}
             </div>
           </>

@@ -165,7 +165,29 @@ export default function MemoriesScreen({ currentUser, setScreen }) {
         padding: 'var(--spacing-lg) var(--spacing-md)',
         paddingTop: 'calc(var(--spacing-lg) + env(safe-area-inset-top))',
         textAlign: 'center',
+        position: 'relative',
       }}>
+        <button
+          onClick={() => setScreen('letters')}
+          style={{
+            position: 'absolute',
+            top: 'calc(env(safe-area-inset-top) + 12px)',
+            left: '12px',
+            width: '38px',
+            height: '38px',
+            borderRadius: '50%',
+            border: '2px solid rgba(255,255,255,0.5)',
+            background: 'rgba(255,255,255,0.2)',
+            color: 'white',
+            fontSize: '18px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          ←
+        </button>
         <div style={{ fontSize: '2.5rem', marginBottom: '8px' }}>🎁</div>
         <h1 style={{
           color: 'white',
