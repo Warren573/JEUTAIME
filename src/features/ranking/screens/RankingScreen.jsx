@@ -1,0 +1,393 @@
+import React, { useState, useEffect } from 'react';
+import { getTitleFromPoints } from '../../config/gameConfig';
+import UserAvatar from '../../avatar/UserAvatar';
+
+export default function RankingScreen({ currentUser, isEmbedded = false, onBack }) {
+  const [rankings, setRankings] = useState([]);
+  const [myRank, setMyRank] = useState(null);
+
+  useEffect(() => {
+    loadRankings();
+  }, [currentUser]);
+
+  const loadRankings = () => {
+    const users = JSON.parse(localStorage.getItem('jeutaime_users') || '[]');
+
+    // Filtrer et trier par points
+    const sortedUsers = users
+      .filter(u => u.pseudo) // Seulement les profils complets
+      .map(u => ({
+        ...u,
+        points: u.points || 0,
+        titleInfo: getTitleFromPoints(u.points || 0)
+      }))
+      .sort((a, b) => b.points - a.points);
+
+    setRankings(sortedUsers);
+
+    // Trouver le rang de l'utilisateur actuel
+    const rank = sortedUsers.findIndex(u => u.email === currentUser?.email);
+    setMyRank(rank >= 0 ? rank + 1 : null);
+  };
+
+  const getMedalEmoji = (rank) => {
+    if (rank === 1) return '🥇';
+    if (rank === 2) return '🥈';
+    if (rank === 3) return '🥉';
+    return `#${rank}`;
+  };
+
+  const currentUserTitle = getTitleFromPoints(currentUser?.points || 0);
+
+  // Contenu commun à extraire
+  const renderContent = () => (
+    <>
+      {/* En-tête style Journal */}
+      <div style={{
+        background: 'var(--color-cream)',
+        borderBottom: '4px double var(--color-brown-dark)',
+        padding: 'var(--spacing-lg)',
+        marginBottom: 'var(--spacing-lg)',
+        boxShadow: 'var(--shadow-md)',
+        position: 'relative'
+      }}>
+        {/* Bouton retour optionnel */}
+        {isEmbedded && onBack && (
+          <button
+            onClick={onBack}
+            style={{
+              position: 'absolute',
+              top: '10px',
+              left: '10px',
+              width: '35px',
+              height: '35px',
+              borderRadius: '50%',
+              border: '2px solid var(--color-brown-dark)',
+              background: 'rgba(255,255,255,0.8)',
+              color: 'var(--color-brown-dark)',
+              fontSize: '18px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              zIndex: 10,
+              backdropFilter: 'blur(10px)',
+              boxShadow: 'var(--shadow-sm)',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(255,255,255,1)';
+              e.currentTarget.style.transform = 'scale(1.1)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(255,255,255,0.8)';
+              e.currentTarget.style.transform = 'scale(1)';
+            }}
+          >
+            ←
+          </button>
+        )}
+
+        <div style={{ textAlign: 'center', marginBottom: 'var(--spacing-xs)' }}>
+          <div style={{ fontSize: '3rem', marginBottom: '8px' }}>🏆</div>
+          <h1 style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: '2rem',
+            textAlign: 'center',
+            margin: '0 0 var(--spacing-xs) 0',
+            color: 'var(--color-brown-dark)',
+            textTransform: 'uppercase',
+            letterSpacing: '2px',
+            borderBottom: '2px solid var(--color-gold)',
+            paddingBottom: 'var(--spacing-xs)',
+            paddingLeft: (isEmbedded && onBack) ? '50px' : '0',
+            paddingRight: (isEmbedded && onBack) ? '50px' : '0'
+          }}>
+            CLASSEMENT
+          </h1>
+        </div>
+        <p style={{
+          textAlign: 'center',
+          fontSize: '0.9rem',
+          color: 'var(--color-brown)',
+          margin: 0,
+          fontStyle: 'italic'
+        }}>
+          Les joueurs les plus courtisés
+        </p>
+      </div>
+
+      <div style={{ padding: '0', width: '100%', boxSizing: 'border-box' }}>
+        {/* Header avec stats personnelles */}
+        <div style={{
+          background: 'var(--color-cream)',
+          border: '3px solid var(--color-gold)',
+          borderRadius: '0',
+          padding: '20px',
+          color: 'var(--color-text-primary)',
+          marginBottom: '0',
+          textAlign: 'center',
+          width: '100%'
+        }}>
+
+        {/* Mes stats */}
+        <div style={{
+          background: 'rgba(255,255,255,0.15)',
+          borderRadius: '15px',
+          padding: '20px',
+          marginTop: '20px',
+          backdropFilter: 'blur(10px)'
+        }}>
+          <div style={{ fontSize: '14px', opacity: '0.9', marginBottom: '10px' }}>Mon Rang</div>
+          <div style={{ fontSize: '36px', fontWeight: '700', marginBottom: '10px' }}>
+            {myRank ? getMedalEmoji(myRank) : '—'}
+          </div>
+          <div style={{ fontSize: '18px', fontWeight: '600', marginBottom: '5px' }}>
+            {currentUserTitle.emoji} {currentUserTitle.title}
+          </div>
+          <div style={{ fontSize: '24px', fontWeight: '700' }}>
+            {currentUser?.points || 0} points
+          </div>
+        </div>
+      </div>
+
+      {/* Top 3 Podium */}
+      {rankings.length >= 3 && (
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'flex-end',
+          gap: '10px',
+          padding: '20px',
+          marginBottom: '0',
+          width: '100%',
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+        }}>
+          {/* 2ème place */}
+          <div style={{
+            flex: 1,
+            textAlign: 'center',
+            background: 'linear-gradient(135deg, #E5E5E5, #C0C0C0)',
+            borderRadius: '15px 15px 0 0',
+            padding: '20px 10px',
+            height: '160px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            boxShadow: '0 5px 15px rgba(0,0,0,0.1)'
+          }}>
+            <div style={{ fontSize: '40px', marginBottom: '5px' }}>🥈</div>
+            <div style={{ fontSize: '16px', fontWeight: '700', color: '#333', marginBottom: '3px' }}>
+              {rankings[1].pseudo}
+            </div>
+            <div style={{ fontSize: '14px', color: '#666' }}>
+              {rankings[1].titleInfo.emoji}
+            </div>
+            <div style={{ fontSize: '18px', fontWeight: '700', color: '#667eea', marginTop: '5px' }}>
+              {rankings[1].points} pts
+            </div>
+          </div>
+
+          {/* 1ère place */}
+          <div style={{
+            flex: 1,
+            textAlign: 'center',
+            background: 'linear-gradient(135deg, #FFD700, #FFA500)',
+            borderRadius: '15px 15px 0 0',
+            padding: '20px 10px',
+            height: '200px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            boxShadow: '0 10px 25px rgba(255,215,0,0.3)'
+          }}>
+            <div style={{ fontSize: '50px', marginBottom: '5px' }}>🥇</div>
+            <div style={{ fontSize: '18px', fontWeight: '700', color: '#333', marginBottom: '3px' }}>
+              {rankings[0].pseudo}
+            </div>
+            <div style={{ fontSize: '16px', color: '#555' }}>
+              {rankings[0].titleInfo.emoji} {rankings[0].titleInfo.title}
+            </div>
+            <div style={{ fontSize: '22px', fontWeight: '700', color: '#667eea', marginTop: '5px' }}>
+              {rankings[0].points} pts
+            </div>
+          </div>
+
+          {/* 3ème place */}
+          <div style={{
+            flex: 1,
+            textAlign: 'center',
+            background: 'linear-gradient(135deg, #CD7F32, #8B4513)',
+            borderRadius: '15px 15px 0 0',
+            padding: '20px 10px',
+            height: '140px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            boxShadow: '0 5px 15px rgba(0,0,0,0.1)'
+          }}>
+            <div style={{ fontSize: '36px', marginBottom: '5px' }}>🥉</div>
+            <div style={{ fontSize: '15px', fontWeight: '700', color: 'white', marginBottom: '3px' }}>
+              {rankings[2].pseudo}
+            </div>
+            <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.9)' }}>
+              {rankings[2].titleInfo.emoji}
+            </div>
+            <div style={{ fontSize: '16px', fontWeight: '700', color: '#FFD700', marginTop: '5px' }}>
+              {rankings[2].points} pts
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Liste complète du classement */}
+      <div style={{
+        background: 'white',
+        borderRadius: '0',
+        padding: '20px 0',
+        width: '100%',
+        boxSizing: 'border-box'
+      }}>
+        <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '20px', color: '#333', padding: '0 20px' }}>
+          Classement Général
+        </h2>
+
+        {rankings.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '40px 20px', color: '#999' }}>
+            Aucun joueur dans le classement pour le moment
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {rankings.map((user, index) => {
+              const rank = index + 1;
+              const isCurrentUser = user.email === currentUser?.email;
+
+              return (
+                <div
+                  key={user.email}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '16px',
+                    padding: '16px 20px',
+                    background: isCurrentUser
+                      ? 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))'
+                      : '#f8f9fa',
+                    borderRadius: '0',
+                    borderTop: '1px solid #e0e0e0',
+                    borderLeft: isCurrentUser ? '4px solid #667eea' : 'none'
+                  }}
+                >
+                  {/* Rang */}
+                  <div style={{
+                    width: '60px',
+                    flexShrink: 0,
+                    fontSize: '22px',
+                    fontWeight: '700',
+                    textAlign: 'center',
+                    color: rank <= 3 ? '#667eea' : '#666'
+                  }}>
+                    {getMedalEmoji(rank)}
+                  </div>
+
+                  {/* Avatar */}
+                  <div style={{ flexShrink: 0 }}>
+                    <UserAvatar user={user} size={60} />
+                  </div>
+
+                  {/* Infos */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: '17px', fontWeight: '700', color: '#333', marginBottom: '4px' }}>
+                      {user.pseudo}
+                      {isCurrentUser && (
+                        <span style={{
+                          marginLeft: '8px',
+                          fontSize: '12px',
+                          fontWeight: '600',
+                          color: '#667eea',
+                          background: 'rgba(102, 126, 234, 0.1)',
+                          padding: '2px 8px',
+                          borderRadius: '8px'
+                        }}>
+                          Vous
+                        </span>
+                      )}
+                    </div>
+                    <div style={{ fontSize: '14px', color: '#666' }}>
+                      {user.titleInfo.emoji} {user.titleInfo.title}
+                    </div>
+                  </div>
+
+                  {/* Points */}
+                  <div style={{
+                    minWidth: '100px',
+                    flexShrink: 0,
+                    textAlign: 'right',
+                    fontSize: '19px',
+                    fontWeight: '700',
+                    color: '#667eea'
+                  }}>
+                    {user.points} pts
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Info sur les points */}
+      <div style={{
+        marginTop: '0',
+        background: '#f8f9fa',
+        borderRadius: '0',
+        padding: '20px',
+        width: '100%',
+        boxSizing: 'border-box'
+      }}>
+        <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '15px', color: '#333' }}>
+          💡 Comment gagner des points ?
+        </h3>
+        <div style={{ fontSize: '14px', color: '#666', lineHeight: '1.8' }}>
+          • Sourire reçu : <strong>+10 pts</strong><br />
+          • Match réussi : <strong>+50 pts</strong><br />
+          • Lettre reçue : <strong>+15 pts</strong><br />
+          • Offrande reçue : <strong>+30 pts</strong><br />
+          • Déclaration reçue : <strong>+100 pts</strong><br />
+          • Duel gagné : <strong>+100 pts</strong><br />
+          • Connexion quotidienne : <strong>+10 pts</strong>
+        </div>
+      </div>
+      </div>
+    </>
+  );
+
+  // Layout pour mode embedded (dans SocialScreen)
+  if (isEmbedded) {
+    return (
+      <div style={{
+        height: '100%',
+        overflowY: 'auto',
+        background: 'var(--color-beige-light)'
+      }}>
+        {renderContent()}
+      </div>
+    );
+  }
+
+  // Layout pour mode standalone (écran principal)
+  return (
+    <div style={{
+      minHeight: '100dvh',
+      maxHeight: '100dvh',
+      overflowY: 'auto',
+      paddingTop: 'env(safe-area-inset-top)',
+      paddingBottom: 'max(80px, calc(70px + env(safe-area-inset-bottom)))',
+      background: 'var(--color-beige-light)',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
+      {renderContent()}
+    </div>
+  );
+}
