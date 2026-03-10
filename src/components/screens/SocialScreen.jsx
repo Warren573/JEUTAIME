@@ -13,6 +13,7 @@ import {
   getTimeRemaining
 } from '../../utils/barExchangeSystem';
 import ScreenHeader from '../common/ScreenHeader';
+import GameRulesModal from '../games/GameRulesModal';
 
 export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, setSelectedSalon, adminMode, isAdminAuthenticated, currentUser, userCoins, setUserCoins, setScreen, setCurrentUser }) {
   const [magicStates, setMagicStates] = useState({});
@@ -20,6 +21,7 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
   const [showBottleModal, setShowBottleModal] = useState(false);
   const unreadBottles = getUnreadCount(currentUser?.email);
   const [exchangeRefresh, setExchangeRefresh] = useState(0); // Pour forcer le refresh
+  const [rulesGameId, setRulesGameId] = useState(null);
 
   const handleMagicAction = (salon, e) => {
     e.stopPropagation();
@@ -693,39 +695,54 @@ export default function SocialScreen({ socialTab, setSocialTab, setGameScreen, s
               width: '100%',
               boxSizing: 'border-box'
             }}>
-            <div onClick={() => setGameScreen('reactivity')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
-              <div style={{ fontSize: '36px', marginBottom: '8px' }}>⚡</div>
-              <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Tape Taupe</h4>
-              <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo</p>
-            </div>
-            <div onClick={() => setGameScreen('pong')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
-              <div style={{ fontSize: '36px', marginBottom: '8px' }}>🎮</div>
-              <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Pong</h4>
-              <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>2 joueurs</p>
-            </div>
-            <div onClick={() => setGameScreen('brickbreaker')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
-              <div style={{ fontSize: '36px', marginBottom: '8px' }}>🧱</div>
-              <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Casse Brique</h4>
-              <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo</p>
-            </div>
-            <div onClick={() => setGameScreen('morpion')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer' }}>
-              <div style={{ fontSize: '36px', marginBottom: '8px' }}>⭕</div>
-              <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Morpion</h4>
-              <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>2 joueurs</p>
-            </div>
-            <div onClick={() => setGameScreen('storytime')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer', gridColumn: '1 / -1' }}>
-              <div style={{ fontSize: '36px', marginBottom: '8px' }}>📖</div>
-              <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Continue l'histoire</h4>
-              <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo, 2 joueurs ou multijoueurs</p>
-            </div>
-            <div onClick={() => setGameScreen('cards')} style={{ background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)', borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer', gridColumn: '1 / -1' }}>
-              <div style={{ fontSize: '36px', marginBottom: '8px' }}>🎴</div>
-              <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>Jeu des Cartes</h4>
-              <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>Solo - Gagne des pièces!</p>
-            </div>
+            {[
+              { id: 'reactivity', screen: 'reactivity', icon: '⚡', title: 'Tape Taupe', mode: 'Solo' },
+              { id: 'pong', screen: 'pong', icon: '🎮', title: 'Pong', mode: '2 joueurs' },
+              { id: 'brickbreaker', screen: 'brickbreaker', icon: '🧱', title: 'Casse Brique', mode: 'Solo' },
+              { id: 'morpion', screen: 'morpion', icon: '⭕', title: 'Morpion', mode: '2 joueurs' },
+              { id: 'storytime', screen: 'storytime', icon: '📖', title: "Continue l'histoire", mode: 'Solo / Multi', wide: true },
+              { id: 'cards', screen: 'cards', icon: '🎴', title: 'Jeu des Cartes', mode: 'Solo - Gagne des pièces!', wide: true },
+            ].map(game => (
+              <div
+                key={game.id}
+                onClick={() => setGameScreen(game.screen)}
+                style={{
+                  background: 'var(--color-cream)', border: '2px solid var(--color-brown-light)',
+                  borderRadius: '15px', padding: '15px', textAlign: 'center', cursor: 'pointer',
+                  position: 'relative',
+                  ...(game.wide ? { gridColumn: '1 / -1' } : {}),
+                }}
+              >
+                <button
+                  onClick={e => { e.stopPropagation(); setRulesGameId(game.id); }}
+                  style={{
+                    position: 'absolute', top: '8px', right: '8px',
+                    width: '22px', height: '22px', borderRadius: '50%',
+                    border: '1.5px solid var(--color-brown-light)',
+                    background: 'var(--color-bg, #fff8f0)', cursor: 'pointer',
+                    fontSize: '11px', fontWeight: '700', color: 'var(--color-text-secondary)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    padding: 0, lineHeight: 1,
+                  }}
+                  title="Voir les règles"
+                >?</button>
+                <div style={{ fontSize: '36px', marginBottom: '8px' }}>{game.icon}</div>
+                <h4 style={{ fontSize: '13px', margin: '0 0 4px 0', fontWeight: '600', color: 'var(--color-text-primary)' }}>{game.title}</h4>
+                <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', margin: 0 }}>{game.mode}</p>
+              </div>
+            ))}
             </div>
           </div>
         </div>
+      )}
+
+      {/* Modal Règles du jeu */}
+      {rulesGameId && (
+        <GameRulesModal
+          gameId={rulesGameId}
+          onClose={() => setRulesGameId(null)}
+          onPlay={() => { setRulesGameId(null); setGameScreen(rulesGameId === 'reactivity' ? 'reactivity' : rulesGameId); }}
+        />
       )}
 
       {/* Modal Bouteille à la mer */}
