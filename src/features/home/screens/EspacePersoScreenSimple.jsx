@@ -544,7 +544,6 @@ function MesSalonsSection({ activeSalons, setScreen, setSelectedSalon }) {
               key={salon.id}
               onClick={() => {
                 setSelectedSalon(salon.id);
-                setScreen('bars');
               }}
               style={{
                 background: salon.gradient || 'var(--color-beige)',

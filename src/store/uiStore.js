@@ -28,11 +28,10 @@ export const useUIStore = create((set, get) => ({
   // ── Actions navigation ────────────────────────────────────────────────────
 
   setScreen: (screen) => {
-    const { selectedSalon, gameScreen } = get();
+    const { gameScreen } = get();
     set({
       screen,
-      // Reset salon si on quitte bars
-      selectedSalon: screen !== 'bars' ? null : selectedSalon,
+      selectedSalon: null,
       // Reset jeu si on quitte social
       gameScreen: screen !== 'social' ? null : gameScreen,
     });

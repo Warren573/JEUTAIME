@@ -10,7 +10,6 @@ import BadgesScreen from './components/screens/BadgesScreen';
 import SettingsScreen from './components/screens/SettingsScreen';
 import BarDetailScreen from './components/screens/BarDetailScreen';
 import RankingScreen from './components/screens/RankingScreen';
-import BarsScreen from './components/screens/BarsScreen';
 import ReferralScreen from './components/screens/ReferralScreen';
 import DemoEffectsScreen from './components/screens/DemoEffectsScreen';
 import AvatarEditor from './avatar/AvatarEditor';
@@ -251,7 +250,6 @@ function MainApp() {
       {screen === 'home' && !gameScreen && !selectedSalon && <EspacePersoScreenSimple {...appState} />}
       {screen === 'profiles' && !gameScreen && !selectedSalon && <ProfilesScreen {...appState} />}
       {screen === 'social' && !gameScreen && !selectedSalon && <SocialScreen {...appState} currentUser={currentUser} />}
-      {screen === 'bars' && !gameScreen && !selectedSalon && <BarsScreen setScreen={setScreen} setGameScreen={setGameScreen} setSelectedSalon={setSelectedSalon} currentUser={currentUser} />}
       {screen === 'referral' && !gameScreen && !selectedSalon && <ReferralScreen currentUser={currentUser} />}
       {screen === 'letters' && !gameScreen && !selectedSalon && <LettersScreen currentUser={currentUser} setScreen={setScreen} />}
       {screen === 'memories' && !gameScreen && !selectedSalon && <MemoriesScreen currentUser={currentUser} setScreen={setScreen} />}

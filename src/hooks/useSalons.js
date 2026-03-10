@@ -18,7 +18,6 @@ export function useSalons() {
     joinSalon,
     selectedSalon,
     setSelectedSalon,
-    setScreen,
   } = useUIStore();
 
   const [barStates, setBarStates] = useState({});
@@ -44,7 +43,6 @@ export function useSalons() {
 
   const openSalon = (salonId) => {
     setSelectedSalon(salonId);
-    setScreen('bars');
   };
 
   const getSalon = (salonId) => staticSalons.find(s => s.id === salonId);
