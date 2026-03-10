@@ -7,6 +7,16 @@
 
 const USERS_KEY = 'jeutaime_users';
 const SANCTIONS_KEY = 'jeutaime_sanctions';
+const ADMIN_SESSION_KEY = 'jeutaime_admin_session';
+
+function getAdminId() {
+  try {
+    const session = localStorage.getItem(ADMIN_SESSION_KEY);
+    return session ? JSON.parse(session).username : 'admin';
+  } catch {
+    return 'admin';
+  }
+}
 
 /**
  * Récupère tous les utilisateurs
@@ -148,7 +158,7 @@ export function warnUser(userId, reason, adminNote = '') {
     type: 'warning',
     reason,
     adminNote,
-    adminId: 'admin', // TODO: utiliser le vrai admin ID
+    adminId: getAdminId(),
     active: false // Les warnings ne sont pas "actifs" (pas de blocage)
   });
 }
@@ -165,7 +175,7 @@ export function restrictUser(userId, reason, durationDays, adminNote = '') {
     type: 'restrict',
     reason,
     adminNote,
-    adminId: 'admin',
+    adminId: getAdminId(),
     expiresAt: expiresAt.toISOString(),
     durationDays
   });
@@ -180,7 +190,7 @@ export function banUser(userId, reason, adminNote = '') {
     type: 'ban',
     reason,
     adminNote,
-    adminId: 'admin',
+    adminId: getAdminId(),
     permanent: true
   });
 }
@@ -198,7 +208,7 @@ export function removeSanction(sanctionId) {
     ...sanctions[index],
     active: false,
     removedAt: new Date().toISOString(),
-    removedBy: 'admin' // TODO: utiliser le vrai admin ID
+    removedBy: getAdminId()
   };
 
   localStorage.setItem(SANCTIONS_KEY, JSON.stringify(sanctions));
@@ -219,7 +229,7 @@ export function removeAllUserSanctions(userId) {
         ...s,
         active: false,
         removedAt: new Date().toISOString(),
-        removedBy: 'admin'
+        removedBy: getAdminId()
       };
     }
     return s;

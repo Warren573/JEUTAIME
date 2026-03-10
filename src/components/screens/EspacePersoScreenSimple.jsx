@@ -460,25 +460,18 @@ function InventaireMagiqueSection({ currentUser }) {
         </div>
       </div>
 
-      <button
-        style={{
-          width: '100%',
-          marginTop: '15px',
-          padding: '12px',
-          background: 'linear-gradient(135deg, var(--color-humorous-light), var(--color-humorous))',
-          border: '2px solid var(--color-humorous)',
-          color: 'var(--color-brown-dark)',
-          borderRadius: '10px',
-          cursor: 'pointer',
-          fontWeight: '700',
-          fontSize: '0.95rem',
-          boxShadow: 'var(--shadow-sm)',
-          transition: 'all var(--transition-normal)'
-        }}
-        onClick={() => alert('🔮 Inventaire complet - Utilise Magie & Offrandes dans les salons !')}
-      >
-        🔮 Voir tout l'inventaire
-      </button>
+      <p style={{
+        marginTop: '15px',
+        padding: '10px',
+        background: 'var(--color-beige-light)',
+        border: '2px dashed var(--color-humorous)',
+        borderRadius: '10px',
+        color: 'var(--color-text-secondary)',
+        fontSize: '0.85rem',
+        textAlign: 'center'
+      }}>
+        💡 Utilise tes magies et cadeaux directement dans les salons
+      </p>
     </div>
   );
 }
@@ -582,15 +575,21 @@ function StatsSocialesSection({ currentUser }) {
         const giftsData = localStorage.getItem(giftsKey);
         const receivedGifts = giftsData ? JSON.parse(giftsData) : [];
 
+        // Calculer les interactions depuis les conversations localStorage
+        const convsKey = `jeutaime_conversations_${currentUser.email}`;
+        const convsData = localStorage.getItem(convsKey);
+        const convs = convsData ? JSON.parse(convsData) : {};
+        const msgCount = Object.values(convs).reduce((acc, msgs) => acc + (Array.isArray(msgs) ? msgs.length : 0), 0);
+
         const calculatedStats = {
-          interactions: Math.floor(Math.random() * 30) + 10, // TODO: calculer depuis les lettres
-          goodVibes: Math.floor(Math.random() * 20) + 8, // TODO: calculer depuis bouteille
+          interactions: msgCount,
+          goodVibes: 0, // TODO: calculer depuis le système de bouteilles
           giftsReceived: receivedGifts.length,
-          giftsSent: 0, // TODO: implémenter tracking
-          salonsJoined: 0, // Sera passé via props
+          giftsSent: 0,
+          salonsJoined: 0,
           dailyStreak: 1,
           positiveRate: 95,
-          socialLevel: 1
+          socialLevel: Math.max(1, Math.floor((currentUser?.points || 0) / 100) + 1)
         };
 
         setStats(calculatedStats);

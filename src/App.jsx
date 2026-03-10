@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navigation from './components/Navigation';
 import HomeScreen from './components/screens/HomeScreen';
-import EspacePersoScreen from './components/screens/EspacePersoScreen';
 import EspacePersoScreenSimple from './components/screens/EspacePersoScreenSimple';
 import ProfilesScreen from './components/screens/ProfilesScreen';
 import SocialScreen from './components/screens/SocialScreen';

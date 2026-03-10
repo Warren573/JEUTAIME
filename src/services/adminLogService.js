@@ -5,6 +5,16 @@
  */
 
 const LOGS_KEY = 'jeutaime_admin_logs';
+const ADMIN_SESSION_KEY = 'jeutaime_admin_session';
+
+function getAdminId() {
+  try {
+    const session = localStorage.getItem(ADMIN_SESSION_KEY);
+    return session ? JSON.parse(session).username : 'admin';
+  } catch {
+    return 'admin';
+  }
+}
 
 /**
  * Récupère tous les logs
@@ -49,7 +59,7 @@ export function createLog(logData) {
   const newLog = {
     id: Date.now(),
     timestamp: new Date().toISOString(),
-    adminId: 'admin', // TODO: utiliser le vrai admin ID
+    adminId: getAdminId(),
     ...logData
   };
 

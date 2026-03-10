@@ -37,7 +37,6 @@ const MEMORIES = [
 const TOTAL_SLOTS = 10;
 
 export default function MemoriesScreen({ currentUser, setScreen }) {
-  const [activeTab, setActiveTab] = useState('galerie');
   const [activeFilter, setActiveFilter] = useState('all');
   const [selectedMemory, setSelectedMemory] = useState(null);
   const [memories, setMemories] = useState(MEMORIES);
@@ -234,47 +233,24 @@ export default function MemoriesScreen({ currentUser, setScreen }) {
         </p>
       </div>
 
-      {/* ===== ONGLETS ===== */}
+      {/* Galerie header */}
       <div style={{
-        display: 'flex',
-        background: 'white',
-        border: '2px solid var(--color-tan)',
-        borderRadius: '12px',
         margin: 'var(--spacing-md) var(--spacing-md) 0',
-        overflow: 'hidden',
+        padding: '10px 16px',
+        background: '#c8860a',
+        borderRadius: '12px',
+        color: 'white',
+        fontWeight: '700',
+        fontSize: '0.95rem',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '6px',
       }}>
-        {[
-          { id: 'galerie', label: 'Galerie', icon: '🖼' },
-          { id: 'timeline', label: 'Timeline', icon: '📅' },
-          { id: 'coffre', label: 'Coffre', icon: '📦' },
-        ].map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            style={{
-              flex: 1,
-              padding: '10px 6px',
-              border: 'none',
-              background: activeTab === tab.id ? '#c8860a' : 'transparent',
-              color: activeTab === tab.id ? 'white' : 'var(--color-text-secondary)',
-              fontWeight: activeTab === tab.id ? '700' : '500',
-              fontSize: '0.85rem',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '4px',
-              transition: 'all 0.2s',
-            }}
-          >
-            <span>{tab.icon}</span> {tab.label}
-          </button>
-        ))}
+        <span>🖼</span> Galerie
       </div>
 
       {/* ===== CONTENU GALERIE ===== */}
-      {activeTab === 'galerie' && (
-        <div style={{ padding: 'var(--spacing-md)' }}>
+      <div style={{ padding: 'var(--spacing-md)' }}>
 
           {/* Titre section */}
           <div style={{
@@ -421,27 +397,7 @@ export default function MemoriesScreen({ currentUser, setScreen }) {
             </div>
           )}
         </div>
-      )}
 
-      {/* ===== TIMELINE ===== */}
-      {activeTab === 'timeline' && (
-        <div style={{ padding: 'var(--spacing-lg)', textAlign: 'center' }}>
-          <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>📅</div>
-          <p style={{ color: 'var(--color-text-secondary)', fontFamily: 'var(--font-heading)', fontStyle: 'italic' }}>
-            La timeline de tes souvenirs<br />sera bientôt disponible...
-          </p>
-        </div>
-      )}
-
-      {/* ===== COFFRE ===== */}
-      {activeTab === 'coffre' && (
-        <div style={{ padding: 'var(--spacing-lg)', textAlign: 'center' }}>
-          <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>🔒</div>
-          <p style={{ color: 'var(--color-text-secondary)', fontFamily: 'var(--font-heading)', fontStyle: 'italic' }}>
-            Tes souvenirs les plus précieux<br />seront conservés ici en sécurité
-          </p>
-        </div>
-      )}
     </div>
   );
 }

@@ -102,54 +102,11 @@ export default function BarsScreen({ setScreen, setGameScreen, setSelectedSalon,
         onBack={() => setScreen('social')}
       />
 
-      {/* Bouton créer son salon (Premium) */}
       <div style={{
         padding: '0 var(--spacing-sm)',
         width: '100%',
         boxSizing: 'border-box'
       }}>
-        {currentUser?.isPremium && (
-          <div
-            style={{
-              background: 'linear-gradient(135deg, #FFD700, #FFA500)',
-              borderRadius: 'var(--border-radius-lg)',
-              padding: 'var(--spacing-lg)',
-              marginBottom: 'var(--spacing-lg)',
-              boxShadow: '0 4px 12px rgba(255, 215, 0, 0.4)',
-              border: '2px solid #FFD700',
-              cursor: 'pointer',
-              transition: 'transform 0.2s',
-              width: '100%',
-              boxSizing: 'border-box'
-            }}
-            onClick={() => alert('🎨 Interface de création de salon en développement !')}
-            onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.98)'}
-            onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-              <span style={{ fontSize: '2.5rem' }}>🎨</span>
-              <div style={{ flex: 1 }}>
-                <h3 style={{
-                  color: '#000',
-                  margin: '0 0 5px 0',
-                  fontSize: '1.3rem',
-                  fontWeight: '700'
-                }}>
-                  👑 Créer mon salon Premium
-                </h3>
-                <p style={{
-                  color: 'rgba(0,0,0,0.7)',
-                  margin: 0,
-                  fontSize: '0.9rem'
-                }}>
-                  Personnalisez votre espace avec nom, thème et couleurs
-                </p>
-              </div>
-              <span style={{ fontSize: '1.5rem', color: '#000' }}>→</span>
-            </div>
-          </div>
-        )}
-
         {salons.map((salon) => (
           <div
             key={salon.id}
