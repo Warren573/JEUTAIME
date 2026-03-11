@@ -1,0 +1,343 @@
+/* ═══════════════════════════════════════════════════════════════
+   SALON QUAD SCENE — CSS
+   Préfixe : sqp__  (SalonQuadParticipants)
+   Mobile-first, cohérent avec la palette JeuTaime
+═══════════════════════════════════════════════════════════════ */
+
+/* ── ROOT ── */
+.sqp {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: #f7f3ef;
+  color: #1a1a1a;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* ── HEADER ── */
+.sqp__header {
+  display: grid;
+  grid-template-columns: 40px 1fr 40px;
+  align-items: center;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, #1a7bbf, #0f5fa0);
+  color: white;
+  flex-shrink: 0;
+  padding-top: calc(12px + env(safe-area-inset-top));
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+}
+
+.sqp__back {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sqp__header-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  overflow: hidden;
+}
+
+.sqp__header-emoji {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.sqp__header-name {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sqp__header-spacer {
+  width: 36px;
+}
+
+/* ── BOARD ── */
+.sqp__board {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr auto;
+  gap: 8px 12px;
+  padding: 12px 14px 8px;
+}
+
+/* ── PARTICIPANT CARDS ── */
+.sqp__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.sqp__card--top-left    { grid-column: 1; grid-row: 1; align-self: start; justify-self: start; }
+.sqp__card--top-right   { grid-column: 2; grid-row: 1; align-self: start; justify-self: end;   }
+.sqp__card--bottom-left { grid-column: 1; grid-row: 3; align-self: end;   justify-self: start; }
+.sqp__card--bottom-right{ grid-column: 2; grid-row: 3; align-self: end;   justify-self: end;   }
+
+/* "Vous" : légère mise en avant */
+.sqp__card--me .sqp__name {
+  color: #C2185B;
+}
+.sqp__card--me .sqp__avatar {
+  border-color: #C2185B;
+}
+
+/* Nom */
+.sqp__name {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #333;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* Avatar — zone prévue pour remplacer l'emoji par <UserAvatar> */
+.sqp__avatar {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid rgba(0, 120, 190, 0.25);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+  /* Quand tu remplaceras l'emoji par <UserAvatar>, garde juste
+     position:relative + width/height + border-radius.         */
+}
+
+.sqp__avatar--online {
+  border-color: rgba(76, 175, 80, 0.5);
+}
+
+/* Point de présence */
+.sqp__online-dot {
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+  width: 10px;
+  height: 10px;
+  background: #4CAF50;
+  border-radius: 50%;
+  border: 2px solid #f7f3ef;
+}
+
+/* Offrandes actives */
+.sqp__offerings {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px;
+  min-height: 20px;
+}
+
+.sqp__offering-item {
+  font-size: 16px;
+  line-height: 1;
+  /* Plus tard : width:20px; height:20px; object-fit:contain pour images */
+}
+
+/* ── DISCUSSION ── */
+.sqp__discussion {
+  grid-column: 1 / span 2;
+  grid-row: 2;
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #eee;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.sqp__discussion-inner {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  scrollbar-width: none;
+}
+
+.sqp__discussion-inner::-webkit-scrollbar {
+  display: none;
+}
+
+/* Messages */
+.sqp__message {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.sqp__message-author {
+  font-weight: 700;
+  color: #C2185B;
+  flex-shrink: 0;
+}
+
+.sqp__message-author::after {
+  content: " :";
+}
+
+.sqp__message-text {
+  color: #333;
+  word-break: break-word;
+}
+
+/* ── ACTION BAR ── */
+.sqp__actionbar {
+  background: white;
+  border-top: 1px solid #eee;
+  padding: 10px 12px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  flex-shrink: 0;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Ligne input */
+.sqp__input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.sqp__input {
+  flex: 1;
+  height: 42px;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 21px;
+  padding: 0 16px;
+  font-size: 15px;
+  background: #f9f9f9;
+  color: #1a1a1a;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.sqp__input:focus {
+  border-color: #C2185B;
+  background: white;
+}
+
+.sqp__send-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #C2185B, #E91E63);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 3px 10px rgba(194, 24, 91, 0.3);
+}
+
+/* Ligne boutons */
+.sqp__btn-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.sqp__btn {
+  height: 42px;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+.sqp__btn:active {
+  transform: scale(0.97);
+  opacity: 0.85;
+}
+
+.sqp__btn--offrandes {
+  background: linear-gradient(135deg, #FF8F00, #FFA726);
+  color: white;
+  box-shadow: 0 3px 10px rgba(255, 143, 0, 0.3);
+}
+
+.sqp__btn--magie {
+  background: linear-gradient(135deg, #C2185B, #E91E63);
+  color: white;
+  box-shadow: 0 3px 10px rgba(194, 24, 91, 0.3);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 360px) {
+  .sqp__avatar {
+    width: 44px;
+    height: 44px;
+    font-size: 22px;
+  }
+
+  .sqp__name {
+    font-size: 0.72rem;
+  }
+
+  .sqp__offering-item {
+    font-size: 14px;
+  }
+
+  .sqp__message {
+    font-size: 0.8rem;
+  }
+}
+
+@media (min-width: 480px) {
+  .sqp__avatar {
+    width: 60px;
+    height: 60px;
+    font-size: 30px;
+  }
+
+  .sqp__board {
+    padding: 16px 20px 10px;
+    gap: 10px 16px;
+  }
+}
