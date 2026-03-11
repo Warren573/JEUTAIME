@@ -48,11 +48,10 @@ const MOCK_MESSAGES = [
 // ─── OFFERINGS GRID ───────────────────────────────────────────────────────────
 
 function OfferingsGrid({ items = [] }) {
-  const visibleItems = items.slice(0, 6);
   return (
     <div className="offerings-grid">
-      {visibleItems.map((item, index) => (
-        <div key={index} className="offering-cell">
+      {items.slice(0, 6).map((item, i) => (
+        <div key={i} className="offering-cell">
           <span className="offering-emoji">{item}</span>
         </div>
       ))}
@@ -64,7 +63,7 @@ function OfferingsGrid({ items = [] }) {
 
 function AvatarBadge({ avatar, isSelf = false }) {
   return (
-    <div className={`avatar-badge ${isSelf ? "self" : ""}`}>
+    <div className={`avatar-badge${isSelf ? " self" : ""}`}>
       <div className="avatar-circle">{avatar}</div>
       <span className="online-dot" />
     </div>
@@ -72,15 +71,18 @@ function AvatarBadge({ avatar, isSelf = false }) {
 }
 
 // ─── PLAYER SLOT ──────────────────────────────────────────────────────────────
+// isRight=true  → [offrandes | avatar]  (Emma, Vous)
+// isRight=false → [avatar | offrandes]  (Sophie, Alex)
 
-function PlayerSlot({ name, avatar, offerings, offerSide = "right", isSelf = false, position }) {
+function PlayerSlot({ participant, isMe }) {
+  const isRight = participant.position.includes("right");
   return (
-    <div className={`player-slot ${position}`}>
-      <div className="player-name">{name}</div>
-      <div className={`player-row ${offerSide === "left" ? "offers-left" : "offers-right"}`}>
-        {offerSide === "left" && <OfferingsGrid items={offerings} />}
-        <AvatarBadge avatar={avatar} isSelf={isSelf} />
-        {offerSide === "right" && <OfferingsGrid items={offerings} />}
+    <div className={`player-slot player-slot--${isRight ? "right" : "left"}${isMe ? " is-me" : ""}`}>
+      <div className="player-name">{participant.name}</div>
+      <div className="player-row">
+        {isRight && <OfferingsGrid items={participant.offerings} />}
+        <AvatarBadge avatar={participant.avatar} isSelf={isMe} />
+        {!isRight && <OfferingsGrid items={participant.offerings} />}
       </div>
     </div>
   );
@@ -96,7 +98,7 @@ function Discussion({ messages }) {
   }, [messages]);
 
   return (
-    <div className="chat-area">
+    <div className="chat-band">
       <div className="chat-messages">
         {messages.map((msg) => (
           <div key={msg.id} className="chat-message">
@@ -134,12 +136,7 @@ function ActionBar({ onSend, onOffrandes, onMagie, onFocus, onBlur, isFocused })
           onFocus={onFocus}
           onBlur={onBlur}
         />
-        <button
-          className="sqp__send-btn"
-          type="button"
-          onClick={handleSend}
-          aria-label="Envoyer"
-        >
+        <button className="sqp__send-btn" type="button" onClick={handleSend} aria-label="Envoyer">
           ➤
         </button>
       </div>
@@ -188,21 +185,49 @@ export default function SalonQuadScene({
 
   return (
     <div className={`sqp${focused ? " sqp--typing" : ""}`}>
-      <header className="sqp__header" style={salon?.gradient ? { background: salon.gradient } : undefined}>
+
+      {/* ── HEADER ── */}
+      <header
+        className="sqp__header"
+        style={salon?.gradient ? { background: salon.gradient } : undefined}
+      >
         <button className="sqp__back" type="button" onClick={onBack}>←</button>
-        <div className="sqp__header-title">
-          {salonEmoji} {salonName}
-        </div>
+        <div className="sqp__header-title">{salonEmoji} {salonName}</div>
       </header>
 
-      <main className="sqp__board">
-        {tl && <PlayerSlot position="top-left"     name={tl.name} avatar={tl.avatar} offerings={tl.offerings} offerSide="right" isSelf={isMe(tl)} />}
-        {tr && <PlayerSlot position="top-right"    name={tr.name} avatar={tr.avatar} offerings={tr.offerings} offerSide="left"  isSelf={isMe(tr)} />}
-        <Discussion messages={messages} />
-        {bl && <PlayerSlot position="bottom-left"  name={bl.name} avatar={bl.avatar} offerings={bl.offerings} offerSide="right" isSelf={isMe(bl)} />}
-        {br && <PlayerSlot position="bottom-right" name={br.name} avatar={br.avatar} offerings={br.offerings} offerSide="left"  isSelf={isMe(br)} />}
-      </main>
+      {/*
+        ── LAYOUT PRINCIPAL : 3 lignes horizontales ──
 
+        ligne 1 → players-top  : Sophie (gauche) | spacer | Emma (droite)
+        ligne 2 → chat-band    : discussion sur toute la largeur
+        ligne 3 → players-bottom : Alex (gauche) | spacer | Vous (droite)
+
+        Offrandes :
+          joueurs gauche (Sophie, Alex) → [avatar | offrandes →]
+          joueurs droite (Emma, Vous)   → [← offrandes | avatar]
+      */}
+      <div className="salon-layout">
+
+        {/* LIGNE 1 — joueurs du haut */}
+        <div className="players-top">
+          {tl && <PlayerSlot participant={tl} isMe={isMe(tl)} />}
+          <div /> {/* spacer */}
+          {tr && <PlayerSlot participant={tr} isMe={isMe(tr)} />}
+        </div>
+
+        {/* LIGNE 2 — discussion horizontale */}
+        <Discussion messages={messages} />
+
+        {/* LIGNE 3 — joueurs du bas */}
+        <div className="players-bottom">
+          {bl && <PlayerSlot participant={bl} isMe={isMe(bl)} />}
+          <div /> {/* spacer */}
+          {br && <PlayerSlot participant={br} isMe={isMe(br)} />}
+        </div>
+
+      </div>
+
+      {/* ── ACTION BAR ── */}
       <ActionBar
         onSend={handleSend}
         onOffrandes={onOffrandes}
