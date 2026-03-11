@@ -70,89 +70,79 @@
   width: 36px;
 }
 
-/* ── BOARD (flex column) ──
-   3 zones : rangée-haut | discussion | rangée-bas
-   Les rangées participants se replient quand le clavier est ouvert.
+/* ── BOARD ──
+   5 colonnes × 2 lignes :
+
+   col1 : avatar gauche  (auto)
+   col2 : offrandes gauche (auto) — pointent vers la discussion
+   col3 : discussion       (1fr)
+   col4 : offrandes droite (auto) — pointent vers la discussion
+   col5 : avatar droite  (auto)
+
+   ligne 1 : Sophie (col1) + Sophie offrandes (col2) + Discussion (col3) + Emma offrandes (col4) + Emma (col5)
+   ligne 2 : Alex   (col1) + Alex offrandes   (col2) + Discussion (col3) + Vous offrandes  (col4) + Vous (col5)
 */
 .sqp__board {
   flex: 1;
   min-height: 0;
-  display: flex;
-  flex-direction: column;
-  padding: 8px 8px 6px;
+  display: grid;
+  grid-template-columns: auto auto 1fr auto auto;
+  grid-template-rows: 1fr 1fr;
+  gap: 6px 4px;
+  padding: 8px 6px 6px;
 }
 
-/* ── RANGÉES PARTICIPANTS ── */
-.sqp__board-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  flex-shrink: 0;
-  overflow: hidden;
-  max-height: 100px;
-  opacity: 1;
-}
-
-.sqp__board-top {
-  margin-bottom: 6px;
-  transition: max-height 0.3s ease, opacity 0.25s ease, margin-bottom 0.3s ease;
-}
-
-.sqp__board-bottom {
-  margin-top: 6px;
-  transition: max-height 0.3s ease, opacity 0.25s ease, margin-top 0.3s ease;
-}
-
-/* Effacement des rangées participant quand le clavier est ouvert */
-.sqp--typing .sqp__board-top {
-  max-height: 0;
-  opacity: 0;
-  margin-bottom: 0;
-}
-
-.sqp--typing .sqp__board-bottom {
-  max-height: 0;
-  opacity: 0;
-  margin-top: 0;
-}
-
-/* ── PARTICIPANT CARDS ──
-   Chaque card est un flex-row : [avatar-block | offrandes →] pour la gauche,
-   [← offrandes | avatar-block] pour la droite (row-reverse).
-*/
-.sqp__card {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 4px;
-  min-width: 0;
-}
-
-/* Joueurs droite : flip pour pointer les offrandes vers le centre */
-.sqp__card--top-right,
-.sqp__card--bottom-right {
-  flex-direction: row-reverse;
-}
-
-/* "Vous" : légère mise en avant */
-.sqp__card--me .sqp__name {
-  color: #C2185B;
-}
-.sqp__card--me .sqp__avatar {
-  border-color: #C2185B;
-}
-
-/* ── AVATAR BLOCK (nom + avatar empilés) ── */
-.sqp__avatar-block {
+/* ── AVATAR CARDS (coins) ── */
+.sqp__avatar-card {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 3px;
-  flex-shrink: 0;
+  overflow: hidden;
+  transition: max-width 0.3s ease, opacity 0.25s ease;
+  max-width: 80px;
+  opacity: 1;
 }
 
-/* Nom */
+.sqp__avatar-card--top-left    { grid-column: 1; grid-row: 1; align-self: start; justify-self: start; }
+.sqp__avatar-card--top-right   { grid-column: 5; grid-row: 1; align-self: start; justify-self: end;   }
+.sqp__avatar-card--bottom-left { grid-column: 1; grid-row: 2; align-self: end;   justify-self: start; }
+.sqp__avatar-card--bottom-right{ grid-column: 5; grid-row: 2; align-self: end;   justify-self: end;   }
+
+/* "Vous" */
+.sqp__avatar-card--me .sqp__name  { color: #C2185B; }
+.sqp__avatar-card--me .sqp__avatar { border-color: #C2185B; }
+
+/* ── COLONNES OFFRANDES (zones latérales entre avatars et discussion) ── */
+.sqp__offrandes-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  transition: max-width 0.3s ease, opacity 0.25s ease;
+  max-width: 80px;
+  opacity: 1;
+}
+
+.sqp__offrandes-col--left  { grid-column: 2; grid-row: 1 / 3; }
+.sqp__offrandes-col--right { grid-column: 4; grid-row: 1 / 3; }
+
+/* Zones haut et bas dans la colonne d'offrandes */
+.sqp__offrandes-zone {
+  display: flex;
+}
+
+.sqp__offrandes-zone--top    { align-self: start; }
+.sqp__offrandes-zone--bottom { align-self: end;   }
+
+/* ── MODE CLAVIER : masquer les colonnes latérales ── */
+.sqp--typing .sqp__avatar-card,
+.sqp--typing .sqp__offrandes-col {
+  max-width: 0;
+  opacity: 0;
+}
+
+/* ── NOM ── */
 .sqp__name {
   font-size: 0.72rem;
   font-weight: 700;
@@ -164,7 +154,7 @@
   text-align: center;
 }
 
-/* Avatar — zone prévue pour remplacer l'emoji par <UserAvatar> */
+/* ── AVATAR — zone prévue pour remplacer l'emoji par <UserAvatar> ── */
 .sqp__avatar {
   position: relative;
   width: 44px;
@@ -198,15 +188,12 @@
 
 /* ── GRILLE D'OFFRANDES — 2 lignes × 3 colonnes ──
    Chaque slot est réutilisable : prêt pour PNG / icônes / animations.
-   Les grilles gauches pointent vers la droite (centre).
-   Les grilles droites pointent vers la gauche grâce à row-reverse sur la card.
 */
 .sqp__offerings-grid {
   display: grid;
   grid-template-columns: repeat(3, 20px);
   grid-template-rows: repeat(2, 20px);
   gap: 2px;
-  flex-shrink: 0;
 }
 
 /* Slot individuel — swap pour <img> ou composant animé quand prêt */
@@ -231,8 +218,8 @@
 
 /* ── DISCUSSION ── */
 .sqp__discussion {
-  flex: 1;
-  min-height: 0;
+  grid-column: 3;
+  grid-row: 1 / 3;
   background: white;
   border-radius: 16px;
   border: 1px solid #eee;
@@ -240,6 +227,8 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  min-height: 0;
+  min-width: 0;
 }
 
 .sqp__discussion-inner {
@@ -393,7 +382,7 @@
 
   .sqp__name {
     font-size: 0.66rem;
-    max-width: 44px;
+    max-width: 40px;
   }
 
   .sqp__offerings-grid {
@@ -409,6 +398,11 @@
 
   .sqp__message {
     font-size: 0.8rem;
+  }
+
+  .sqp__board {
+    gap: 4px 2px;
+    padding: 6px 4px 4px;
   }
 }
 
@@ -431,6 +425,7 @@
   }
 
   .sqp__board {
-    padding: 12px 14px 8px;
+    padding: 12px 10px 8px;
+    gap: 8px 6px;
   }
 }
