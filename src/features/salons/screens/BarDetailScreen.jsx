@@ -535,7 +535,7 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
                 border: member.isPatron ? '2px solid #FFD700' : '2px solid transparent'
               }}>
                 <div style={{ position: 'relative', flexShrink: 0 }}>
-                  <UserAvatar user={member} size={52} style={{ border: '2px solid #eee', borderRadius: '50%' }} />
+                  <UserAvatar user={member} size={72} style={{ border: '2px solid #eee', borderRadius: '50%' }} />
                   {member.online !== false && (
                     <div style={{
                       position: 'absolute', bottom: '1px', right: '1px',

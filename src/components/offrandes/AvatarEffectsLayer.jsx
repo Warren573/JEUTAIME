@@ -106,17 +106,19 @@ function AvatarTransform({ asset }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'rgba(255,255,255,0.85)',
+        background: '#FFF8F0',
         borderRadius: '50%',
-        fontSize: '1.8rem',
-        animation: 'transformPop 0.3s ease-out',
+        fontSize: '2.2rem',
+        zIndex: 20,
+        animation: 'transformPop 0.4s cubic-bezier(0.34,1.56,0.64,1)',
+        boxShadow: '0 0 0 3px rgba(194,24,91,0.35)',
       }}
     >
       {asset}
       <style>{`
         @keyframes transformPop {
-          0%   { transform: scale(0.5); opacity: 0; }
-          70%  { transform: scale(1.1); }
+          0%   { transform: scale(0.3); opacity: 0; }
+          60%  { transform: scale(1.15); }
           100% { transform: scale(1);   opacity: 1; }
         }
       `}</style>
