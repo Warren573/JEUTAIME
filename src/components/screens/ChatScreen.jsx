@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { awardPoints } from '../../utils/pointsSystem';
 import { updateUserStats, addPointsToUser, triggerBotAutoReply, getUserById } from '../../utils/demoUsers';
-import GiftSelector from '../gifts/GiftSelector';
+import OffrandesPanel from '../../components/offrandes/OffrandesPanel';
 import UserAvatar from '../../avatar/UserAvatar';
 
 export default function ChatScreen({ currentUser, matchedUser, onBack }) {
@@ -470,26 +470,26 @@ export default function ChatScreen({ currentUser, matchedUser, onBack }) {
         </div>
       </div>
 
-      {/* Gift Selector Modal */}
       {showGiftSelector && (
-        <GiftSelector
+        <OffrandesPanel
           currentUser={{ ...currentUser, coins: userCoins }}
-          receiverId={matchedUser.id}
+          salonMembers={[matchedUser]}
+          initialTab="offrandes"
           onClose={() => setShowGiftSelector(false)}
-          onGiftSent={(gift, coinsRemaining) => {
-            setUserCoins(coinsRemaining);
-            // Optionally add a system message in the chat
+          onSendOffering={(offering) => {
             const giftMessage = {
               id: Date.now(),
               sender: 'system',
-              text: `🎁 Tu as envoyé ${gift.giftEmoji} ${gift.giftName} !`,
+              text: `🎁 Tu as envoyé ${offering.icon} ${offering.name} !`,
               timestamp: new Date().toISOString(),
               type: 'gift'
             };
             const updatedMessages = [...messages, giftMessage];
             setMessages(updatedMessages);
             saveConversation(updatedMessages, letterCount);
+            setShowGiftSelector(false);
           }}
+          onUsePower={() => setShowGiftSelector(false)}
         />
       )}
     </div>

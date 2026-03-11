@@ -4,8 +4,7 @@ import { getAllUsers } from '../../utils/demoUsers';
 import QuestionGame from '../matching/QuestionGame';
 import { awardPoints, checkAndAwardBadge } from '../../utils/pointsSystem';
 import UserAvatar from '../../avatar/UserAvatar';
-import GiftSelector from '../gifts/GiftSelector';
-import MagicEffect from '../effects/MagicEffect';
+import OffrandesPanel from '../offrandes/OffrandesPanel';
 import { getReceivedGifts } from '../../utils/giftsSystem';
 import ScreenHeader from '../common/ScreenHeader';
 import ProfileViewTabs from '../matching/ProfileViewTabs';
@@ -17,7 +16,6 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
   const [showQuestionGame, setShowQuestionGame] = useState(false);
   const [mutualSmileUser, setMutualSmileUser] = useState(null);
   const [showGiftSelector, setShowGiftSelector] = useState(false);
-  const [magicEffect, setMagicEffect] = useState(null);
 
   // Récupérer tous les utilisateurs sauf le currentUser
   const allProfiles = getAllUsers().filter(u => u.email !== currentUser?.email);
@@ -192,9 +190,7 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
     setShowGiftSelector(true);
   };
 
-  const handleGiftSent = (gift, coinsRemaining) => {
-    // Afficher l'effet magique
-    setMagicEffect(gift);
+  const handleOffrande = () => {
     setShowGiftSelector(false);
   };
 
@@ -877,23 +873,17 @@ export default function ProfilesScreen({ currentProfile, setCurrentProfile, admi
         />
       )}
 
-      {/* Gift Selector Modal */}
       {showGiftSelector && (
-        <GiftSelector
+        <OffrandesPanel
           currentUser={currentUser}
-          receiverId={currentProfileData.id}
+          salonMembers={[currentProfileData]}
+          initialTab="offrandes"
           onClose={() => setShowGiftSelector(false)}
-          onGiftSent={handleGiftSent}
+          onSendOffering={handleOffrande}
+          onUsePower={handleOffrande}
         />
       )}
 
-      {/* Magic Effect Animation */}
-      {magicEffect && (
-        <MagicEffect
-          gift={magicEffect}
-          onComplete={() => setMagicEffect(null)}
-        />
-      )}
     </div>
   );
 }

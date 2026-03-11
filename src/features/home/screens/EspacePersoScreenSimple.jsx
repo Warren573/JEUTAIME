@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import UserAvatar from '../../avatar/UserAvatar';
-import { allMagic, allGifts } from '../../data/magicGifts';
+import { getPowers, getOfferings } from '../../../engine/ContentRegistry';
 
 export default function EspacePersoScreenSimple({
   currentUser,
@@ -483,8 +483,8 @@ function InventaireMagiqueSection({ currentUser }) {
           alignItems: 'center',
           border: '2px solid var(--color-brown-light)'
         }}>
-          <span style={{ color: 'var(--color-text-primary)' }}>✨ Magies disponibles</span>
-          <span style={{ color: 'var(--color-romantic)', fontWeight: '700' }}>{allMagic.length}</span>
+          <span style={{ color: 'var(--color-text-primary)' }}>✨ Pouvoirs disponibles</span>
+          <span style={{ color: 'var(--color-romantic)', fontWeight: '700' }}>{getPowers().length}</span>
         </div>
         <div style={{
           background: 'var(--color-beige-light)',
@@ -495,8 +495,8 @@ function InventaireMagiqueSection({ currentUser }) {
           alignItems: 'center',
           border: '2px solid var(--color-brown-light)'
         }}>
-          <span style={{ color: 'var(--color-text-primary)' }}>🎁 Cadeaux à offrir</span>
-          <span style={{ color: 'var(--color-romantic)', fontWeight: '700' }}>{allGifts.length}</span>
+          <span style={{ color: 'var(--color-text-primary)' }}>🎁 Offrandes disponibles</span>
+          <span style={{ color: 'var(--color-romantic)', fontWeight: '700' }}>{getOfferings().length}</span>
         </div>
       </div>
 

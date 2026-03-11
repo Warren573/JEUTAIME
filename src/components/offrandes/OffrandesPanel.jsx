@@ -17,11 +17,14 @@ export default function OffrandesPanel({
   onClose,
   currentUser,
   salonMembers = [],
+  initialTab = 'offrandes',
   onUsePower,
   onSendOffering
 }) {
-  const [activeTab, setActiveTab] = useState('offrandes');
-  const [selectedRecipient, setSelectedRecipient] = useState(null);
+  const [activeTab, setActiveTab] = useState(initialTab);
+  const [selectedRecipient, setSelectedRecipient] = useState(
+    salonMembers.length === 1 ? salonMembers[0] : null
+  );
   const [feedback, setFeedback] = useState(null);
 
   const offerings = getOfferings();

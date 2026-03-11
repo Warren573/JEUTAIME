@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import GiftSelector from '../gifts/GiftSelector';
-import MagicEffect from '../effects/MagicEffect';
 import OffrandesPanel from '../offrandes/OffrandesPanel';
 import UserAvatar from '../../avatar/UserAvatar';
 import {
@@ -12,7 +10,6 @@ import {
   updateBarTurn,
   completeStory
 } from '../../utils/barsSystem';
-import { sendMagicToSalon, sendGiftToUser, canAfford, deductCoins } from '../../utils/magic';
 import { applyTheme } from '../../engine/ThemeEngine';
 import { getSalonBackground, getBackgroundStyle } from '../../data/salonBackgrounds';
 import SalonBackgroundPicker from '../salon/SalonBackgroundPicker';
@@ -23,11 +20,10 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
   const containerRef = useRef(null);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
 
-  const [showGiftSelector, setShowGiftSelector] = useState(false);
   const [selectedMember, setSelectedMember] = useState(null);
-  const [magicEffect, setMagicEffect] = useState(null);
   const [giftReceiverEffect, setGiftReceiverEffect] = useState(null);
-  const [showMagicGiftsPanel, setShowMagicGiftsPanel] = useState(false);
+  const [showOffrandesPanel, setShowOffrandesPanel] = useState(false);
+  const [offrandesPanelTab, setOffrandesPanelTab] = useState('offrandes');
   const [showBgPicker, setShowBgPicker] = useState(false);
   const [currentBgId, setCurrentBgId] = useState(null);
 
@@ -189,43 +185,30 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
     }
   };
 
-  const handleSendGiftToMember = (member) => { setSelectedMember(member); setShowGiftSelector(true); };
-
-  const handleGiftSent = (gift) => {
-    setMagicEffect(gift);
-    setGiftReceiverEffect(selectedMember?.id);
-    setTimeout(() => setGiftReceiverEffect(null), 3000);
-    const sid = salon?.type || salon?.id || 'unknown';
-    const giftMessage = saveBarMessage(sid, 'system', 'Système',
-      `${currentUser?.name || 'Quelqu\'un'} a envoyé ${gift.giftEmoji} ${gift.giftName} à ${selectedMember?.name} !`,
-      true, gift);
-    setMessages([...messages, giftMessage]);
-    setShowGiftSelector(false);
-    setSelectedMember(null);
+  const handleSendGiftToMember = (member) => {
+    setSelectedMember(member);
+    setOffrandesPanelTab('offrandes');
+    setShowOffrandesPanel(true);
   };
 
-  const handleUseMagic = (magic) => {
+  const handleUsePower = (power) => {
     const sid = salon?.type || salon?.id || 'unknown';
-    const userId = currentUser?.id || currentUser?.email || 'user';
-    if (magic.type === 'salon') sendMagicToSalon(magic.id, userId, sid);
     const magicMessage = saveBarMessage(sid, 'system', 'Système',
-      `✨ ${currentUser?.name || 'Quelqu\'un'} a utilisé ${magic.icon} ${magic.name} !`,
-      true, { type: 'magic', magicData: magic });
+      `✨ ${currentUser?.name || 'Quelqu\'un'} a utilisé ${power.icon} ${power.name} !`,
+      true, { type: 'magic', magicData: power });
     setMessages([...messages, magicMessage]);
-    alert(`✨ ${magic.name} activé ! (-${magic.cost} pièces)`);
   };
 
-  const handleSendGift = (gift, recipient) => {
+  const handleSendOffering = (offering, recipient) => {
     const sid = salon?.type || salon?.id || 'unknown';
-    const userId = currentUser?.id || currentUser?.email || 'user';
-    sendGiftToUser(gift.id, userId, recipient.id, sid);
     setGiftReceiverEffect(recipient?.id);
     setTimeout(() => setGiftReceiverEffect(null), 3000);
     const giftMessage = saveBarMessage(sid, 'system', 'Système',
-      `🎁 ${currentUser?.name || 'Quelqu\'un'} a envoyé ${gift.icon} ${gift.name} à ${recipient?.name} !`,
-      true, { type: 'gift', giftData: gift });
+      `🎁 ${currentUser?.name || 'Quelqu\'un'} a envoyé ${offering.icon} ${offering.name} à ${recipient?.name} !`,
+      true, { type: 'gift', giftData: offering });
     setMessages([...messages, giftMessage]);
-    alert(`🎁 ${gift.name} envoyé à ${recipient.name} ! (-${gift.cost} pièces)`);
+    setShowOffrandesPanel(false);
+    setSelectedMember(null);
   };
 
   const formatTime = (seconds) => {
@@ -617,7 +600,9 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
               key={tab.id}
               onClick={() => {
                 if (tab.id === 'magic') {
-                  setShowMagicGiftsPanel(true);
+                  setOffrandesPanelTab('pouvoirs');
+                  setSelectedMember(null);
+                  setShowOffrandesPanel(true);
                 } else {
                   setBarTab(tab.id);
                 }
@@ -649,22 +634,14 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
       </div>}
 
       {/* ── MODALES ── */}
-      {showGiftSelector && selectedMember && (
-        <GiftSelector
-          currentUser={currentUser}
-          receiverId={selectedMember.name}
-          onClose={() => { setShowGiftSelector(false); setSelectedMember(null); }}
-          onGiftSent={handleGiftSent}
-        />
-      )}
-      {magicEffect && <MagicEffect gift={magicEffect} onComplete={() => setMagicEffect(null)} />}
-      {showMagicGiftsPanel && (
+      {showOffrandesPanel && (
         <OffrandesPanel
-          onClose={() => setShowMagicGiftsPanel(false)}
+          onClose={() => { setShowOffrandesPanel(false); setSelectedMember(null); }}
           currentUser={currentUser}
-          salonMembers={members.filter(m => !m.isPatron)}
-          onUsePower={handleUseMagic}
-          onSendOffering={handleSendGift}
+          salonMembers={selectedMember ? [selectedMember] : members.filter(m => !m.isPatron)}
+          initialTab={offrandesPanelTab}
+          onUsePower={handleUsePower}
+          onSendOffering={handleSendOffering}
         />
       )}
 
