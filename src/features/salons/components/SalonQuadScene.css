@@ -70,25 +70,56 @@
   width: 36px;
 }
 
-/* ── BOARD ──
-   3 colonnes : zone-gauche | discussion | zone-droite
-   2 lignes   : haut | bas
-   Les joueurs gauches poussent leurs offrandes vers le centre (droite).
-   Les joueurs droits les poussent vers le centre (gauche).
+/* ── BOARD (flex column) ──
+   3 zones : rangée-haut | discussion | rangée-bas
+   Les rangées participants se replient quand le clavier est ouvert.
 */
 .sqp__board {
   flex: 1;
   min-height: 0;
-  display: grid;
-  grid-template-columns: auto minmax(60px, 1fr) auto;
-  grid-template-rows: 1fr 1fr;
-  gap: 6px 6px;
-  padding: 10px 8px 6px;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 8px 6px;
+}
+
+/* ── RANGÉES PARTICIPANTS ── */
+.sqp__board-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  max-height: 100px;
+  opacity: 1;
+}
+
+.sqp__board-top {
+  margin-bottom: 6px;
+  transition: max-height 0.3s ease, opacity 0.25s ease, margin-bottom 0.3s ease;
+}
+
+.sqp__board-bottom {
+  margin-top: 6px;
+  transition: max-height 0.3s ease, opacity 0.25s ease, margin-top 0.3s ease;
+}
+
+/* Effacement des rangées participant quand le clavier est ouvert */
+.sqp--typing .sqp__board-top {
+  max-height: 0;
+  opacity: 0;
+  margin-bottom: 0;
+}
+
+.sqp--typing .sqp__board-bottom {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
 }
 
 /* ── PARTICIPANT CARDS ──
-   Chaque card est un flex-row : [avatar-block][offrandes] pour la gauche,
-   [offrandes][avatar-block] pour la droite (row-reverse).
+   Chaque card est un flex-row : [avatar-block | offrandes →] pour la gauche,
+   [← offrandes | avatar-block] pour la droite (row-reverse).
 */
 .sqp__card {
   display: flex;
@@ -98,11 +129,11 @@
   min-width: 0;
 }
 
-/* Positions dans le grid */
-.sqp__card--top-left    { grid-column: 1; grid-row: 1; align-self: start; }
-.sqp__card--bottom-left { grid-column: 1; grid-row: 2; align-self: end;   }
-.sqp__card--top-right   { grid-column: 3; grid-row: 1; align-self: start; flex-direction: row-reverse; }
-.sqp__card--bottom-right{ grid-column: 3; grid-row: 2; align-self: end;   flex-direction: row-reverse; }
+/* Joueurs droite : flip pour pointer les offrandes vers le centre */
+.sqp__card--top-right,
+.sqp__card--bottom-right {
+  flex-direction: row-reverse;
+}
 
 /* "Vous" : légère mise en avant */
 .sqp__card--me .sqp__name {
@@ -168,7 +199,7 @@
 /* ── GRILLE D'OFFRANDES — 2 lignes × 3 colonnes ──
    Chaque slot est réutilisable : prêt pour PNG / icônes / animations.
    Les grilles gauches pointent vers la droite (centre).
-   Les grilles droites pointent vers la gauche (centre) grâce à row-reverse sur la card.
+   Les grilles droites pointent vers la gauche grâce à row-reverse sur la card.
 */
 .sqp__offerings-grid {
   display: grid;
@@ -200,8 +231,8 @@
 
 /* ── DISCUSSION ── */
 .sqp__discussion {
-  grid-column: 2;
-  grid-row: 1 / 3;
+  flex: 1;
+  min-height: 0;
   background: white;
   border-radius: 16px;
   border: 1px solid #eee;
@@ -209,8 +240,6 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  min-height: 0;
-  min-width: 0;
 }
 
 .sqp__discussion-inner {
@@ -402,7 +431,6 @@
   }
 
   .sqp__board {
-    padding: 14px 14px 8px;
-    gap: 8px 8px;
+    padding: 12px 14px 8px;
   }
 }

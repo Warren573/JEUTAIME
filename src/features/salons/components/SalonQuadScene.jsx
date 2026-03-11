@@ -2,14 +2,13 @@ import { useState, useRef, useEffect } from "react";
 import "./SalonQuadScene.css";
 
 // ─── DONNÉES MOCK ─────────────────────────────────────────────────────────────
-// Remplacer plus tard par les vrais participants du salon
 
 const MOCK_PARTICIPANTS = [
   {
     id: "sophie",
     name: "Sophie",
-    avatar: "🙂",           // remplacer par <UserAvatar user={...} size={44} />
-    offerings: ["🍔", "🍟", "🌹"], // remplacer par les effectDef actifs de l'effectEngine
+    avatar: "🙂",
+    offerings: ["🍔", "🍟", "🌹"],
     position: "top-left",
     online: true,
   },
@@ -124,9 +123,8 @@ function Discussion({ messages }) {
 
 // ─── ACTION BAR ───────────────────────────────────────────────────────────────
 
-function ActionBar({ onSend, onOffrandes, onMagie }) {
+function ActionBar({ onSend, onOffrandes, onMagie, onFocus, onBlur, isFocused }) {
   const [input, setInput] = useState("");
-  const [focused, setFocused] = useState(false);
 
   const handleSend = () => {
     if (!input.trim()) return;
@@ -135,7 +133,7 @@ function ActionBar({ onSend, onOffrandes, onMagie }) {
   };
 
   return (
-    <div className={`sqp__actionbar${focused ? " sqp__actionbar--focused" : ""}`}>
+    <div className={`sqp__actionbar${isFocused ? " sqp__actionbar--focused" : ""}`}>
       <div className="sqp__input-row">
         <input
           className="sqp__input"
@@ -144,8 +142,8 @@ function ActionBar({ onSend, onOffrandes, onMagie }) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
+          onFocus={onFocus}
+          onBlur={onBlur}
         />
         <button
           className="sqp__send-btn"
@@ -187,6 +185,7 @@ export default function SalonQuadScene({
 }) {
   const participants = externalParticipants ?? MOCK_PARTICIPANTS;
   const [messages, setMessages] = useState(MOCK_MESSAGES);
+  const [focused, setFocused] = useState(false);
 
   const handleSend = (text) => {
     setMessages((prev) => [
@@ -200,11 +199,18 @@ export default function SalonQuadScene({
     ]);
   };
 
+  const isMe = (p) => p.isMe || p.id === (currentUser?.id ?? "you");
+
+  const topLeft     = participants.find(p => p.position === "top-left");
+  const topRight    = participants.find(p => p.position === "top-right");
+  const bottomLeft  = participants.find(p => p.position === "bottom-left");
+  const bottomRight = participants.find(p => p.position === "bottom-right");
+
   const salonName  = salon?.name  ?? "Café de Paris 2.0";
   const salonEmoji = salon?.emoji ?? "☕";
 
   return (
-    <section className="sqp">
+    <section className={`sqp${focused ? " sqp--typing" : ""}`}>
       {/* ── HEADER ── */}
       <header className="sqp__header" style={salon?.gradient ? { background: salon.gradient } : undefined}>
         <button className="sqp__back" type="button" onClick={onBack}>←</button>
@@ -215,18 +221,24 @@ export default function SalonQuadScene({
         <div className="sqp__header-spacer" />
       </header>
 
-      {/* ── BOARD : gauche | discussion | droite × 2 lignes ── */}
+      {/* ── BOARD : haut | discussion | bas ── */}
       <div className="sqp__board">
-        {participants.map((p) => (
-          <ParticipantCard
-            key={p.id}
-            participant={p}
-            isMe={p.isMe || p.id === (currentUser?.id ?? "you")}
-          />
-        ))}
 
-        {/* Zone centrale */}
+        {/* Rangée haute — Sophie (gauche) + Emma (droite) */}
+        <div className="sqp__board-row sqp__board-top">
+          {topLeft  && <ParticipantCard participant={topLeft}  isMe={isMe(topLeft)}  />}
+          {topRight && <ParticipantCard participant={topRight} isMe={isMe(topRight)} />}
+        </div>
+
+        {/* Zone de discussion centrale */}
         <Discussion messages={messages} />
+
+        {/* Rangée basse — Alex (gauche) + Vous (droite) */}
+        <div className="sqp__board-row sqp__board-bottom">
+          {bottomLeft  && <ParticipantCard participant={bottomLeft}  isMe={isMe(bottomLeft)}  />}
+          {bottomRight && <ParticipantCard participant={bottomRight} isMe={isMe(bottomRight)} />}
+        </div>
+
       </div>
 
       {/* ── ACTION BAR ── */}
@@ -234,6 +246,9 @@ export default function SalonQuadScene({
         onSend={handleSend}
         onOffrandes={onOffrandes}
         onMagie={onMagie}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        isFocused={focused}
       />
     </section>
   );
