@@ -74,26 +74,46 @@ function EffectRenderer({ effect }) {
 
 function EmojiAboveAvatar({ asset }) {
   return (
-    <div
-      style={{
-        position: 'absolute',
-        top: '-22px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        fontSize: '1.3rem',
-        animation: 'floatUpDown 1.5s ease-in-out infinite',
-        filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))',
-        lineHeight: 1,
-      }}
-    >
-      {asset}
+    <>
+      {/* Version visible quand l'avatar est dans un container overflow:visible */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '-20px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          fontSize: '1.2rem',
+          animation: 'floatUpDown 1.5s ease-in-out infinite',
+          filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))',
+          lineHeight: 1,
+          zIndex: 30,
+        }}
+      >
+        {asset}
+      </div>
+      {/* Mini-badge en bas-droite visible même avec overflow:hidden */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '2px', right: '2px',
+          fontSize: '0.7rem', lineHeight: 1,
+          background: 'rgba(255,255,255,0.9)',
+          borderRadius: '50%',
+          width: 16, height: 16,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: '0 1px 4px rgba(0,0,0,0.25)',
+          zIndex: 30,
+        }}
+      >
+        {asset}
+      </div>
       <style>{`
         @keyframes floatUpDown {
           0%, 100% { transform: translateX(-50%) translateY(0); }
           50%       { transform: translateX(-50%) translateY(-5px); }
         }
       `}</style>
-    </div>
+    </>
   );
 }
 
