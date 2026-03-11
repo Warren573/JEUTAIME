@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import GiftSelector from '../gifts/GiftSelector';
 import MagicEffect from '../effects/MagicEffect';
-import MagicGiftsPanel from '../MagicGiftsPanel';
+import OffrandesPanel from '../offrandes/OffrandesPanel';
 import UserAvatar from '../../avatar/UserAvatar';
 import {
   loadBarState,
@@ -659,12 +659,12 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
       )}
       {magicEffect && <MagicEffect gift={magicEffect} onComplete={() => setMagicEffect(null)} />}
       {showMagicGiftsPanel && (
-        <MagicGiftsPanel
+        <OffrandesPanel
           onClose={() => setShowMagicGiftsPanel(false)}
           currentUser={currentUser}
           salonMembers={members.filter(m => !m.isPatron)}
-          onUseMagic={handleUseMagic}
-          onSendGift={handleSendGift}
+          onUsePower={handleUseMagic}
+          onSendOffering={handleSendGift}
         />
       )}
 
