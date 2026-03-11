@@ -8,7 +8,7 @@ const MOCK_PARTICIPANTS = [
     id: "sophie",
     name: "Sophie",
     avatar: "🙂",
-    offerings: ["🍔", "🍟", "🌹"],
+    offerings: ["🍔", "🍟", "🌹", "🍺", "🍰", "💌"],
     position: "top-left",
     online: true,
   },
@@ -16,7 +16,7 @@ const MOCK_PARTICIPANTS = [
     id: "emma",
     name: "Emma",
     avatar: "🙂",
-    offerings: ["🍹", "🍰", "💌"],
+    offerings: ["🍹", "🍰", "💌", "🍓", "🍸", "🌸"],
     position: "top-right",
     online: true,
   },
@@ -24,7 +24,7 @@ const MOCK_PARTICIPANTS = [
     id: "alex",
     name: "Alex",
     avatar: "😎",
-    offerings: ["🍺", "🍔", "🌭"],
+    offerings: ["🍺", "🍔", "🌭", "🍟", "☕", "🍫"],
     position: "bottom-left",
     online: true,
   },
@@ -32,7 +32,7 @@ const MOCK_PARTICIPANTS = [
     id: "you",
     name: "Vous",
     avatar: "🙂",
-    offerings: ["🍟", "☕", "🍫"],
+    offerings: ["🍟", "☕", "🍫", "🍾", "🍓", "💌"],
     position: "bottom-right",
     online: true,
     isMe: true,
@@ -40,50 +40,47 @@ const MOCK_PARTICIPANTS = [
 ];
 
 const MOCK_MESSAGES = [
-  { id: 1, author: "Alex",   authorId: "alex",   text: "Salut !" },
-  { id: 2, author: "Emma",   authorId: "emma",   text: "Merci pour le mojito 🍹" },
-  { id: 3, author: "Sophie", authorId: "sophie", text: "Je mange 🍔" },
+  { id: 1, author: "Alex",   text: "Salut !" },
+  { id: 2, author: "Emma",   text: "Merci pour le mojito 🍹" },
+  { id: 3, author: "Sophie", text: "Je mange 🍔" },
 ];
 
-// ─── OFFERING SLOT ────────────────────────────────────────────────────────────
-// Composant réutilisable — recevra plus tard images PNG / icônes / animations
-
-function OfferingSlot({ content, isOverflow }) {
-  return (
-    <div className={`sqp__offering-slot${isOverflow ? " sqp__offering-slot--overflow" : ""}`}>
-      {content}
-    </div>
-  );
-}
-
 // ─── OFFERINGS GRID ───────────────────────────────────────────────────────────
-// Grille 2 lignes × 3 colonnes — max 6 slots, "+N" si dépassement
 
-function OfferingsGrid({ offerings }) {
-  const MAX = 6;
-  const hasOverflow = offerings.length > MAX;
-  const visible = hasOverflow ? offerings.slice(0, MAX - 1) : offerings;
-  const overflow = offerings.length - (MAX - 1);
-
+function OfferingsGrid({ items = [] }) {
+  const visibleItems = items.slice(0, 6);
   return (
-    <div className="sqp__offerings-grid">
-      {visible.map((item, i) => (
-        <OfferingSlot key={i} content={item} />
+    <div className="offerings-grid">
+      {visibleItems.map((item, index) => (
+        <div key={index} className="offering-cell">
+          <span className="offering-emoji">{item}</span>
+        </div>
       ))}
-      {hasOverflow && <OfferingSlot content={`+${overflow}`} isOverflow />}
     </div>
   );
 }
 
-// ─── AVATAR CARD (coin — nom + avatar uniquement) ─────────────────────────────
+// ─── AVATAR BADGE ─────────────────────────────────────────────────────────────
 
-function AvatarCard({ participant, isMe }) {
+function AvatarBadge({ avatar, isSelf = false }) {
   return (
-    <div className={`sqp__avatar-card sqp__avatar-card--${participant.position}${isMe ? " sqp__avatar-card--me" : ""}`}>
-      <div className="sqp__name">{participant.name}</div>
-      <div className={`sqp__avatar${participant.online ? " sqp__avatar--online" : ""}`}>
-        <span>{participant.avatar}</span>
-        {participant.online && <div className="sqp__online-dot" />}
+    <div className={`avatar-badge ${isSelf ? "self" : ""}`}>
+      <div className="avatar-circle">{avatar}</div>
+      <span className="online-dot" />
+    </div>
+  );
+}
+
+// ─── PLAYER SLOT ──────────────────────────────────────────────────────────────
+
+function PlayerSlot({ name, avatar, offerings, offerSide = "right", isSelf = false, position }) {
+  return (
+    <div className={`player-slot ${position}`}>
+      <div className="player-name">{name}</div>
+      <div className={`player-row ${offerSide === "left" ? "offers-left" : "offers-right"}`}>
+        {offerSide === "left" && <OfferingsGrid items={offerings} />}
+        <AvatarBadge avatar={avatar} isSelf={isSelf} />
+        {offerSide === "right" && <OfferingsGrid items={offerings} />}
       </div>
     </div>
   );
@@ -99,12 +96,12 @@ function Discussion({ messages }) {
   }, [messages]);
 
   return (
-    <div className="sqp__discussion">
-      <div className="sqp__discussion-inner">
+    <div className="chat-area">
+      <div className="chat-messages">
         {messages.map((msg) => (
-          <div key={msg.id} className="sqp__message">
-            <span className="sqp__message-author">{msg.author}</span>
-            <span className="sqp__message-text">{msg.text}</span>
+          <div key={msg.id} className="chat-message">
+            <span className="chat-author">{msg.author} :</span>{" "}
+            <span className="chat-text">{msg.text}</span>
           </div>
         ))}
         <div ref={bottomRef} />
@@ -125,7 +122,7 @@ function ActionBar({ onSend, onOffrandes, onMagie, onFocus, onBlur, isFocused })
   };
 
   return (
-    <div className={`sqp__actionbar${isFocused ? " sqp__actionbar--focused" : ""}`}>
+    <footer className={`sqp__actionbar${isFocused ? " sqp__actionbar--focused" : ""}`}>
       <div className="sqp__input-row">
         <input
           className="sqp__input"
@@ -148,24 +145,17 @@ function ActionBar({ onSend, onOffrandes, onMagie, onFocus, onBlur, isFocused })
       </div>
       <div className="sqp__btn-row">
         <button className="sqp__btn sqp__btn--offrandes" type="button" onClick={onOffrandes}>
-          🎁 <span>Offrandes</span>
+          🎁 Offrandes
         </button>
         <button className="sqp__btn sqp__btn--magie" type="button" onClick={onMagie}>
-          ✨ <span>Magie</span>
+          ✨ Magie
         </button>
       </div>
-    </div>
+    </footer>
   );
 }
 
 // ─── SALON QUAD SCENE ─────────────────────────────────────────────────────────
-// Props :
-//   salon        { name, emoji, gradient? }
-//   onBack       () => void
-//   onOffrandes  () => void
-//   onMagie      () => void
-//   participants  tableau de participants réels — optionnel, utilise mock si absent
-//   currentUser   objet utilisateur courant
 
 export default function SalonQuadScene({
   salon,
@@ -182,88 +172,37 @@ export default function SalonQuadScene({
   const handleSend = (text) => {
     setMessages((prev) => [
       ...prev,
-      {
-        id: Date.now(),
-        author: currentUser?.name ?? "Vous",
-        authorId: currentUser?.id ?? "you",
-        text,
-      },
+      { id: Date.now(), author: currentUser?.name ?? "Vous", text },
     ]);
   };
 
   const isMe = (p) => p.isMe || p.id === (currentUser?.id ?? "you");
 
-  const topLeft     = participants.find(p => p.position === "top-left");
-  const topRight    = participants.find(p => p.position === "top-right");
-  const bottomLeft  = participants.find(p => p.position === "bottom-left");
-  const bottomRight = participants.find(p => p.position === "bottom-right");
+  const tl = participants.find(p => p.position === "top-left");
+  const tr = participants.find(p => p.position === "top-right");
+  const bl = participants.find(p => p.position === "bottom-left");
+  const br = participants.find(p => p.position === "bottom-right");
 
   const salonName  = salon?.name  ?? "Café de Paris 2.0";
   const salonEmoji = salon?.emoji ?? "☕";
 
   return (
-    <section className={`sqp${focused ? " sqp--typing" : ""}`}>
-      {/* ── HEADER ── */}
+    <div className={`sqp${focused ? " sqp--typing" : ""}`}>
       <header className="sqp__header" style={salon?.gradient ? { background: salon.gradient } : undefined}>
         <button className="sqp__back" type="button" onClick={onBack}>←</button>
         <div className="sqp__header-title">
-          <span className="sqp__header-emoji">{salonEmoji}</span>
-          <span className="sqp__header-name">{salonName}</span>
+          {salonEmoji} {salonName}
         </div>
-        <div className="sqp__header-spacer" />
       </header>
 
-      {/*
-        ── BOARD : grille 5 colonnes × 2 lignes ──
-
-        col1 : avatar gauche    (Sophie haut / Alex bas)
-        col2 : offrandes gauche (Sophie haut / Alex bas) → pointent vers le centre
-        col3 : discussion       (span sur les 2 lignes)
-        col4 : offrandes droite (Emma haut / Vous bas)  → pointent vers le centre
-        col5 : avatar droite    (Emma haut / Vous bas)
-
-        Exemple visuel :
-        [Sophie] [🍔🍟🌹]          [🍹🍰💌] [Emma]
-                 [🍺🍰💌] DISCUSS. [      ]
-        [Alex  ] [🍺🍔🌭]          [🍟☕🍫] [Vous]
-                 [      ]          [      ]
-      */}
-      <div className="sqp__board">
-
-        {/* ── Coins gauche ── */}
-        {topLeft    && <AvatarCard participant={topLeft}    isMe={isMe(topLeft)}    />}
-        {bottomLeft && <AvatarCard participant={bottomLeft} isMe={isMe(bottomLeft)} />}
-
-        {/* ── Colonne offrandes gauche (Sophie en haut, Alex en bas) ── */}
-        <div className="sqp__offrandes-col sqp__offrandes-col--left">
-          <div className="sqp__offrandes-zone sqp__offrandes-zone--top">
-            {topLeft?.offerings?.length > 0 && <OfferingsGrid offerings={topLeft.offerings} />}
-          </div>
-          <div className="sqp__offrandes-zone sqp__offrandes-zone--bottom">
-            {bottomLeft?.offerings?.length > 0 && <OfferingsGrid offerings={bottomLeft.offerings} />}
-          </div>
-        </div>
-
-        {/* ── Discussion centrale ── */}
+      <main className="sqp__board">
+        {tl && <PlayerSlot position="top-left"     name={tl.name} avatar={tl.avatar} offerings={tl.offerings} offerSide="right" isSelf={isMe(tl)} />}
+        {tr && <PlayerSlot position="top-right"    name={tr.name} avatar={tr.avatar} offerings={tr.offerings} offerSide="left"  isSelf={isMe(tr)} />}
         <Discussion messages={messages} />
+        {bl && <PlayerSlot position="bottom-left"  name={bl.name} avatar={bl.avatar} offerings={bl.offerings} offerSide="right" isSelf={isMe(bl)} />}
+        {br && <PlayerSlot position="bottom-right" name={br.name} avatar={br.avatar} offerings={br.offerings} offerSide="left"  isSelf={isMe(br)} />}
+      </main>
 
-        {/* ── Colonne offrandes droite (Emma en haut, Vous en bas) ── */}
-        <div className="sqp__offrandes-col sqp__offrandes-col--right">
-          <div className="sqp__offrandes-zone sqp__offrandes-zone--top">
-            {topRight?.offerings?.length > 0 && <OfferingsGrid offerings={topRight.offerings} />}
-          </div>
-          <div className="sqp__offrandes-zone sqp__offrandes-zone--bottom">
-            {bottomRight?.offerings?.length > 0 && <OfferingsGrid offerings={bottomRight.offerings} />}
-          </div>
-        </div>
-
-        {/* ── Coins droite ── */}
-        {topRight    && <AvatarCard participant={topRight}    isMe={isMe(topRight)}    />}
-        {bottomRight && <AvatarCard participant={bottomRight} isMe={isMe(bottomRight)} />}
-
-      </div>
-
-      {/* ── ACTION BAR ── */}
       <ActionBar
         onSend={handleSend}
         onOffrandes={onOffrandes}
@@ -272,6 +211,6 @@ export default function SalonQuadScene({
         onBlur={() => setFocused(false)}
         isFocused={focused}
       />
-    </section>
+    </div>
   );
 }
