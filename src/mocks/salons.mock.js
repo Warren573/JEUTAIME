@@ -134,4 +134,18 @@ export const salons = [
       { name: 'Thomas', gender: 'M', age: 31, online: false }
     ]
   }
+  {
+    id: 99,
+    icon: '☕',
+    name: 'Café de Paris 2.0',
+    desc: '2H/2F - Le salon nouvelle génération',
+    bgGradient: 'linear-gradient(135deg, #6B4F3A 0%, #C8A882 60%, #F5E6D3 100%)',
+    tag: 'global',
+    isQuadScene: true,   // flag pour activer le layout spatial 4 coins
+    participants: [
+      { name: 'Sophie', gender: 'F', age: 28, online: true },
+      { name: 'Emma',   gender: 'F', age: 26, online: true },
+      { name: 'Alex',   gender: 'M', age: 31, online: true },
+    ],
+  },
 ];

@@ -9,6 +9,7 @@ import MemoriesScreen from './components/screens/MemoriesScreen';
 import BadgesScreen from './components/screens/BadgesScreen';
 import SettingsScreen from './components/screens/SettingsScreen';
 import BarDetailScreen from './components/screens/BarDetailScreen';
+import SalonQuadScene from './features/salons/components/SalonQuadScene';
 import RankingScreen from './components/screens/RankingScreen';
 import ReferralScreen from './components/screens/ReferralScreen';
 import DemoEffectsScreen from './components/screens/DemoEffectsScreen';
@@ -265,7 +266,21 @@ function MainApp() {
       {gameScreen === 'cards' && <CardGame {...appState} currentUser={currentUser} />}
       {gameScreen === 'storytime' && <StoryTimeGame {...appState} currentUser={currentUser} />}
 
-      {selectedSalon && <BarDetailScreen {...appState} salon={salons.find(s => s.id === selectedSalon)} />}
+      {selectedSalon && (() => {
+        const salon = salons.find(s => s.id === selectedSalon);
+        if (salon?.isQuadScene) {
+          return (
+            <SalonQuadScene
+              salon={salon}
+              currentUser={currentUser}
+              onBack={() => setSelectedSalon(null)}
+              onOffrandes={() => {}}
+              onMagie={() => {}}
+            />
+          );
+        }
+        return <BarDetailScreen {...appState} salon={salon} />;
+      })()}
 
       {/* Admin Mode Toggle */}
       {isAdminAuthenticated && (
