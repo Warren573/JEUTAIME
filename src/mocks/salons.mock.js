@@ -133,7 +133,7 @@ export const salons = [
       { name: 'Laura', gender: 'F', age: 27, online: true },
       { name: 'Thomas', gender: 'M', age: 31, online: false }
     ]
-  }
+  },
   {
     id: 99,
     icon: '☕',
