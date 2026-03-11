@@ -76,7 +76,7 @@ export const powers = [
       effectId: 'ghost_overlay',
       durationSec: 1800,
     },
-    salonMessage: '{target} devient un fantôme grâce à {sender} 👻',
+    salonMessage: '{sender} transforme {target} en fantôme 👻',
   },
 
   // ── METAL EXCLUSIF ────────────────────────────────────────────────

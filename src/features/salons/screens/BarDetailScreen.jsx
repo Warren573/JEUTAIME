@@ -194,10 +194,19 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
     setShowOffrandesPanel(true);
   };
 
+  const recentSalonEvents = useRef(new Map());
   const handleSalonMessage = (text) => {
+    const now = Date.now();
+    // Déduplique : ignore le même texte envoyé dans la même seconde
+    if (recentSalonEvents.current.get(text) > now - 1000) return;
+    recentSalonEvents.current.set(text, now);
     const sid = salon?.type || salon?.id || 'unknown';
     const msg = saveBarMessage(sid, 'system', 'Système', text, true, { type: 'offrande' });
-    setMessages(prev => [...prev, msg]);
+    setMessages(prev => {
+      // Double protection : évite les doublons dans le state
+      if (prev.some(m => m.id === msg.id)) return prev;
+      return [...prev, msg];
+    });
   };
 
   const formatTime = (seconds) => {
@@ -332,16 +341,16 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
               {messages.map((msg) => {
                 const isOwn = msg.username === (currentUser?.name || 'Vous');
                 const isSystem = msg.isSystem || msg.username === 'Système';
-                if (isSystem && msg.giftData) {
+                if (isSystem) {
                   return (
-                    <div key={msg.id} style={{ display: 'flex', justifyContent: 'center' }}>
+                    <div key={msg.id} style={{ display: 'flex', justifyContent: 'center', padding: '2px 0' }}>
                       <div style={{
-                        background: 'linear-gradient(135deg, #FFD700, #FFA500)',
-                        color: '#000', padding: '10px 18px', borderRadius: '20px',
-                        maxWidth: '85%', textAlign: 'center', fontSize: '0.85rem', fontWeight: '600',
-                        boxShadow: '0 4px 12px rgba(255,215,0,0.3)'
+                        background: 'rgba(194,24,91,0.08)',
+                        border: '1px solid rgba(194,24,91,0.18)',
+                        color: '#9C1B4B', padding: '5px 14px', borderRadius: '20px',
+                        maxWidth: '88%', textAlign: 'center', fontSize: '0.78rem', fontWeight: '600',
+                        lineHeight: 1.4,
                       }}>
-                        <div style={{ fontSize: '1.4rem', marginBottom: '2px' }}>{msg.giftData.giftEmoji}</div>
                         {msg.text}
                       </div>
                     </div>
