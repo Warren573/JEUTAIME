@@ -240,3 +240,18 @@ export function activateAvatarOverlay(userId, name, durationMs) {
 export function activateScreenEffect(userId, name, durationMs) {
   activateEffect('screen_' + name, userId, durationMs);
 }
+
+/** @deprecated */
+export function activateInvisibility(userId, durationMs) {
+  activateEffect('ghost_overlay', userId, durationMs);
+}
+
+/** @deprecated */
+export function activateProfileBadge(userId, data, durationMs) {
+  activateEffect('profile_badge', userId, durationMs);
+}
+
+/** @deprecated */
+export function applyTextTransform(userId, transform, durationMs) {
+  activateEffect('text_transform_' + transform, userId, durationMs);
+}
