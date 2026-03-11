@@ -120,6 +120,7 @@ export default {
 };
 
 // ─── ALIASES (compatibilité) ──────────────────────────────────────────────────
-export const getOfferings = getAllOfferings;
-export const getPowers    = getAllPowers;
-export const getSalons    = () => [];   // stub — les salons sont dans appData
+export const getOfferings   = getAllOfferings;
+export const getPowers      = getAllPowers;
+export const getSalons      = () => [];    // stub — les salons sont dans appData
+export const getSalonTheme  = () => null;  // stub — utilisé par ThemeEngine
