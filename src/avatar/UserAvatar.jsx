@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react';
 import AvatarRenderer from './AvatarRenderer.jsx';
 import { createInitialAvatarState } from './avatar.generator.js';
-import AvatarEffectsLayer from '../components/effects/AvatarEffectsLayer.jsx';
+import AvatarEffectsLayer from '../components/offrandes/AvatarEffectsLayer.jsx';
 
 /**
  * Wrapper d'avatar pour l'application

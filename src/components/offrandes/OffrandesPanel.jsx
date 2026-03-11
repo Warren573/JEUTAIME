@@ -1,178 +1,165 @@
 import React, { useState } from 'react';
-import { getOfferings, getPowers } from '../../engine/ContentRegistry';
 import {
-  activateEffect,
-  activateAvatarOverlay,
-  activateScreenEffect,
-  EFFECT_TYPES
-} from '../../engine/EffectEngine';
+  getOfferingsForSalon,
+  getPowersForSalon,
+  formatSalonMessage,
+} from '../../engine/contentRegistry.js';
+import { applyItemToTarget } from '../../engine/effectEngine.js';
 
 /**
- * OffrandesPanel - Panneau Offrandes & Pouvoirs
+ * OFFRANDES PANEL
  *
- * Utilise ContentRegistry pour les données et EffectEngine pour les effets.
- * Remplace MagicGiftsPanel avec une architecture data-driven.
+ * Panneau de jeu pour envoyer des offrandes et pouvoirs.
+ * Entièrement data-driven — aucune logique hardcodée.
+ *
+ * Props :
+ *   onClose          () => void
+ *   currentUser      { id, name, coins, ... }
+ *   salonMembers     [{ id, name, ... }]
+ *   salonTag         string  (ex: "metal", "romantique")
+ *   initialTab       "offrandes" | "pouvoirs"
+ *   onSalonMessage   (text: string) => void  — pour afficher dans le chat salon
  */
 export default function OffrandesPanel({
   onClose,
   currentUser,
   salonMembers = [],
+  salonTag = 'global',
   initialTab = 'offrandes',
-  onUsePower,
-  onSendOffering
+  onSalonMessage,
 }) {
   const [activeTab, setActiveTab] = useState(initialTab);
-  const [selectedRecipient, setSelectedRecipient] = useState(
+  const [selectedTarget, setSelectedTarget] = useState(
     salonMembers.length === 1 ? salonMembers[0] : null
   );
   const [feedback, setFeedback] = useState(null);
 
-  const offerings = getOfferings();
-  const powers = getPowers();
-  const userCoins = currentUser?.coins || 0;
+  const offrandes = getOfferingsForSalon(salonTag);
+  const pouvoirs  = getPowersForSalon(salonTag);
+  const userCoins = currentUser?.coins ?? 0;
 
   const showFeedback = (msg, isError = false) => {
     setFeedback({ msg, isError });
-    setTimeout(() => setFeedback(null), 2500);
+    setTimeout(() => setFeedback(null), 3000);
   };
 
-  const handleUsePower = (power) => {
-    if (userCoins < power.cost) {
-      showFeedback(`Il te faut ${power.cost} pièces !`, true);
+  const handleUse = (item) => {
+    if (userCoins < item.priceCoins) {
+      showFeedback(`💰 Il te faut ${item.priceCoins} pièces !`, true);
+      return;
+    }
+    if (!selectedTarget) {
+      showFeedback('👆 Choisis d\'abord un destinataire', true);
       return;
     }
 
-    // Appliquer l'effet via EffectEngine
-    const userId = currentUser?.id || currentUser?.email || 'user';
-    const durationMs = power.duration ? power.duration * 1000 : 0;
+    const result = applyItemToTarget(
+      item.id,
+      currentUser?.id ?? currentUser?.email ?? 'player',
+      selectedTarget.id ?? selectedTarget.name
+    );
 
-    if (power.type === 'salon') {
-      // Effet plein écran pour le salon
-      activateScreenEffect(userId, power.id, durationMs || 10000);
-    } else {
-      // Effet sur l'avatar
-      activateAvatarOverlay(userId, { emoji: power.icon }, durationMs || 30000);
-    }
-
-    if (onUsePower) {
-      onUsePower(power);
-    }
-
-    showFeedback(`${power.icon} ${power.name} activé !`);
-  };
-
-  const handleSendOffering = (offering) => {
-    if (userCoins < offering.cost) {
-      showFeedback(`Il te faut ${offering.cost} pièces !`, true);
-      return;
-    }
-    if (!selectedRecipient) {
-      showFeedback('Choisis d\'abord un destinataire !', true);
+    if (!result.ok) {
+      showFeedback(result.message || 'Erreur', true);
       return;
     }
 
-    // Appliquer un effet badge sur le destinataire
-    const targetId = selectedRecipient?.id || selectedRecipient?.email || selectedRecipient?.name;
-    if (targetId) {
-      activateEffect(
-        EFFECT_TYPES.PROFILE_BADGE,
-        String(targetId),
-        30000,
-        { text: offering.name, icon: offering.icon, color: '#FF69B4' }
-      );
-    }
+    // Message salon
+    const msg = formatSalonMessage(
+      item,
+      currentUser?.name ?? 'Quelqu\'un',
+      selectedTarget.name
+    );
+    if (onSalonMessage) onSalonMessage(msg);
 
-    if (onSendOffering) {
-      onSendOffering(offering, selectedRecipient);
-    }
-
-    showFeedback(`${offering.icon} ${offering.name} envoyé à ${selectedRecipient.name} !`);
-    setSelectedRecipient(null);
+    showFeedback(`${item.emoji} ${item.label} → ${selectedTarget.name} !`);
   };
 
   const tabs = [
-    { id: 'offrandes', label: '🎁 Offrandes', items: offerings },
-    { id: 'pouvoirs', label: '✨ Pouvoirs', items: powers }
+    { id: 'offrandes', label: '🎁 Offrandes', items: offrandes },
+    { id: 'pouvoirs',  label: '✨ Pouvoirs',   items: pouvoirs  },
   ];
-
-  const currentItems = activeTab === 'offrandes' ? offerings : powers;
+  const currentItems = activeTab === 'offrandes' ? offrandes : pouvoirs;
 
   return (
     <div style={{
-      position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+      position: 'fixed', inset: 0,
       background: 'rgba(0,0,0,0.75)',
       display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
-      zIndex: 1000
+      zIndex: 1000,
     }}>
       <div style={{
         background: 'var(--color-cream, #FFF8F0)',
         borderRadius: '20px 20px 0 0',
-        width: '100%',
-        maxWidth: '600px',
-        maxHeight: '85vh',
+        width: '100%', maxWidth: '600px', maxHeight: '88vh',
         display: 'flex', flexDirection: 'column',
         border: '2px solid var(--color-brown, #8B5E3C)',
-        borderBottom: 'none'
+        borderBottom: 'none',
+        boxShadow: '0 -8px 32px rgba(0,0,0,0.25)',
       }}>
-        {/* Header */}
+
+        {/* ── HEADER ── */}
         <div style={{
           padding: '16px 20px 0',
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+          display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
+          flexShrink: 0,
         }}>
           <div>
-            <h2 style={{ margin: 0, fontFamily: 'var(--font-heading)', fontSize: '1.3rem' }}>
-              ✨ Magie & Offrandes
-            </h2>
-            <span style={{ fontSize: '0.8rem', color: '#888' }}>
-              💰 {userCoins} pièces
-            </span>
+            <div style={{ fontWeight: '800', fontSize: '1.2rem', color: '#333' }}>
+              ✨ Offrandes & Pouvoirs
+            </div>
+            <div style={{ fontSize: '0.78rem', color: '#888', marginTop: 2 }}>
+              💰 {userCoins} pièces disponibles
+            </div>
           </div>
           <button
             onClick={onClose}
             style={{
               background: 'rgba(0,0,0,0.08)', border: 'none', borderRadius: '50%',
-              width: 36, height: 36, fontSize: '1.2rem', cursor: 'pointer'
+              width: 36, height: 36, fontSize: '1.1rem', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}
           >✕</button>
         </div>
 
-        {/* Feedback */}
+        {/* ── FEEDBACK ── */}
         {feedback && (
           <div style={{
-            margin: '8px 20px 0',
+            margin: '8px 16px 0',
             padding: '8px 14px',
             borderRadius: 10,
-            background: feedback.isError ? '#FFE0E0' : '#E0FFE8',
+            background: feedback.isError ? '#FFEBEE' : '#E8F5E9',
             color: feedback.isError ? '#C62828' : '#2E7D32',
-            fontSize: '0.85rem', fontWeight: '600', textAlign: 'center'
+            fontSize: '0.85rem', fontWeight: '600', textAlign: 'center',
+            flexShrink: 0,
           }}>
             {feedback.msg}
           </div>
         )}
 
-        {/* Tabs */}
+        {/* ── ONGLETS ── */}
         <div style={{
-          display: 'flex', margin: '12px 20px 0',
-          background: 'rgba(0,0,0,0.06)', borderRadius: 12, padding: 4
+          display: 'flex', margin: '12px 16px 0',
+          background: 'rgba(0,0,0,0.06)', borderRadius: 12, padding: 4,
+          flexShrink: 0,
         }}>
           {tabs.map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               style={{
-                flex: 1, padding: '8px 0', border: 'none', borderRadius: 8, cursor: 'pointer',
+                flex: 1, padding: '8px 0', border: 'none', borderRadius: 8,
+                cursor: 'pointer', fontSize: '0.9rem',
                 background: activeTab === tab.id ? 'white' : 'transparent',
                 fontWeight: activeTab === tab.id ? '700' : '500',
-                fontSize: '0.9rem',
                 boxShadow: activeTab === tab.id ? '0 1px 4px rgba(0,0,0,0.1)' : 'none',
-                transition: 'all 0.15s'
+                transition: 'all 0.15s',
               }}
             >
               {tab.label}
               <span style={{
-                marginLeft: 6, fontSize: '0.75rem',
-                background: 'rgba(0,0,0,0.08)', borderRadius: 20,
-                padding: '1px 7px'
+                marginLeft: 5, fontSize: '0.72rem',
+                background: 'rgba(0,0,0,0.08)', borderRadius: 20, padding: '1px 6px',
               }}>
                 {tab.items.length}
               </span>
@@ -180,115 +167,126 @@ export default function OffrandesPanel({
           ))}
         </div>
 
-        {/* Sélection destinataire (offrandes seulement) */}
-        {activeTab === 'offrandes' && salonMembers.length > 0 && (
-          <div style={{ padding: '10px 20px 0' }}>
-            <div style={{ fontSize: '0.78rem', color: '#666', marginBottom: 6, fontWeight: '600' }}>
+        {/* ── SÉLECTEUR DE DESTINATAIRE ── */}
+        {salonMembers.length > 1 && (
+          <div style={{ padding: '10px 16px 0', flexShrink: 0 }}>
+            <div style={{
+              fontSize: '0.7rem', fontWeight: '700', color: '#888',
+              marginBottom: 6, letterSpacing: '0.5px',
+            }}>
               ENVOYER À :
             </div>
             <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4 }}>
               {salonMembers.map(member => (
                 <button
-                  key={member.id}
-                  onClick={() => setSelectedRecipient(
-                    selectedRecipient?.id === member.id ? null : member
+                  key={member.id ?? member.name}
+                  onClick={() => setSelectedTarget(
+                    selectedTarget?.id === member.id ? null : member
                   )}
                   style={{
-                    flexShrink: 0, padding: '6px 14px', borderRadius: 20, cursor: 'pointer',
-                    border: selectedRecipient?.id === member.id
+                    flexShrink: 0, padding: '5px 12px', borderRadius: 20,
+                    cursor: 'pointer',
+                    border: selectedTarget?.id === member.id
                       ? '2px solid #C2185B' : '2px solid #ddd',
-                    background: selectedRecipient?.id === member.id
+                    background: selectedTarget?.id === member.id
                       ? '#FCE4EC' : 'white',
                     fontSize: '0.82rem', fontWeight: '600',
-                    color: selectedRecipient?.id === member.id ? '#C2185B' : '#555'
+                    color: selectedTarget?.id === member.id ? '#C2185B' : '#555',
+                    transition: 'all 0.15s',
                   }}
                 >
-                  {member.online ? '🟢' : '⚫'} {member.name}
+                  {member.online !== false ? '🟢' : '⚫'} {member.name}
                 </button>
               ))}
             </div>
           </div>
         )}
 
-        {/* Liste des items */}
+        {/* ── GRILLE D'ITEMS ── */}
         <div style={{
-          flex: 1, overflowY: 'auto', padding: '12px 20px 24px',
-          display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10
+          flex: 1, overflowY: 'auto',
+          padding: '12px 16px 28px',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          gap: 10,
+          alignContent: 'start',
         }}>
           {currentItems.length === 0 ? (
             <div style={{
               gridColumn: '1/-1', textAlign: 'center',
-              padding: '40px 0', color: '#aaa'
+              padding: '40px 0', color: '#aaa', fontSize: '0.9rem',
             }}>
-              Aucun élément disponible
+              Aucun item disponible dans ce salon
             </div>
           ) : currentItems.map(item => {
-            const canAfford = userCoins >= item.cost;
-            const needsRecipient = activeTab === 'offrandes' && !selectedRecipient;
-            const isDisabled = !canAfford;
-            const isPower = activeTab === 'pouvoirs';
-            const isSalon = item.type === 'salon';
+            const canAfford = userCoins >= item.priceCoins;
+            const needsTarget = !selectedTarget && salonMembers.length > 1;
 
             return (
               <div
                 key={item.id}
                 style={{
-                  background: isDisabled ? '#f5f5f5' : 'white',
+                  background: canAfford ? 'white' : '#f5f5f5',
                   borderRadius: 14,
-                  border: `2px solid ${isDisabled ? '#e0e0e0' : '#f0e0d0'}`,
+                  border: `2px solid ${canAfford ? '#f0e0d0' : '#e0e0e0'}`,
                   padding: '12px 10px',
-                  display: 'flex', flexDirection: 'column', alignItems: 'center',
-                  gap: 6, opacity: isDisabled ? 0.6 : 1
+                  display: 'flex', flexDirection: 'column',
+                  alignItems: 'center', gap: 5,
+                  opacity: canAfford ? 1 : 0.55,
                 }}
               >
-                <div style={{ fontSize: '2rem', lineHeight: 1 }}>{item.icon}</div>
-                <div style={{
-                  fontSize: '0.78rem', fontWeight: '700', textAlign: 'center',
-                  color: '#333', lineHeight: 1.2
-                }}>
-                  {item.name}
+                {/* Emoji item */}
+                <div style={{ fontSize: '2.2rem', lineHeight: 1 }}>
+                  {item.emoji}
                 </div>
-                {isSalon && (
+
+                {/* Nom */}
+                <div style={{
+                  fontSize: '0.78rem', fontWeight: '700',
+                  textAlign: 'center', color: '#333', lineHeight: 1.2,
+                }}>
+                  {item.label}
+                </div>
+
+                {/* Badge catégorie si metal */}
+                {item.salonTags?.includes('metal') && !item.salonTags?.includes('global') && (
                   <span style={{
-                    fontSize: '0.65rem', background: '#E8F5E9',
-                    color: '#388E3C', borderRadius: 20, padding: '2px 8px', fontWeight: '700'
+                    fontSize: '0.6rem', background: '#212121',
+                    color: 'white', borderRadius: 20, padding: '2px 7px',
+                    fontWeight: '700',
                   }}>
-                    SALON
+                    MÉTAL
                   </span>
                 )}
-                {item.duration > 0 && (
-                  <span style={{
-                    fontSize: '0.65rem', color: '#9C27B0', fontWeight: '600'
-                  }}>
-                    ⏱ {item.duration}s
-                  </span>
-                )}
+
+                {/* Prix */}
                 <div style={{
-                  fontSize: '0.75rem', color: canAfford ? '#FF6B35' : '#aaa',
-                  fontWeight: '700'
+                  fontSize: '0.74rem',
+                  color: canAfford ? '#E65100' : '#aaa',
+                  fontWeight: '700',
                 }}>
-                  💰 {item.cost} pièces
+                  💰 {item.priceCoins} pièces
                 </div>
+
+                {/* Bouton */}
                 <button
-                  disabled={isDisabled}
-                  onClick={() => isPower
-                    ? handleUsePower(item)
-                    : handleSendOffering(item)
-                  }
+                  disabled={!canAfford}
+                  onClick={() => handleUse(item)}
                   style={{
-                    width: '100%', padding: '7px 0', border: 'none', borderRadius: 10,
-                    cursor: isDisabled ? 'not-allowed' : 'pointer',
-                    background: isDisabled
+                    width: '100%', padding: '7px 0',
+                    border: 'none', borderRadius: 10,
+                    cursor: !canAfford ? 'not-allowed' : 'pointer',
+                    background: !canAfford
                       ? '#e0e0e0'
-                      : needsRecipient && !isPower
-                        ? 'linear-gradient(135deg, #ccc, #aaa)'
+                      : needsTarget
+                        ? '#bbb'
                         : 'linear-gradient(135deg, #C2185B, #E91E63)',
-                    color: 'white', fontSize: '0.78rem', fontWeight: '700'
+                    color: 'white',
+                    fontSize: '0.78rem', fontWeight: '700',
+                    transition: 'opacity 0.15s',
                   }}
                 >
-                  {isPower
-                    ? '✨ Activer'
-                    : needsRecipient ? 'Choisir destinataire' : '🎁 Envoyer'}
+                  {activeTab === 'pouvoirs' ? '✨ Activer' : '🎁 Envoyer'}
                 </button>
               </div>
             );

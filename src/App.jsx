@@ -50,7 +50,7 @@ import { isFeatureUnlocked } from './utils/onboarding';
 import { salons } from './data/appData';
 
 // Effect Engine - Auto-cleanup
-import { startAutoCleanup } from './engine/EffectEngine';
+import { startAutoCleanup } from './engine/effectEngine.js';
 
 // Debug
 import LogOverlay from './components/debug/LogOverlay';

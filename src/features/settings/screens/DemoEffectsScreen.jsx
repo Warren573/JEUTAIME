@@ -9,9 +9,9 @@ import {
   activateProfileBadge,
   applyTextTransform,
   EFFECT_TYPES
-} from '../../engine/EffectEngine';
+} from '../../engine/effectEngine.js';
 import { applyTheme, transitionToTheme } from '../../engine/ThemeEngine';
-import { getSalons } from '../../engine/ContentRegistry';
+import { getSalons } from '../../engine/ContentRegistry.js';
 
 export default function DemoEffectsScreen({ currentUser, onBack }) {
   const [selectedSalon, setSelectedSalon] = useState(1);

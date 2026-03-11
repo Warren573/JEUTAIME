@@ -1,3 +1,4 @@
-export { default as GiftSelector } from './components/GiftSelector.jsx';
-export { default as MagicInventory } from './components/MagicInventory.jsx';
-export { default as MagicGiftsPanel } from './components/MagicGiftsPanel.jsx';
+// Le système magie/cadeaux a été remplacé par Offrandes & Pouvoirs
+// Voir src/components/offrandes/ et src/engine/contentRegistry.js
+export { default as OffrandesPanel } from '../components/offrandes/OffrandesPanel.jsx';
+export { default as AvatarEffectsLayer } from '../components/offrandes/AvatarEffectsLayer.jsx';

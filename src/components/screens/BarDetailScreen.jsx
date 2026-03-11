@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import OffrandesPanel from '../offrandes/OffrandesPanel';
+import { startAutoCleanup } from '../../engine/effectEngine.js';
 import UserAvatar from '../../avatar/UserAvatar';
 import {
   loadBarState,
@@ -82,6 +83,9 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
   useEffect(() => {
     setCurrentBgId(getSalonBackground(salonId));
   }, [salonId]);
+
+  // Démarrer le nettoyage automatique des effets expirés
+  useEffect(() => { startAutoCleanup(); }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'instant' });
@@ -191,24 +195,11 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
     setShowOffrandesPanel(true);
   };
 
-  const handleUsePower = (power) => {
+  // Appelé par OffrandesPanel quand un item est envoyé avec succès
+  const handleSalonMessage = (text) => {
     const sid = salon?.type || salon?.id || 'unknown';
-    const magicMessage = saveBarMessage(sid, 'system', 'Système',
-      `✨ ${currentUser?.name || 'Quelqu\'un'} a utilisé ${power.icon} ${power.name} !`,
-      true, { type: 'magic', magicData: power });
-    setMessages([...messages, magicMessage]);
-  };
-
-  const handleSendOffering = (offering, recipient) => {
-    const sid = salon?.type || salon?.id || 'unknown';
-    setGiftReceiverEffect(recipient?.id);
-    setTimeout(() => setGiftReceiverEffect(null), 3000);
-    const giftMessage = saveBarMessage(sid, 'system', 'Système',
-      `🎁 ${currentUser?.name || 'Quelqu\'un'} a envoyé ${offering.icon} ${offering.name} à ${recipient?.name} !`,
-      true, { type: 'gift', giftData: offering });
-    setMessages([...messages, giftMessage]);
-    setShowOffrandesPanel(false);
-    setSelectedMember(null);
+    const msg = saveBarMessage(sid, 'system', 'Système', text, true, { type: 'offrande' });
+    setMessages(prev => [...prev, msg]);
   };
 
   const formatTime = (seconds) => {
@@ -639,9 +630,9 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
           onClose={() => { setShowOffrandesPanel(false); setSelectedMember(null); }}
           currentUser={currentUser}
           salonMembers={selectedMember ? [selectedMember] : members.filter(m => !m.isPatron)}
+          salonTag={salon?.tag || salon?.type || 'global'}
           initialTab={offrandesPanelTab}
-          onUsePower={handleUsePower}
-          onSendOffering={handleSendOffering}
+          onSalonMessage={handleSalonMessage}
         />
       )}
 
