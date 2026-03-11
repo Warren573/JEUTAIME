@@ -8,8 +8,8 @@ const MOCK_PARTICIPANTS = [
   {
     id: "sophie",
     name: "Sophie",
-    avatar: "🙂",           // remplacer par <UserAvatar user={...} size={52} />
-    offerings: ["🍔", "🍟"], // remplacer par les effectDef actifs de l'effectEngine
+    avatar: "🙂",           // remplacer par <UserAvatar user={...} size={44} />
+    offerings: ["🍔", "🍟", "🌹"], // remplacer par les effectDef actifs de l'effectEngine
     position: "top-left",
     online: true,
   },
@@ -17,7 +17,7 @@ const MOCK_PARTICIPANTS = [
     id: "emma",
     name: "Emma",
     avatar: "🙂",
-    offerings: ["🍹"],
+    offerings: ["🍹", "🍰", "💌"],
     position: "top-right",
     online: true,
   },
@@ -25,7 +25,7 @@ const MOCK_PARTICIPANTS = [
     id: "alex",
     name: "Alex",
     avatar: "😎",
-    offerings: ["🍺", "🍔"],
+    offerings: ["🍺", "🍔", "🌭"],
     position: "bottom-left",
     online: true,
   },
@@ -33,7 +33,7 @@ const MOCK_PARTICIPANTS = [
     id: "you",
     name: "Vous",
     avatar: "🙂",
-    offerings: ["🍺"],
+    offerings: ["🍟", "☕", "🍫"],
     position: "bottom-right",
     online: true,
     isMe: true,
@@ -46,27 +46,53 @@ const MOCK_MESSAGES = [
   { id: 3, author: "Sophie", authorId: "sophie", text: "Je mange 🍔" },
 ];
 
+// ─── OFFERING SLOT ────────────────────────────────────────────────────────────
+// Composant réutilisable — recevra plus tard images PNG / icônes / animations
+
+function OfferingSlot({ content, isOverflow }) {
+  return (
+    <div className={`sqp__offering-slot${isOverflow ? " sqp__offering-slot--overflow" : ""}`}>
+      {content}
+    </div>
+  );
+}
+
+// ─── OFFERINGS GRID ───────────────────────────────────────────────────────────
+// Grille 2 lignes × 3 colonnes — max 6 slots, "+N" si dépassement
+
+function OfferingsGrid({ offerings }) {
+  const MAX = 6;
+  const hasOverflow = offerings.length > MAX;
+  const visible = hasOverflow ? offerings.slice(0, MAX - 1) : offerings;
+  const overflow = offerings.length - (MAX - 1);
+
+  return (
+    <div className="sqp__offerings-grid">
+      {visible.map((item, i) => (
+        <OfferingSlot key={i} content={item} />
+      ))}
+      {hasOverflow && <OfferingSlot content={`+${overflow}`} isOverflow />}
+    </div>
+  );
+}
+
 // ─── PARTICIPANT CARD ─────────────────────────────────────────────────────────
 
 function ParticipantCard({ participant, isMe }) {
   return (
     <div className={`sqp__card sqp__card--${participant.position}${isMe ? " sqp__card--me" : ""}`}>
-      {/* Nom */}
-      <div className="sqp__name">{participant.name}</div>
-
-      {/* Avatar — swap pour <UserAvatar user={participant} size={52} /> quand prêt */}
-      <div className={`sqp__avatar${participant.online ? " sqp__avatar--online" : ""}`}>
-        <span>{participant.avatar}</span>
-        {participant.online && <div className="sqp__online-dot" />}
+      {/* Bloc nom + avatar — swap pour <UserAvatar user={participant} size={44} /> quand prêt */}
+      <div className="sqp__avatar-block">
+        <div className="sqp__name">{participant.name}</div>
+        <div className={`sqp__avatar${participant.online ? " sqp__avatar--online" : ""}`}>
+          <span>{participant.avatar}</span>
+          {participant.online && <div className="sqp__online-dot" />}
+        </div>
       </div>
 
-      {/* Offrandes actives — swap pour des icônes d'effets depuis effectEngine */}
+      {/* Grille d'offrandes orientée vers le centre */}
       {participant.offerings.length > 0 && (
-        <div className="sqp__offerings">
-          {participant.offerings.map((item, i) => (
-            <span key={i} className="sqp__offering-item">{item}</span>
-          ))}
-        </div>
+        <OfferingsGrid offerings={participant.offerings} />
       )}
     </div>
   );
@@ -100,6 +126,7 @@ function Discussion({ messages }) {
 
 function ActionBar({ onSend, onOffrandes, onMagie }) {
   const [input, setInput] = useState("");
+  const [focused, setFocused] = useState(false);
 
   const handleSend = () => {
     if (!input.trim()) return;
@@ -108,7 +135,7 @@ function ActionBar({ onSend, onOffrandes, onMagie }) {
   };
 
   return (
-    <div className="sqp__actionbar">
+    <div className={`sqp__actionbar${focused ? " sqp__actionbar--focused" : ""}`}>
       <div className="sqp__input-row">
         <input
           className="sqp__input"
@@ -117,6 +144,8 @@ function ActionBar({ onSend, onOffrandes, onMagie }) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
         />
         <button
           className="sqp__send-btn"
@@ -186,7 +215,7 @@ export default function SalonQuadScene({
         <div className="sqp__header-spacer" />
       </header>
 
-      {/* ── BOARD : 2×2 + DISCUSSION ── */}
+      {/* ── BOARD : gauche | discussion | droite × 2 lignes ── */}
       <div className="sqp__board">
         {participants.map((p) => (
           <ParticipantCard
