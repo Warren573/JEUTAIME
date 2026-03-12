@@ -4,26 +4,93 @@ import ScreenHeader from '../common/ScreenHeader';
 export default function BarsScreen({ setScreen, setGameScreen, setSelectedSalon, currentUser }) {
   const salons = [
     {
-      id: 'metal',
-      name: 'Métal',
-      emoji: '🤘',
-      description: 'Faut battre le fer tant qu\'il est chaud',
+      id: 1,
+      name: 'Piscine',
+      emoji: '🏊',
+      description: '2H/2F - Ambiance aquatique et détente',
       currentMembers: 3,
       maxMembers: 4,
-      gradient: 'linear-gradient(135deg, #424242, #000000)',
+      gradient: 'linear-gradient(180deg, #4FC3F7 0%, #0288D1 100%)',
       textColor: 'white',
-      action: () => setSelectedSalon({ type: 'metal', name: 'Métal', emoji: '🤘' })
+      action: () => setSelectedSalon(1)
     },
     {
-      id: 'psy',
-      name: 'Cabinet du Psy',
-      emoji: '🛋️',
-      description: 'On y sert aussi des mojitos',
+      id: 2,
+      name: 'Café de Paris',
+      emoji: '☕',
+      description: '2H/2F - Ambiance parisienne chic',
+      currentMembers: 3,
+      maxMembers: 4,
+      gradient: 'linear-gradient(180deg, #D7CCC8 0%, #8D6E63 100%)',
+      textColor: 'white',
+      action: () => setSelectedSalon(2)
+    },
+    {
+      id: 3,
+      name: 'Île des pirates',
+      emoji: '🏴‍☠️',
+      description: '2H/2F - Aventures maritimes',
       currentMembers: 2,
       maxMembers: 4,
-      gradient: 'linear-gradient(135deg, #B2DFDB, #00695C)',
+      gradient: 'linear-gradient(180deg, #FFD54F 0%, #5D4037 100%)',
       textColor: 'white',
-      action: () => setSelectedSalon({ type: 'psy', name: 'Cabinet du Psy', emoji: '🛋️' })
+      action: () => setSelectedSalon(3)
+    },
+    {
+      id: 4,
+      name: 'Théâtre improvisé',
+      emoji: '🎭',
+      description: '2H/2F - Spectacles et fous rires',
+      currentMembers: 3,
+      maxMembers: 4,
+      gradient: 'linear-gradient(180deg, #CE93D8 0%, #7B1FA2 100%)',
+      textColor: 'white',
+      action: () => setSelectedSalon(4)
+    },
+    {
+      id: 5,
+      name: 'Bar à cocktails',
+      emoji: '🍸',
+      description: '2H/2F - Mixologie et saveurs exotiques',
+      currentMembers: 2,
+      maxMembers: 4,
+      gradient: 'linear-gradient(180deg, #F48FB1 0%, #C2185B 100%)',
+      textColor: 'white',
+      action: () => setSelectedSalon(5)
+    },
+    {
+      id: 6,
+      name: 'Métal',
+      emoji: '🤘',
+      description: '2H/2F - Faut battre le fer tant qu\'il est chaud',
+      currentMembers: 3,
+      maxMembers: 4,
+      gradient: 'linear-gradient(180deg, #424242 0%, #000000 100%)',
+      textColor: 'white',
+      action: () => setSelectedSalon(6)
+    },
+    {
+      id: 7,
+      name: 'Cabinet du Psy',
+      emoji: '🛋️',
+      description: '2H/2F - On y sert aussi des mojitos',
+      currentMembers: 2,
+      maxMembers: 4,
+      gradient: 'linear-gradient(180deg, #B2DFDB 0%, #00695C 100%)',
+      textColor: 'white',
+      action: () => setSelectedSalon(7)
+    },
+    {
+      id: 99,
+      name: 'Café de Paris 2.0',
+      emoji: '☕',
+      description: '2H/2F - Le salon nouvelle génération',
+      currentMembers: 3,
+      maxMembers: 4,
+      badge: 'NOUVEAU',
+      gradient: 'linear-gradient(135deg, #6B4F3A 0%, #C8A882 60%, #F5E6D3 100%)',
+      textColor: 'white',
+      action: () => setSelectedSalon(99)
     }
   ];
 
