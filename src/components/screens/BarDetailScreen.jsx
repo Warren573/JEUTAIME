@@ -92,17 +92,19 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
   }, [messages]);
 
   useEffect(() => {
+    document.body.classList.add('salon-lock');
+    return () => document.body.classList.remove('salon-lock');
+  }, []);
+
+  useEffect(() => {
     const vv = window.visualViewport;
     if (!vv) return;
     const update = () => {
-      if (containerRef.current) {
-        containerRef.current.style.top = `${vv.offsetTop}px`;
-        containerRef.current.style.height = `${vv.height}px`;
-      }
       const isOpen = vv.height < window.innerHeight * 0.75;
       setKeyboardOpen(isOpen);
       if (isOpen) setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'instant' }), 100);
     };
+    update();
     vv.addEventListener('resize', update);
     return () => vv.removeEventListener('resize', update);
   }, []);
@@ -234,7 +236,7 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
       top: 0,
       left: 0,
       right: 0,
-      height: '100dvh',
+      bottom: 0,
       display: 'flex',
       flexDirection: 'column',
       background: '#f7f3ef',
@@ -261,7 +263,8 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
               background: 'rgba(255,255,255,0.2)',
               color: 'white', fontSize: '18px', fontWeight: 'bold',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer', flexShrink: 0
+              cursor: 'pointer', flexShrink: 0,
+              padding: 0, minHeight: 'unset', minWidth: 'unset'
             }}
           >←</button>
           <div style={{ flex: 1, color: 'white', fontWeight: '700', fontSize: '1rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -403,7 +406,8 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
 
             {/* Input chat */}
             <div style={{
-              display: 'flex', gap: '8px', padding: '10px 12px',
+              display: 'flex', gap: '8px',
+              padding: `10px 12px calc(10px + env(safe-area-inset-bottom))`,
               background: 'white', borderTop: '1px solid #eee', flexShrink: 0
             }}>
               <input
@@ -426,7 +430,8 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
                   background: 'linear-gradient(135deg, #667eea, #764ba2)',
                   border: 'none', color: 'white', fontSize: '18px',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  cursor: 'pointer', flexShrink: 0
+                  cursor: 'pointer', flexShrink: 0,
+                  padding: 0, minHeight: 'unset', minWidth: 'unset'
                 }}
               >➤</button>
             </div>
@@ -582,54 +587,57 @@ export default function BarDetailScreen({ salon, currentUser, setSelectedSalon }
       </div>
 
       {/* ── BARRE D'ONGLETS EN BAS ── (cachée si clavier ouvert) */}
-      {!keyboardOpen && <div style={{
-        display: 'flex',
-        background: 'white',
-        borderTop: '1px solid #eee',
-        paddingBottom: 'env(safe-area-inset-bottom)',
-        flexShrink: 0,
-        boxShadow: '0 -2px 12px rgba(0,0,0,0.08)'
-      }}>
-        {bottomTabs.map((tab) => {
-          const isActive = barTab === tab.id;
-          const accentColor = '#C2185B';
-          return (
-            <button
-              key={tab.id}
-              onClick={() => {
-                if (tab.id === 'magic') {
-                  setOffrandesPanelTab('pouvoirs');
-                  setSelectedMember(null);
-                  setShowOffrandesPanel(true);
-                } else {
-                  setBarTab(tab.id);
-                }
-              }}
-              style={{
-                flex: 1,
-                display: 'flex', flexDirection: 'column', alignItems: 'center',
-                justifyContent: 'center', padding: '8px 4px 10px',
-                background: 'none', border: 'none', cursor: 'pointer',
-                position: 'relative'
-              }}
-            >
-              {isActive && (
-                <div style={{
-                  position: 'absolute', top: 0, left: '20%', right: '20%',
-                  height: '2px', background: accentColor, borderRadius: '0 0 2px 2px'
-                }} />
-              )}
-              <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>{tab.icon}</span>
-              <span style={{
-                fontSize: '0.58rem', marginTop: '3px', fontWeight: isActive ? '700' : '500',
-                color: isActive ? accentColor : '#888'
-              }}>
-                {tab.label}
-              </span>
-            </button>
-          );
-        })}
-      </div>}
+      {!keyboardOpen && (
+        <div style={{
+          display: 'flex',
+          background: 'white',
+          borderTop: '1px solid #eee',
+          paddingBottom: 'env(safe-area-inset-bottom)',
+          flexShrink: 0,
+          boxShadow: '0 -2px 12px rgba(0,0,0,0.08)'
+        }}>
+          {bottomTabs.map((tab) => {
+            const isActive = barTab === tab.id;
+            const accentColor = '#C2185B';
+            return (
+              <button
+                key={tab.id}
+                onClick={() => {
+                  if (tab.id === 'magic') {
+                    setOffrandesPanelTab('pouvoirs');
+                    setSelectedMember(null);
+                    setShowOffrandesPanel(true);
+                  } else {
+                    setBarTab(tab.id);
+                  }
+                }}
+                style={{
+                  flex: 1,
+                  display: 'flex', flexDirection: 'column', alignItems: 'center',
+                  justifyContent: 'center', padding: '8px 4px 10px',
+                  background: 'none', border: 'none', cursor: 'pointer',
+                  position: 'relative',
+                  minHeight: 'unset', minWidth: 'unset'
+                }}
+              >
+                {isActive && (
+                  <div style={{
+                    position: 'absolute', top: 0, left: '20%', right: '20%',
+                    height: '2px', background: accentColor, borderRadius: '0 0 2px 2px'
+                  }} />
+                )}
+                <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>{tab.icon}</span>
+                <span style={{
+                  fontSize: '0.58rem', marginTop: '3px', fontWeight: isActive ? '700' : '500',
+                  color: isActive ? accentColor : '#888'
+                }}>
+                  {tab.label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       {/* ── MODALES ── */}
       {showOffrandesPanel && (
