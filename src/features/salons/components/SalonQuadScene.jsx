@@ -71,8 +71,8 @@ function AvatarBadge({ avatar, isSelf = false }) {
 }
 
 // ─── PLAYER SLOT ──────────────────────────────────────────────────────────────
-// isRight=true  → [offrandes | avatar]  (Emma, Vous)
-// isRight=false → [avatar | offrandes]  (Sophie, Alex)
+// isRight → [offrandes | avatar]  (Emma, Vous)
+// !isRight → [avatar | offrandes]  (Sophie, Alex)
 
 function PlayerSlot({ participant, isMe }) {
   const isRight = participant.position.includes("right");
@@ -196,32 +196,26 @@ export default function SalonQuadScene({
       </header>
 
       {/*
-        ── LAYOUT PRINCIPAL : 3 lignes horizontales ──
+        ── LAYOUT : 3 rangées horizontales ──
 
-        ligne 1 → players-top  : Sophie (gauche) | spacer | Emma (droite)
-        ligne 2 → chat-band    : discussion sur toute la largeur
-        ligne 3 → players-bottom : Alex (gauche) | spacer | Vous (droite)
+        1. players-top    hauteur auto (~110px)
+        2. chat-band      hauteur bornée (160px–240px, scroll interne)
+        3. players-bottom hauteur auto (~110px)
 
-        Offrandes :
-          joueurs gauche (Sophie, Alex) → [avatar | offrandes →]
-          joueurs droite (Emma, Vous)   → [← offrandes | avatar]
+        joueurs gauche → [avatar | offrandes →]
+        joueurs droite → [← offrandes | avatar]
       */}
       <div className="salon-layout">
 
-        {/* LIGNE 1 — joueurs du haut */}
         <div className="players-top">
           {tl && <PlayerSlot participant={tl} isMe={isMe(tl)} />}
-          <div /> {/* spacer */}
           {tr && <PlayerSlot participant={tr} isMe={isMe(tr)} />}
         </div>
 
-        {/* LIGNE 2 — discussion horizontale */}
         <Discussion messages={messages} />
 
-        {/* LIGNE 3 — joueurs du bas */}
         <div className="players-bottom">
           {bl && <PlayerSlot participant={bl} isMe={isMe(bl)} />}
-          <div /> {/* spacer */}
           {br && <PlayerSlot participant={br} isMe={isMe(br)} />}
         </div>
 
