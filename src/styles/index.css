@@ -79,8 +79,13 @@
 }
 
 html, body {
-  overflow-x: hidden;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
   max-width: 100%;
+  /* Empêche le scroll bounce iOS sur le body */
+  position: fixed;
+  width: 100%;
 }
 
 img, svg {
@@ -103,7 +108,8 @@ code {
 }
 
 #root {
-  min-height: 100vh;
+  height: 100%;
+  overflow: hidden;
   background: var(--color-beige-light);
 }
 

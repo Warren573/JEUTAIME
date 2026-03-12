@@ -45,7 +45,7 @@ const MOCK_MESSAGES = [
   { id: 3, author: "Sophie", text: "Je mange 🍔" },
 ];
 
-// ─── OFFERINGS GRID ───────────────────────────────────────────────────────────
+// ─── SOUS-COMPOSANTS ──────────────────────────────────────────────────────────
 
 function OfferingsGrid({ items = [] }) {
   return (
@@ -59,8 +59,6 @@ function OfferingsGrid({ items = [] }) {
   );
 }
 
-// ─── AVATAR BADGE ─────────────────────────────────────────────────────────────
-
 function AvatarBadge({ avatar, isSelf = false }) {
   return (
     <div className={`avatar-badge${isSelf ? " self" : ""}`}>
@@ -70,10 +68,8 @@ function AvatarBadge({ avatar, isSelf = false }) {
   );
 }
 
-// ─── PLAYER SLOT ──────────────────────────────────────────────────────────────
 // isRight → [offrandes | avatar]  (Emma, Vous)
-// !isRight → [avatar | offrandes]  (Sophie, Alex)
-
+// !isRight → [avatar | offrandes] (Sophie, Alex)
 function PlayerSlot({ participant, isMe }) {
   const isRight = participant.position.includes("right");
   return (
@@ -88,71 +84,14 @@ function PlayerSlot({ participant, isMe }) {
   );
 }
 
-// ─── DISCUSSION ───────────────────────────────────────────────────────────────
-
-function Discussion({ messages }) {
-  const bottomRef = useRef(null);
-
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-  return (
-    <div className="chat-band">
-      <div className="chat-messages">
-        {messages.map((msg) => (
-          <div key={msg.id} className="chat-message">
-            <span className="chat-author">{msg.author} :</span>{" "}
-            <span className="chat-text">{msg.text}</span>
-          </div>
-        ))}
-        <div ref={bottomRef} />
-      </div>
-    </div>
-  );
-}
-
-// ─── ACTION BAR ───────────────────────────────────────────────────────────────
-
-function ActionBar({ onSend, onOffrandes, onMagie, onFocus, onBlur, isFocused }) {
-  const [input, setInput] = useState("");
-
-  const handleSend = () => {
-    if (!input.trim()) return;
-    onSend?.(input.trim());
-    setInput("");
-  };
-
-  return (
-    <footer className={`sqp__actionbar${isFocused ? " sqp__actionbar--focused" : ""}`}>
-      <div className="sqp__input-row">
-        <input
-          className="sqp__input"
-          type="text"
-          placeholder="Écrire un message…"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSend()}
-          onFocus={onFocus}
-          onBlur={onBlur}
-        />
-        <button className="sqp__send-btn" type="button" onClick={handleSend} aria-label="Envoyer">
-          ➤
-        </button>
-      </div>
-      <div className="sqp__btn-row">
-        <button className="sqp__btn sqp__btn--offrandes" type="button" onClick={onOffrandes}>
-          🎁 Offrandes
-        </button>
-        <button className="sqp__btn sqp__btn--magie" type="button" onClick={onMagie}>
-          ✨ Magie
-        </button>
-      </div>
-    </footer>
-  );
-}
-
-// ─── SALON QUAD SCENE ─────────────────────────────────────────────────────────
+// ─── COMPOSANT PRINCIPAL ──────────────────────────────────────────────────────
+// Props :
+//   salon        { name, emoji, gradient? }
+//   onBack       () => void
+//   onOffrandes  () => void
+//   onMagie      () => void
+//   participants  [] — optionnel, utilise mock si absent
+//   currentUser  {}
 
 export default function SalonQuadScene({
   salon,
@@ -162,15 +101,47 @@ export default function SalonQuadScene({
   participants: externalParticipants,
   currentUser,
 }) {
-  const participants = externalParticipants ?? MOCK_PARTICIPANTS;
+  const participants   = externalParticipants ?? MOCK_PARTICIPANTS;
   const [messages, setMessages] = useState(MOCK_MESSAGES);
-  const [focused, setFocused] = useState(false);
+  const [input, setInput]       = useState("");
+  const [focused, setFocused]   = useState(false);
+  const [kbVisible, setKbVisible] = useState(false);
+  const bottomRef = useRef(null);
 
-  const handleSend = (text) => {
+  // ── Scroll to bottom on new message ──────────────────────────────────────
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  // ── Détection clavier via visualViewport ──────────────────────────────────
+  // visualViewport.height baisse quand le clavier iOS s'ouvre.
+  // On compare à la hauteur initiale pour détecter l'ouverture.
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+
+    // Snapshot pris après le premier paint, hors clavier
+    let initialHeight = vv.height;
+    const THRESHOLD   = 150; // px minimum de réduction pour valider
+
+    const onResize = () => {
+      setKbVisible(vv.height < initialHeight - THRESHOLD);
+    };
+
+    vv.addEventListener("resize", onResize);
+    return () => vv.removeEventListener("resize", onResize);
+  }, []);
+
+  // Clavier actif = visualViewport OU focus (fallback desktop)
+  const kbMode = kbVisible || focused;
+
+  const handleSend = () => {
+    if (!input.trim()) return;
     setMessages((prev) => [
       ...prev,
-      { id: Date.now(), author: currentUser?.name ?? "Vous", text },
+      { id: Date.now(), author: currentUser?.name ?? "Vous", text: input.trim() },
     ]);
+    setInput("");
   };
 
   const isMe = (p) => p.isMe || p.id === (currentUser?.id ?? "you");
@@ -184,52 +155,83 @@ export default function SalonQuadScene({
   const salonEmoji = salon?.emoji ?? "☕";
 
   return (
-    <div className={`sqp${focused ? " sqp--typing" : ""}`}>
+    <div className={`sqp${kbMode ? " sqp--keyboard" : ""}`}>
 
-      {/* ── HEADER ── */}
+      {/* ══ ZONE 1 : Header fixe ════════════════════════════════════════════ */}
       <header
         className="sqp__header"
         style={salon?.gradient ? { background: salon.gradient } : undefined}
       >
         <button className="sqp__back" type="button" onClick={onBack}>←</button>
-        <div className="sqp__header-title">{salonEmoji} {salonName}</div>
+        <span className="sqp__header-title">{salonEmoji} {salonName}</span>
       </header>
 
-      {/*
-        ── LAYOUT : 3 rangées horizontales ──
-
-        1. players-top    hauteur auto (~110px)
-        2. chat-band      hauteur bornée (160px–240px, scroll interne)
-        3. players-bottom hauteur auto (~110px)
-
-        joueurs gauche → [avatar | offrandes →]
-        joueurs droite → [← offrandes | avatar]
-      */}
-      <div className="salon-layout">
-
-        <div className="players-top">
+      {/* ══ ZONE 2 : Joueurs + offrandes ════════════════════════════════════
+          Masqué entièrement quand le clavier s'ouvre.
+          Joueurs gauche → [avatar | offrandes →]
+          Joueurs droite → [← offrandes | avatar]
+      ═══════════════════════════════════════════════════════════════════════ */}
+      <div className="sqp__players" aria-hidden={kbMode}>
+        <div className="sqp__players-row sqp__players-row--top">
           {tl && <PlayerSlot participant={tl} isMe={isMe(tl)} />}
           {tr && <PlayerSlot participant={tr} isMe={isMe(tr)} />}
         </div>
-
-        <Discussion messages={messages} />
-
-        <div className="players-bottom">
+        <div className="sqp__players-row sqp__players-row--bottom">
           {bl && <PlayerSlot participant={bl} isMe={isMe(bl)} />}
           {br && <PlayerSlot participant={br} isMe={isMe(br)} />}
         </div>
-
       </div>
 
-      {/* ── ACTION BAR ── */}
-      <ActionBar
-        onSend={handleSend}
-        onOffrandes={onOffrandes}
-        onMagie={onMagie}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        isFocused={focused}
-      />
+      {/* ══ ZONE 3 : Messages — seul élément scrollable ══════════════════════
+          flex: 1 → prend tout l'espace restant.
+          overflow-y: auto → scroll interne uniquement.
+      ═══════════════════════════════════════════════════════════════════════ */}
+      <div className="sqp__messages">
+        {messages.map((msg) => (
+          <div key={msg.id} className="sqp__message">
+            <span className="sqp__msg-author">{msg.author}</span>
+            <span className="sqp__msg-text">{msg.text}</span>
+          </div>
+        ))}
+        <div ref={bottomRef} />
+      </div>
+
+      {/* ══ ZONE 4 : Composer fixé en bas ════════════════════════════════════
+          Input + bouton envoyer : toujours visibles.
+          Boutons Offrandes / Magie : masqués si clavier.
+      ═══════════════════════════════════════════════════════════════════════ */}
+      <footer className="sqp__composer">
+        <div className="sqp__input-row">
+          <input
+            className="sqp__input"
+            type="text"
+            placeholder="Écrire un message…"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSend()}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+          />
+          <button
+            className="sqp__send-btn"
+            type="button"
+            onClick={handleSend}
+            aria-label="Envoyer"
+          >
+            ➤
+          </button>
+        </div>
+
+        <div className="sqp__action-btns">
+          <button className="sqp__btn sqp__btn--offrandes" type="button" onClick={onOffrandes}>
+            🎁 Offrandes
+          </button>
+          <button className="sqp__btn sqp__btn--magie" type="button" onClick={onMagie}>
+            ✨ Magie
+          </button>
+        </div>
+      </footer>
+
     </div>
   );
 }
