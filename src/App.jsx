@@ -53,8 +53,8 @@ import { salons } from './data/appData';
 // Effect Engine - Auto-cleanup
 import { startAutoCleanup } from './engine/effectEngine.js';
 
-// Debug
-import LogOverlay from './components/debug/LogOverlay';
+// Debug (désactivé — LogOverlay flottait sur tous les écrans)
+// import LogOverlay from './components/debug/LogOverlay';
 
 function MainApp() {
   const { isAdminAuthenticated } = useAdmin();
@@ -311,7 +311,6 @@ function MainApp() {
         </button>
       )}
 
-      <LogOverlay />
     </AppShell>
   );
 }

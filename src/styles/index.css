@@ -87,8 +87,6 @@ html, body {
 /* Verrou scroll activé UNIQUEMENT quand le salon est ouvert */
 body.salon-lock {
   overflow: hidden;
-  position: fixed;
-  width: 100%;
 }
 
 img, svg {
