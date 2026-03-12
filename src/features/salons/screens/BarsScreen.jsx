@@ -4,63 +4,6 @@ import ScreenHeader from '../common/ScreenHeader';
 export default function BarsScreen({ setScreen, setGameScreen, setSelectedSalon, currentUser }) {
   const salons = [
     {
-      id: 'romantic',
-      name: 'Salon Romantique',
-      emoji: '🌹',
-      description: 'Écrivez ensemble des histoires d\'amour touchantes',
-      currentMembers: 2,
-      maxMembers: 4,
-      gradient: 'linear-gradient(135deg, #FF6B9D, #C2185B)',
-      textColor: 'white',
-      action: () => setSelectedSalon({ type: 'romantic', name: 'Salon Romantique', emoji: '🌹' })
-    },
-    {
-      id: 'humorous',
-      name: 'Salon Humoristique',
-      emoji: '😄',
-      description: 'Créez des histoires drôles et absurdes à plusieurs',
-      currentMembers: 3,
-      maxMembers: 4,
-      gradient: 'linear-gradient(135deg, #FFD54F, #FFA000)',
-      textColor: '#1a1a1a',
-      action: () => setSelectedSalon({ type: 'humorous', name: 'Salon Humoristique', emoji: '😄' })
-    },
-    {
-      id: 'adventure',
-      name: 'Salon Aventure',
-      emoji: '🗺️',
-      description: 'Partez en quête d\'aventures épiques ensemble',
-      currentMembers: 1,
-      maxMembers: 4,
-      gradient: 'linear-gradient(135deg, #4CAF50, #2E7D32)',
-      textColor: 'white',
-      action: () => setSelectedSalon({ type: 'adventure', name: 'Salon Aventure', emoji: '🗺️' })
-    },
-    {
-      id: 'mystery',
-      name: 'Salon Mystère',
-      emoji: '🔮',
-      description: 'Tissez des récits mystérieux et envoûtants',
-      currentMembers: 4,
-      maxMembers: 4,
-      gradient: 'linear-gradient(135deg, #7B1FA2, #4A148C)',
-      textColor: '#FFD700',
-      border: '2px solid rgba(255, 215, 0, 0.3)',
-      action: () => setSelectedSalon({ type: 'mystery', name: 'Salon Mystère', emoji: '🔮' })
-    },
-    {
-      id: 'weekly',
-      name: 'Salon Hebdomadaire',
-      emoji: '📅',
-      description: 'Groupe exclusif renouvelé chaque semaine',
-      badge: 'NOUVEAU',
-      currentMembers: 0,
-      maxMembers: 4,
-      gradient: 'linear-gradient(135deg, #5C6BC0, #3949AB)',
-      textColor: 'white',
-      action: () => setSelectedSalon({ type: 'weekly', name: 'Salon Hebdomadaire', emoji: '📅' })
-    },
-    {
       id: 'metal',
       name: 'Métal',
       emoji: '🤘',
