@@ -6,6 +6,16 @@
  */
 
 const STORAGE_KEY = 'jeutaime_reports';
+const ADMIN_SESSION_KEY = 'jeutaime_admin_session';
+
+function getAdminId() {
+  try {
+    const session = localStorage.getItem(ADMIN_SESSION_KEY);
+    return session ? JSON.parse(session).username : 'admin';
+  } catch {
+    return 'admin';
+  }
+}
 
 /**
  * Récupère tous les signalements
@@ -91,7 +101,7 @@ export function resolveReport(id, decision, adminNote = '') {
     status: 'resolved',
     decision,
     adminNote,
-    resolvedBy: 'admin', // TODO: utiliser le vrai admin ID
+    resolvedBy: getAdminId(),
     resolvedAt: new Date().toISOString()
   });
 }
@@ -103,7 +113,7 @@ export function dismissReport(id, adminNote = '') {
   return updateReport(id, {
     status: 'dismissed',
     adminNote,
-    resolvedBy: 'admin',
+    resolvedBy: getAdminId(),
     resolvedAt: new Date().toISOString()
   });
 }

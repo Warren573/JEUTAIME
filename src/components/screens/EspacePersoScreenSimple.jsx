@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import UserAvatar from '../../avatar/UserAvatar';
-import { allMagic, allGifts } from '../../data/magicGifts';
+import { getPowers, getOfferings } from '../../engine/ContentRegistry';
 
 export default function EspacePersoScreenSimple({
   currentUser,
@@ -182,117 +182,157 @@ function ReglesSection() {
           fontSize: '0.95rem',
           lineHeight: '1.6'
         }}>
-          <div style={{ marginBottom: '20px', textAlign: 'center', fontStyle: 'italic' }}>
-            <p style={{ margin: '10px 0', fontSize: '1.1rem', fontWeight: '600' }}>Bienvenue sur JeuTaime 💖</p>
-            <p style={{ margin: '10px 0' }}>JeuTaime est une application de rencontres sous forme de jeu social.</p>
-            <p style={{ margin: '10px 0' }}>Le principe est simple : interagir avec les autres pour créer des échanges, s'amuser et, pourquoi pas, faire de vraies rencontres.</p>
+          {/* Introduction */}
+          <div style={{ marginBottom: '24px', textAlign: 'center', fontStyle: 'italic', padding: '16px', background: 'var(--color-beige-light)', borderRadius: '10px' }}>
+            <p style={{ margin: '8px 0', fontSize: '1.15rem', fontWeight: '700' }}>Bienvenue sur JeuTaime 💖</p>
+            <p style={{ margin: '8px 0' }}>JeuTaime, c'est une appli de rencontres qui mise sur les mots, pas sur les photos.</p>
+            <p style={{ margin: '8px 0' }}>Ici, tu découvres les gens avant de les voir. Le charme passe par la plume.</p>
           </div>
 
+          {/* But du jeu */}
           <div style={{ marginBottom: '20px' }}>
-            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.2rem', marginBottom: '10px' }}>🎯 LE BUT DU JEU</h4>
-            <p style={{ margin: '10px 0' }}>Sur JeuTaime, le but n'est pas de collectionner des profils. Le but est de :</p>
-            <ul style={{ marginLeft: '20px' }}>
-              <li>discuter</li>
-              <li>réagir</li>
-              <li>jouer</li>
-              <li>écrire</li>
-              <li>créer du lien</li>
+            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.15rem', marginBottom: '10px' }}>🎯 LE BUT DU JEU</h4>
+            <p style={{ margin: '8px 0' }}>Pas de swipe. Pas de collection de profils. Le vrai but ici :</p>
+            <ul style={{ marginLeft: '20px', margin: '8px 0 8px 20px' }}>
+              <li>Écrire de belles lettres</li>
+              <li>Participer aux salons</li>
+              <li>Jouer et gagner des pièces</li>
+              <li>Créer de vraies connexions</li>
             </ul>
-            <p style={{ margin: '10px 0', fontWeight: '600' }}>👉 Plus tu interagis, plus tu progresses.</p>
+            <p style={{ margin: '10px 0', fontWeight: '700' }}>👉 Plus tu t'impliques, plus tu progresses — et plus tu deviens visible.</p>
           </div>
 
+          {/* Lettres */}
           <div style={{ marginBottom: '20px' }}>
-            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.2rem', marginBottom: '10px' }}>💌 LES LETTRES (CŒUR DE L'APP)</h4>
-            <p style={{ margin: '10px 0' }}>Les lettres sont au centre de JeuTaime.</p>
-            <ul style={{ marginLeft: '20px' }}>
-              <li>Envoyer une lettre : +10 points</li>
-              <li>Recevoir une lettre : +15 points</li>
+            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.15rem', marginBottom: '10px' }}>💌 LES LETTRES — LE CŒUR DE L'APP</h4>
+            <p style={{ margin: '8px 0' }}>L'échange de lettres est la mécanique principale. Chaque lettre compte.</p>
+            <ul style={{ marginLeft: '20px', margin: '8px 0 8px 20px' }}>
+              <li>Envoyer une lettre : <strong>+10 points</strong></li>
+              <li>Recevoir une réponse : <strong>+15 points</strong></li>
             </ul>
-            <p style={{ margin: '10px 0', fontWeight: '600' }}>🔓 Photos de profil</p>
-            <p style={{ margin: '10px 0' }}>Les photos sont floues au départ. Pour les déverrouiller : au minimum 10 lettres échangées chacun.</p>
-            <p style={{ margin: '10px 0', fontStyle: 'italic' }}>👉 JeuTaime privilégie la personnalité, les mots et les échanges avant l'image.</p>
+            <p style={{ margin: '10px 0', fontWeight: '600' }}>🔓 Déverrouillage des photos</p>
+            <p style={{ margin: '8px 0' }}>Les photos de profil sont floues au départ. Elles se dévoilent progressivement :</p>
+            <ul style={{ marginLeft: '20px', margin: '8px 0 8px 20px' }}>
+              <li>Photo 1 : après 10 lettres échangées</li>
+              <li>Photo 2 : après 20 lettres échangées</li>
+              <li>Photo 3 : après 30 lettres échangées</li>
+            </ul>
+            <p style={{ margin: '10px 0', fontStyle: 'italic', color: 'var(--color-text-secondary)' }}>La personnalité d'abord. L'image ensuite.</p>
           </div>
 
+          {/* Sourires & Grimaces */}
           <div style={{ marginBottom: '20px' }}>
-            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.2rem', marginBottom: '10px' }}>😊 SOURIRES & 😬 GRIMACES</h4>
-            <ul style={{ marginLeft: '20px' }}>
-              <li>😊 Sourire : le profil te plaît (style, humour, vibe)</li>
-              <li>😬 Grimace : le profil ne te correspond pas</li>
+            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.15rem', marginBottom: '10px' }}>😊 SOURIRES & 😬 GRIMACES</h4>
+            <p style={{ margin: '8px 0' }}>En parcourant les profils, tu peux exprimer ta réaction :</p>
+            <ul style={{ marginLeft: '20px', margin: '8px 0 8px 20px' }}>
+              <li>😊 <strong>Sourire</strong> : ce profil m'attire, j'aime sa vibe</li>
+              <li>😬 <strong>Grimace</strong> : pas pour moi, on passe</li>
             </ul>
-            <p style={{ margin: '10px 0', fontWeight: '600' }}>Effets :</p>
-            <ul style={{ marginLeft: '20px' }}>
-              <li>Sourire envoyé : +5 points</li>
-              <li>Sourire reçu : +10 points</li>
-              <li>Grimace reçue : -5 points</li>
-            </ul>
-          </div>
-
-          <div style={{ marginBottom: '20px' }}>
-            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.2rem', marginBottom: '10px' }}>💘 MATCHS</h4>
-            <p style={{ margin: '10px 0' }}>Un match se crée lorsque deux personnes se sourient mutuellement.</p>
-            <ul style={{ marginLeft: '20px' }}>
-              <li>Bonus : +50 points chacun</li>
-              <li>Un petit questionnaire de compatibilité valide le match</li>
-            </ul>
-          </div>
-
-          <div style={{ marginBottom: '20px' }}>
-            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.2rem', marginBottom: '10px' }}>🏛️ LES SALONS DE DISCUSSION</h4>
-            <p style={{ margin: '10px 0' }}>Dans un salon, tu peux :</p>
-            <ul style={{ marginLeft: '20px' }}>
-              <li>discuter librement</li>
-              <li>observer avant de participer</li>
-              <li>rencontrer plusieurs personnes en même temps</li>
-              <li>participer à une histoire collective</li>
-            </ul>
-            <p style={{ margin: '10px 0', fontWeight: '600' }}>📖 Histoire collective :</p>
-            <ul style={{ marginLeft: '20px' }}>
-              <li>Ajouter une phrase : +5 points</li>
-              <li>Histoire complétée : bonus collectif +50 points</li>
+            <p style={{ margin: '8px 0', fontWeight: '600' }}>Effets sur les points :</p>
+            <ul style={{ marginLeft: '20px', margin: '8px 0 8px 20px' }}>
+              <li>Tu envoies un sourire : <strong>+5 pts</strong></li>
+              <li>Tu reçois un sourire : <strong>+10 pts</strong></li>
+              <li>Tu reçois une grimace : <strong>−5 pts</strong></li>
             </ul>
           </div>
 
+          {/* Matchs */}
           <div style={{ marginBottom: '20px' }}>
-            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.2rem', marginBottom: '10px' }}>🎮 LES MINI-JEUX</h4>
-            <p style={{ margin: '10px 0' }}>Jeux disponibles : Pong, Morpion, Memory, Whack-a-mole</p>
-            <ul style={{ marginLeft: '20px' }}>
-              <li>Victoire : +50 points</li>
-              <li>Défaite : -10 points</li>
+            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.15rem', marginBottom: '10px' }}>💘 LES MATCHS</h4>
+            <p style={{ margin: '8px 0' }}>Deux sourires mutuels = un match ! Un questionnaire de compatibilité le confirme.</p>
+            <ul style={{ marginLeft: '20px', margin: '8px 0 8px 20px' }}>
+              <li>Bonus match : <strong>+50 pts chacun</strong></li>
+              <li>Le questionnaire permet de découvrir si vous vous correspondez vraiment</li>
             </ul>
           </div>
 
+          {/* Salons */}
           <div style={{ marginBottom: '20px' }}>
-            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.2rem', marginBottom: '10px' }}>🐾 L'ANIMAL VIRTUEL</h4>
-            <p style={{ margin: '10px 0' }}>Tu peux adopter un seul animal à la fois.</p>
-            <p style={{ margin: '10px 0' }}>Ton animal a 4 jauges simples : 🍽️ Faim, 😊 Bonheur, ⚡ Énergie, 🧼 Propreté</p>
-            <p style={{ margin: '10px 0', fontWeight: '600' }}>🐶 Réactions de l'animal</p>
-            <p style={{ margin: '10px 0' }}>Ton animal est vivant et expressif. Ces réactions sont visibles par les autres et rendent ton profil plus vivant.</p>
+            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.15rem', marginBottom: '10px' }}>🏛️ LES SALONS DE DISCUSSION</h4>
+            <p style={{ margin: '8px 0' }}>5 salons thématiques pour rencontrer la communauté :</p>
+            <ul style={{ marginLeft: '20px', margin: '8px 0 8px 20px' }}>
+              <li>🌹 Salon Romantique — pour les cœurs tendres</li>
+              <li>😄 Salon Humoristique — rires et légèreté</li>
+              <li>🏴‍☠️ Salon Pirates — esprit aventurier</li>
+              <li>📅 Salon Hebdomadaire — événements de la semaine</li>
+              <li>👑 Salon Caché — accès Premium uniquement</li>
+            </ul>
+            <p style={{ margin: '8px 0', fontWeight: '600' }}>📖 Histoires collectives :</p>
+            <ul style={{ marginLeft: '20px', margin: '8px 0 8px 20px' }}>
+              <li>Ajouter une phrase : <strong>+5 pts</strong></li>
+              <li>Histoire complétée : <strong>+50 pts</strong> pour tous les participants</li>
+            </ul>
           </div>
 
+          {/* Mini-jeux */}
           <div style={{ marginBottom: '20px' }}>
-            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.2rem', marginBottom: '10px' }}>🏅 POINTS, NIVEAUX & BADGES</h4>
-            <p style={{ margin: '10px 0' }}>Chaque action te fait gagner des points pour monter de niveau et débloquer des titres.</p>
-            <p style={{ margin: '10px 0', fontWeight: '600' }}>🌟 Profil de la semaine</p>
-            <p style={{ margin: '10px 0' }}>Chaque semaine, la communauté met en avant 1 profil féminin et 1 profil masculin pour leur originalité et implication.</p>
+            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.15rem', marginBottom: '10px' }}>🎮 LES MINI-JEUX</h4>
+            <p style={{ margin: '8px 0' }}>6 jeux pour gagner des pièces et passer du bon temps :</p>
+            <ul style={{ marginLeft: '20px', margin: '8px 0 8px 20px' }}>
+              <li>🐭 <strong>Tape Taupe</strong> — réflexes solo (30 secondes)</li>
+              <li>🏓 <strong>Pong</strong> — classique à 2 joueurs</li>
+              <li>❌ <strong>Morpion</strong> — stratégie à 2 joueurs</li>
+              <li>🃏 <strong>Jeu des Cartes</strong> — hasard, tout risquer ou tout gagner</li>
+              <li>📖 <strong>Continue l'Histoire</strong> — narration collaborative</li>
+              <li>🧱 <strong>Casse-Brique</strong> — arcade solo</li>
+            </ul>
+            <ul style={{ marginLeft: '20px', margin: '8px 0 8px 20px' }}>
+              <li>Victoire : <strong>+50 pts</strong></li>
+              <li>Défaite : <strong>−10 pts</strong></li>
+            </ul>
           </div>
 
+          {/* Animal virtuel */}
           <div style={{ marginBottom: '20px' }}>
-            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.2rem', marginBottom: '10px' }}>🎁 CADEAUX & 🔮 MAGIE</h4>
-            <p style={{ margin: '10px 0' }}>Les cadeaux servent à faire plaisir et marquer les esprits. Les sorts ajoutent du fun dans les salons.</p>
+            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.15rem', marginBottom: '10px' }}>🐾 TON COMPAGNON VIRTUEL</h4>
+            <p style={{ margin: '8px 0' }}>Adopte un animal et prends soin de lui — il rend ton profil vivant.</p>
+            <p style={{ margin: '8px 0' }}>4 jauges à surveiller : 🍽️ Faim · 😊 Bonheur · ⚡ Énergie · 🧼 Propreté</p>
+            <p style={{ margin: '8px 0', fontStyle: 'italic', color: 'var(--color-text-secondary)' }}>Ton compagnon réagit à tes actions et s'exprime sur ton profil public.</p>
           </div>
 
+          {/* Points & Badges */}
+          <div style={{ marginBottom: '20px' }}>
+            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.15rem', marginBottom: '10px' }}>🏅 POINTS, NIVEAUX & BADGES</h4>
+            <p style={{ margin: '8px 0' }}>Chaque interaction te rapporte des points. Les points font monter ton niveau et débloquent des badges.</p>
+            <ul style={{ marginLeft: '20px', margin: '8px 0 8px 20px' }}>
+              <li>Lettre envoyée : <strong>+10 pts</strong></li>
+              <li>Participation salon : <strong>+15 pts</strong></li>
+              <li>Partie jouée : <strong>+5 pts</strong></li>
+              <li>Match validé : <strong>+50 pts</strong></li>
+            </ul>
+            <p style={{ margin: '8px 0', fontWeight: '600' }}>🌟 Profil de la semaine</p>
+            <p style={{ margin: '8px 0' }}>Chaque semaine, 1 profil féminin et 1 profil masculin sont mis en avant par la communauté.</p>
+          </div>
+
+          {/* Cadeaux */}
+          <div style={{ marginBottom: '20px' }}>
+            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.15rem', marginBottom: '10px' }}>🎁 OFFRANDES & MAGIE</h4>
+            <p style={{ margin: '8px 0' }}>Utilise tes pièces pour envoyer des offrandes et marquer les esprits :</p>
+            <ul style={{ marginLeft: '20px', margin: '8px 0 8px 20px' }}>
+              <li>🌹 Rose — 50 pièces</li>
+              <li>💜 Philtre d'amour — 100 pièces</li>
+              <li>💐 Bouquet — 150 pièces</li>
+              <li>🍾 Champagne — 200 pièces</li>
+              <li>🍫 Chocolats — 75 pièces</li>
+            </ul>
+            <p style={{ margin: '8px 0', fontStyle: 'italic', color: 'var(--color-text-secondary)' }}>Les sorts magiques ajoutent une touche de fantaisie dans les salons.</p>
+          </div>
+
+          {/* Esprit */}
           <div style={{
-            marginTop: '30px',
+            marginTop: '24px',
             padding: '20px',
-            background: 'var(--color-beige-light)',
-            borderRadius: '10px',
-            textAlign: 'center'
+            background: 'linear-gradient(135deg, #fff5f8, #ffeef5)',
+            borderRadius: '12px',
+            textAlign: 'center',
+            border: '1px solid var(--color-tan)'
           }}>
-            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.3rem', marginBottom: '15px' }}>❤️ L'ESPRIT JEUTAIME</h4>
-            <p style={{ margin: '10px 0', fontWeight: '600', fontSize: '1.1rem' }}>👉 Prendre le temps</p>
-            <p style={{ margin: '10px 0', fontWeight: '600', fontSize: '1.1rem' }}>👉 Interagir sincèrement</p>
-            <p style={{ margin: '10px 0', fontWeight: '600', fontSize: '1.1rem' }}>👉 Jouer pour créer du lien</p>
-            <p style={{ margin: '20px 0', fontSize: '1.2rem' }}>Bienvenue dans le jeu 💖</p>
+            <h4 style={{ color: 'var(--color-romantic)', fontSize: '1.2rem', marginBottom: '14px' }}>❤️ L'ESPRIT JEUTAIME</h4>
+            <p style={{ margin: '8px 0', fontWeight: '600' }}>✍️ Prendre le temps d'écrire</p>
+            <p style={{ margin: '8px 0', fontWeight: '600' }}>🤝 Interagir avec sincérité</p>
+            <p style={{ margin: '8px 0', fontWeight: '600' }}>🎲 Jouer pour créer du lien</p>
+            <p style={{ margin: '8px 0', fontWeight: '600' }}>🌱 Laisser la relation se construire naturellement</p>
+            <p style={{ margin: '18px 0 0', fontSize: '1.1rem' }}>Bienvenue dans le jeu 💖</p>
           </div>
         </div>
       )}
@@ -443,8 +483,8 @@ function InventaireMagiqueSection({ currentUser }) {
           alignItems: 'center',
           border: '2px solid var(--color-brown-light)'
         }}>
-          <span style={{ color: 'var(--color-text-primary)' }}>✨ Magies disponibles</span>
-          <span style={{ color: 'var(--color-romantic)', fontWeight: '700' }}>{allMagic.length}</span>
+          <span style={{ color: 'var(--color-text-primary)' }}>✨ Pouvoirs disponibles</span>
+          <span style={{ color: 'var(--color-romantic)', fontWeight: '700' }}>{getPowers().length}</span>
         </div>
         <div style={{
           background: 'var(--color-beige-light)',
@@ -455,30 +495,23 @@ function InventaireMagiqueSection({ currentUser }) {
           alignItems: 'center',
           border: '2px solid var(--color-brown-light)'
         }}>
-          <span style={{ color: 'var(--color-text-primary)' }}>🎁 Cadeaux à offrir</span>
-          <span style={{ color: 'var(--color-romantic)', fontWeight: '700' }}>{allGifts.length}</span>
+          <span style={{ color: 'var(--color-text-primary)' }}>🎁 Offrandes disponibles</span>
+          <span style={{ color: 'var(--color-romantic)', fontWeight: '700' }}>{getOfferings().length}</span>
         </div>
       </div>
 
-      <button
-        style={{
-          width: '100%',
-          marginTop: '15px',
-          padding: '12px',
-          background: 'linear-gradient(135deg, var(--color-humorous-light), var(--color-humorous))',
-          border: '2px solid var(--color-humorous)',
-          color: 'var(--color-brown-dark)',
-          borderRadius: '10px',
-          cursor: 'pointer',
-          fontWeight: '700',
-          fontSize: '0.95rem',
-          boxShadow: 'var(--shadow-sm)',
-          transition: 'all var(--transition-normal)'
-        }}
-        onClick={() => alert('🔮 Inventaire complet - Utilise Magie & Offrandes dans les salons !')}
-      >
-        🔮 Voir tout l'inventaire
-      </button>
+      <p style={{
+        marginTop: '15px',
+        padding: '10px',
+        background: 'var(--color-beige-light)',
+        border: '2px dashed var(--color-humorous)',
+        borderRadius: '10px',
+        color: 'var(--color-text-secondary)',
+        fontSize: '0.85rem',
+        textAlign: 'center'
+      }}>
+        💡 Utilise tes magies et cadeaux directement dans les salons
+      </p>
     </div>
   );
 }
@@ -511,7 +544,6 @@ function MesSalonsSection({ activeSalons, setScreen, setSelectedSalon }) {
               key={salon.id}
               onClick={() => {
                 setSelectedSalon(salon.id);
-                setScreen('bars');
               }}
               style={{
                 background: salon.gradient || 'var(--color-beige)',
@@ -582,15 +614,21 @@ function StatsSocialesSection({ currentUser }) {
         const giftsData = localStorage.getItem(giftsKey);
         const receivedGifts = giftsData ? JSON.parse(giftsData) : [];
 
+        // Calculer les interactions depuis les conversations localStorage
+        const convsKey = `jeutaime_conversations_${currentUser.email}`;
+        const convsData = localStorage.getItem(convsKey);
+        const convs = convsData ? JSON.parse(convsData) : {};
+        const msgCount = Object.values(convs).reduce((acc, msgs) => acc + (Array.isArray(msgs) ? msgs.length : 0), 0);
+
         const calculatedStats = {
-          interactions: Math.floor(Math.random() * 30) + 10, // TODO: calculer depuis les lettres
-          goodVibes: Math.floor(Math.random() * 20) + 8, // TODO: calculer depuis bouteille
+          interactions: msgCount,
+          goodVibes: 0, // TODO: calculer depuis le système de bouteilles
           giftsReceived: receivedGifts.length,
-          giftsSent: 0, // TODO: implémenter tracking
-          salonsJoined: 0, // Sera passé via props
+          giftsSent: 0,
+          salonsJoined: 0,
           dailyStreak: 1,
           positiveRate: 95,
-          socialLevel: 1
+          socialLevel: Math.max(1, Math.floor((currentUser?.points || 0) / 100) + 1)
         };
 
         setStats(calculatedStats);

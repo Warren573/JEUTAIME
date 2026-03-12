@@ -1,0 +1,381 @@
+/* ═══════════════════════════════════════════════════════════════
+   SALON QUAD SCENE — layout scoped, aucune règle globale
+   App mobile native : 4 zones fixes, un seul scroll (messages).
+   Comportement iPhone chat : clavier masque joueurs + boutons.
+
+   ARCHITECTURE :
+   .sqp = position:fixed, top/left/right fixés, height = --vvh
+         → quand clavier ouvre, --vvh shrink, conteneur suit
+         → grid-template-rows: auto auto 1fr auto
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── CONTENEUR RACINE ──
+   top/left/right fixés + height: var(--vvh) calculé par JS.
+   Quand le clavier s'ouvre, --vvh = visualViewport.height.
+   PAS de bottom:0 → évite le conflit bottom vs height.
+*/
+.sqp {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--vvh, 100dvh);
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  background: #f2f1ed;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ZONE 1 — HEADER FIXE
+══════════════════════════════════════════════════════════════ */
+.sqp__header {
+  grid-row: 1;
+  background: linear-gradient(135deg, #1a7bbf, #0f5fa0);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 0 50px;
+  padding-top: env(safe-area-inset-top);
+  height: calc(52px + env(safe-area-inset-top));
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.sqp__back {
+  position: absolute;
+  left: 12px;
+  bottom: 8px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* reset règles globales */
+  padding: 0;
+  min-height: unset;
+  min-width: unset;
+}
+
+.sqp__header-title {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ZONE 2 — BLOC JOUEURS + OFFRANDES
+   max-height animé → collapse smooth quand clavier s'ouvre.
+══════════════════════════════════════════════════════════════ */
+.sqp__players {
+  grid-row: 2;
+  overflow: hidden;
+  max-height: 260px;
+  opacity: 1;
+  padding: 10px 12px 6px;
+  transition:
+    max-height 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity    0.2s ease,
+    padding    0.25s ease;
+}
+
+.sqp--keyboard .sqp__players {
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  pointer-events: none;
+}
+
+/* Rangées haut / bas */
+.sqp__players-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.sqp__players-row--top    { align-items: flex-start; margin-bottom: 8px; }
+.sqp__players-row--bottom { align-items: flex-end; }
+
+/* ── Player slot ── */
+.sqp-player-slot {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.sqp-player-slot--left  { align-items: flex-start; }
+.sqp-player-slot--right { align-items: flex-end; }
+
+.sqp-player-name {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #2a2a2a;
+  line-height: 1;
+}
+
+.sqp-player-slot--right.sqp-player-slot--me .sqp-player-name {
+  color: #c2185b;
+}
+
+.sqp-player-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Avatar ── */
+.sqp-avatar-badge {
+  position: relative;
+  flex: 0 0 50px;
+  width: 50px;
+  height: 50px;
+}
+
+.sqp-avatar-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid #9fd6a2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sqp-avatar-badge--self .sqp-avatar-circle {
+  border-color: #c2185b;
+}
+
+.sqp-online-dot {
+  position: absolute;
+  right: 1px;
+  bottom: 1px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #4caf50;
+  border: 2px solid #f2f1ed;
+}
+
+/* ── Grille d'offrandes 2×3 ── */
+.sqp-offerings-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 26px);
+  grid-template-rows: repeat(2, 26px);
+  gap: 4px;
+  flex: 0 0 auto;
+}
+
+.sqp-offering-cell {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sqp-offering-emoji {
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ZONE 3 — MESSAGES (SEUL ÉLÉMENT SCROLLABLE)
+   grid-row 1fr → prend tout l'espace vertical restant.
+   min-height:0 → requis dans un grid pour que overflow fonctionne.
+══════════════════════════════════════════════════════════════ */
+.sqp__messages {
+  grid-row: 3;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 12px 16px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  scrollbar-width: none;
+}
+
+.sqp__messages::-webkit-scrollbar {
+  display: none;
+}
+
+.sqp__message {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #333;
+  word-break: break-word;
+}
+
+.sqp__msg-author {
+  font-weight: 700;
+  color: #c2185b;
+  margin-right: 4px;
+}
+
+.sqp__msg-text {
+  color: #333;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ZONE 4 — COMPOSER (COLLÉ EN BAS DU VIEWPORT VISIBLE)
+   Quand --vvh shrink avec le clavier, cette zone reste
+   parfaitement collée au bas du conteneur.
+══════════════════════════════════════════════════════════════ */
+.sqp__composer {
+  grid-row: 4;
+  position: relative;
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.97);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+}
+
+/* Input + bouton envoyer */
+.sqp__input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.sqp__input {
+  flex: 1;
+  height: 44px;
+  border: 1.5px solid #e0dbd4;
+  border-radius: 22px;
+  padding: 0 18px;
+  /* font-size >= 16px : empêche le zoom auto sur iOS */
+  font-size: 16px;
+  background: #f9f7f4;
+  color: #1a1a1a;
+  outline: none;
+  transition: border-color 0.15s;
+  /* reset des règles globales */
+  min-height: unset;
+  min-width: unset;
+  box-sizing: border-box;
+}
+
+.sqp__input:focus {
+  border-color: #c2185b;
+  background: #fff;
+}
+
+.sqp__send-btn {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #c2185b, #e91e63);
+  color: #fff;
+  font-size: 17px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 10px rgba(194, 24, 91, 0.35);
+  transition: transform 0.1s, opacity 0.15s;
+  /* reset règles globales */
+  padding: 0;
+  min-height: unset;
+  min-width: unset;
+}
+
+.sqp__send-btn:active {
+  transform: scale(0.94);
+  opacity: 0.85;
+}
+
+/* Boutons Offrandes / Magie — collapse quand clavier ouvert */
+.sqp__action-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  overflow: hidden;
+  max-height: 58px;
+  margin-top: 8px;
+  opacity: 1;
+  transition:
+    max-height 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity    0.18s ease,
+    margin-top 0.22s ease;
+}
+
+.sqp--keyboard .sqp__action-btns {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
+  pointer-events: none;
+}
+
+.sqp__btn {
+  height: 44px;
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.1s, opacity 0.15s;
+  /* reset règles globales */
+  padding: 0;
+  min-height: unset;
+  min-width: unset;
+}
+
+.sqp__btn:active {
+  transform: scale(0.96);
+  opacity: 0.85;
+}
+
+.sqp__btn--offrandes {
+  background: linear-gradient(135deg, #ff8f00, #ffa726);
+  box-shadow: 0 3px 8px rgba(255, 143, 0, 0.3);
+}
+
+.sqp__btn--magie {
+  background: linear-gradient(135deg, #c2185b, #e91e63);
+  box-shadow: 0 3px 8px rgba(194, 24, 91, 0.3);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 360px) {
+  .sqp-offerings-grid {
+    grid-template-columns: repeat(3, 22px);
+    grid-template-rows: repeat(2, 22px);
+    gap: 3px;
+  }
+
+  .sqp-offering-cell  { width: 22px; height: 22px; }
+  .sqp-offering-emoji { font-size: 13px; }
+
+  .sqp-avatar-badge,
+  .sqp-avatar-circle  { width: 44px; height: 44px; flex-basis: 44px; }
+  .sqp-avatar-circle  { font-size: 22px; }
+
+  .sqp__players { padding: 8px 10px 4px; }
+}

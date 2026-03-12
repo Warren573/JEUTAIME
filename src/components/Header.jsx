@@ -5,7 +5,7 @@ export default function Header({ userCoins, adminMode, isAdminAuthenticated }) {
     <div style={{ background: '#1a1a1a', padding: '15px 20px', position: 'sticky', top: 0, zIndex: 100 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
         <div style={{ width: '55px', height: '55px', borderRadius: '50%', background: 'linear-gradient(135deg, #E91E63, #C2185B)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '20px' }}>UT</div>
-        <div style={{ flex: 1 }}>
+        <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '600' }}>Utilisateur, 28 👑</h2>
             {adminMode && isAdminAuthenticated && (

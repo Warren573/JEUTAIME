@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Mockup – Intérieur Salon</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
+    body { background: #1a1a2e; padding: 30px; display: flex; flex-direction: column; align-items: center; gap: 40px; }
+    h1 { color: white; font-size: 1.4rem; text-align: center; }
+    .row { display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; }
+    .phone { width: 320px; display: flex; flex-direction: column; }
+    .label { color: #ccc; text-align: center; margin-bottom: 10px; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
+    .screen { width: 320px; height: 620px; background: white; border-radius: 36px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5); display: flex; flex-direction: column; position: relative; border: 6px solid #222; }
+    .tag { display: inline-block; background: #FFD700; color: #000; font-size: 0.6rem; font-weight: 700; padding: 2px 6px; border-radius: 6px; vertical-align: middle; margin-left: 4px; }
+
+    /* ---- Option A : Header compact ---- */
+    .a-header {
+      background: linear-gradient(160deg, #FF6B9D, #C2185B);
+      padding: 10px 14px 12px;
+      flex-shrink: 0;
+    }
+    .a-topbar { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .back-btn { width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.25); border: none; color: white; font-size: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+    .a-title { color: white; font-size: 1rem; font-weight: 700; }
+    .a-actions { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+    .icon-btn { width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.2); border: 1.5px solid rgba(255,255,255,0.4); color: white; font-size: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .members-strip { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; }
+    .members-strip::-webkit-scrollbar { display: none; }
+    .member-chip { display: flex; flex-direction: column; align-items: center; gap: 3px; flex-shrink: 0; }
+    .avatar-sm { width: 42px; height: 42px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 18px; position: relative; }
+    .online-dot { position: absolute; bottom: 1px; right: 1px; width: 9px; height: 9px; background: #4CAF50; border-radius: 50%; border: 1.5px solid white; }
+    .member-name { color: rgba(255,255,255,0.9); font-size: 0.6rem; font-weight: 600; }
+    .tabs-strip { display: flex; gap: 6px; margin-top: 10px; }
+    .tab { flex: 1; padding: 7px 4px; border-radius: 8px; background: rgba(255,255,255,0.15); border: none; color: white; font-size: 0.72rem; font-weight: 700; cursor: pointer; text-align: center; }
+    .tab.active { background: rgba(255,255,255,0.3); border: 1.5px solid rgba(255,255,255,0.5); }
+
+    .chat-area { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; background: #f7f3ef; }
+    .chat-area::-webkit-scrollbar { display: none; }
+    .msg-row { display: flex; flex-direction: column; }
+    .msg-row.own { align-items: flex-end; }
+    .msg-meta { font-size: 0.6rem; color: #999; margin-bottom: 2px; padding: 0 6px; }
+    .bubble { padding: 8px 12px; border-radius: 16px; font-size: 0.8rem; max-width: 80%; line-height: 1.4; }
+    .bubble.them { background: white; color: #333; border-radius: 16px 16px 16px 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .bubble.me { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 16px 16px 4px 16px; }
+    .bubble.system { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; font-size: 0.75rem; font-weight: 600; border-radius: 20px; text-align: center; align-self: center; }
+
+    .chat-input-bar { display: flex; gap: 8px; padding: 10px 12px; background: white; border-top: 1px solid #eee; align-items: center; flex-shrink: 0; }
+    .chat-input { flex: 1; padding: 9px 14px; border: 1.5px solid #ddd; border-radius: 22px; font-size: 0.8rem; outline: none; background: #f5f5f5; }
+    .send-btn { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); border: none; color: white; font-size: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+
+    /* ---- Option B : Onglets en bas ---- */
+    .b-header {
+      background: linear-gradient(160deg, #FF6B9D, #C2185B);
+      padding: 10px 14px 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .b-title { color: white; font-size: 1rem; font-weight: 700; flex: 1; }
+    .bottom-tabs { display: flex; background: white; border-top: 1px solid #eee; flex-shrink: 0; }
+    .btab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 4px 10px; cursor: pointer; }
+    .btab .btab-icon { font-size: 1.1rem; }
+    .btab .btab-label { font-size: 0.58rem; color: #888; margin-top: 2px; }
+    .btab.active .btab-label { color: #C2185B; font-weight: 700; }
+    .btab.active .btab-icon { filter: saturate(2); }
+    .btab-indicator { width: 100%; height: 2px; background: #C2185B; border-radius: 2px; margin-bottom: 1px; opacity: 0; }
+    .btab.active .btab-indicator { opacity: 1; }
+
+    .b-members-bar { background: rgba(255,255,255,0.15); padding: 6px 14px 8px; display: flex; gap: 10px; overflow-x: auto; flex-shrink: 0; }
+    .b-members-bar::-webkit-scrollbar { display: none; }
+
+    /* ---- Option C : Header actuel corrigé ---- */
+    .c-header {
+      background: linear-gradient(160deg, #FF6B9D, #C2185B);
+      padding: 10px 14px 10px;
+      flex-shrink: 0;
+    }
+    .c-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .c-member-card { background: rgba(255,255,255,0.15); border-radius: 10px; padding: 8px; display: flex; align-items: center; gap: 8px; }
+    .avatar-c { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.2); border: 1.5px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .c-member-info { display: flex; flex-direction: column; }
+    .c-member-name { color: white; font-size: 0.68rem; font-weight: 700; }
+    .c-member-status { color: rgba(255,255,255,0.7); font-size: 0.58rem; }
+    .c-tabs { display: flex; gap: 6px; margin-top: 8px; }
+    .magic-btn { margin-top: 6px; background: linear-gradient(135deg, #FFD700, #FFA500); border: none; border-radius: 8px; padding: 7px; color: #000; font-size: 0.72rem; font-weight: 700; width: 100%; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>🛋️ Mise en forme intérieure des salons — Comparaison</h1>
+  <div class="row">
+
+    <!-- OPTION A -->
+    <div class="phone">
+      <div class="label">Option A — Header compact</div>
+      <div class="screen">
+        <div class="a-header">
+          <div class="a-topbar">
+            <div class="back-btn">←</div>
+            <div class="a-title">🌹 Salon Romantique</div>
+            <div class="a-actions">
+              <div class="icon-btn" title="Magie">✨</div>
+              <div class="icon-btn" title="Membres">👥</div>
+            </div>
+          </div>
+          <div class="members-strip">
+            <div class="member-chip">
+              <div class="avatar-sm">👩<div class="online-dot"></div></div>
+              <div class="member-name">Sophie</div>
+            </div>
+            <div class="member-chip">
+              <div class="avatar-sm">👩<div class="online-dot"></div></div>
+              <div class="member-name">Emma</div>
+            </div>
+            <div class="member-chip">
+              <div class="avatar-sm">👨<div class="online-dot"></div></div>
+              <div class="member-name">Alexandre</div>
+            </div>
+            <div class="member-chip">
+              <div class="avatar-sm" style="border-color:#FFD700;">👤</div>
+              <div class="member-name">Vous 👑</div>
+            </div>
+          </div>
+          <div class="tabs-strip">
+            <button class="tab active">💬 Discussion</button>
+            <button class="tab">📖 Histoire</button>
+          </div>
+        </div>
+
+        <div class="chat-area">
+          <div class="msg-row">
+            <div class="msg-meta">Sophie • 14h32</div>
+            <div class="bubble them">Bonjour tout le monde ! 😊</div>
+          </div>
+          <div class="msg-row own">
+            <div class="msg-meta">Vous • 14h33</div>
+            <div class="bubble me">Salut Sophie ! Contente de te voir ici ✨</div>
+          </div>
+          <div class="msg-row">
+            <div class="msg-meta">Emma • 14h34</div>
+            <div class="bubble them">On commence une nouvelle histoire ?</div>
+          </div>
+          <div class="bubble system">✨ Sophie a envoyé 🌹 Rose à Emma !</div>
+          <div class="msg-row own">
+            <div class="msg-meta">Vous • 14h36</div>
+            <div class="bubble me">Oui ! Je propose qu'on parte dans un château...</div>
+          </div>
+          <div class="msg-row">
+            <div class="msg-meta">Alexandre • 14h37</div>
+            <div class="bubble them">Super idée ! 🏰</div>
+          </div>
+        </div>
+
+        <div class="chat-input-bar">
+          <input class="chat-input" placeholder="Écris un message..." readonly>
+          <div class="send-btn">➤</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPTION B -->
+    <div class="phone">
+      <div class="label">Option B — Onglets en bas</div>
+      <div class="screen">
+        <div class="b-header">
+          <div class="back-btn">←</div>
+          <div class="b-title">🌹 Salon Romantique</div>
+          <div class="icon-btn">✨</div>
+        </div>
+        <div class="b-members-bar">
+          <div class="member-chip">
+            <div class="avatar-sm" style="width:38px;height:38px;font-size:16px;">👩<div class="online-dot"></div></div>
+            <div class="member-name">Sophie</div>
+          </div>
+          <div class="member-chip">
+            <div class="avatar-sm" style="width:38px;height:38px;font-size:16px;">👩<div class="online-dot"></div></div>
+            <div class="member-name">Emma</div>
+          </div>
+          <div class="member-chip">
+            <div class="avatar-sm" style="width:38px;height:38px;font-size:16px;">👨<div class="online-dot"></div></div>
+            <div class="member-name">Alex</div>
+          </div>
+          <div class="member-chip">
+            <div class="avatar-sm" style="width:38px;height:38px;font-size:16px;border-color:#FFD700;">👤</div>
+            <div class="member-name">Vous 👑</div>
+          </div>
+        </div>
+
+        <div class="chat-area" style="background:#f7f3ef;">
+          <div class="msg-row">
+            <div class="msg-meta">Sophie • 14h32</div>
+            <div class="bubble them">Bonjour tout le monde ! 😊</div>
+          </div>
+          <div class="msg-row own">
+            <div class="msg-meta">Vous • 14h33</div>
+            <div class="bubble me">Salut Sophie ! Contente de te voir ici ✨</div>
+          </div>
+          <div class="msg-row">
+            <div class="msg-meta">Emma • 14h34</div>
+            <div class="bubble them">On commence une nouvelle histoire ?</div>
+          </div>
+          <div class="bubble system">✨ Sophie a envoyé 🌹 Rose à Emma !</div>
+          <div class="msg-row own">
+            <div class="msg-meta">Vous • 14h36</div>
+            <div class="bubble me">Oui ! Je propose qu'on parte dans un château...</div>
+          </div>
+          <div class="msg-row">
+            <div class="msg-meta">Alex • 14h37</div>
+            <div class="bubble them">Super idée ! 🏰</div>
+          </div>
+        </div>
+
+        <div class="chat-input-bar">
+          <input class="chat-input" placeholder="Écris un message..." readonly>
+          <div class="send-btn">➤</div>
+        </div>
+
+        <div class="bottom-tabs">
+          <div class="btab active">
+            <div class="btab-indicator"></div>
+            <div class="btab-icon">💬</div>
+            <div class="btab-label">Discussion</div>
+          </div>
+          <div class="btab">
+            <div class="btab-indicator"></div>
+            <div class="btab-icon">📖</div>
+            <div class="btab-label">Histoire</div>
+          </div>
+          <div class="btab">
+            <div class="btab-indicator"></div>
+            <div class="btab-icon">✨</div>
+            <div class="btab-label">Magie</div>
+          </div>
+          <div class="btab">
+            <div class="btab-indicator"></div>
+            <div class="btab-icon">👥</div>
+            <div class="btab-label">Membres</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPTION C -->
+    <div class="phone">
+      <div class="label">Option C — Header actuel corrigé</div>
+      <div class="screen">
+        <div class="c-header">
+          <div class="a-topbar">
+            <div class="back-btn">←</div>
+            <div class="a-title">🌹 Salon Romantique</div>
+          </div>
+          <div class="c-grid">
+            <div class="c-member-card">
+              <div class="avatar-c">👩</div>
+              <div class="c-member-info">
+                <div class="c-member-name">Sophie</div>
+                <div class="c-member-status">🟢 en ligne</div>
+              </div>
+            </div>
+            <div class="c-member-card">
+              <div class="avatar-c">👩</div>
+              <div class="c-member-info">
+                <div class="c-member-name">Emma</div>
+                <div class="c-member-status">🟢 en ligne</div>
+              </div>
+            </div>
+            <div class="c-member-card">
+              <div class="avatar-c">👨</div>
+              <div class="c-member-info">
+                <div class="c-member-name">Alexandre</div>
+                <div class="c-member-status">🟢 en ligne</div>
+              </div>
+            </div>
+            <div class="c-member-card" style="border: 1.5px solid #FFD700;">
+              <div class="avatar-c" style="border-color:#FFD700;">👤</div>
+              <div class="c-member-info">
+                <div class="c-member-name">Vous 👑</div>
+                <div class="c-member-status">patron</div>
+              </div>
+            </div>
+          </div>
+          <div class="c-tabs">
+            <button class="tab active" style="font-size:0.7rem;">💬 Discussion</button>
+            <button class="tab" style="font-size:0.7rem;">📖 Histoire</button>
+          </div>
+          <button class="magic-btn">✨ Magie &amp; Offrandes</button>
+        </div>
+
+        <div class="chat-area" style="background:#f7f3ef;">
+          <div class="msg-row">
+            <div class="msg-meta">Sophie • 14h32</div>
+            <div class="bubble them">Bonjour tout le monde ! 😊</div>
+          </div>
+          <div class="msg-row own">
+            <div class="msg-meta">Vous • 14h33</div>
+            <div class="bubble me">Salut ! ✨</div>
+          </div>
+          <div class="msg-row">
+            <div class="msg-meta">Emma • 14h34</div>
+            <div class="bubble them">On commence ?</div>
+          </div>
+        </div>
+
+        <div class="chat-input-bar">
+          <input class="chat-input" placeholder="Écris un message..." readonly>
+          <div class="send-btn">➤</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <p style="color:#888; font-size:0.8rem; text-align:center; margin-top:10px;">
+    Ouvre ce fichier dans ton navigateur pour voir les maquettes
+  </p>
+</body>
+</html>

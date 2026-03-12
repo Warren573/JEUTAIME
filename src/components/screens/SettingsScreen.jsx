@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getReferralStats, copyReferralCode } from '../../utils/referralSystem';
 import ScreenHeader from '../common/ScreenHeader';
+import SettingsTabButton from '../settings/SettingsTabButton';
 
 export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogout, setScreen, setCurrentUser }) {
   const [settingsTab, setSettingsTab] = useState('profile');
@@ -134,28 +135,23 @@ export default function SettingsScreen({ setShowAdminPanel, currentUser, onLogou
           marginBottom: 'var(--spacing-lg)',
           justifyContent: 'center'
         }}>
-          {['profile', 'referral', 'diagnostic', 'shop', 'notifications', 'privacy', 'account'].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setSettingsTab(tab)}
-              style={{
-                padding: 'var(--spacing-sm) var(--spacing-md)',
-                background: settingsTab === tab
-                  ? 'linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))'
-                  : 'var(--color-brown)',
-                border: settingsTab === tab ? '2px solid var(--color-gold-light)' : '2px solid var(--color-brown-dark)',
-                color: settingsTab === tab ? 'var(--color-brown-dark)' : 'var(--color-cream)',
-                borderRadius: 'var(--border-radius-md)',
-                cursor: 'pointer',
-                fontWeight: '600',
-                fontSize: '0.875rem',
-                transition: 'all var(--transition-normal)',
-                boxShadow: settingsTab === tab ? 'var(--shadow-md)' : 'var(--shadow-sm)',
-                minWidth: 'fit-content'
-              }}
-            >
-              {tab === 'profile' ? '👤 Profil' : tab === 'referral' ? '🎁 Parrainage' : tab === 'diagnostic' ? '🔧 Diagnostic' : tab === 'shop' ? '🛍️ Boutique' : tab === 'notifications' ? '🔔 Notifs' : tab === 'privacy' ? '🔒 Confidentialité' : '⚙️ Compte'}
-            </button>
+          {[
+            { id: 'profile', icon: '👤', label: 'Profil' },
+            { id: 'referral', icon: '🎁', label: 'Parrainage' },
+            { id: 'diagnostic', icon: '🔧', label: 'Diagnostic' },
+            { id: 'shop', icon: '🛍️', label: 'Boutique' },
+            { id: 'notifications', icon: '🔔', label: 'Notifs' },
+            { id: 'privacy', icon: '🔒', label: 'Confidentialité' },
+            { id: 'account', icon: '⚙️', label: 'Compte' },
+          ].map(tab => (
+            <SettingsTabButton
+              key={tab.id}
+              tabId={tab.id}
+              activeTab={settingsTab}
+              onClick={setSettingsTab}
+              icon={tab.icon}
+              label={tab.label}
+            />
           ))}
         </div>
 

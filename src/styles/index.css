@@ -78,6 +78,22 @@
   box-sizing: border-box;
 }
 
+html, body {
+  height: 100%;
+  overscroll-behavior: none;
+  max-width: 100%;
+}
+
+/* Verrou scroll activé UNIQUEMENT quand le salon est ouvert */
+body.salon-lock {
+  overflow: hidden;
+}
+
+img, svg {
+  max-width: 100%;
+  height: auto;
+}
+
 body {
   margin: 0;
   font-family: var(--font-primary);
@@ -93,7 +109,8 @@ code {
 }
 
 #root {
-  min-height: 100vh;
+  height: 100%;
+  overflow: hidden;
   background: var(--color-beige-light);
 }
 

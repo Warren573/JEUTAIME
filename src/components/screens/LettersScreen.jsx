@@ -116,6 +116,34 @@ export default function LettersScreen({ currentUser, setScreen }) {
         onBack={() => setScreen('home')}
       />
 
+
+      {/* Onglets Lettres / Journal / Souvenirs */}
+      <div style={{ display: 'flex', gap: '8px', padding: '0 var(--spacing-sm)', marginBottom: 'var(--spacing-sm)' }}>
+        {[
+          { id: 'lettres', icon: '💌', label: 'Lettres' },
+          { id: 'journal', icon: '📰', label: 'Journal' },
+          { id: 'memories', icon: '📦', label: 'Souvenirs' },
+        ].map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => tab.id !== 'lettres' && setScreen(tab.id)}
+            style={{
+              flex: 1,
+              padding: '10px 4px',
+              background: tab.id === 'lettres' ? 'var(--color-brown)' : 'var(--color-cream)',
+              color: tab.id === 'lettres' ? 'white' : 'var(--color-brown)',
+              border: '2px solid var(--color-brown)',
+              borderRadius: '10px',
+              fontWeight: '600',
+              fontSize: '13px',
+              cursor: tab.id === 'lettres' ? 'default' : 'pointer',
+            }}
+          >
+            {tab.icon} {tab.label}
+          </button>
+        ))}
+      </div>
+
       {/* Message si pas de conversations */}
       <div style={{ padding: '0 var(--spacing-sm)' }}>
         <p style={{

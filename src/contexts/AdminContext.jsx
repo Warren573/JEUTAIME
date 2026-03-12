@@ -17,13 +17,15 @@ export const AdminProvider = ({ children }) => {
   const adminLogin = (username, password) => {
     // Pour l'instant, authentification simple (à remplacer par une vraie API)
     if (username === 'admin' && password === 'admin123') {
-      setIsAdminAuthenticated(true);
-      setAdminUser({
+      const user = {
         id: 1,
         username: 'admin',
         role: 'super_admin',
         email: 'admin@jeutaime.com'
-      });
+      };
+      setIsAdminAuthenticated(true);
+      setAdminUser(user);
+      localStorage.setItem('jeutaime_admin_session', JSON.stringify(user));
       return true;
     }
     return false;
@@ -32,6 +34,7 @@ export const AdminProvider = ({ children }) => {
   const adminLogout = () => {
     setIsAdminAuthenticated(false);
     setAdminUser(null);
+    localStorage.removeItem('jeutaime_admin_session');
   };
 
   return (
