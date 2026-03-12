@@ -49,10 +49,10 @@ const MOCK_MESSAGES = [
 
 function OfferingsGrid({ items = [] }) {
   return (
-    <div className="offerings-grid">
+    <div className="sqp-offerings-grid">
       {items.slice(0, 6).map((item, i) => (
-        <div key={i} className="offering-cell">
-          <span className="offering-emoji">{item}</span>
+        <div key={i} className="sqp-offering-cell">
+          <span className="sqp-offering-emoji">{item}</span>
         </div>
       ))}
     </div>
@@ -61,9 +61,9 @@ function OfferingsGrid({ items = [] }) {
 
 function AvatarBadge({ avatar, isSelf = false }) {
   return (
-    <div className={`avatar-badge${isSelf ? " self" : ""}`}>
-      <div className="avatar-circle">{avatar}</div>
-      <span className="online-dot" />
+    <div className={`sqp-avatar-badge${isSelf ? " sqp-avatar-badge--self" : ""}`}>
+      <div className="sqp-avatar-circle">{avatar}</div>
+      <span className="sqp-online-dot" />
     </div>
   );
 }
@@ -73,9 +73,9 @@ function AvatarBadge({ avatar, isSelf = false }) {
 function PlayerSlot({ participant, isMe }) {
   const isRight = participant.position.includes("right");
   return (
-    <div className={`player-slot player-slot--${isRight ? "right" : "left"}${isMe ? " is-me" : ""}`}>
-      <div className="player-name">{participant.name}</div>
-      <div className="player-row">
+    <div className={`sqp-player-slot sqp-player-slot--${isRight ? "right" : "left"}${isMe ? " sqp-player-slot--me" : ""}`}>
+      <div className="sqp-player-name">{participant.name}</div>
+      <div className="sqp-player-row">
         {isRight && <OfferingsGrid items={participant.offerings} />}
         <AvatarBadge avatar={participant.avatar} isSelf={isMe} />
         {!isRight && <OfferingsGrid items={participant.offerings} />}
@@ -101,38 +101,55 @@ export default function SalonQuadScene({
   participants: externalParticipants,
   currentUser,
 }) {
-  const participants   = externalParticipants ?? MOCK_PARTICIPANTS;
+  const participants = externalParticipants ?? MOCK_PARTICIPANTS;
   const [messages, setMessages] = useState(MOCK_MESSAGES);
   const [input, setInput]       = useState("");
   const [focused, setFocused]   = useState(false);
   const [kbVisible, setKbVisible] = useState(false);
   const bottomRef = useRef(null);
 
-  // ── Scroll to bottom on new message ──────────────────────────────────────
+  // ── 1. Verrou body.salon-lock — scoped à cet écran uniquement ─────────────
+  useEffect(() => {
+    document.body.classList.add("salon-lock");
+    return () => document.body.classList.remove("salon-lock");
+  }, []);
+
+  // ── 2. --vvh + --keyboard-offset via visualViewport ───────────────────────
+  // --vvh            : hauteur visible réelle (shrink quand clavier iOS s'ouvre)
+  // --keyboard-offset: px du clavier (0 quand fermé)
+  useEffect(() => {
+    const updateViewportHeight = () => {
+      const vv = window.visualViewport;
+      const height = vv ? vv.height : window.innerHeight;
+      const offset = vv ? Math.max(0, window.innerHeight - vv.height) : 0;
+
+      document.documentElement.style.setProperty("--vvh", `${height}px`);
+      document.documentElement.style.setProperty("--keyboard-offset", `${offset}px`);
+
+      setKbVisible(offset > 150);
+    };
+
+    updateViewportHeight();
+    window.visualViewport?.addEventListener("resize", updateViewportHeight);
+    window.visualViewport?.addEventListener("scroll", updateViewportHeight);
+    window.addEventListener("resize", updateViewportHeight);
+
+    return () => {
+      window.visualViewport?.removeEventListener("resize", updateViewportHeight);
+      window.visualViewport?.removeEventListener("scroll", updateViewportHeight);
+      window.removeEventListener("resize", updateViewportHeight);
+      // Nettoyer les variables CSS quand on quitte le salon
+      document.documentElement.style.removeProperty("--vvh");
+      document.documentElement.style.removeProperty("--keyboard-offset");
+    };
+  }, []);
+
+  // ── 3. Auto-scroll vers le bas lors d'un nouveau message ──────────────────
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // ── Détection clavier via visualViewport ──────────────────────────────────
-  // visualViewport.height baisse quand le clavier iOS s'ouvre.
-  // On compare à la hauteur initiale pour détecter l'ouverture.
-  useEffect(() => {
-    const vv = window.visualViewport;
-    if (!vv) return;
-
-    // Snapshot pris après le premier paint, hors clavier
-    let initialHeight = vv.height;
-    const THRESHOLD   = 150; // px minimum de réduction pour valider
-
-    const onResize = () => {
-      setKbVisible(vv.height < initialHeight - THRESHOLD);
-    };
-
-    vv.addEventListener("resize", onResize);
-    return () => vv.removeEventListener("resize", onResize);
-  }, []);
-
-  // Clavier actif = visualViewport OU focus (fallback desktop)
+  // Clavier actif = visualViewport OU focus input (fallback desktop)
   const kbMode = kbVisible || focused;
 
   const handleSend = () => {
@@ -168,8 +185,8 @@ export default function SalonQuadScene({
 
       {/* ══ ZONE 2 : Joueurs + offrandes ════════════════════════════════════
           Masqué entièrement quand le clavier s'ouvre.
-          Joueurs gauche → [avatar | offrandes →]
-          Joueurs droite → [← offrandes | avatar]
+          Joueurs gauche → [avatar | offrandes]
+          Joueurs droite → [offrandes | avatar]
       ═══════════════════════════════════════════════════════════════════════ */}
       <div className="sqp__players" aria-hidden={kbMode}>
         <div className="sqp__players-row sqp__players-row--top">
@@ -183,8 +200,7 @@ export default function SalonQuadScene({
       </div>
 
       {/* ══ ZONE 3 : Messages — seul élément scrollable ══════════════════════
-          flex: 1 → prend tout l'espace restant.
-          overflow-y: auto → scroll interne uniquement.
+          flex: 1 (ou grid row 1fr) → prend tout l'espace restant.
       ═══════════════════════════════════════════════════════════════════════ */}
       <div className="sqp__messages">
         {messages.map((msg) => (

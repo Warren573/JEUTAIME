@@ -80,10 +80,13 @@
 
 html, body {
   height: 100%;
-  overflow: hidden;
   overscroll-behavior: none;
   max-width: 100%;
-  /* Empêche le scroll bounce iOS sur le body */
+}
+
+/* Verrou scroll activé UNIQUEMENT quand le salon est ouvert */
+body.salon-lock {
+  overflow: hidden;
   position: fixed;
   width: 100%;
 }
